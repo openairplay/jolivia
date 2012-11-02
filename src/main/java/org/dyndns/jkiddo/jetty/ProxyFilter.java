@@ -10,11 +10,15 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Singleton;
 
 @Singleton
 public class ProxyFilter implements Filter
 {
+	static Logger logger = LoggerFactory.getLogger(ProxyFilter.class);
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException
@@ -27,7 +31,7 @@ public class ProxyFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-		System.out.println(httpServletRequest.getRequestURI());
+		logger.info(httpServletRequest.getRequestURI());
 		chain.doFilter(request, response);
 	}
 
