@@ -31,7 +31,13 @@ public class ProxyFilter implements Filter
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
 	{
 		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-		logger.info(httpServletRequest.getRequestURI());
+		String queryString = httpServletRequest.getQueryString();
+		if(queryString == null)
+			queryString = "";
+		else
+			queryString = "?" + queryString;
+
+		logger.info(httpServletRequest.getRequestURI() + queryString);
 		chain.doFilter(request, response);
 	}
 

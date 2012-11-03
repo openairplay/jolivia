@@ -44,7 +44,7 @@ public class RemoteControlResource extends MDNSResource implements IRemoteContro
 	@Override
 	@GET
 	@Path("logout")
-	public String logout(@QueryParam("session-id") final String session_id)
+	public Response logout(@QueryParam("session-id") final String session_id)
 	{
 		throw new NotImplementedException();
 	}

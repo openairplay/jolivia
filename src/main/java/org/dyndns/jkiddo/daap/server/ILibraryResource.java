@@ -53,7 +53,7 @@ public interface ILibraryResource
 
 	@Path("/logout")
 	@GET
-	Response logout();
+	Response logout(@QueryParam("session-id") String sessionId);
 
 	@Path("/resolve")
 	@GET

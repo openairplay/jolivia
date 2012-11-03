@@ -2,7 +2,6 @@ package org.dyndns.jkiddo.dacp.server;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -17,11 +16,11 @@ public interface IRemoteControlResource
 
 	@GET
 	@Path("logout")
-	String logout(@QueryParam("session-id") String session_id);
+	Response logout(@QueryParam("session-id") String session_id);
 
-//	@GET
-//	@Path("databases/{databaseid}/containers")
-//	String databases(@PathParam("databaseid") String databaseid, @QueryParam("session-id") String session_id);
+	// @GET
+	// @Path("databases/{databaseid}/containers")
+	// String databases(@PathParam("databaseid") String databaseid, @QueryParam("session-id") String session_id);
 
 	@GET
 	@Path("ctrl-int/1/pause")

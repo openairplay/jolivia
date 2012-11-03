@@ -116,7 +116,7 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 		records.put(ITSH_VERSION_KEY, DaapUtil.MUSIC_SHARING_VERSION_201 + "");
 		records.put(DAAP_VERSION_KEY, DaapUtil.DAAP_VERSION_3 + "");
 		records.put(PASSWORD_KEY, "0");
-		return ServiceInfo.create(DAAP_SERVICE_TYPE, Jolivia.class.getSimpleName(), port, 0, 0, records);
+		return ServiceInfo.create(DAAP_SERVICE_TYPE, Jolivia.name, port, 0, 0, records);
 	}
 
 	Response buildResponse(Chunk chunk) throws IOException
@@ -307,7 +307,7 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 				}
 				else
 				{
-					System.out.println("Unknown chunk type: " + key);
+					logger.debug("Unknown chunk type: " + key);
 				}
 			}
 
@@ -365,7 +365,7 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 				}
 				else
 				{
-					System.out.println("Unknown chunk type: " + key);
+					logger.debug("Unknown chunk type: " + key);
 				}
 			}
 
@@ -422,7 +422,7 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 				}
 				else
 				{
-					System.out.println("Unknown chunk type: " + key);
+					logger.debug("Unknown chunk type: " + key);
 				}
 			}
 
@@ -456,7 +456,7 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 	@Override
 	@Path("/logout")
 	@GET
-	public Response logout()
+	public Response logout(@QueryParam("session-id") String sessionId)
 	{
 		return buildEmptyResponse();
 	}

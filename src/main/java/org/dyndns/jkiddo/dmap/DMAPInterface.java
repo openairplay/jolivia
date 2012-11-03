@@ -12,10 +12,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.daap.server.ILibraryResource;
 import org.dyndns.jkiddo.dacp.client.IPairingResource;
 import org.dyndns.jkiddo.dacp.server.IRemoteControlResource;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -23,12 +25,6 @@ import com.google.inject.Singleton;
 @Singleton
 public class DMAPInterface implements IRemoteControlResource, IPairingResource, ILibraryResource
 {
-	@Inject
-	public DMAPInterface()
-	{
-		// TODO Auto-generated constructor stub
-	}
-	
 	@Inject
 	IRemoteControlResource remoteControlResource;
 	@Inject
@@ -45,11 +41,18 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	}
 
 	@Override
-	@Path("/login")
-	@GET
 	public Response login(@Context HttpServletRequest httpServletRequest) throws IOException
 	{
 		return libraryResource.login(httpServletRequest);
+	}
+
+	@Path("/login")
+	@GET
+	public Response login(@Context HttpServletRequest httpServletRequest, @QueryParam("pairing-guid") String guid) throws IOException
+	{
+		if(Strings.isNullOrEmpty(guid))
+			return login(httpServletRequest);
+		return login(guid);
 	}
 
 	@Override
@@ -100,13 +103,13 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 		return libraryResource.contentCodes();
 	}
 
-	@Override
-	@Path("/logout")
-	@GET
-	public Response logout()
-	{
-		return libraryResource.logout();
-	}
+	// @Override
+	// @Path("/logout")
+	// @GET
+	// public Response logout()
+	// {
+	// return libraryResource.logout();
+	// }
 
 	@Override
 	@Path("/resolve")
@@ -133,8 +136,6 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	}
 
 	@Override
-	@GET
-	@Path("login")
 	public Response login(@QueryParam("pairing-guid") String guid)
 	{
 		return remoteControlResource.login(guid);
@@ -143,9 +144,11 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@GET
 	@Path("logout")
-	public String logout(@QueryParam("session-id") String sessionId)
+	public Response logout(@QueryParam("session-id") String sessionId)
 	{
-		return remoteControlResource.logout(sessionId);
+		Response libraryResponse = libraryResource.logout(sessionId);
+		Response remoteControlResponse = remoteControlResource.logout(sessionId);
+		throw new NotImplementedException();
 	}
 
 	// @Override
