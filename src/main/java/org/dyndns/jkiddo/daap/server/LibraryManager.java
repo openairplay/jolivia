@@ -25,7 +25,7 @@ public class LibraryManager
 	private Set<IMusicStoreReader> setOfReaders;
 	private Library library;
 	private Database database;
-	private Map<Integer,IMusicStoreReader> songToReader;
+	private Map<Integer, IMusicStoreReader> songToReader;
 
 	@Inject
 	public LibraryManager(Set<IMusicStoreReader> databases) throws Exception
@@ -34,7 +34,7 @@ public class LibraryManager
 		library = new Library(LIBARY_NAME);
 		database = new Database(LIBARY_NAME);
 		Transaction txn = library.beginTransaction();
-		
+
 		Set<Song> collectionOfSongs = new HashSet<Song>();
 		for(IMusicStoreReader reader : databases)
 		{
@@ -45,13 +45,13 @@ public class LibraryManager
 				songToReader.put(s.hashCode(), reader);
 			}
 		}
-		
+
 		database.setSongs(txn, collectionOfSongs);
 		library.addDatabase(txn, database);
 		txn.commit();
 	}
 
-	private static final String LIBARY_NAME = Jolivia.class.getSimpleName();
+	private static final String LIBARY_NAME = Jolivia.name;
 
 	public enum PasswordMethod
 	{
@@ -104,5 +104,17 @@ public class LibraryManager
 	public Database getDatabase(String databaseId)
 	{
 		return library.getDatabase(databaseId);
+	}
+
+	public void waitForUpdate()
+	{
+		try
+		{
+			Thread.sleep(100000000);
+		}
+		catch(InterruptedException ie)
+		{
+			ie.printStackTrace();
+		}
 	}
 }

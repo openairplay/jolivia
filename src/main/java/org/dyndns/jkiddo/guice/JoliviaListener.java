@@ -1,10 +1,15 @@
 package org.dyndns.jkiddo.guice;
 
-import javax.jmdns.JmDNS;
-import javax.jmdns.impl.JmDNSImpl;
+import javax.jmdns.JmmDNS;
 
+import org.dyndns.jkiddo.daap.server.ILibraryResource;
 import org.dyndns.jkiddo.daap.server.LibraryManager;
 import org.dyndns.jkiddo.daap.server.LibraryResource;
+import org.dyndns.jkiddo.dacp.client.IPairingResource;
+import org.dyndns.jkiddo.dacp.client.PairingResource;
+import org.dyndns.jkiddo.dacp.server.IRemoteControlResource;
+import org.dyndns.jkiddo.dacp.server.RemoteControlResource;
+import org.dyndns.jkiddo.dmap.DMAPInterface;
 import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
 import org.dyndns.jkiddo.jetty.ProxyFilter;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
@@ -36,9 +41,17 @@ public class JoliviaListener extends GuiceServletContextListener
 			@Override
 			protected void configureServlets()
 			{
+				bind(Integer.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PORT_NAME)).toInstance(hostingPort);
+				bind(Integer.class).annotatedWith(Names.named(RemoteControlResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);
+				bind(IPairingResource.class).to(PairingResource.class);
+				bind(JmmDNS.class).toInstance(JmmDNS.Factory.getInstance());
+				
+				bind(IRemoteControlResource.class).to(RemoteControlResource.class);
+				bind(DMAPInterface.class).asEagerSingleton();
+				
 				filter("*").through(ProxyFilter.class);
-				// Route all requests through GuiceContainer
 				serve("/*").with(GuiceContainer.class);
+				
 			}
 		});
 	}
@@ -48,21 +61,14 @@ public class JoliviaListener extends GuiceServletContextListener
 		@Override
 		protected void configure()
 		{
-			try
-			{
-				Multibinder<IMusicStoreReader> multibinder = Multibinder.newSetBinder(binder(), IMusicStoreReader.class);
-				multibinder.addBinding().to(DeskMusicStoreReader.class).asEagerSingleton();
+			Multibinder<IMusicStoreReader> multibinder = Multibinder.newSetBinder(binder(), IMusicStoreReader.class);
+			multibinder.addBinding().to(DeskMusicStoreReader.class).asEagerSingleton();
 
-				bind(Integer.class).annotatedWith(Names.named(LibraryResource.DAAP_PORT_NAME)).toInstance(hostingPort);
-				bind(LibraryManager.class);
-				bind(JmDNS.class).toInstance(JmDNSImpl.create());
-				bind(LibraryResource.class).asEagerSingleton();
-				bind(JoliviaExceptionMapper.class);
-			}
-			catch(Exception e)
-			{
-				addError(e);
-			}
+			bind(Integer.class).annotatedWith(Names.named(LibraryResource.DAAP_PORT_NAME)).toInstance(hostingPort);
+			bind(LibraryManager.class);
+			bind(JmmDNS.class).toInstance(JmmDNS.Factory.getInstance());
+			bind(ILibraryResource.class).to(LibraryResource.class);
+			bind(JoliviaExceptionMapper.class);
 		}
 	}
 }

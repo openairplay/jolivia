@@ -4,7 +4,7 @@ import java.util.Hashtable;
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
 
-import org.dyndns.jkiddo.dacp.client.iTunesPairingHandler;
+import org.dyndns.jkiddo.dacp.client.PairingResource;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
@@ -23,7 +23,7 @@ public class TestClient
 		Server server = new Server(PAIRING_SERVER_PORT);
 		ServletContextHandler handler = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		handler.setContextPath("/");
-		handler.addServlet(new ServletHolder(new iTunesPairingHandler()), "/");
+		handler.addServlet(new ServletHolder(new PairingResource()), "/");
 		server.setHandler(handler);
 		server.start();
 

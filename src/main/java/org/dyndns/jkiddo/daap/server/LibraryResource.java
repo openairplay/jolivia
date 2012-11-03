@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.inject.Inject;
-import javax.jmdns.JmDNS;
+import javax.jmdns.JmmDNS;
 import javax.jmdns.ServiceInfo;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
@@ -18,13 +18,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
-import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.SecurityContext;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.ext.Providers;
 
 import org.ardverk.daap.DaapUtil;
 import org.ardverk.daap.Database;
@@ -69,7 +64,7 @@ import org.ardverk.daap.chunks.impl.UpdateType;
 import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.daap.server.LibraryManager.PasswordMethod;
-import org.dyndns.jkiddo.dmap.DMAPResource;
+import org.dyndns.jkiddo.dmap.MDNSResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,8 +75,7 @@ import com.google.inject.name.Named;
 import com.sun.jersey.core.spi.factory.ResponseBuilderImpl;
 
 @Singleton
-@Path("/")
-public class LibraryResource extends DMAPResource
+public class LibraryResource extends MDNSResource implements ILibraryResource
 {
 	@Inject
 	LibraryManager libraryManager;
@@ -103,7 +97,7 @@ public class LibraryResource extends DMAPResource
 	static Logger logger = LoggerFactory.getLogger(LibraryResource.class);
 
 	@Inject
-	public LibraryResource(JmDNS mDNS, @Named(DAAP_PORT_NAME) Integer port, LibraryManager libraryManager) throws IOException
+	public LibraryResource(JmmDNS mDNS, @Named(DAAP_PORT_NAME) Integer port, LibraryManager libraryManager) throws IOException
 	{
 		super(mDNS, port);
 		this.libraryManager = libraryManager;
@@ -122,7 +116,7 @@ public class LibraryResource extends DMAPResource
 		records.put(ITSH_VERSION_KEY, DaapUtil.MUSIC_SHARING_VERSION_201 + "");
 		records.put(DAAP_VERSION_KEY, DaapUtil.DAAP_VERSION_3 + "");
 		records.put(PASSWORD_KEY, "0");
-		return ServiceInfo.create(DAAP_SERVICE_TYPE, Jolivia.class.getSimpleName() , port, 0, 0, records);
+		return ServiceInfo.create(DAAP_SERVICE_TYPE, Jolivia.class.getSimpleName(), port, 0, 0, records);
 	}
 
 	Response buildResponse(Chunk chunk) throws IOException
@@ -160,9 +154,10 @@ public class LibraryResource extends DMAPResource
 		return buildResponse().status(Response.Status.NO_CONTENT).build();
 	}
 
+	@Override
 	@Path("/server-info")
 	@GET
-	public Response server_info() throws IOException
+	public Response serverInfo() throws IOException
 	{
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 
@@ -210,6 +205,7 @@ public class LibraryResource extends DMAPResource
 		return buildResponse(serverInfoResponse);
 	}
 
+	@Override
 	@Path("/login")
 	@GET
 	public Response login(@Context HttpServletRequest httpServletRequest) throws IOException
@@ -220,31 +216,25 @@ public class LibraryResource extends DMAPResource
 		return buildResponse(loginResponse);
 	}
 
+	@Override
 	@Path("/update")
 	@GET
-	public Response update(@QueryParam("session-id") String session_id, @QueryParam("revision-number") String revision_number, @QueryParam("delta") String delta, @Context HttpServletRequest httpServletRequest) throws IOException
+	public Response update(@QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @Context HttpServletRequest httpServletRequest) throws IOException
 	{
-		if(revision_number.equals(delta))
+		if(revisionNumber.equals(delta))
 		{
-			try
-			{
-				// Sleep until a update occurs ... - NOT DONE
-				Thread.sleep(10000000);
-			}
-			catch(InterruptedException e)
-			{
-				e.printStackTrace();
-			}
+			libraryManager.waitForUpdate();
 		}
 		UpdateResponse updateResponse = new UpdateResponse();
 		updateResponse.add(new Status(200));
-		updateResponse.add(new ServerRevision(libraryManager.getRevision(httpServletRequest.getRemoteHost(), session_id)));
+		updateResponse.add(new ServerRevision(libraryManager.getRevision(httpServletRequest.getRemoteHost(), sessionId)));
 		return buildResponse(updateResponse);
 	}
 
+	@Override
 	@Path("/databases")
 	@GET
-	public Response databases(@QueryParam("session-id") String session_id, @QueryParam("revision-number") String revision_number, @QueryParam("delta") String delta, @Context HttpServletRequest httpServletRequest) throws IOException
+	public Response databases(@QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta) throws IOException
 	{
 		ServerDatabases serverDatabases = new ServerDatabases();
 
@@ -285,9 +275,10 @@ public class LibraryResource extends DMAPResource
 		return buildResponse(serverDatabases);
 	}
 
+	@Override
 	@Path("/databases/{databaseId}/items")
 	@GET
-	public Response songs(@PathParam("databaseId") String databaseId, @QueryParam("session-id") String session_id, @QueryParam("revision-number") String revision_number, @QueryParam("delta") String delta, @QueryParam("meta") String meta) throws Exception
+	public Response songs(@PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @QueryParam("meta") String meta) throws Exception
 	{
 		Set<Song> songs = libraryManager.getDatabase(databaseId).getSongs();
 		Iterable<String> parameters = DaapUtil.parseMeta(meta);
@@ -340,9 +331,10 @@ public class LibraryResource extends DMAPResource
 		return buildResponse(databaseSongs);
 	}
 
+	@Override
 	@Path("/databases/{databaseId}/containers")
 	@GET
-	public Response playlists(@PathParam("databaseId") String databaseId, @QueryParam("session-id") String session_id, @QueryParam("revision-number") String revision_number, @QueryParam("delta") String delta, @QueryParam("meta") String meta) throws IOException
+	public Response playlists(@PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @QueryParam("meta") String meta) throws IOException
 	{
 		Collection<Playlist> playlists = libraryManager.getDatabase(databaseId).getPlaylists();
 		Iterable<String> parameters = DaapUtil.parseMeta(meta);
@@ -397,9 +389,10 @@ public class LibraryResource extends DMAPResource
 		return buildResponse(databasePlaylists);
 	}
 
+	@Override
 	@Path("/databases/{databaseId}/containers/{containerId}/items")
 	@GET
-	public Response playlistSongs(@PathParam("containerId") String containerId, @PathParam("databaseId") String databaseId, @QueryParam("session-id") String session_id, @QueryParam("revision-number") String revision_number, @QueryParam("delta") String delta, @QueryParam("meta") String meta) throws IOException
+	public Response playlistSongs(@PathParam("containerId") String containerId, @PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @QueryParam("meta") String meta) throws IOException
 	{
 		// throw new NotImplementedException();
 		// /databases/0/containers/1/items?session-id=1570434761&revision-number=2&delta=0&type=music&meta=dmap.itemkind,dmap.itemid,dmap.containeritemid
@@ -452,30 +445,34 @@ public class LibraryResource extends DMAPResource
 		return buildResponse(playlistSongs);
 	}
 
+	@Override
 	@Path("/content-codes")
 	@GET
-	public Response content_Codes(@Context UriInfo uriInfo, @Context Request request, @Context HttpHeaders httpHeaders, @Context SecurityContext securityContext, @Context Providers provider) throws IOException
+	public Response contentCodes() throws IOException
 	{
 		return buildResponse(new ContentCodesResponseImpl());
 	}
 
+	@Override
 	@Path("/logout")
 	@GET
-	public Response logout(@Context UriInfo uriInfo, @Context Request request, @Context HttpHeaders httpHeaders, @Context SecurityContext securityContext, @Context Providers provider)
+	public Response logout()
 	{
 		return buildEmptyResponse();
 	}
 
+	@Override
 	@Path("/resolve")
 	@GET
-	public Response resolve(@Context UriInfo uriInfo, @Context Request request, @Context HttpHeaders httpHeaders, @Context SecurityContext securityContext, @Context Providers provider)
+	public Response resolve()
 	{
 		throw new NotImplementedException();
 	}
 
+	@Override
 	@Path("/databases/{databaseId}/items/{itemId}.{format}")
 	@GET
-	public Response song(@PathParam("databaseId") String databaseId, @PathParam("itemId") String itemId, @PathParam("format") String format, @Context UriInfo uriInfo, @Context Request request, @Context HttpHeaders httpHeaders, @Context SecurityContext securityContext, @Context Providers provider, @HeaderParam("Range") String rangeHeader) throws Exception
+	public Response song(@PathParam("databaseId") String databaseId, @PathParam("itemId") String itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
 	{
 		File file = libraryManager.getTune(databaseId, itemId);
 
@@ -491,7 +488,7 @@ public class LibraryResource extends DMAPResource
 		return buildAudioResponse(buffer, pos, file.length());
 	}
 
-	private static long[] getRange(String rangeHeader, long position, long end)
+	static private long[] getRange(String rangeHeader, long position, long end)
 	{
 		if(!Strings.isNullOrEmpty(rangeHeader))
 		{
