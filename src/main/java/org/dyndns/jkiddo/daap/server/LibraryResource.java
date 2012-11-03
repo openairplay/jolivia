@@ -61,7 +61,6 @@ import org.ardverk.daap.chunks.impl.SupportsUpdate;
 import org.ardverk.daap.chunks.impl.TimeoutInterval;
 import org.ardverk.daap.chunks.impl.UpdateResponse;
 import org.ardverk.daap.chunks.impl.UpdateType;
-import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.daap.server.LibraryManager.PasswordMethod;
 import org.dyndns.jkiddo.dmap.MDNSResource;
@@ -116,7 +115,7 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 		records.put(ITSH_VERSION_KEY, DaapUtil.MUSIC_SHARING_VERSION_201 + "");
 		records.put(DAAP_VERSION_KEY, DaapUtil.DAAP_VERSION_3 + "");
 		records.put(PASSWORD_KEY, "0");
-		return ServiceInfo.create(DAAP_SERVICE_TYPE, Jolivia.name, port, 0, 0, records);
+		return ServiceInfo.create(DAAP_SERVICE_TYPE, hostname, port, 0, 0, records);
 	}
 
 	Response buildResponse(Chunk chunk) throws IOException
@@ -278,7 +277,7 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 	@Override
 	@Path("/databases/{databaseId}/items")
 	@GET
-	public Response songs(@PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @QueryParam("meta") String meta) throws Exception
+	public Response songs(@PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
 	{
 		Set<Song> songs = libraryManager.getDatabase(databaseId).getSongs();
 		Iterable<String> parameters = DaapUtil.parseMeta(meta);
@@ -392,7 +391,7 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 	@Override
 	@Path("/databases/{databaseId}/containers/{containerId}/items")
 	@GET
-	public Response playlistSongs(@PathParam("containerId") String containerId, @PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @QueryParam("meta") String meta) throws IOException
+	public Response playlistSongs(@PathParam("containerId") String containerId, @PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
 	{
 		// throw new NotImplementedException();
 		// /databases/0/containers/1/items?session-id=1570434761&revision-number=2&delta=0&type=music&meta=dmap.itemkind,dmap.itemid,dmap.containeritemid
@@ -506,6 +505,22 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 		}
 
 		return(new long[] { position, end });
+	}
+
+	@Override
+	@Path("/databases/{databaseId}/groups")
+	@GET
+	public Response groups(@PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
+	{
+		throw new NotImplementedException();
+	}
+
+	@Override
+	@Path("/databases/{databaseId}/items/{itemId}/extra_data/artwork")
+	@GET
+	public Response artwork(@PathParam("databaseId") String databaseId, @PathParam("itemId") String itemId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception
+	{
+		throw new NotImplementedException();
 	}
 
 	// POST /fp-setup?session-id=130493758

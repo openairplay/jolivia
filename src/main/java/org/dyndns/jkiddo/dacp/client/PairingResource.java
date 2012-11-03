@@ -40,18 +40,6 @@ public class PairingResource extends MDNSResource implements IPairingResource
 		super(mDNS, port);
 	}
 
-	// @Override
-	// protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException
-	// {
-	// byte[] code = new byte[8];
-	// random.nextBytes(code);
-	// System.arraycopy(code, 0, PAIRING_RAW, 16, 8);
-	// guidCode = toHex(code);
-	//
-	// resp.setStatus(HttpServletResponse.SC_OK);
-	// resp.getOutputStream().write(PAIRING_RAW);
-	// }
-
 	public final static String REMOTE_TYPE = "_touch-remote._tcp.local.";
 	public final static String DEVICE_ID = "0000000000000000000000000000000000000010";
 
@@ -101,10 +89,10 @@ public class PairingResource extends MDNSResource implements IPairingResource
 	protected ServiceInfo registerServerRemote()
 	{
 		final Map<String, String> values = new HashMap<String, String>();
-		values.put("DvNm", Jolivia.name);
+		values.put("DvNm", Jolivia.name + "5309");
 		values.put("RemV", "10000");
 		values.put("DvTy", "JKiddo Inc");
-		values.put("RemN", Jolivia.name + " Remote");
+		values.put("RemN", Jolivia.name + " 5309" + " Remote");
 		values.put("txtvers", "1");
 		values.put("Pair", "0000000000000001");
 

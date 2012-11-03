@@ -32,6 +32,12 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Inject
 	ILibraryResource libraryResource;
 
+	@Inject
+	public DMAPInterface()
+	{
+		System.out.println();
+	}
+
 	@Override
 	@Path("/server-info")
 	@GET
@@ -74,9 +80,17 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@Path("/databases/{databaseId}/items")
 	@GET
-	public Response songs(@PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @QueryParam("meta") String meta) throws Exception
+	public Response songs(@PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
 	{
-		return libraryResource.songs(databaseId, sessionId, revisionNumber, delta, meta);
+		return libraryResource.songs(databaseId, sessionId, revisionNumber, delta, type, meta);
+	}
+
+	@Override
+	@Path("/databases/{databaseId}/items/{itemId}/extra_data/artwork")
+	@GET
+	public Response artwork(@PathParam("databaseId") String databaseId, @PathParam("itemId") String itemId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception
+	{
+		return libraryResource.artwork(databaseId, itemId, sessionId, revisionNumber, mw, mh);
 	}
 
 	@Override
@@ -90,9 +104,9 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@Path("/databases/{databaseId}/containers/{containerId}/items")
 	@GET
-	public Response playlistSongs(@PathParam("containerId") String containerId, @PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @QueryParam("meta") String meta) throws IOException
+	public Response playlistSongs(@PathParam("containerId") String containerId, @PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
 	{
-		return libraryResource.playlistSongs(containerId, databaseId, sessionId, revisionNumber, delta, meta);
+		return libraryResource.playlistSongs(containerId, databaseId, sessionId, revisionNumber, delta, meta, type, group_type, sort, include_sort_headers, query, index);
 	}
 
 	@Override
@@ -150,15 +164,6 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 		Response remoteControlResponse = remoteControlResource.logout(sessionId);
 		throw new NotImplementedException();
 	}
-
-	// @Override
-	// @GET
-	// @Path("databases/{databaseid}/containers")
-	// String databases(@PathParam("databaseid") String databaseid, @QueryParam("session-id") String session_id)
-	// {
-	// // TODO Auto-generated method stub
-	// return null;
-	// }
 
 	@Override
 	@GET
@@ -262,5 +267,13 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	public String playspec(@QueryParam("playlist-spec") String playlist_spec, @QueryParam("session-id") String session_id)
 	{
 		return remoteControlResource.playspec(playlist_spec, session_id);
+	}
+
+	@Override
+	@Path("/databases/{databaseId}/groups")
+	@GET
+	public Response groups(@PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
+	{
+		return libraryResource.groups(databaseId, sessionId, meta, type, group_type, sort, include_sort_headers);
 	}
 }
