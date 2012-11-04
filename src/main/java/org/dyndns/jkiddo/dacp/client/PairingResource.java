@@ -89,10 +89,10 @@ public class PairingResource extends MDNSResource implements IPairingResource
 	protected ServiceInfo registerServerRemote()
 	{
 		final Map<String, String> values = new HashMap<String, String>();
-		values.put("DvNm", Jolivia.name + "5309");
+		values.put("DvNm", "Use 5309 as code for " + Jolivia.name);
 		values.put("RemV", "10000");
 		values.put("DvTy", "JKiddo Inc");
-		values.put("RemN", Jolivia.name + " 5309" + " Remote");
+		values.put("RemN", Jolivia.name + " Remote");
 		values.put("txtvers", "1");
 		values.put("Pair", "0000000000000001");
 
