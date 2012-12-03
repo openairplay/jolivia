@@ -57,12 +57,14 @@ public class LibraryManager
 	{
 		NO_PASSWORD, PASSWORD, USERNAME_AND_PASSWORD
 	}
-
-	public int getRevision(String remoteHost, String session_id)
+	
+	@SuppressWarnings("unused")
+	public int getRevision(String remoteHost, long session_id)
 	{
 		return library.getRevision();
 	}
 
+	@SuppressWarnings("unused")
 	public int getSessionId(String remoteHost)
 	{
 		return new Random().nextInt(Integer.MAX_VALUE);
@@ -89,10 +91,10 @@ public class LibraryManager
 		return LIBARY_NAME;
 	}
 
-	public File getTune(String databaseId, String itemId) throws Exception
+	public File getTune(long databaseId, long itemId) throws Exception
 	{
-		IMusicStoreReader reader = songToReader.get(new Integer(itemId));
-		Song song = library.getDatabase(databaseId).getSong(itemId);
+		IMusicStoreReader reader = songToReader.get(new Integer((int)itemId));
+		Song song = library.getDatabase(databaseId+"").getSong(itemId+"");
 		return reader.getTune(song);
 	}
 
@@ -101,9 +103,9 @@ public class LibraryManager
 		return library.getDatabases();
 	}
 
-	public Database getDatabase(String databaseId)
+	public Database getDatabase(long databaseId)
 	{
-		return library.getDatabase(databaseId);
+		return library.getDatabase(databaseId+"");
 	}
 
 	public void waitForUpdate()

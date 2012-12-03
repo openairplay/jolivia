@@ -52,19 +52,21 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 		return libraryResource.login(httpServletRequest);
 	}
 
+	@Override
 	@Path("/login")
 	@GET
 	public Response login(@Context HttpServletRequest httpServletRequest, @QueryParam("pairing-guid") String guid) throws IOException
 	{
 		if(Strings.isNullOrEmpty(guid))
 			return login(httpServletRequest);
-		return login(guid);
+		// TODO: Don't know what else to do as of now
+		return login(httpServletRequest);
 	}
 
 	@Override
 	@Path("/update")
 	@GET
-	public Response update(@QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @Context HttpServletRequest httpServletRequest) throws IOException
+	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @Context HttpServletRequest httpServletRequest) throws IOException
 	{
 		return libraryResource.update(sessionId, revisionNumber, delta, httpServletRequest);
 	}
@@ -72,7 +74,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@Path("/databases")
 	@GET
-	public Response databases(@QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta) throws IOException
+	public Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
 	{
 		return libraryResource.databases(sessionId, revisionNumber, delta);
 	}
@@ -80,7 +82,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@Path("/databases/{databaseId}/items")
 	@GET
-	public Response songs(@PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
+	public Response songs(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
 	{
 		return libraryResource.songs(databaseId, sessionId, revisionNumber, delta, type, meta);
 	}
@@ -88,7 +90,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@Path("/databases/{databaseId}/items/{itemId}/extra_data/artwork")
 	@GET
-	public Response artwork(@PathParam("databaseId") String databaseId, @PathParam("itemId") String itemId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception
+	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception
 	{
 		return libraryResource.artwork(databaseId, itemId, sessionId, revisionNumber, mw, mh);
 	}
@@ -96,7 +98,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@Path("/databases/{databaseId}/containers")
 	@GET
-	public Response playlists(@PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @QueryParam("meta") String meta) throws IOException
+	public Response playlists(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
 	{
 		return libraryResource.playlists(databaseId, sessionId, revisionNumber, delta, meta);
 	}
@@ -104,7 +106,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@Path("/databases/{databaseId}/containers/{containerId}/items")
 	@GET
-	public Response playlistSongs(@PathParam("containerId") String containerId, @PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("revision-number") String revisionNumber, @QueryParam("delta") String delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
+	public Response playlistSongs(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
 	{
 		return libraryResource.playlistSongs(containerId, databaseId, sessionId, revisionNumber, delta, meta, type, group_type, sort, include_sort_headers, query, index);
 	}
@@ -136,7 +138,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@Path("/databases/{databaseId}/items/{itemId}.{format}")
 	@GET
-	public Response song(@PathParam("databaseId") String databaseId, @PathParam("itemId") String itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
+	public Response song(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
 	{
 		return libraryResource.song(databaseId, itemId, format, rangeHeader);
 	}
@@ -149,16 +151,16 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 		return pairingResource.pair(pairingcode, servicename);
 	}
 
-	@Override
-	public Response login(@QueryParam("pairing-guid") String guid)
-	{
-		return remoteControlResource.login(guid);
-	}
+	// @Override
+	// public Response login(@QueryParam("pairing-guid") String guid)
+	// {
+	// return remoteControlResource.login(guid);
+	// }
 
 	@Override
 	@GET
 	@Path("logout")
-	public Response logout(@QueryParam("session-id") String sessionId)
+	public Response logout(@QueryParam("session-id") long sessionId)
 	{
 		Response libraryResponse = libraryResource.logout(sessionId);
 		Response remoteControlResponse = remoteControlResource.logout(sessionId);
@@ -168,7 +170,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@GET
 	@Path("ctrl-int/1/pause")
-	public String pause(@QueryParam("session-id") String session_id)
+	public String pause(@QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.pause(session_id);
 	}
@@ -176,7 +178,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@GET
 	@Path("ctrl-int/1/stop")
-	public String stop(@QueryParam("session-id") String session_id)
+	public String stop(@QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.stop(session_id);
 	}
@@ -184,7 +186,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@GET
 	@Path("ctrl-int/1/playpause")
-	public String playpause(@QueryParam("session-id") String session_id)
+	public String playpause(@QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.playpause(session_id);
 	}
@@ -192,7 +194,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@GET
 	@Path("ctrl-int/1/nextitem")
-	public String nextitem(@QueryParam("session-id") String session_id)
+	public String nextitem(@QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.nextitem(session_id);
 	}
@@ -200,7 +202,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@GET
 	@Path("ctrl-int/1/previtem")
-	public String previtem(@QueryParam("session-id") String session_id)
+	public String previtem(@QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.previtem(session_id);
 	}
@@ -208,47 +210,23 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@GET
 	@Path("ctrl-int/1/playlist")
-	public String playlist(@QueryParam("session-id") String session_id)
+	public String playlist(@QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.playlist(session_id);
 	}
 
 	@Override
 	@GET
-	@Path("ctrl-int/1/setproperty")
-	public String setproperty(@Context UriInfo uriInfo, @QueryParam("session-id") String session_id)
-	{
-		return remoteControlResource.setproperty(uriInfo, session_id);
-	}
-
-	@Override
-	@GET
-	@Path("ctrl-int/1/getproperty")
-	public String getproperty(@Context UriInfo uriInfo, @QueryParam("session-id") String session_id)
-	{
-		return remoteControlResource.getproperty(uriInfo, session_id);
-	}
-
-	@Override
-	@GET
 	@Path("ctrl-int/1/playstatusupdate")
-	public String playstatusupdate(@QueryParam("session-id") String session_id)
+	public String playstatusupdate(@QueryParam("revision-number") long revisionNumber, @QueryParam("session-id") long session_id)
 	{
-		return remoteControlResource.playstatusupdate(session_id);
-	}
-
-	@Override
-	@GET
-	@Path("ctrl-int/1/cue")
-	public String cue(@QueryParam("commmand") String command, @QueryParam("query") String query, @QueryParam("index") String index, @QueryParam("session-id") String session_id)
-	{
-		return remoteControlResource.cue(command, query, index, session_id);
+		return remoteControlResource.playstatusupdate(revisionNumber, session_id);
 	}
 
 	@Override
 	@GET
 	@Path("ctrl-int/1/getspeakers")
-	public String getspeakers(@QueryParam("session-id") String session_id)
+	public String getspeakers(@QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.getspeakers(session_id);
 	}
@@ -256,7 +234,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@GET
 	@Path("ctrl-int/1/setspeakers")
-	public String setspeakers(@QueryParam("speaker-id") String speaker_id, @QueryParam("session-id") String session_id)
+	public String setspeakers(@QueryParam("speaker-id") String speaker_id, @QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.setspeakers(speaker_id, session_id);
 	}
@@ -264,7 +242,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@GET
 	@Path("/ctrl-int/1/playspec")
-	public String playspec(@QueryParam("playlist-spec") String playlist_spec, @QueryParam("session-id") String session_id)
+	public String playspec(@QueryParam("playlist-spec") String playlist_spec, @QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.playspec(playlist_spec, session_id);
 	}
@@ -272,8 +250,40 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@Path("/databases/{databaseId}/groups")
 	@GET
-	public Response groups(@PathParam("databaseId") String databaseId, @QueryParam("session-id") String sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
+	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
 	{
 		return libraryResource.groups(databaseId, sessionId, meta, type, group_type, sort, include_sort_headers);
+	}
+
+	@Override
+	@GET
+	@Path("ctrl-int/1/setproperty")
+	public String setproperty(@Context UriInfo uriInfo, @QueryParam("dmcp.volume") String dmcpVolume, @QueryParam("dacp.playingtime") String dacpPlayingtime, @QueryParam("dacp.shufflestate") String dacpShufflestate, @QueryParam("dacp.repeatstate") String dacpRepeatstate, @QueryParam("session-id") long session_id)
+	{
+		return remoteControlResource.setproperty(uriInfo, dmcpVolume, dacpPlayingtime, dacpShufflestate, dacpRepeatstate, session_id);
+	}
+
+	@Override
+	@GET
+	@Path("ctrl-int/1/getproperty")
+	public String getproperty(@Context UriInfo uriInfo, @QueryParam("properties") String properties, @QueryParam("session-id") long session_id)
+	{
+		return remoteControlResource.getproperty(uriInfo, properties, session_id);
+	}
+
+	@Override
+	@GET
+	@Path("ctrl-int/1/cue")
+	public String cue(@QueryParam("commmand") String command, @QueryParam("query") String query, @QueryParam("index") String index, @QueryParam("sort") String sort, @QueryParam("session-id") long session_id)
+	{
+		return remoteControlResource.cue(command, query, index, sort, session_id);
+	}
+
+	@Override
+	@GET
+	@Path("/ctrl-int/1/nowplayingartwork")
+	public String nowplayingartwork(@QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("session-id") long session_id)
+	{
+		return nowplayingartwork(mw, mh, session_id);
 	}
 }

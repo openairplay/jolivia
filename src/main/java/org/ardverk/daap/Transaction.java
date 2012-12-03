@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * The Transaction object is the handle for a transaction. Methods off the transaction handle are used to abort and commit the transaction.
  * 
@@ -144,8 +143,7 @@ public class Transaction
 	 * Attach Object to Transaction. This is necessary for Objects that were constructed/modified independently from this transaction.
 	 */
 	@SuppressWarnings("unchecked")
-	public
-	synchronized void attach(Object obj)
+	public synchronized void attach(Object obj)
 	{
 		if(!txnMap.containsKey(obj))
 		{
@@ -179,8 +177,7 @@ public class Transaction
 	 * Returns true if Database or one of its Playlists was modified
 	 */
 	@SuppressWarnings("unchecked")
-	public
-	synchronized boolean modified(Database database)
+	public synchronized boolean modified(Database database)
 	{
 		if(txnMap.containsKey(database))
 		{

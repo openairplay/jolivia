@@ -1,4 +1,5 @@
 package org.dyndns.jkiddo;
+
 public class NotImplementedException extends RuntimeException
 {
 

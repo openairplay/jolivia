@@ -630,7 +630,7 @@ public class DaapParser extends HttpParser
 								if(!_host && _version != HttpVersion.HTTP_1_0 && _requestHandler != null)
 								{
 									LOG.debug("Nice try, Apple");
-									// Ignore - Apple apparently made it this way ... 
+									// Ignore - Apple apparently made it this way ...
 									// badMessage(buffer, HttpStatus.BAD_REQUEST_400, "No Host");
 									// return true;
 								}

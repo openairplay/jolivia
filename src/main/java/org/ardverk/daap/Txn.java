@@ -17,7 +17,6 @@
 
 package org.ardverk.daap;
 
-
 /**
  * A Txn is a internal implementation of a Transaction. As a user of these classes you can safely ignore this!
  * 

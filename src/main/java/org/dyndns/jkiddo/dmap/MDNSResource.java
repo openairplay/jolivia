@@ -10,7 +10,7 @@ public abstract class MDNSResource
 {
 	private JmmDNS mDNS;
 	protected Integer port;
-	
+
 	protected String hostname = InetAddress.getLocalHost().getHostName();
 
 	public MDNSResource(JmmDNS mDNS, Integer port) throws IOException

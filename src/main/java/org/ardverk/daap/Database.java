@@ -504,9 +504,8 @@ public class Database
 	 * @param playlistId
 	 * @return
 	 */
-	public Playlist getPlaylist(String itemId)
+	public Playlist getPlaylist(long playlistId)
 	{
-		long playlistId = Long.parseLong(itemId);
 		for(Playlist playlist : playlists)
 		{
 			if(playlist.getItemId() == playlistId)
@@ -517,5 +516,5 @@ public class Database
 
 		return null;
 	}
-	
+
 }

@@ -10,6 +10,6 @@ public interface IMusicStoreReader
 	public Collection<Song> readTunes() throws Exception;
 
 	public File getTune(Song tune) throws Exception;
-	
+
 	public String getLibraryName();
 }

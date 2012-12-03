@@ -1,17 +1,22 @@
 package org.dyndns.jkiddo.dacp.client;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+import javax.jmdns.JmDNS;
 import javax.jmdns.JmmDNS;
+import javax.jmdns.NetworkTopologyEvent;
+import javax.jmdns.NetworkTopologyListener;
+import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceInfo;
+import javax.jmdns.ServiceListener;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.dyndns.jkiddo.Jolivia;
@@ -25,7 +30,7 @@ import com.google.inject.name.Named;
 import com.sun.jersey.core.spi.factory.ResponseBuilderImpl;
 
 @Singleton
-public class PairingResource extends MDNSResource implements IPairingResource
+public class PairingResource extends MDNSResource implements IPairingResource, ServiceListener, NetworkTopologyListener
 {
 	/**
 	 * 
@@ -38,6 +43,7 @@ public class PairingResource extends MDNSResource implements IPairingResource
 	public PairingResource(JmmDNS mDNS, @Named(DACP_CLIENT_PORT_NAME) Integer port) throws IOException
 	{
 		super(mDNS, port);
+		mDNS.addNetworkTopologyListener(this);
 	}
 
 	public final static String REMOTE_TYPE = "_touch-remote._tcp.local.";
@@ -79,10 +85,7 @@ public class PairingResource extends MDNSResource implements IPairingResource
 		System.arraycopy(code, 0, PAIRING_RAW, 16, 8);
 		guidCode = toHex(code);
 
-		ResponseBuilder response = new ResponseBuilderImpl();
-		response.entity(PAIRING_RAW);
-		response.status(Status.OK);
-		return response.build();
+		return new ResponseBuilderImpl().entity(PAIRING_RAW).status(Status.OK).build();
 	}
 
 	@Override
@@ -91,11 +94,71 @@ public class PairingResource extends MDNSResource implements IPairingResource
 		final Map<String, String> values = new HashMap<String, String>();
 		values.put("DvNm", "Use 5309 as code for " + Jolivia.name);
 		values.put("RemV", "10000");
-		values.put("DvTy", "JKiddo Inc");
-		values.put("RemN", Jolivia.name + " Remote");
+		values.put("DvTy", "iPod");
+		values.put("RemN", "Remote");
 		values.put("txtvers", "1");
 		values.put("Pair", "0000000000000001");
 
 		return ServiceInfo.create(REMOTE_TYPE, DEVICE_ID, this.port, 0, 0, values);
+	}
+
+	@Override
+	public void inetAddressAdded(NetworkTopologyEvent event)
+	{
+		JmDNS mdns = event.getDNS();
+		InetAddress address = event.getInetAddress();
+
+		// Start listening for DACP servers on this interface
+		mdns.addServiceListener(REMOTE_TYPE, this);
+		try
+		{
+			mdns.registerService(registerServerRemote());
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void inetAddressRemoved(NetworkTopologyEvent event)
+	{
+		JmDNS mdns = event.getDNS();
+		mdns.removeServiceListener(REMOTE_TYPE, this);
+		mdns.unregisterAllServices();
+	}
+
+	@Override
+	public void serviceAdded(ServiceEvent event)
+	{
+		final String serviceName = event.getName();
+		final ServiceInfo info = event.getDNS().getServiceInfo(event.getType(), event.getName());
+		updateService(serviceName, info);
+	}
+
+	private void updateService(String serviceName, ServiceInfo serviceInfo)
+	{
+		final String libraryName = serviceInfo.getPropertyString("CtlN");
+		final String address = serviceInfo.getHostAddresses()[0];
+		final String library = serviceInfo.getPropertyString("DbId");
+		final String libraryType = serviceInfo.getPropertyString("DvTy");
+		final int port = serviceInfo.getPort();
+		
+	}
+
+	@Override
+	public void serviceRemoved(ServiceEvent event)
+	{
+		final String serviceName = event.getName();
+		final ServiceInfo info = event.getInfo();
+
+	}
+
+	@Override
+	public void serviceResolved(ServiceEvent event)
+	{
+		final String serviceName = event.getName();
+		final ServiceInfo serviceInfo = event.getInfo();
+		updateService(serviceName, serviceInfo);
 	}
 }

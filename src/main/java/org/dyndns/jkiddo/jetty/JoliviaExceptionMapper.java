@@ -4,17 +4,21 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.inject.Singleton;
 
 @Provider
 @Singleton
-public class JoliviaExceptionMapper implements ExceptionMapper<Exception>
+public class JoliviaExceptionMapper implements ExceptionMapper<Throwable>
 {
+	final static Logger logger = LoggerFactory.getLogger(JoliviaExceptionMapper.class);
 
 	@Override
-	public Response toResponse(Exception exception)
+	public Response toResponse(Throwable exception)
 	{
-		// TODO Auto-generated method stub
+		logger.warn(exception.getMessage(), exception);
 		return null;
 	}
 

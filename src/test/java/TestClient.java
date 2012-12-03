@@ -17,19 +17,19 @@ public class TestClient
 	public final static String REMOTE_TYPE = "_touch-remote._tcp.local.";
 	public final static String DEVICE_ID = "0000000000000000000000000000000000000010";
 
-//	@Test
-//	public void setupTestClient() throws Exception
-//	{
-//		Server server = new Server(PAIRING_SERVER_PORT);
-//		ServletContextHandler handler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-//		handler.setContextPath("/");
-//		handler.addServlet(new ServletHolder(new PairingResource(null, null)), "/");
-//		server.setHandler(handler);
-//		server.start();
-//
-//		registerClientRemote();
-//		server.join();
-//	}
+	// @Test
+	// public void setupTestClient() throws Exception
+	// {
+	// Server server = new Server(PAIRING_SERVER_PORT);
+	// ServletContextHandler handler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+	// handler.setContextPath("/");
+	// handler.addServlet(new ServletHolder(new PairingResource(null, null)), "/");
+	// server.setHandler(handler);
+	// server.start();
+	//
+	// registerClientRemote();
+	// server.join();
+	// }
 
 	private void registerClientRemote() throws IOException
 	{
