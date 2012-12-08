@@ -26,7 +26,6 @@ import com.google.inject.name.Named;
 public class RemoteControlResource extends MDNSResource implements IRemoteControlResource
 {
 	public static final String DACP_SERVER_PORT_NAME = "DACP_SERVER_PORT_NAME";
-	public final static String TOUCH_ABLE_TYPE = "_touch-able._tcp.local.";
 
 	@Inject
 	public RemoteControlResource(JmmDNS mDNS, @Named(DACP_SERVER_PORT_NAME) Integer port) throws IOException
@@ -166,7 +165,7 @@ public class RemoteControlResource extends MDNSResource implements IRemoteContro
 	}
 
 	@Override
-	protected ServiceInfo registerServerRemote()
+	protected ServiceInfo getServiceToRegister()
 	{
 		String hash = Integer.toHexString(hostname.hashCode()).toUpperCase();
 		hash = (hash + hash).substring(0, 13);

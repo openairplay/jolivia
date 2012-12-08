@@ -13,7 +13,8 @@ import javax.ws.rs.core.Response;
 
 public interface ILibraryResource
 {
-
+	public static final String DAAP_SERVICE_TYPE = "_daap._tcp.local.";
+	
 	@Path("/server-info")
 	@GET
 	Response serverInfo() throws IOException;

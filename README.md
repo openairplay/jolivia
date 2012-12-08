@@ -25,3 +25,7 @@ A Java application/library implementation of the DMAP family (DAAP, DACP, DPAP) 
 
 ## Far future functionality ##
  * DLNA/DMAP Gateway translation.
+ 
+This project is licensed under the license presented in the license.txt file with exception to code in the namespace org.ardverk.daap.*, which is licensed under the Apache License 2.0 (LICENSE-2.0.txt)
+
+Copyright 2012 [Jens Kristian Villadsen](http://www.genuswillehadus.net). 

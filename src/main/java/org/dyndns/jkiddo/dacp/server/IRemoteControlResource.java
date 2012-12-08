@@ -12,7 +12,8 @@ import javax.ws.rs.core.UriInfo;
 
 public interface IRemoteControlResource
 {
-
+	public final static String TOUCH_ABLE_TYPE = "_touch-able._tcp.local.";
+	
 	@GET
 	@Path("login")
 	Response login(@Context HttpServletRequest httpServletRequest, @QueryParam("pairing-guid") String guid) throws IOException;

@@ -3,6 +3,7 @@ package org.dyndns.jkiddo.dmap;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -34,9 +35,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 
 	@Inject
 	public DMAPInterface()
-	{
-		System.out.println();
-	}
+	{}
 
 	@Override
 	@Path("/server-info")
@@ -146,9 +145,9 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@GET
 	@Path("pair")
-	public Response pair(@QueryParam("pairingcode") String pairingcode, @QueryParam("servicename") String servicename)
+	public Response pair(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairingcode") String pairingcode, @QueryParam("servicename") String servicename) throws IOException
 	{
-		return pairingResource.pair(pairingcode, servicename);
+		return pairingResource.pair(httpServletRequest, httpServletResponse, pairingcode, servicename);
 	}
 
 	// @Override

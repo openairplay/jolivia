@@ -27,7 +27,7 @@ public class Jolivia
 	{
 		new Jolivia();
 	}
-	static int port = 3689;
+	static int port = 4001;
 
 	public Jolivia() throws Exception
 	{

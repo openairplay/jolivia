@@ -22,8 +22,8 @@ public abstract class MDNSResource
 
 	void registerService() throws IOException
 	{
-		mDNS.registerService(registerServerRemote());
+		mDNS.registerService(getServiceToRegister());
 	}
 
-	abstract protected ServiceInfo registerServerRemote();
+	abstract protected ServiceInfo getServiceToRegister();
 }

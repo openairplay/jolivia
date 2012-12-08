@@ -80,7 +80,6 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 	@Inject
 	LibraryManager libraryManager;
 
-	private static final String DAAP_SERVICE_TYPE = "_daap._tcp.local.";
 	private static final String TXT_VERSION = "1";
 	private static final String TXT_VERSION_KEY = "txtvers";
 	private static final String DATABASE_ID_KEY = "Database ID";
@@ -104,7 +103,7 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 	}
 
 	@Override
-	protected ServiceInfo registerServerRemote()
+	protected ServiceInfo getServiceToRegister()
 	{
 		String hash = Integer.toHexString(hostname.hashCode()).toUpperCase();
 		hash = (hash + hash).substring(0, 13);
