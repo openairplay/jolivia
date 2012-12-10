@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2012 Jens Kristian Villadsen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Jens Kristian Villadsen - initial API and implementation
+ ******************************************************************************/
 package org.dyndns.jkiddo.dacp.client;
 
 import java.io.IOException;
@@ -44,7 +54,6 @@ public class PairingResource extends MDNSResource implements IPairingResource
 
 	public final static String DEVICE_ID = "0000000000000000000000000000000000000010";
 
-	private static final byte[] CHAR_TABLE = new byte[] { (byte) '0', (byte) '1', (byte) '2', (byte) '3', (byte) '4', (byte) '5', (byte) '6', (byte) '7', (byte) '8', (byte) '9', (byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E', (byte) 'F' };
 	private static final byte[] PAIRING_RAW = new byte[] { 0x63, 0x6d, 0x70, 0x61, 0x00, 0x00, 0x00, 0x3a, 0x63, 0x6d, 0x70, 0x67, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x63, 0x6d, 0x6e, 0x6d, 0x00, 0x00, 0x00, 0x16, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x69, 0x73, 0x74, 0x72, 0x61, 0x74, 0x6f, 0x72, (byte) 0xe2, (byte) 0x80, (byte) 0x99, 0x73, 0x20, 0x69, 0x50, 0x6f, 0x64, 0x63, 0x6d, 0x74, 0x79, 0x00, 0x00, 0x00, 0x04, 0x69, 0x50, 0x6f, 0x64 };
 	private String guidCode;
 
@@ -53,17 +62,12 @@ public class PairingResource extends MDNSResource implements IPairingResource
 		return guidCode;
 	}
 
-	private static String toHex(byte[] code)
+	public static String bytArrayToHex(byte[] a)
 	{
-		byte[] result = new byte[2 * code.length];
-		int index = 0;
-		for(byte b : code)
-		{
-			int v = b & 0xff;
-			result[index++] = CHAR_TABLE[v >>> 4];
-			result[index++] = CHAR_TABLE[v & 0xf];
-		}
-		return new String(result);
+		StringBuilder sb = new StringBuilder();
+		for(byte b : a)
+			sb.append(String.format("%02x", b & 0xff));
+		return sb.toString().toUpperCase();
 	}
 
 	@Override
@@ -76,21 +80,7 @@ public class PairingResource extends MDNSResource implements IPairingResource
 		byte[] code = new byte[8];
 		new Random().nextBytes(code);
 		System.arraycopy(code, 0, PAIRING_RAW, 16, 8);
-		guidCode = toHex(code);
-		
-//		httpServletResponse.reset();
-		httpServletResponse.getOutputStream().write(PAIRING_RAW);
-		httpServletResponse.setStatus(Status.OK.getStatusCode());
-		httpServletResponse.setContentType("application/octet-stream");
-		httpServletResponse.getOutputStream().flush();
-		httpServletResponse.getOutputStream().close();
-//		if(httpServletResponse.isCommitted())
-//			System.out.println("");
-//		httpServletResponse.getWriter().write(new String(PAIRING_RAW));
-//		httpServletResponse.getWriter().flush();
-//		httpServletResponse.getOutputStream().close();
-		System.out.println();
-//		return null;
+		guidCode = bytArrayToHex(code);
 		return new ResponseBuilderImpl().entity(PAIRING_RAW).status(Status.OK).build();
 	}
 

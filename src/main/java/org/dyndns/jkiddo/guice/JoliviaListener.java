@@ -1,3 +1,13 @@
+/*******************************************************************************
+ * Copyright (c) 2012 Jens Kristian Villadsen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Jens Kristian Villadsen - initial API and implementation
+ ******************************************************************************/
 package org.dyndns.jkiddo.guice;
 
 import javax.jmdns.JmmDNS;
@@ -6,6 +16,7 @@ import org.dyndns.jkiddo.daap.server.ILibraryResource;
 import org.dyndns.jkiddo.daap.server.LibraryManager;
 import org.dyndns.jkiddo.daap.server.LibraryResource;
 import org.dyndns.jkiddo.dacp.client.IPairingResource;
+import org.dyndns.jkiddo.dacp.client.PairingDaemon;
 import org.dyndns.jkiddo.dacp.client.PairingResource;
 import org.dyndns.jkiddo.dacp.server.IRemoteControlResource;
 import org.dyndns.jkiddo.dacp.server.RemoteControlResource;
@@ -48,6 +59,7 @@ public class JoliviaListener extends GuiceServletContextListener
 				bind(Integer.class).annotatedWith(Names.named(RemoteControlResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);
 
 				bind(LibraryManager.class);
+				bind(PairingDaemon.class).asEagerSingleton();
 				bind(ILibraryResource.class).to(LibraryResource.class);
 				bind(IPairingResource.class).to(PairingResource.class);
 				bind(IRemoteControlResource.class).to(RemoteControlResource.class);
