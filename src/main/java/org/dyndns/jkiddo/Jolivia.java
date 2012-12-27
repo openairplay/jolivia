@@ -28,7 +28,7 @@ import com.google.inject.servlet.GuiceFilter;
 
 public class Jolivia
 {
-	public static final String name = "joliva";
+	public static final String name = "joliv1a";
 	static Logger logger = LoggerFactory.getLogger(Jolivia.class);
 	// http://randomizedsort.blogspot.dk/2011/05/using-guice-ified-jersey-in-embedded.html
 	// http://blog.palominolabs.com/2011/08/15/a-simple-java-web-stack-with-guice-jetty-jersey-and-jackson/
@@ -37,7 +37,7 @@ public class Jolivia
 	{
 		new Jolivia();
 	}
-	static int port = 4001;
+	static int port = 4002;
 
 	public Jolivia() throws Exception
 	{

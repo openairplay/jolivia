@@ -155,9 +155,9 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@GET
 	@Path("pair")
-	public Response pair(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairingcode") String pairingcode, @QueryParam("servicename") String servicename) throws IOException
+	public Response pair(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairingcode") String pairingcode, @QueryParam("servicename") String servicename) throws IOException
 	{
-		return pairingResource.pair(httpServletRequest, httpServletResponse, pairingcode, servicename);
+		return pairingResource.pair(uri, httpServletRequest, httpServletResponse, pairingcode, servicename);
 	}
 
 	// @Override
@@ -251,9 +251,9 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@GET
 	@Path("/ctrl-int/1/playspec")
-	public String playspec(@QueryParam("playlist-spec") String playlist_spec, @QueryParam("session-id") long session_id)
+	public String playspec(@QueryParam("container-item-spec") String container_item_spec, @QueryParam("item-spec") String item_spec, @QueryParam("container-spec") String container_spec, @QueryParam("dacp.shufflestate") String dacp_shufflestate, @QueryParam("database-spec") String database_spec, @QueryParam("playlist-spec") String playlist_spec, @QueryParam("session-id") long session_id)
 	{
-		return remoteControlResource.playspec(playlist_spec, session_id);
+		return remoteControlResource.playspec(container_item_spec, item_spec, container_spec, dacp_shufflestate, database_spec, playlist_spec, session_id);
 	}
 
 	@Override
@@ -294,5 +294,21 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	public String nowplayingartwork(@QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("session-id") long session_id)
 	{
 		return nowplayingartwork(mw, mh, session_id);
+	}
+
+	@Override
+	@GET
+	@Path("/ctrl-int/1/set-genius-seed")
+	public String editGenius(@QueryParam("database-spec") String database_spec, @QueryParam("item-spec") String item_spec, @QueryParam("session-id") long session_id)
+	{
+		return remoteControlResource.editGenius(database_spec, item_spec, session_id);
+	}
+
+	@Override
+	@Path("/databases/{databaseId}/edit")
+	@GET
+	public String editPlaylist(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("action") String action, @QueryParam("edit-params") String edit_params) throws IOException
+	{
+		return remoteControlResource.editPlaylist(databaseId, sessionId, action, edit_params);
 	}
 }

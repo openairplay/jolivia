@@ -12,28 +12,62 @@ package org.dyndns.jkiddo.dmap;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
 
+import javax.jmdns.JmDNS;
 import javax.jmdns.JmmDNS;
+import javax.jmdns.NetworkTopologyEvent;
+import javax.jmdns.NetworkTopologyListener;
 import javax.jmdns.ServiceInfo;
 
-public abstract class MDNSResource
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public abstract class MDNSResource implements NetworkTopologyListener
 {
 	private JmmDNS mDNS;
 	protected Integer port;
 
+	public static final Logger logger = LoggerFactory.getLogger(MDNSResource.class);
+	private Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
 	protected String hostname = InetAddress.getLocalHost().getHostName();
+	private ServiceInfo serviceInfo;
 
 	public MDNSResource(JmmDNS mDNS, Integer port) throws IOException
 	{
 		this.mDNS = mDNS;
 		this.port = port;
-		registerService();
-	}
-
-	void registerService() throws IOException
-	{
-		mDNS.registerService(getServiceToRegister());
+		this.mDNS.addNetworkTopologyListener(this);
+		serviceInfo = getServiceToRegister();
 	}
 
 	abstract protected ServiceInfo getServiceToRegister();
+
+	@Override
+	public void inetAddressAdded(NetworkTopologyEvent event)
+	{
+		JmDNS mdns = event.getDNS();
+		InetAddress address = event.getInetAddress();
+		try
+		{
+			logger.info("Registering service: " + serviceInfo.getQualifiedName());
+			mdns.registerService(serviceInfo);
+		}
+		catch(IOException e)
+		{
+			logger.error(e.getMessage(), e);
+			e.printStackTrace();
+		}
+		interfaces.put(mdns, address);
+	}
+
+	@Override
+	public void inetAddressRemoved(NetworkTopologyEvent event)
+	{
+		JmDNS mdns = event.getDNS();
+		mdns.unregisterService(serviceInfo);
+		mdns.unregisterAllServices();
+		interfaces.remove(mdns);
+	}
 }

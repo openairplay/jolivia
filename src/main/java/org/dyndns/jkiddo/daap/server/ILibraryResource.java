@@ -24,7 +24,7 @@ import javax.ws.rs.core.Response;
 public interface ILibraryResource
 {
 	public static final String DAAP_SERVICE_TYPE = "_daap._tcp.local.";
-	
+
 	@Path("/server-info")
 	@GET
 	Response serverInfo() throws IOException;
@@ -57,6 +57,14 @@ public interface ILibraryResource
 	@GET
 	Response playlistSongs(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException;
 
+	@Path("/databases/{databaseId}/items/{itemId}.{format}")
+	@GET
+	Response song(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception;
+
+	@Path("/databases/{databaseId}/items/{itemId}/extra_data/artwork")
+	@GET
+	Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception;
+
 	@Path("/content-codes")
 	@GET
 	Response contentCodes() throws IOException;
@@ -68,13 +76,4 @@ public interface ILibraryResource
 	@Path("/resolve")
 	@GET
 	Response resolve();
-
-	@Path("/databases/{databaseId}/items/{itemId}.{format}")
-	@GET
-	Response song(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception;
-
-	@Path("/databases/{databaseId}/items/{itemId}/extra_data/artwork")
-	@GET
-	Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception;
-
 }

@@ -67,7 +67,7 @@ public class LibraryManager
 	{
 		NO_PASSWORD, PASSWORD, USERNAME_AND_PASSWORD
 	}
-	
+
 	@SuppressWarnings("unused")
 	public int getRevision(String remoteHost, long session_id)
 	{
@@ -103,8 +103,8 @@ public class LibraryManager
 
 	public File getTune(long databaseId, long itemId) throws Exception
 	{
-		IMusicStoreReader reader = songToReader.get(new Integer((int)itemId));
-		Song song = library.getDatabase(databaseId+"").getSong(itemId+"");
+		IMusicStoreReader reader = songToReader.get(new Integer((int) itemId));
+		Song song = library.getDatabase(databaseId + "").getSong(itemId + "");
 		return reader.getTune(song);
 	}
 
@@ -115,7 +115,7 @@ public class LibraryManager
 
 	public Database getDatabase(long databaseId)
 	{
-		return library.getDatabase(databaseId+"");
+		return library.getDatabase(databaseId + "");
 	}
 
 	public void waitForUpdate()

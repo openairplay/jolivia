@@ -19,6 +19,7 @@ import javax.jmdns.ServiceInfo;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MultivaluedMap;
@@ -169,7 +170,31 @@ public class RemoteControlResource extends MDNSResource implements IRemoteContro
 	@Override
 	@GET
 	@Path("/ctrl-int/1/playspec")
-	public String playspec(@QueryParam("playlist-spec") final String playlist_spec, @QueryParam("session-id") final long session_id)
+	public String playspec(@QueryParam("container-item-spec") String container_item_spec, @QueryParam("item-spec") String item_spec, @QueryParam("container-spec") String container_spec, @QueryParam("dacp.shufflestate") String dacp_shufflestate, @QueryParam("database-spec") String database_spec, @QueryParam("playlist-spec") String playlist_spec, @QueryParam("session-id") long session_id)
+	{
+		throw new NotImplementedException();
+	}
+
+	@Override
+	@GET
+	@Path("/ctrl-int/1/nowplayingartwork")
+	public String nowplayingartwork(@QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("session-id") long session_id)
+	{
+		throw new NotImplementedException();
+	}
+
+	@Override
+	@GET
+	@Path("/ctrl-int/1/set-genius-seed")
+	public String editGenius(@QueryParam("database-spec") String database_spec, @QueryParam("item-spec") String item_spec, @QueryParam("session-id") long session_id)
+	{
+		throw new NotImplementedException();
+	}
+
+	@Override
+	@Path("/databases/{databaseId}/edit")
+	@GET
+	public String editPlaylist(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("action") String action, @QueryParam("edit-params") String edit_params) throws IOException
 	{
 		throw new NotImplementedException();
 	}
@@ -190,14 +215,5 @@ public class RemoteControlResource extends MDNSResource implements IRemoteContro
 		records.put("DbId", hash);
 
 		return ServiceInfo.create(TOUCH_ABLE_TYPE, hash, port, 0, 0, records);
-	}
-
-	@Override
-	@GET
-	@Path("/ctrl-int/1/nowplayingartwork")
-	public
-	String nowplayingartwork(@QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("session-id") long session_id)
-	{
-		throw new NotImplementedException();
 	}
 }

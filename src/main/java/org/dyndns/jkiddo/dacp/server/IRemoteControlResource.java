@@ -15,6 +15,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
@@ -22,8 +23,9 @@ import javax.ws.rs.core.UriInfo;
 
 public interface IRemoteControlResource
 {
+	public final static String DACP_TYPE = "_dacp._tcp.local.";
 	public final static String TOUCH_ABLE_TYPE = "_touch-able._tcp.local.";
-	
+
 	@GET
 	@Path("login")
 	Response login(@Context HttpServletRequest httpServletRequest, @QueryParam("pairing-guid") String guid) throws IOException;
@@ -62,7 +64,7 @@ public interface IRemoteControlResource
 
 	@GET
 	@Path("ctrl-int/1/getproperty")
-	String getproperty(@Context UriInfo uriInfo, @QueryParam("properties") String properties ,@QueryParam("session-id") long session_id);
+	String getproperty(@Context UriInfo uriInfo, @QueryParam("properties") String properties, @QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int/1/playstatusupdate")
@@ -82,9 +84,17 @@ public interface IRemoteControlResource
 
 	@GET
 	@Path("/ctrl-int/1/playspec")
-	String playspec(@QueryParam("playlist-spec") String playlist_spec, @QueryParam("session-id") long session_id);
-	
+	String playspec(@QueryParam("container-item-spec") String container_item_spec, @QueryParam("item-spec") String item_spec, @QueryParam("container-spec") String container_spec, @QueryParam("dacp.shufflestate") String dacp_shufflestate, @QueryParam("database-spec") String database_spec, @QueryParam("playlist-spec") String playlist_spec, @QueryParam("session-id") long session_id);
+
 	@GET
 	@Path("/ctrl-int/1/nowplayingartwork")
 	String nowplayingartwork(@QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("session-id") long session_id);
+
+	@GET
+	@Path("/ctrl-int/1/set-genius-seed")
+	String editGenius(@QueryParam("database-spec") String database_spec, @QueryParam("item-spec") String item_spec, @QueryParam("session-id") long session_id);
+
+	@Path("/databases/{databaseId}/edit")
+	@GET
+	String editPlaylist(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("action") String action, @QueryParam("edit-params") String edit_params) throws IOException;
 }

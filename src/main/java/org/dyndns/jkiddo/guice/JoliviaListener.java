@@ -25,6 +25,8 @@ import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
 import org.dyndns.jkiddo.jetty.ProxyFilter;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
+import org.tunesremote.IDatabase;
+import org.tunesremote.PairingDatabase;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -59,6 +61,7 @@ public class JoliviaListener extends GuiceServletContextListener
 				bind(Integer.class).annotatedWith(Names.named(RemoteControlResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);
 
 				bind(LibraryManager.class);
+				bind(IDatabase.class).toInstance(new PairingDatabase());
 				bind(PairingDaemon.class).asEagerSingleton();
 				bind(ILibraryResource.class).to(LibraryResource.class);
 				bind(IPairingResource.class).to(PairingResource.class);
