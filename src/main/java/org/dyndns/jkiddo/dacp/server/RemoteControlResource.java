@@ -42,6 +42,7 @@ public class RemoteControlResource extends MDNSResource implements IRemoteContro
 	public RemoteControlResource(JmmDNS mDNS, @Named(DACP_SERVER_PORT_NAME) Integer port) throws IOException
 	{
 		super(mDNS, port);
+		this.registerServiceInfo();
 	}
 
 	@Override
@@ -200,7 +201,7 @@ public class RemoteControlResource extends MDNSResource implements IRemoteContro
 	}
 
 	@Override
-	protected ServiceInfo getServiceToRegister()
+	protected ServiceInfo getServiceInfoToRegister()
 	{
 		String hash = Integer.toHexString(hostname.hashCode()).toUpperCase();
 		hash = (hash + hash).substring(0, 13);

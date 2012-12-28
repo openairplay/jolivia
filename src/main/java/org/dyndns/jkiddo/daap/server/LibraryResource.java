@@ -110,10 +110,11 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 	{
 		super(mDNS, port);
 		this.libraryManager = libraryManager;
+		this.registerServiceInfo();
 	}
 
 	@Override
-	protected ServiceInfo getServiceToRegister()
+	protected ServiceInfo getServiceInfoToRegister()
 	{
 		String hash = Integer.toHexString(hostname.hashCode()).toUpperCase();
 		hash = (hash + hash).substring(0, 13);

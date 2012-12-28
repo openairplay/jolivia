@@ -56,6 +56,7 @@ public class JoliviaListener extends GuiceServletContextListener
 				Multibinder<IMusicStoreReader> multibinder = Multibinder.newSetBinder(binder(), IMusicStoreReader.class);
 				multibinder.addBinding().to(DeskMusicStoreReader.class).asEagerSingleton();
 
+				bind(String.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PAIRING_CODE)).toInstance("1337");
 				bind(Integer.class).annotatedWith(Names.named(LibraryResource.DAAP_PORT_NAME)).toInstance(hostingPort);
 				bind(Integer.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PORT_NAME)).toInstance(hostingPort);
 				bind(Integer.class).annotatedWith(Names.named(RemoteControlResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);

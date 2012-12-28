@@ -30,8 +30,8 @@ public abstract class MDNSResource implements NetworkTopologyListener
 	protected Integer port;
 
 	public static final Logger logger = LoggerFactory.getLogger(MDNSResource.class);
-	private Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
-	protected String hostname = InetAddress.getLocalHost().getHostName();
+	private final Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
+	protected final String hostname = InetAddress.getLocalHost().getHostName();
 	private ServiceInfo serviceInfo;
 
 	public MDNSResource(JmmDNS mDNS, Integer port) throws IOException
@@ -39,13 +39,22 @@ public abstract class MDNSResource implements NetworkTopologyListener
 		this.mDNS = mDNS;
 		this.port = port;
 		this.mDNS.addNetworkTopologyListener(this);
-		serviceInfo = getServiceToRegister();
 	}
 
-	abstract protected ServiceInfo getServiceToRegister();
+	abstract protected ServiceInfo getServiceInfoToRegister();
+
+	protected synchronized void registerServiceInfo() throws IOException
+	{
+		serviceInfo = getServiceInfoToRegister();
+
+		for(JmDNS mdns : interfaces.keySet())
+		{
+			mdns.registerService(serviceInfo);
+		}
+	}
 
 	@Override
-	public void inetAddressAdded(NetworkTopologyEvent event)
+	public synchronized void inetAddressAdded(NetworkTopologyEvent event)
 	{
 		JmDNS mdns = event.getDNS();
 		InetAddress address = event.getInetAddress();
@@ -57,13 +66,12 @@ public abstract class MDNSResource implements NetworkTopologyListener
 		catch(IOException e)
 		{
 			logger.error(e.getMessage(), e);
-			e.printStackTrace();
 		}
 		interfaces.put(mdns, address);
 	}
 
 	@Override
-	public void inetAddressRemoved(NetworkTopologyEvent event)
+	public synchronized void inetAddressRemoved(NetworkTopologyEvent event)
 	{
 		JmDNS mdns = event.getDNS();
 		mdns.unregisterService(serviceInfo);

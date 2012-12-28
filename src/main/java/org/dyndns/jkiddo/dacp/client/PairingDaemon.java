@@ -26,7 +26,6 @@ import org.dyndns.jkiddo.dacp.server.IRemoteControlResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tunesremote.IDatabase;
-import org.tunesremote.daap.Library;
 import org.tunesremote.daap.Session;
 
 import com.google.inject.Inject;
