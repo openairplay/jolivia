@@ -25,7 +25,7 @@
 
 package org.tunesremote;
 
-import org.tunesremote.daap.Response;
+import org.dyndns.jkiddo.daap.client.Response;
 
 /**
  * Interface used to process a binary HTTP response from the HTTP Server and look for specific tag values. When complete the searchDone() method is used as a callback to let the UI know it is complete.

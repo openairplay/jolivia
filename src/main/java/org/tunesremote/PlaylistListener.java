@@ -25,7 +25,7 @@
 
 package org.tunesremote;
 
-import org.tunesremote.daap.Playlist;
+import org.dyndns.jkiddo.daap.client.Playlist;
 
 /**
  * Interface used to process playlists. When complete the searchDone() method is used as a callback to let the UI know it is complete.

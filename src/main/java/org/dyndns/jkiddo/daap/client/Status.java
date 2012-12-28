@@ -23,7 +23,7 @@
     All Rights Reserved.
  */
 
-package org.tunesremote.daap;
+package org.dyndns.jkiddo.daap.client;
 
 import android.graphics.Bitmap;
 import android.os.Handler;

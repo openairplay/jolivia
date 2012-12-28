@@ -1,4 +1,4 @@
-package org.tunesremote;
+package org.dyndns.jkiddo.dacp.client;
 
 public interface IDatabase
 {

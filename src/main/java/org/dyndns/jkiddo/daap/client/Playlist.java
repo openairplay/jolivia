@@ -22,7 +22,7 @@
     Copyright (C) 2008. Jeffrey Sharkey, http://jsharkey.org/
     All Rights Reserved.
  */
-package org.tunesremote.daap;
+package org.dyndns.jkiddo.daap.client;
 
 /**
  * POJO representing a Playlist object.

@@ -34,7 +34,6 @@ import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.dmap.MDNSResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tunesremote.IDatabase;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -77,10 +76,10 @@ public class PairingResource extends MDNSResource implements IPairingResource
 
 	private static final byte[] PAIRING_RAW = new byte[] { 0x63, 0x6d, 0x70, 0x61, 0x00, 0x00, 0x00, 0x3a, 0x63, 0x6d, 0x70, 0x67, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x63, 0x6d, 0x6e, 0x6d, 0x00, 0x00, 0x00, 0x16, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x69, 0x73, 0x74, 0x72, 0x61, 0x74, 0x6f, 0x72, (byte) 0xe2, (byte) 0x80, (byte) 0x99, 0x73, 0x20, 0x69, 0x50, 0x6f, 0x64, 0x63, 0x6d, 0x74, 0x79, 0x00, 0x00, 0x00, 0x04, 0x69, 0x50, 0x6f, 0x64 };
 
-	public static String byteArrayToHex(byte[] a)
+	public static String toHex(byte[] code)
 	{
 		StringBuilder sb = new StringBuilder();
-		for(byte b : a)
+		for(byte b : code)
 		{
 			sb.append(String.format("%02x", b & 0xff));
 		}
@@ -98,11 +97,11 @@ public class PairingResource extends MDNSResource implements IPairingResource
 
 		if(expectedPairingCode(actualCode, database.getPairCode()).equals(pairingcode))
 		{
-			database.updateCode(servicename, byteArrayToHex(code));
+			database.updateCode(servicename, toHex(code));
 			return new ResponseBuilderImpl().entity(PAIRING_RAW).status(Status.OK).build();
 		}
 		// TODO Response is not correct according to iTunes - it is however better than nothing.
-		return new ResponseBuilderImpl().status(Status.UNAUTHORIZED).build();
+		return new ResponseBuilderImpl().status(Status.SERVICE_UNAVAILABLE).build();
 	}
 
 	@Override
@@ -131,6 +130,6 @@ public class PairingResource extends MDNSResource implements IPairingResource
 			os.write(0);
 		}
 
-		return byteArrayToHex(md5.digest(os.toByteArray()));
+		return toHex(md5.digest(os.toByteArray()));
 	}
 }

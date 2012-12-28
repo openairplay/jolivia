@@ -1,4 +1,4 @@
-package org.tunesremote;
+package org.dyndns.jkiddo.dacp.client;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -166,15 +166,11 @@ public class PairingDatabase implements IDatabase
 
 	public static String toHex(byte[] code)
 	{
-		// somewhat borrowed from rgagnon.com
-		byte[] result = new byte[2 * code.length];
-		int index = 0;
+		StringBuilder sb = new StringBuilder();
 		for(byte b : code)
 		{
-			int v = b & 0xff;
-			result[index++] = CHAR_TABLE[v >>> 4];
-			result[index++] = CHAR_TABLE[v & 0xf];
+			sb.append(String.format("%02x", b & 0xff));
 		}
-		return new String(result);
+		return sb.toString().toUpperCase();
 	}
 }

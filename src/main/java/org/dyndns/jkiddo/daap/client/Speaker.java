@@ -23,7 +23,7 @@
     Copyright (C) 2008. Jeffrey Sharkey, http://jsharkey.org/
     All Rights Reserved.
  */
-package org.tunesremote.daap;
+package org.dyndns.jkiddo.daap.client;
 
 /**
  * Representation of a speaker as can be constructed from the response of the <code>getspeakers</code> DACP call

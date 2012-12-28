@@ -23,7 +23,7 @@
     All Rights Reserved.
  */
 
-package org.tunesremote.daap;
+package org.dyndns.jkiddo.daap.client;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;

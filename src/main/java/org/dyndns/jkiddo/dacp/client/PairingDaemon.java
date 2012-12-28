@@ -19,14 +19,12 @@ import javax.jmdns.JmmDNS;
 import javax.jmdns.NetworkTopologyEvent;
 import javax.jmdns.NetworkTopologyListener;
 import javax.jmdns.ServiceEvent;
-import javax.jmdns.ServiceInfo;
 import javax.jmdns.ServiceListener;
 
+import org.dyndns.jkiddo.daap.client.Session;
 import org.dyndns.jkiddo.dacp.server.IRemoteControlResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tunesremote.IDatabase;
-import org.tunesremote.daap.Session;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -36,26 +34,23 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener
 {
 	public static final Logger logger = LoggerFactory.getLogger(PairingDaemon.class);
 
-	private JmmDNS mDNS;
-
-	private Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
-
-	private IDatabase database;
+	private final JmmDNS mDNS;
+	private final Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
+	private final IDatabase database;
 
 	@Inject
 	public PairingDaemon(JmmDNS mDNS, IDatabase database)
 	{
 		this.mDNS = mDNS;
-		this.mDNS.addNetworkTopologyListener(this);
 		this.database = database;
+
+		this.mDNS.addNetworkTopologyListener(this);
 	}
 
 	@Override
 	public void serviceAdded(ServiceEvent event)
 	{
 		logger.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
-		final String serviceName = event.getName();
-		final ServiceInfo info = event.getDNS().getServiceInfo(event.getType(), event.getName());
 	}
 
 	@Override
@@ -67,21 +62,19 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener
 	@Override
 	public void serviceResolved(ServiceEvent event)
 	{
-		logger.info("RESOLVED: " + event.getInfo());
-		final String serviceName = event.getName();
-		final ServiceInfo serviceInfo = event.getInfo();
+		logger.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
 
-		final String code = database.findCode(serviceInfo.getName());
+		final String code = database.findCode(event.getInfo().getName());
 		if(code != null)
 		{
 			try
 			{
-				//TODO Not DONE!
-				Session s = new Session(serviceInfo.getServer(), code);
+				// TODO Not DONE!
+				new Session(event.getInfo().getServer(), code);
 			}
 			catch(Exception e)
 			{
-				database.updateCode(serviceInfo.getName(), null);
+				database.updateCode(event.getInfo().getName(), null);
 			}
 		}
 	}
@@ -92,8 +85,8 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener
 		JmDNS mdns = event.getDNS();
 		InetAddress address = event.getInetAddress();
 		logger.info("Registered Pairing Service @ " + address.getHostAddress());
-		mdns.addServiceListener(IPairingResource.REMOTE_TYPE, this);
 		mdns.addServiceListener(IRemoteControlResource.TOUCH_ABLE_TYPE, this);
+//		mdns.addServiceListener(IPairingResource.REMOTE_TYPE, this);
 		interfaces.put(mdns, address);
 	}
 
@@ -102,40 +95,8 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener
 	{
 		JmDNS mdns = event.getDNS();
 		mdns.removeServiceListener(IRemoteControlResource.TOUCH_ABLE_TYPE, this);
-		mdns.removeServiceListener(IPairingResource.REMOTE_TYPE, this);
+		// mdns.removeServiceListener(IPairingResource.REMOTE_TYPE, this);
 		mdns.unregisterAllServices();
 		interfaces.remove(mdns);
 	}
-
-	// @Override
-	// public void registerPairing(String hostname, String paircode, String servicename)
-	// {
-	// // ServiceInfo[] set1 = this.mDNS.list(IPairingResource.REMOTE_TYPE);
-	// // ServiceInfo[] set2 = this.mDNS.list(IRemoteControlResource.TOUCH_ABLE_TYPE);
-	// // Map<String, ServiceInfo[]> map = this.mDNS.listBySubtype("_tcp.local.");
-	//
-	// logger.debug(hostname + " " + paircode + " " + servicename);
-	// // mDNS.requestServiceInfo(IRemoteControlResource.TOUCH_ABLE_TYPE, servicename);
-	// Collection<ServiceInfo> serviceInfos = null;
-	//
-	// serviceInfos = Arrays.asList(mDNS.getServiceInfos(IRemoteControlResource.TOUCH_ABLE_TYPE, servicename));
-	// if(serviceInfos.isEmpty())
-	// {
-	// serviceInfos = Arrays.asList(mDNS.getServiceInfos(IRemoteControlResource.DACP_TYPE, servicename));
-	// }
-	//
-	// if(serviceInfos.isEmpty())
-	// {
-	// return;
-	// }
-	//
-	// for(ServiceInfo serviceInfo : serviceInfos)
-	// {
-	// String libraryName = serviceInfo.getPropertyString("CtlN");
-	// if(libraryName == null)
-	// {
-	// libraryName = serviceInfo.getName();
-	// }
-	// }
-	// }
 }
