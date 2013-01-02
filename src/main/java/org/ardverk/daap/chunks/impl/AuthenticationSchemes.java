@@ -20,7 +20,7 @@ package org.ardverk.daap.chunks.impl;
 import org.ardverk.daap.chunks.UByteChunk;
 
 /**
- * Authentication Schemes. ATTENTION: There's a bug in DAAP/iTunes! /content-codes says 'msas' is of type 0x0005 (signed int) however has the 'msas' Chunk a length of 1 in /server-info respones and is thus a Byte!
+ * Authentication Schemes. ATTENTION: There's a bug in DAAP/iTunes! /content-codes says 'msas' is of type 0x0005 (signed int) however it has the 'msas' Chunk a length of 1 in /server-info respones and is thus a Byte!
  * 
  * @author Roger Kapsi
  */

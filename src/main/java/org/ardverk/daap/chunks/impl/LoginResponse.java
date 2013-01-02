@@ -31,4 +31,14 @@ public class LoginResponse extends ContainerChunk
 	{
 		super("mlog", "dmap.loginresponse");
 	}
+
+	public Status getStatus()
+	{
+		return getSingleChunk(Status.class);
+	}
+
+	public SessionId getSessionId()
+	{
+		return getSingleChunk(SessionId.class);
+	}
 }

@@ -53,6 +53,8 @@ public class JoliviaListener extends GuiceServletContextListener
 			@Override
 			protected void configureServlets()
 			{
+				bind(JmmDNS.class).toInstance(JmmDNS.Factory.getInstance());
+				
 				Multibinder<IMusicStoreReader> multibinder = Multibinder.newSetBinder(binder(), IMusicStoreReader.class);
 				multibinder.addBinding().to(DeskMusicStoreReader.class).asEagerSingleton();
 
@@ -69,7 +71,6 @@ public class JoliviaListener extends GuiceServletContextListener
 				bind(IRemoteControlResource.class).to(RemoteControlResource.class);
 
 				bind(JoliviaExceptionMapper.class);
-				bind(JmmDNS.class).toInstance(JmmDNS.Factory.getInstance());
 				bind(DMAPInterface.class).asEagerSingleton();
 
 				filter("*").through(ProxyFilter.class);

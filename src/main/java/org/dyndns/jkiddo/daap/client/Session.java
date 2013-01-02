@@ -25,14 +25,21 @@
 
 package org.dyndns.jkiddo.daap.client;
 
-import android.os.Handler;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.tunesremote.util.ThreadExecutor;
-
 import java.util.LinkedList;
 import java.util.List;
+
+import org.ardverk.daap.chunks.impl.DatabaseShareType;
+import org.ardverk.daap.chunks.impl.ItemId;
+import org.ardverk.daap.chunks.impl.ItemName;
+import org.ardverk.daap.chunks.impl.Listing;
+import org.ardverk.daap.chunks.impl.ListingItem;
+import org.ardverk.daap.chunks.impl.LoginResponse;
+import org.ardverk.daap.chunks.impl.PersistentId;
+import org.ardverk.daap.chunks.impl.ServerDatabases;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import android.os.Handler;
 
 public class Session
 {
@@ -48,6 +55,7 @@ public class Session
 
 	public String radioDatabaseName = null;
 	private List<Playlist> radioGenres = null;
+	private String databaseName;
 
 	public Session(String host, String pairingGuid) throws Exception
 	{
@@ -56,11 +64,44 @@ public class Session
 
 		// http://192.168.254.128:3689/login?pairing-guid=0x0000000000000001
 		logger.debug(TAG, String.format("trying login for host=%s and guid=%s", host, pairingGuid));
-		Response login = RequestHelper.requestParsed(String.format("%s/login?pairing-guid=0x%s", this.getRequestBase(), pairingGuid), false);
-		this.sessionId = login.getNested("mlog").getNumberString("mlid");
+		LoginResponse loginResponse = RequestHelper.requestParsed(String.format("%s/login?pairing-guid=0x%s", this.getRequestBase(), pairingGuid));
+
+		// Response login = RequestHelper.requestParsed(String.format("%s/login?pairing-guid=0x%s", this.getRequestBase(), pairingGuid), false);
+		// this.sessionId = login.getNested("mlog").getNumberString("mlid");
+		this.sessionId = loginResponse.getSessionId().getValue() + "";
 		logger.debug(TAG, String.format("found session-id=%s", this.sessionId));
 
 		// http://192.168.254.128:3689/databases?session-id=1301749047
+		ServerDatabases serverDatabases = RequestHelper.requestParsed(String.format("%s/databases?session-id=%s", this.getRequestBase(), this.sessionId));
+		Listing listing = serverDatabases.getListing();
+		for(ListingItem item : listing.getListingItems())
+		{
+			DatabaseShareType type = item.getSpecificChunk(DatabaseShareType.class);
+
+			if(DatabaseShareType.LOCAL == type.getValue())
+			{
+				this.databaseName = item.getSpecificChunk(ItemName.class).getValue();
+				this.databaseId = item.getSpecificChunk(ItemId.class).getValue();
+				this.databasePersistentId = Long.toHexString(item.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue());
+			}
+			else if(DatabaseShareType.RADIO == type.getValue())
+			{
+				this.radioDatabaseName = item.getSpecificChunk(ItemName.class).getValue();
+				this.radioDatabaseId = item.getSpecificChunk(ItemId.class).getValue();
+				this.radioPersistentId = Long.toHexString(item.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue());
+			}
+			else if(DatabaseShareType.SHARED == type.getValue())
+			{
+				this.databaseName = item.getSpecificChunk(ItemName.class).getValue();
+				this.databaseId = item.getSpecificChunk(ItemId.class).getValue();
+				this.databasePersistentId = Long.toHexString(item.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue());
+			}
+			else
+			{
+				logger.info("Unknown share type: " + type.getValue());
+			}
+		}
+		// System.out.println(serverDatabases.getName());
 		Response databases = RequestHelper.requestParsed(String.format("%s/databases?session-id=%s", this.getRequestBase(), this.sessionId), false);
 		for(Response resp : databases.getNested("avdb").getNested("mlcl").findArray("mlit"))
 		{
@@ -89,7 +130,7 @@ public class Session
 		}
 
 		// fetch playlists to find the overall magic "Music" playlist
-		Response playlists = RequestHelper.requestParsed(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemname,dmap.itemcount,dmap.itemid,dmap.persistentid,daap.baseplaylist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,com.apple.itunes.saved-genius,dmap.parentcontainerid,dmap.editcommandssupported", this.getRequestBase(), this.databaseId, this.sessionId), false);
+		Response playlists = RequestHelper.requestParsed(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemname,dmap.itemcount,dmap.itemid,dmap.persistentid,daap.baseplaylist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,com.apple.itunes.saved-genius,dmap.parentcontainerid,dmap.editcommandssupported", this.getRequestBase(), this.databaseId, this.sessionId));
 
 		for(Response resp : playlists.getNested("aply").getNested("mlcl").findArray("mlit"))
 		{

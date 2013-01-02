@@ -30,7 +30,6 @@ import android.os.Handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tunesremote.util.ThreadExecutor;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;

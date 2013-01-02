@@ -43,7 +43,6 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener
 	{
 		this.mDNS = mDNS;
 		this.database = database;
-
 		this.mDNS.addNetworkTopologyListener(this);
 	}
 
@@ -69,14 +68,22 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener
 		{
 			try
 			{
-				// TODO Not DONE!
-				new Session(event.getInfo().getServer(), code);
+				logger.debug("About to pair with " + event.getInfo().getServer());
+				// If code is != null, we previously have been paired with this library. It does not mean that we still are.
+				spawnClientTraverser(event.getInfo().getServer(), code);
 			}
 			catch(Exception e)
 			{
+				logger.warn(e.getMessage(), e);
 				database.updateCode(event.getInfo().getName(), null);
 			}
 		}
+	}
+
+	private void spawnClientTraverser(String server, String code) throws Exception
+	{
+		Session session = new Session(server, code);
+
 	}
 
 	@Override
@@ -86,7 +93,7 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener
 		InetAddress address = event.getInetAddress();
 		logger.info("Registered Pairing Service @ " + address.getHostAddress());
 		mdns.addServiceListener(IRemoteControlResource.TOUCH_ABLE_TYPE, this);
-//		mdns.addServiceListener(IPairingResource.REMOTE_TYPE, this);
+		// mdns.addServiceListener(IPairingResource.REMOTE_TYPE, this);
 		interfaces.put(mdns, address);
 	}
 

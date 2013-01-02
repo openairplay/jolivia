@@ -32,4 +32,9 @@ public class Listing extends ContainerChunk
 	{
 		super("mlcl", "dmap.listing");
 	}
+
+	public Iterable<ListingItem> getListingItems()
+	{
+		return getMultipleChunks(ListingItem.class);
+	}
 }

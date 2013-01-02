@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterables;
 
 /**
  * A container contains a series of other chunks.
@@ -104,5 +108,26 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 			}
 		}
 		return buffer.toString();
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <T extends Chunk> T getSingleChunk(Class<T> clazz)
+	{
+		Iterable<Chunk> iterables = Iterables.filter(this.collection, Predicates.instanceOf(clazz));
+		if(Iterables.size(iterables) == 1)
+		{
+			return (T) iterables.iterator().next();
+		}
+		throw new NoSuchElementException();
+	}
+
+	protected <T extends Chunk> Iterable<T> getMultipleChunks(Class<T> clazz)
+	{
+		Iterable<T> iterables = Iterables.filter(collection, clazz);
+		if(Iterables.size(iterables) > 0)
+		{
+			return iterables;
+		}
+		throw new NoSuchElementException();
 	}
 }

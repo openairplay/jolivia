@@ -31,4 +31,9 @@ public class ServerDatabases extends ContainerChunk
 	{
 		super("avdb", "daap.serverdatabases");
 	}
+
+	public Listing getListing()
+	{
+		return getSingleChunk(Listing.class);
+	}
 }

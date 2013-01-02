@@ -100,8 +100,8 @@ public class PairingResource extends MDNSResource implements IPairingResource
 			database.updateCode(servicename, toHex(code));
 			return new ResponseBuilderImpl().entity(PAIRING_RAW).status(Status.OK).build();
 		}
-		// TODO Response is not correct according to iTunes - it is however better than nothing.
-		return new ResponseBuilderImpl().status(Status.SERVICE_UNAVAILABLE).build();
+		// TODO Response is not verified to be correct in iTunes regi - it is however better than nothing.
+		return new ResponseBuilderImpl().status(Status.UNAUTHORIZED).build();
 	}
 
 	@Override

@@ -25,6 +25,7 @@
 
 package org.dyndns.jkiddo.daap.client;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -33,8 +34,12 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
+import org.ardverk.daap.DaapInputStream;
+import org.ardverk.daap.chunks.Chunk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.io.Closeables;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -87,6 +92,28 @@ public class RequestHelper
 		return ResponseParser.performParse(request(url, keepalive));
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <T extends Chunk> T requestParsed(String url) throws Exception
+	{
+		logger.debug(TAG, url);
+		// DAAP client start
+		
+		byte[] array = request(url);
+//		System.out.println(ResponseParser.performParse(array).getNested("mlog").getNumberString("mlid"));
+		
+		System.out.println(new String(array));
+		DaapInputStream inputStream = new DaapInputStream(new ByteArrayInputStream(array));
+
+		Chunk chunk = null;
+		while(inputStream.available() > 0)
+		{
+			chunk = inputStream.readChunk();
+		}
+		Closeables.closeQuietly(inputStream);
+		// DAAP client end
+		return (T) chunk;
+	}
+
 	public static void attemptRequest(String url)
 	{
 		try
@@ -99,6 +126,10 @@ public class RequestHelper
 		}
 	}
 
+	public static byte[] request(String remoteUrl) throws Exception
+	{
+		return request(remoteUrl, false);
+	}
 	/**
 	 * Performs the HTTP request and gathers the response from the server. The gzip and deflate headers are sent in case the server can respond with compressed answers saving network bandwidth and speeding up responses.
 	 * <p>
@@ -194,7 +225,7 @@ public class RequestHelper
 			byte[] raw = request(String.format("%s/databases/%d/items/%d/extra_data/artwork?session-id=%s&mw=55&mh=55%s", session.getRequestBase(), session.databaseId, itemid, session.sessionId, type), false);
 			return BitmapFactory.decodeByteArray(raw, 0, raw.length);
 		}
-		catch(java.lang.OutOfMemoryError e)
+		catch(OutOfMemoryError e)
 		{
 			logger.warn(TAG, "Bitmap OOM:" + e.getMessage());
 			return null;
@@ -208,7 +239,7 @@ public class RequestHelper
 			byte[] raw = request(remote, false);
 			return BitmapFactory.decodeByteArray(raw, 0, raw.length);
 		}
-		catch(java.lang.OutOfMemoryError e)
+		catch(OutOfMemoryError e)
 		{
 			logger.warn(TAG, "Bitmap OOM:" + e.getMessage());
 			return null;

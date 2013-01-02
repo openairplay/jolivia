@@ -22,7 +22,7 @@
     Copyright (C) 2008. Jeffrey Sharkey, http://jsharkey.org/
     All Rights Reserved.
  */
-package org.tunesremote.util;
+package org.dyndns.jkiddo.daap.client;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;

@@ -23,18 +23,17 @@
     All Rights Reserved.
  */
 
-package org.tunesremote;
+package org.dyndns.jkiddo.daap.client;
 
-import org.dyndns.jkiddo.daap.client.Response;
 
 /**
- * Interface used to process a binary HTTP response from the HTTP Server and look for specific tag values. When complete the searchDone() method is used as a callback to let the UI know it is complete.
+ * Interface used to process playlists. When complete the searchDone() method is used as a callback to let the UI know it is complete.
  * <p>
  */
-public interface TagListener
+public interface PlaylistListener
 {
 
-	public void foundTag(String tag, Response resp);
+	public void foundPlaylist(Playlist ply);
 
 	public void searchDone();
 

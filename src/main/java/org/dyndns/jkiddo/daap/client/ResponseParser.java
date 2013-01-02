@@ -32,9 +32,12 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.regex.Pattern;
 
+import org.ardverk.daap.DaapInputStream;
+import org.ardverk.daap.chunks.Chunk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tunesremote.TagListener;
+
+import com.google.common.io.Closeables;
 
 /**
  * Class responsible for parsing binary HTTP responses from a DACP Server.
@@ -73,7 +76,6 @@ public class ResponseParser
 		final DataInputStream stream = new DataInputStream(new ByteArrayInputStream(raw));
 		return ResponseParser.parse(stream, null, null, stream.available());
 	}
-
 	private static int search(DataInputStream raw, TagListener listener, Pattern listenFor, int handle, boolean haltmlit) throws IOException
 	{
 		int hits = 0;
