@@ -138,13 +138,23 @@ public class Database
 	 */
 	public Database(String name, Playlist masterPlaylist)
 	{
-		this.itemId = DATABASE_ID.getAndIncrement();
-		this.persistentId = Library.nextPersistentId();
+		this(name, DATABASE_ID.getAndIncrement(), Library.nextPersistentId(), masterPlaylist);
+	}
+	
+	public Database(String name, long itemId, long persistentId)
+	{
+		this(name, itemId, persistentId, new Playlist(name));
+	}
+
+	public Database(String name, long itemId, long persistentId, Playlist playlist)
+	{
+		this.itemId = itemId;
+		this.persistentId = persistentId;
 		this.name = name;
 		this.totalPlaylistCount = 0;
 		this.totalSongCount = 0;
 
-		this.masterPlaylist = masterPlaylist;
+		this.masterPlaylist = playlist;
 		addPlaylistP(null, masterPlaylist);
 	}
 
@@ -228,6 +238,13 @@ public class Database
 		return Collections.unmodifiableList(playlists);
 	}
 
+	public void addPlaylists(Transaction txn, final Collection<Playlist> playlists)
+	{
+		for(Playlist p : playlists)
+		{
+			addPlaylist(txn, p);
+		}
+	}
 	/**
 	 * Adds playlist to this Database
 	 * 

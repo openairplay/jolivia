@@ -83,6 +83,7 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener
 	private void spawnClientTraverser(String server, String code) throws Exception
 	{
 		Session session = new Session(server, code);
+		session.listContentCodes();
 
 	}
 

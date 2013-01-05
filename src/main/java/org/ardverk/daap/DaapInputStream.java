@@ -22,6 +22,7 @@ import java.io.EOFException;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 import org.ardverk.daap.chunks.ByteChunk;
 import org.ardverk.daap.chunks.Chunk;
@@ -78,13 +79,27 @@ public class DaapInputStream extends FilterInputStream
 	public int readInt(int length) throws IOException
 	{
 		skip(length - Chunk.INT_LENGTH);
-		return (read() << 24) | (read() << 16) | (read() << 8) | read();
+		int size = Chunk.INT_LENGTH;
+		ByteBuffer buffer = ByteBuffer.allocate(size);
+		for(int i = 0; i < size; i++)
+		{
+			buffer.put((byte) read());
+		}
+		buffer.position(0);
+		return buffer.getInt();
 	}
 
 	public long readLong(int length) throws IOException
 	{
 		skip(length - Chunk.LONG_LENGTH);
-		return (read() << 54l) | (read() << 48l) | (read() << 40l) | (read() << 32l) | (read() << 24l) | (read() << 16l) | (read() << 8l) | read();
+		int size = Chunk.LONG_LENGTH;
+		ByteBuffer buffer = ByteBuffer.allocate(size);
+		for(int i = 0; i < size; i++)
+		{
+			buffer.put((byte) read());
+		}
+		buffer.position(0);
+		return buffer.getLong();
 	}
 
 	public String readString(int length) throws IOException

@@ -17,7 +17,15 @@
 
 package org.ardverk.daap.chunks.impl;
 
+import java.util.NoSuchElementException;
+
+import org.ardverk.daap.chunks.Chunk;
 import org.ardverk.daap.chunks.ContainerChunk;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 
 /**
  * Used to group ListingItems objects.
@@ -27,6 +35,7 @@ import org.ardverk.daap.chunks.ContainerChunk;
  */
 public class Listing extends ContainerChunk
 {
+	public final static Logger logger = LoggerFactory.getLogger(Listing.class);
 
 	public Listing()
 	{
@@ -36,5 +45,38 @@ public class Listing extends ContainerChunk
 	public Iterable<ListingItem> getListingItems()
 	{
 		return getMultipleChunks(ListingItem.class);
+	}
+
+	public Iterable<ListingItem> getListingItems(Predicate<ListingItem> predicate)
+	{
+		return Iterables.filter(getListingItems(), predicate);
+	}
+
+	public ListingItem getSingleListingItemContainingClass(final Class<? extends Chunk> clazz)
+	{
+		return getSingleListingItem(new Predicate<ListingItem>() {
+			@Override
+			public boolean apply(ListingItem input)
+			{
+				return input.getSpecificChunk(clazz) != null ? true : false;
+			}
+		});
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public ListingItem getSingleListingItem(Predicate predicate)
+	{
+		Iterable<ListingItem> filteredItems = Iterables.filter(getListingItems(), predicate);
+
+		if(Iterables.size(filteredItems) < 1)
+		{
+			throw new NoSuchElementException("Found no ListingItems fullfilling predicate");
+		}
+		if(Iterables.size(filteredItems) > 1)
+		{
+			logger.info("Found more than one ListingItem fullfilling predicate - returning the first one");
+		}
+
+		return filteredItems.iterator().next();
 	}
 }

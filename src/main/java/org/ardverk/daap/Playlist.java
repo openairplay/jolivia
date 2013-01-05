@@ -131,6 +131,15 @@ public class Playlist
 		init();
 	}
 
+	public Playlist(String name, long persistentId, long itemId, long itemCount)
+	{
+		this.itemName.setValue(name);
+		this.persistentId.setValue(persistentId);
+		this.itemId.setValue(itemId);
+		this.itemCount.setValue(itemCount);
+		init();
+	}
+
 	private void init()
 	{
 		addChunk(itemId);

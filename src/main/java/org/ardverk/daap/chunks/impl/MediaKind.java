@@ -1,16 +1,27 @@
+/*******************************************************************************
+ * Copyright (c) 2012 Jens Kristian Villadsen.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the GNU Public License v3.0
+ * which accompanies this distribution, and is available at
+ * http://www.gnu.org/licenses/gpl.html
+ * 
+ * Contributors:
+ *     Jens Kristian Villadsen - initial API and implementation
+ ******************************************************************************/
 package org.ardverk.daap.chunks.impl;
 
-import org.ardverk.daap.chunks.UIntChunk;
+import org.ardverk.daap.chunks.UByteChunk;
 
-public class MediaKind extends UIntChunk
+public class MediaKind extends UByteChunk
 {
+
 	public MediaKind()
 	{
-		this(0);
+		this(1);
 	}
 
-	public MediaKind(int value)
+	public MediaKind(int mode)
 	{
-		super("aeMk", "com.apple.itunes.extended-media-kind", value);
+		super("aeMK", "com.apple.itunes.mediakind", mode);
 	}
 }

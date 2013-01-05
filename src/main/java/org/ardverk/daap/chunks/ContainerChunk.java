@@ -118,7 +118,11 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 		{
 			return (T) iterables.iterator().next();
 		}
-		throw new NoSuchElementException();
+		if(Iterables.size(iterables) == 0)
+		{
+			return null;
+		}
+		throw new NoSuchElementException("Multiple chunks of type " + clazz + " was found");
 	}
 
 	protected <T extends Chunk> Iterable<T> getMultipleChunks(Class<T> clazz)
@@ -128,6 +132,6 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 		{
 			return iterables;
 		}
-		throw new NoSuchElementException();
+		throw new NoSuchElementException("Chunks of type " + clazz + " could not be found");
 	}
 }

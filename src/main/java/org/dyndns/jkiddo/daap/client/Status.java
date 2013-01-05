@@ -25,15 +25,15 @@
 
 package org.dyndns.jkiddo.daap.client;
 
-import android.graphics.Bitmap;
-import android.os.Handler;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import android.graphics.Bitmap;
+import android.os.Handler;
 
 /**
  * Status handles status information, including background timer thread also subscribes to keep-alive event updates.

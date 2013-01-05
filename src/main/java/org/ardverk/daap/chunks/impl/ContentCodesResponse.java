@@ -17,6 +17,9 @@
 
 package org.ardverk.daap.chunks.impl;
 
+import java.util.Collection;
+
+import org.ardverk.daap.chunks.Chunk;
 import org.ardverk.daap.chunks.ContainerChunk;
 
 /**
@@ -30,5 +33,10 @@ public class ContentCodesResponse extends ContainerChunk
 	public ContentCodesResponse()
 	{
 		super("mccr", "dmap.contentcodesresponse");
+	}
+
+	public Collection<? extends Chunk> getChuncks()
+	{
+		return collection;
 	}
 }

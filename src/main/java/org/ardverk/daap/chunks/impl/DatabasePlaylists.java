@@ -31,4 +31,9 @@ public class DatabasePlaylists extends ContainerChunk
 	{
 		super("aply", "daap.databaseplaylists");
 	}
+
+	public Listing getListing()
+	{
+		return getSingleChunk(Listing.class);
+	}
 }

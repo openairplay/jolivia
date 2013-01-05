@@ -25,6 +25,8 @@
 
 package org.dyndns.jkiddo.daap.client;
 
+import org.ardverk.daap.Playlist;
+
 
 /**
  * Interface used to process playlists. When complete the searchDone() method is used as a callback to let the UI know it is complete.

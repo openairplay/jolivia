@@ -29,7 +29,7 @@ public final class ChunkFactory
 
 	public ChunkFactory()
 	{
-        map.put(new Integer(0x61654373), org.ardverk.daap.chunks.impl.ArtworkChecksum.class); //aeCs
+		map.put(new Integer(0x61654373), org.ardverk.daap.chunks.impl.ArtworkChecksum.class); //aeCs
         map.put(new Integer(0x6D736175), org.ardverk.daap.chunks.impl.AuthenticationMethod.class); //msau
         map.put(new Integer(0x6D736173), org.ardverk.daap.chunks.impl.AuthenticationSchemes.class); //msas
         map.put(new Integer(0x6D62636C), org.ardverk.daap.chunks.impl.Bag.class); //mbcl
@@ -55,6 +55,7 @@ public final class ChunkFactory
         map.put(new Integer(0x6D64636C), org.ardverk.daap.chunks.impl.Dictionary.class); //mdcl
         map.put(new Integer(0x6D70726F), org.ardverk.daap.chunks.impl.DmapProtocolVersion.class); //mpro
         map.put(new Integer(0x6D656473), org.ardverk.daap.chunks.impl.EditCommandSupported.class); //meds
+        map.put(new Integer(0x61654D6B), org.ardverk.daap.chunks.impl.EMediaKind.class); //aeMk
         map.put(new Integer(0x668D6368), org.ardverk.daap.chunks.impl.HasChildContainers.class); //f?ch
         map.put(new Integer(0x61654856), org.ardverk.daap.chunks.impl.HasVideo.class); //aeHV
         map.put(new Integer(0x6D696D63), org.ardverk.daap.chunks.impl.ItemCount.class); //mimc
@@ -71,7 +72,7 @@ public final class ChunkFactory
         map.put(new Integer(0x6D6C6974), org.ardverk.daap.chunks.impl.ListingItem.class); //mlit
         map.put(new Integer(0x6D736C72), org.ardverk.daap.chunks.impl.LoginRequired.class); //mslr
         map.put(new Integer(0x6D6C6F67), org.ardverk.daap.chunks.impl.LoginResponse.class); //mlog
-        map.put(new Integer(0x61654D6B), org.ardverk.daap.chunks.impl.MediaKind.class); //aeMk
+        map.put(new Integer(0x61654D4B), org.ardverk.daap.chunks.impl.MediaKind.class); //aeMK
         map.put(new Integer(0x61655356), org.ardverk.daap.chunks.impl.MusicSharingVersion.class); //aeSV
         map.put(new Integer(0x61654E56), org.ardverk.daap.chunks.impl.NormVolume.class); //aeNV
         map.put(new Integer(0x6D70636F), org.ardverk.daap.chunks.impl.ParentContainerId.class); //mpco
@@ -126,6 +127,7 @@ public final class ChunkFactory
         map.put(new Integer(0x6173746E), org.ardverk.daap.chunks.impl.SongTrackNumber.class); //astn
         map.put(new Integer(0x61737572), org.ardverk.daap.chunks.impl.SongUserRating.class); //asur
         map.put(new Integer(0x61737972), org.ardverk.daap.chunks.impl.SongYear.class); //asyr
+        map.put(new Integer(0x61655053), org.ardverk.daap.chunks.impl.SpecialPlaylist.class); //aePS
         map.put(new Integer(0x6D74636F), org.ardverk.daap.chunks.impl.SpecifiedTotalCount.class); //mtco
         map.put(new Integer(0x6D737474), org.ardverk.daap.chunks.impl.Status.class); //mstt
         map.put(new Integer(0x6D737473), org.ardverk.daap.chunks.impl.StatusString.class); //msts

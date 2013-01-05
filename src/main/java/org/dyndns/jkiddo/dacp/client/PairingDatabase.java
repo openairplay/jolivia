@@ -1,12 +1,12 @@
 package org.dyndns.jkiddo.dacp.client;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Random;
-import java.io.File;
 
 import com.google.inject.Singleton;
 

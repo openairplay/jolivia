@@ -29,6 +29,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.regex.Pattern;
 
+import org.ardverk.daap.Playlist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

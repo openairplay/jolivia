@@ -17,12 +17,7 @@
 
 package org.ardverk.daap.tools;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 import org.ardverk.daap.chunks.Chunk;
 
