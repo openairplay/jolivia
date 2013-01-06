@@ -42,7 +42,7 @@ import org.ardverk.daap.chunks.impl.PersistentId;
 import org.ardverk.daap.chunks.impl.PlaylistRepeatMode;
 import org.ardverk.daap.chunks.impl.PlaylistShuffleMode;
 import org.ardverk.daap.chunks.impl.PodcastPlaylist;
-import org.ardverk.daap.chunks.impl.SmartPlaylist;
+import org.ardverk.daap.chunks.impl.com.apple.itunes.SmartPlaylist;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

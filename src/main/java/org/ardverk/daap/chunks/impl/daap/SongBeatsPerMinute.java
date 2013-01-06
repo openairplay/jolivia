@@ -15,27 +15,25 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.UShortChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * Beats per minute? One of those needless things...
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongBeatsPerMinute extends UShortChunk
 {
 
-	public ReturnedCount()
+	public SongBeatsPerMinute()
 	{
 		this(0);
 	}
 
-	public ReturnedCount(long count)
+	public SongBeatsPerMinute(int bpm)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("asbt", "daap.songbeatsperminute", bpm);
 	}
 }

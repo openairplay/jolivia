@@ -15,27 +15,25 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.dmap;
 
 import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * Used for the <tt>/update</tt> request and represents the current revisionNumber of the Library.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class ServerRevision extends UIntChunk
 {
 
-	public ReturnedCount()
+	public ServerRevision()
 	{
 		this(0);
 	}
 
-	public ReturnedCount(long count)
+	public ServerRevision(long count)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("musr", "dmap.serverrevision", count);
 	}
 }

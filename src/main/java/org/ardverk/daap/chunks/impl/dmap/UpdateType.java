@@ -15,27 +15,28 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.dmap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.UByteChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * This Chunk is used to indicate if a response is either an update or a full response. The first request is always followed by a full response (e.g. the list of all Songs in the Library) and thenceforward it's awlays an update (a diff between client's and server's Library).
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class UpdateType extends UByteChunk
 {
 
-	public ReturnedCount()
+	/**
+	 * Creates a new UpdateType
+	 */
+	public UpdateType()
 	{
 		this(0);
 	}
 
-	public ReturnedCount(long count)
+	public UpdateType(int updatetype)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("muty", "dmap.updatetype", updatetype);
 	}
 }

@@ -15,27 +15,33 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
 import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * The length of the Song in milliseconds.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongTime extends UIntChunk
 {
 
-	public ReturnedCount()
+	/**
+	 * Creates a new SongTime with 0 length. You can change this value with {@see #setValue(int)}.
+	 */
+	public SongTime()
 	{
 		this(0);
 	}
 
-	public ReturnedCount(long count)
+	/**
+	 * Creates a new SongTime with the assigned time. You can change this value with {@see #setValue(int)}.
+	 * 
+	 * @param <tt>time</tt> the length of this song in milliseconds.
+	 */
+	public SongTime(long time)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("astm", "daap.songtime", time);
 	}
 }

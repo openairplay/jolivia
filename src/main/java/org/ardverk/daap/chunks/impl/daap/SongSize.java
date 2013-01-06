@@ -15,27 +15,33 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
 import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * The size of the Song in bytes.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongSize extends UIntChunk
 {
 
-	public ReturnedCount()
+	/**
+	 * Creates a new SongSize with 0-length You can change this value with {@see #setValue(int)}.
+	 */
+	public SongSize()
 	{
 		this(0);
 	}
 
-	public ReturnedCount(long count)
+	/**
+	 * Creates a new SongSize with the assigned size. You can change this value with {@see #setValue(int)}.
+	 * 
+	 * @param <tt>size</tt> the size of this song in bytes.
+	 */
+	public SongSize(long size)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("assz", "daap.songsize", size);
 	}
 }

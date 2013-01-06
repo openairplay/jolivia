@@ -18,6 +18,8 @@
 package org.ardverk.daap.chunks.impl;
 
 import org.ardverk.daap.chunks.ContainerChunk;
+import org.ardverk.daap.chunks.impl.dmap.SessionId;
+import org.ardverk.daap.chunks.impl.dmap.Status;
 
 /**
  * Container for the <tt>/login</tt> request.

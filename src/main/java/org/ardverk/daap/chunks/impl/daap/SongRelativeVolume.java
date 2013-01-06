@@ -15,27 +15,37 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.SByteChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * The relative loudness of the Song to the main volume adjuster. You can increase or decrease the loundness by +/- 100%.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongRelativeVolume extends SByteChunk
 {
 
-	public ReturnedCount()
+	/** Decrease the volume by 100% */
+	public static final int MIN_VALUE = -100;
+
+	/** Do not increase or decrease the sound volume */
+	public static final int NONE = 0;
+
+	/** Increase the volume by 100% */
+	public static final int MAX_VALUE = 100;
+
+	public SongRelativeVolume()
 	{
 		this(0);
 	}
 
-	public ReturnedCount(long count)
+	/**
+	 * @param <tt>volume</tt> the relative volume
+	 */
+	public SongRelativeVolume(int volume)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("asrv", "daap.songrelativevolume", volume);
 	}
 }

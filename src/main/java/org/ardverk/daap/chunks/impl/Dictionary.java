@@ -17,6 +17,7 @@
 
 package org.ardverk.daap.chunks.impl;
 
+import org.ardverk.daap.chunks.Chunk;
 import org.ardverk.daap.chunks.ContainerChunk;
 
 /**
@@ -30,5 +31,10 @@ public class Dictionary extends ContainerChunk
 	public Dictionary()
 	{
 		super("mdcl", "dmap.dictionary");
+	}
+
+	public <T extends Chunk> T getSpecificChunk(Class<T> clazz)
+	{
+		return getSingleChunk(clazz);
 	}
 }

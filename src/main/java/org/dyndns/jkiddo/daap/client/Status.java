@@ -29,11 +29,22 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.ardverk.daap.chunks.impl.Dictionary;
+import org.ardverk.daap.chunks.impl.ItemName;
+import org.ardverk.daap.chunks.impl.RelativeVolume;
+import org.ardverk.daap.chunks.impl.unknown.SpeakerActive;
+import org.ardverk.daap.chunks.impl.unknown.SpeakerList;
+import org.ardverk.daap.chunks.impl.unknown.UnknownGT;
+import org.ardverk.daap.chunks.impl.unknown.UnknownMA;
+import org.ardverk.daap.chunks.impl.unknown.UnknownVD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
+
 import android.graphics.Bitmap;
-import android.os.Handler;
 
 /**
  * Status handles status information, including background timer thread also subscribes to keep-alive event updates.
@@ -60,29 +71,21 @@ public class Status
 	public final static int UPDATE_COVER = 5;
 	public final static int UPDATE_RATING = 6;
 	public static final int UPDATE_SPEAKERS = 7;
-	private final static int MAX_FAILURES = 10;
 
+	public Status(Session session)
+	{
+		this.session = session;
+	}
 	/**
 	 * Fields
 	 */
 	public boolean coverEmpty = true;
 	public Bitmap coverCache = null;
-	public String albumId = "";
 	protected int repeatStatus = REPEAT_OFF, shuffleStatus = SHUFFLE_OFF, playStatus = STATE_PAUSED;
 	protected boolean visualizer = false, fullscreen = false, geniusSelectable = false;
-	protected final AtomicBoolean destroyThread = new AtomicBoolean(false);
-	private long rating = -1;
-	private long databaseId = 0;
-	private long playlistId = 0;
-	private long containerItemId = 0;
-	private long trackId = 0;
-	private String trackName = "", trackArtist = "", trackAlbum = "", trackGenre = "";
-	private long progressTotal = 0, progressRemain = 0;
 	private final Session session;
-	private final AtomicInteger failures = new AtomicInteger(0);
 	private long revision = 1;
 
-	private Handler update;
 	public static String lastActivity, lastPlaylistId, lastPlaylistPersistentId;
 	public static String[] lastAlbum;
 
@@ -92,112 +95,6 @@ public class Status
 
 	public static final Logger logger = LoggerFactory.getLogger(Status.class);
 
-	/**
-	 * Constructor accepts a Session and UI Handler to update the UI.
-	 * 
-	 * @param session
-	 * @param update
-	 */
-	public Status(Session session, Handler update)
-	{
-		this.session = session;
-		this.update = update;
-
-		// create two threads, one for backend keep-alive updates
-		// and a second one to update running time and fire gui events
-
-		this.progress.start();
-		this.keepalive.start();
-
-		// keep our status updated with server however we need to
-		// end thread when getting any 404 responses, etc
-	}
-
-	public void updateHandler(Handler handler)
-	{
-		this.update = handler;
-	}
-
-	protected final Thread progress = new Thread(new Runnable() {
-		@Override
-		public void run()
-		{
-			while(true)
-			{
-				// when in playing state, keep moving progress forward
-				while(playStatus == STATE_PLAYING)
-				{
-					// logger.debug(TAG, "thread entering playing loop");
-					if(destroyThread.get())
-						break;
-					long anchor = System.currentTimeMillis();
-					try
-					{
-						Thread.sleep(1000);
-					}
-					catch(InterruptedException e)
-					{
-						// someone jolted us awake during playing, which means
-						// track
-						// changed
-						logger.debug(TAG, "someone jolted us during STATE_PLAYING loop");
-						continue;
-					}
-
-					if(destroyThread.get())
-						break;
-
-					// update progress and gui
-					progressRemain -= (System.currentTimeMillis() - anchor);
-					if(update != null)
-						update.sendEmptyMessage(UPDATE_PROGRESS);
-
-					// trigger a forced update if we seem to gone past end of
-					// song
-					if(progressRemain <= 0)
-					{
-						logger.debug(TAG, "suggesting that we fetch new song");
-						fetchUpdate();
-					}
-				}
-
-				// keep sleeping while in paused state
-				while(playStatus == STATE_PAUSED)
-				{
-					logger.debug(TAG, "thread entering paused loop");
-					try
-					{
-						Thread.sleep(10000);
-					}
-					catch(InterruptedException e)
-					{
-						// someone probably jolted us awake with a status update
-						logger.debug(TAG, "someone jolted us during STATE_PAUSED loop");
-					}
-
-					if(destroyThread.get())
-						break;
-				}
-
-				// one final sleep to make sure we behave nicely in case of
-				// unknown
-				// status
-				try
-				{
-					Thread.sleep(1000);
-				}
-				catch(InterruptedException e)
-				{
-					logger.debug(TAG, "someone jolted us during OVERALL loop");
-				}
-
-				if(destroyThread.get())
-					break;
-			}
-			logger.warn(TAG, "Status Progress Thread Killed!");
-		}
-	});
-
 	protected final Thread keepalive = new Thread(new Runnable() {
 		@Override
 		public void run()
@@ -206,66 +103,29 @@ public class Status
 			{
 				try
 				{
-					// sleep a few seconds to make sure we dont kill stuff
 					Thread.sleep(1000);
-					if(destroyThread.get())
-						break;
 
 					// try fetching next revision update using socket keepalive
 					// approach
 					// using the next revision-number will make itunes keepalive
 					// until something happens
 					// http://192.168.254.128:3689/ctrl-int/1/playstatusupdate?revision-number=1&session-id=1034286700
-					parseUpdate(RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), revision, session.sessionId), true));
+					parseUpdate(RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), revision, session.getSessionId()), true));
 				}
 				catch(Exception e)
 				{
-					logger.debug(TAG, String.format("Exception in keepalive thread, so killing try# %d", failures.get()), e);
-					if(failures.incrementAndGet() > MAX_FAILURES)
-						destroy();
+					e.printStackTrace();
 				}
 			}
-			logger.warn(TAG, "Status KeepAlive Thread Killed!");
 		}
 	});
 
-	public void destroy()
+	public void fetchUpdate() throws Exception
 	{
-		// destroy our internal thread
-		logger.warn(TAG, "trying to destroy internal status thread");
-		if(this.destroyThread.get())
-			return;
-		this.destroyThread.set(true);
-		this.progress.interrupt();
-		this.keepalive.interrupt();
-	}
-
-	public void fetchUpdate()
-	{
-		logger.debug(TAG, "Fetching Update From Server...");
-		// force a status update, will pass along to parseUpdate()
-		ThreadExecutor.runTask(new Runnable() {
-			@Override
-			public void run()
-			{
-				try
-				{
-					// using revision-number=1 will make sure we return
-					// instantly
-					// http://192.168.254.128:3689/ctrl-int/1/playstatusupdate?revision-number=1&session-id=1034286700
-					parseUpdate(RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), 1, session.sessionId), false));
-				}
-				catch(Exception e)
-				{
-					logger.warn(TAG, e);
-					if(failures != null && failures.incrementAndGet() > MAX_FAILURES)
-					{
-						destroy();
-					}
-				}
-			}
-		});
-
+		// using revision-number=1 will make sure we return
+		// instantly
+		// http://192.168.254.128:3689/ctrl-int/1/playstatusupdate?revision-number=1&session-id=1034286700
+		parseUpdate(RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), 1, session.getSessionId()), false));
 	}
 
 	protected void parseUpdate(Response resp) throws Exception
@@ -345,40 +205,16 @@ public class Status
 
 		this.progressRemain = resp.getNumberLong("cant");
 		this.progressTotal = resp.getNumberLong("cast");
-
-		// send off updated event to gui
-		if(update != null)
-			this.update.sendEmptyMessage(updateType);
 	}
 
-	public void fetchCover()
+	public void fetchCover() throws Exception
 	{
-		if(coverCache == null)
+		if(screenHeight > 640)
 		{
-			// spawn thread to fetch coverart
-			ThreadExecutor.runTask(new Runnable() {
-				@Override
-				public void run()
-				{
-					try
-					{
-						if(screenHeight > 640)
-						{
-							screenHeight = 640;
-						}
-						// http://192.168.254.128:3689/ctrl-int/1/nowplayingartwork?mw=320&mh=320&session-id=1940361390
-						coverCache = RequestHelper.requestBitmap(String.format("%s/ctrl-int/1/nowplayingartwork?mw=" + screenHeight + "&mh=" + screenHeight + "&session-id=%s", session.getRequestBase(), session.sessionId));
-					}
-					catch(Exception e)
-					{
-						logger.error(TAG, "Fetch Cover Exception:" + e.getMessage());
-					}
-					coverEmpty = (coverCache == null);
-					if(update != null)
-						update.sendEmptyMessage(UPDATE_COVER);
-				}
-			});
+			screenHeight = 640;
 		}
+		// http://192.168.254.128:3689/ctrl-int/1/nowplayingartwork?mw=320&mh=320&session-id=1940361390
+		coverCache = RequestHelper.requestBitmap(String.format("%s/ctrl-int/1/nowplayingartwork?mw=" + screenHeight + "&mh=" + screenHeight + "&session-id=%s", session.getRequestBase(), session.getSessionId()));
 	}
 
 	private void extractNowPlaying(byte[] bs)
@@ -409,113 +245,57 @@ public class Status
 		trackId |= bs[15] & 0xff;
 	}
 
-	// fetch rating of current playing item
-	public void fetchRating()
+	public void fetchRating() throws Exception
 	{
-		// spawn thread to fetch rating
-		ThreadExecutor.runTask(new Runnable() {
-			@Override
-			public void run()
-			{
-				try
-				{
-					Response resp = RequestHelper.requestParsed(String.format("%s/databases/%d/items?session-id=%s&meta=daap.songuserrating&type=music&query='dmap.itemid:%d'", session.getRequestBase(), databaseId, session.sessionId, trackId), false);
-
-					if(update != null)
-					{
-						// 2 different responses possible!
-						Response entry = resp.getNested("adbs"); // iTunes style
-						if(entry == null)
-						{
-							entry = resp.getNested("apso"); // MonkeyTunes style
-						}
-						rating = entry.getNested("mlcl").getNested("mlit").getNumberLong("asur");
-						update.sendEmptyMessage(UPDATE_RATING);
-					}
-
-				}
-				catch(Exception e)
-				{
-					logger.error(TAG, "Fetch Rating Exception:" + e.getMessage());
-				}
-			}
-		});
+		Object o = RequestHelper.requestParsed(String.format("%s/databases/%d/items?session-id=%s&meta=daap.songuserrating&type=music&query='dmap.itemid:%d'", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId(), trackId));
+		Response resp = RequestHelper.requestParsed(String.format("%s/databases/%d/items?session-id=%s&meta=daap.songuserrating&type=music&query='dmap.itemid:%d'", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId(), trackId));
+		// 2 different responses possible!
+		Response entry = resp.getNested("adbs"); // iTunes style
+		if(entry == null)
+		{
+			entry = resp.getNested("apso"); // MonkeyTunes style
+		}
+		// rating = entry.getNested("mlcl").getNested("mlit").getNumberLong("asur");
 	}
 
-	public long getVolume()
+	public long getMasterVolume() throws Exception
 	{
-		try
-		{
-			// http://192.168.254.128:3689/ctrl-int/1/getproperty?properties=dmcp.volume&session-id=130883770
-			Response resp = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/getproperty?properties=dmcp.volume&session-id=%s", session.getRequestBase(), session.sessionId), false);
-			return resp.getNested("cmgt").getNumberLong("cmvo");
-		}
-		catch(Exception e)
-		{
-			logger.error(TAG, "Fetch Volume Exception:" + e.getMessage());
-		}
-		return -1;
+		UnknownGT unknown = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/getproperty?properties=dmcp.volume&session-id=%s", session.getRequestBase(), session.getSessionId()));
+		return unknown.getMasterVolume().getUnsignedValue();
 	}
 
 	/**
 	 * Reads the list of available speakers
 	 * 
 	 * @return list of available speakers
+	 * @throws Exception
 	 */
-	public List<Speaker> getSpeakers(final List<Speaker> speakers)
+	public List<Speaker> getSpeakers() throws Exception
 	{
-		try
+		List<Speaker> speakers = Lists.newArrayList();
+
+		SpeakerList speakerList = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/getspeakers?session-id=%s", session.getRequestBase(), session.getSessionId()));
+		for(Dictionary dictonary : speakerList.getDictionaries())
 		{
-			logger.debug(TAG, "getSpeakers() requesting...");
-
-			String temp = String.format("%s/ctrl-int/1/getspeakers?session-id=%s", session.getRequestBase(), session.sessionId);
-
-			byte[] raw = RequestHelper.request(temp, false);
-
-			Response response = ResponseParser.performParse(raw);
-
-			Response casp = response.getNested("casp");
-			if(casp != null)
-			{
-				speakers.clear();
-			}
-
-			List<Response> mdclArray = casp.findArray("mdcl");
-
-			// Master volume is required to compute the speakers' absolute volume
-			long masterVolume = getVolume();
-
-			for(Response mdcl : mdclArray)
-			{
-				Speaker speaker = new Speaker();
-				speaker.setName(mdcl.getString("minm"));
-				long id = mdcl.getNumberLong("msma");
-				speaker.setId(id);
-				logger.debug(TAG, "Speaker = " + speaker.getName());
-				int relativeVolume = (int) mdcl.getNumberLong("cmvo");
-				boolean isActive = mdcl.containsKey("caia");
-				speaker.setActive(isActive);
-				// mastervolume/100 * relativeVolume/100 * 100
-				int absoluteVolume = isActive ? (int) masterVolume * relativeVolume / 100 : 0;
-				speaker.setAbsoluteVolume(absoluteVolume);
-				speakers.add(speaker);
-			}
-
-		}
-		catch(Exception e)
-		{
-			logger.error(TAG, "Could not get speakers: ", e);
-			speakers.clear();
 			Speaker speaker = new Speaker();
-			speaker.setName("Computer");
-			speaker.setId(1);
-			speaker.setActive(true);
-			speaker.setAbsoluteVolume(50);
+			String name = dictonary.getSpecificChunk(ItemName.class).getValue();
+			long speakerId = dictonary.getSpecificChunk(UnknownMA.class).getValue();
+			int relativeVolume = dictonary.getSpecificChunk(RelativeVolume.class).getValue();
+
+			SpeakerActive isActive = dictonary.getSpecificChunk(SpeakerActive.class);
+			if(dictonary.getSpecificChunk(UnknownVD.class) != null)
+			{
+				int vd = dictonary.getSpecificChunk(UnknownVD.class).getValue();
+			}
+
+			speaker.setActive(isActive != null ? isActive.getBooleanValue() : false);
+			speaker.setId(speakerId);
+			speaker.setName(name);
+			speaker.setAbsoluteVolume(speaker.isActive() ? (int) getMasterVolume() * relativeVolume / 100 : 0);
 			speakers.add(speaker);
 		}
 
 		return speakers;
-
 	}
 
 	/**
@@ -523,43 +303,31 @@ public class Status
 	 * 
 	 * @param speakers
 	 *            all speakers to read the active flag from
+	 * @throws Exception
 	 */
-	public void setSpeakers(List<Speaker> speakers)
+	public void setSpeakers(List<Speaker> speakers) throws Exception
 	{
-
-		try
+		String idsString = "";
+		boolean first = true;
+		// The list of speakers to activate is a comma-separated string with
+		// the hex versions of the speakers' IDs
+		for(Speaker speaker : speakers)
 		{
-			logger.debug(TAG, "setSpeakers() requesting...");
-
-			String idsString = "";
-			boolean first = true;
-			// The list of speakers to activate is a comma-separated string with
-			// the hex versions of the speakers' IDs
-			for(Speaker speaker : speakers)
+			if(speaker.isActive())
 			{
-				if(speaker.isActive())
+				if(!first)
 				{
-					if(!first)
-					{
-						idsString += ",";
-					}
-					else
-					{
-						first = false;
-					}
-					idsString += speaker.getIdAsHex();
+					idsString += ",";
 				}
+				else
+				{
+					first = false;
+				}
+				idsString += speaker.getIdAsHex();
 			}
-
-			String url = String.format("%s/ctrl-int/1/setspeakers?speaker-id=%s&session-id=%s", session.getRequestBase(), idsString, session.sessionId);
-
-			RequestHelper.request(url, false);
-
 		}
-		catch(Exception e)
-		{
-			logger.error(TAG, "Could not set speakers: ", e);
-		}
+
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setspeakers?speaker-id=%s&session-id=%s", session.getRequestBase(), idsString, session.getSessionId()));
 	}
 
 	/**
@@ -577,44 +345,38 @@ public class Status
 	 *            the volume of the second loudest speaker
 	 * @param masterVolume
 	 *            the current master volume
+	 * @throws Exception
 	 */
-	public void setSpeakerVolume(long speakerId, int newVolume, int formerVolume, int speakersMaxVolume, int secondMaxVolume, long masterVolume)
+	public void setSpeakerVolume(long speakerId, int newVolume, int formerVolume, int speakersMaxVolume, int secondMaxVolume, long masterVolume) throws Exception
 	{
-		try
+		/*************************************************************
+		 * If this speaker will become or is currently the loudest or is the only activated speaker, it will be controlled via the master volume.
+		 *************************************************************/
+		if(newVolume > masterVolume || formerVolume == speakersMaxVolume)
 		{
-			/*************************************************************
-			 * If this speaker will become or is currently the loudest or is the only activated speaker, it will be controlled via the master volume.
-			 *************************************************************/
-			if(newVolume > masterVolume || formerVolume == speakersMaxVolume)
+			if(newVolume < secondMaxVolume)
 			{
-				if(newVolume < secondMaxVolume)
-				{
-					// First equalize the volume of this speaker with the second
-					// loudest
-					setAbsoluteVolume(speakerId, secondMaxVolume);
-					int relativeVolume = newVolume * 100 / secondMaxVolume;
-					// then go on by decreasing the relative volume of this speaker
-					setRelativeVolume(speakerId, relativeVolume);
-				}
-				else
-				{
-					// the speaker will remain the loudest, so just control the
-					// absolute volume (master volume)
-					setAbsoluteVolume(speakerId, newVolume);
-				}
-			}
-			/*************************************************************
-			 * Otherwise its relative volume will be controlled
-			 *************************************************************/
-			else
-			{
-				int relativeVolume = newVolume * 100 / (int) masterVolume;
+				// First equalize the volume of this speaker with the second
+				// loudest
+				setAbsoluteVolume(speakerId, secondMaxVolume);
+				int relativeVolume = newVolume * 100 / secondMaxVolume;
+				// then go on by decreasing the relative volume of this speaker
 				setRelativeVolume(speakerId, relativeVolume);
 			}
+			else
+			{
+				// the speaker will remain the loudest, so just control the
+				// absolute volume (master volume)
+				setAbsoluteVolume(speakerId, newVolume);
+			}
 		}
-		catch(Exception e)
+		/*************************************************************
+		 * Otherwise its relative volume will be controlled
+		 *************************************************************/
+		else
 		{
-			logger.error(TAG, "Error when setting speaker volume: ", e);
+			int relativeVolume = newVolume * 100 / (int) masterVolume;
+			setRelativeVolume(speakerId, relativeVolume);
 		}
 	}
 
@@ -629,9 +391,7 @@ public class Status
 	 */
 	private void setAbsoluteVolume(long speakerId, int absoluteVolume) throws Exception
 	{
-		String url;
-		url = String.format("%s/ctrl-int/1/setproperty?dmcp.volume=%d&include-speaker-id=%s" + "&session-id=%s", session.getRequestBase(), absoluteVolume, speakerId, session.sessionId);
-		RequestHelper.request(url, false);
+		Object o = RequestHelper.request(String.format("%s/ctrl-int/1/setproperty?dmcp.volume=%d&include-speaker-id=%s" + "&session-id=%s", session.getRequestBase(), absoluteVolume, speakerId, session.getSessionId()), false);
 	}
 
 	/**
@@ -645,103 +405,7 @@ public class Status
 	 */
 	private void setRelativeVolume(long speakerId, int relativeVolume) throws Exception
 	{
-		String url;
-		url = String.format("%s/ctrl-int/1/setproperty?speaker-id=%s&dmcp.volume=%d" + "&session-id=%s", session.getRequestBase(), speakerId, relativeVolume, session.sessionId);
-		RequestHelper.request(url, false);
+		Object o = RequestHelper.request(String.format("%s/ctrl-int/1/setproperty?speaker-id=%s&dmcp.volume=%d" + "&session-id=%s", session.getRequestBase(), speakerId, relativeVolume, session.getSessionId()), false);
 	}
 
-	public int getProgress()
-	{
-		return (int) ((this.progressTotal - this.progressRemain) / 1000);
-	}
-
-	public int getRemaining()
-	{
-		return (int) (this.progressRemain / 1000);
-	}
-
-	public int getProgressTotal()
-	{
-		return (int) (this.progressTotal / 1000);
-	}
-
-	public int getShuffle()
-	{
-		return this.shuffleStatus;
-	}
-
-	public int getRepeat()
-	{
-		return this.repeatStatus;
-	}
-
-	public int getPlayStatus()
-	{
-		return this.playStatus;
-	}
-
-	public String getTrackName()
-	{
-		return this.trackName;
-	}
-
-	public String getTrackArtist()
-	{
-		return this.trackArtist;
-	}
-
-	public String getTrackAlbum()
-	{
-		return this.trackAlbum;
-	}
-
-	public String getTrackGenre()
-	{
-		return this.trackGenre;
-	}
-
-	public long getContainerItemId()
-	{
-		return this.containerItemId;
-	}
-
-	public long getDatabaseId()
-	{
-		return this.databaseId;
-	}
-
-	public long getPlaylistId()
-	{
-		return this.playlistId;
-	}
-
-	public long getRating()
-	{
-		return this.rating;
-	}
-
-	public String getAlbumId()
-	{
-		return this.albumId;
-	}
-
-	public long getTrackId()
-	{
-		return this.trackId;
-	}
-
-	public boolean isVisualizerOn()
-	{
-		return this.visualizer;
-	}
-
-	public boolean isFullscreen()
-	{
-		return this.fullscreen;
-	}
-
-	public boolean isGeniusSelectable()
-	{
-		return this.geniusSelectable;
-	}
 }

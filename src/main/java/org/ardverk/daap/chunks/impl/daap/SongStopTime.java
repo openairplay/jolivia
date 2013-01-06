@@ -15,27 +15,33 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
 import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * The stop time of the Song in milliseconds. I.e. you can use it to stop playing this song n-milliseconds before end.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongStopTime extends UIntChunk
 {
 
-	public ReturnedCount()
+	/**
+	 * Creates a new SongStopTime where stop time is not set. You can change this value with {@see #setValue(int)}.
+	 */
+	public SongStopTime()
 	{
 		this(0);
 	}
 
-	public ReturnedCount(long count)
+	/**
+	 * Creates a new SongStopTime at the assigned time. Use 0 to disable this property. You can change this value with {@see #setValue(int)}.
+	 * 
+	 * @param <tt>time</tt> the stop time of this song in milliseconds.
+	 */
+	public SongStopTime(long time)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("assp", "daap.songstoptime", time);
 	}
 }

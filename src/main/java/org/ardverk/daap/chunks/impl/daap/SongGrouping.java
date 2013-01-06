@@ -15,27 +15,25 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.StringChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * The grouping of the Song.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongGrouping extends StringChunk
 {
 
-	public ReturnedCount()
+	public SongGrouping()
 	{
-		this(0);
+		this(null);
 	}
 
-	public ReturnedCount(long count)
+	public SongGrouping(String grouping)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("agrp", "daap.songgrouping", grouping);
 	}
 }

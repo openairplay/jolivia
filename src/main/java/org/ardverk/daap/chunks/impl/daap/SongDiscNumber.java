@@ -15,27 +15,33 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.UShortChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * The disk number of the Song.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongDiscNumber extends UShortChunk
 {
 
-	public ReturnedCount()
+	/**
+	 * Creates a new SongDiscNumber where disc is 0. You can change this value with {@see #setValue(int)}.
+	 */
+	public SongDiscNumber()
 	{
 		this(0);
 	}
 
-	public ReturnedCount(long count)
+	/**
+	 * Creates a new SongDiscNumber with the assigned disc. You can change this value with {@see #setValue(int)}.
+	 * 
+	 * @param <tt>disc</tt> the disc of this song.
+	 */
+	public SongDiscNumber(int discNumber)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("asdn", "daap.songdiscnumber", discNumber);
 	}
 }

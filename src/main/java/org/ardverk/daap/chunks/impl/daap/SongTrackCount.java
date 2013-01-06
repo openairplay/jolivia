@@ -15,27 +15,33 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.UShortChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * The total number of Tracks.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongTrackCount extends UShortChunk
 {
 
-	public ReturnedCount()
+	/**
+	 * Creates a new SongTrackCount with 0 tracks. You can change this value with {@see #setValue(int)}.
+	 */
+	public SongTrackCount()
 	{
 		this(0);
 	}
 
-	public ReturnedCount(long count)
+	/**
+	 * Creates a new SongTrackCount with the assigned count. You can change this value with {@see #setValue(int)}.
+	 * 
+	 * @param <tt>count</tt> the count of tracks the album has where this song belongs to.
+	 */
+	public SongTrackCount(int count)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("astc", "daap.songtrackcount", count);
 	}
 }

@@ -15,27 +15,25 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.BooleanChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * A Song is either part of a compilation or not (default).
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongCompilation extends BooleanChunk
 {
 
-	public ReturnedCount()
+	public SongCompilation()
 	{
-		this(0);
+		this(false);
 	}
 
-	public ReturnedCount(long count)
+	public SongCompilation(boolean comp)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("asco", "daap.songcompilation", comp);
 	}
 }

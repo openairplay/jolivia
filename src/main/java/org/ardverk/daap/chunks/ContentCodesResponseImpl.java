@@ -18,7 +18,7 @@
 package org.ardverk.daap.chunks;
 
 import org.ardverk.daap.chunks.impl.ContentCodesResponse;
-import org.ardverk.daap.chunks.impl.Status;
+import org.ardverk.daap.chunks.impl.dmap.Status;
 
 public final class ContentCodesResponseImpl extends ContentCodesResponse
 {

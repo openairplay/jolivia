@@ -15,27 +15,33 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.UShortChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * The year when the Song was released.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongYear extends UShortChunk
 {
 
-	public ReturnedCount()
+	/**
+	 * Creates a new SongYear and initializes it with 0 You can change this value with {@see #setValue(int)}.
+	 */
+	public SongYear()
 	{
 		this(0);
 	}
 
-	public ReturnedCount(long count)
+	/**
+	 * Creates a new SongYear and initializes it with the assigned year. You can change this value with {@see #setValue(int)}.
+	 * 
+	 * @param <code>year</code> the year
+	 */
+	public SongYear(int year)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("asyr", "daap.songyear", year);
 	}
 }

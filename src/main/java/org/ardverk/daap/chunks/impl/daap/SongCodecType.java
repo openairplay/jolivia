@@ -15,27 +15,31 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
+import org.ardverk.daap.ByteUtil;
 import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * Unknown purpose.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
+ * @since iTunes 4.5
  */
-public class ReturnedCount extends UIntChunk
+public class SongCodecType extends UIntChunk
 {
 
-	public ReturnedCount()
+	public static final int MPEG = ByteUtil.toFourCharCode("mpeg");
+	public static final int MP4A = ByteUtil.toFourCharCode("mp4a");
+
+	/** Creates a new instance of SongCodecType */
+	public SongCodecType()
 	{
 		this(0);
 	}
 
-	public ReturnedCount(long count)
+	public SongCodecType(long codec)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("ascd", "daap.songcodectype", codec);
 	}
 }

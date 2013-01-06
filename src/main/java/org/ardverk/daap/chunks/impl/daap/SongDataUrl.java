@@ -15,27 +15,31 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.StringChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * The stream source of the Song. Used together with {@see SongDataKind} if data kind is Radio stream.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongDataUrl extends StringChunk
 {
 
-	public ReturnedCount()
+	/**
+*
+*/
+	public SongDataUrl()
 	{
-		this(0);
+		this(null);
 	}
 
-	public ReturnedCount(long count)
+	/**
+	 * @param url
+	 */
+	public SongDataUrl(String url)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("asul", "daap.songdataurl", url);
 	}
 }

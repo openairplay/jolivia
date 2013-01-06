@@ -15,27 +15,34 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.StringChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * The artist of the Song.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongArtist extends StringChunk
 {
 
-	public ReturnedCount()
+	/**
+	 * Creates a new SongArtist where Artist is <tt>null</tt> (i.e. no artist)
+	 */
+	public SongArtist()
 	{
-		this(0);
+		this(null);
 	}
 
-	public ReturnedCount(long count)
+	/**
+	 * Creates a new SongArtist with the secified artist name.
+	 * 
+	 * @param artist
+	 *            the name of the artist (individual, a band or group)
+	 */
+	public SongArtist(String artist)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("asar", "daap.songartist", artist);
 	}
 }

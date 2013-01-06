@@ -15,27 +15,34 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.UByteChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * This class describes if a song is either a Radio stream or DAAP stream. Radio streams have a different icon and and the data is usually streamed from an URL ({@see SongDataUrl}).
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongDataKind extends UByteChunk
 {
 
-	public ReturnedCount()
+	/** Radio stream */
+	public static final int RADIO_STREAM = 1;
+
+	/** DAAP stream (default) */
+	public static final int DAAP_STREAM = 2;
+
+	/**
+	 * Creates a new SongDataKind with DAAP_STREAM as type.
+	 */
+	public SongDataKind()
 	{
-		this(0);
+		this(DAAP_STREAM);
 	}
 
-	public ReturnedCount(long count)
+	public SongDataKind(int kind)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("asdk", "daap.songdatakind", kind);
 	}
 }

@@ -15,27 +15,33 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.BooleanChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * Enables or disables the Song. Default is enabled. iTunes shows this as the small checkbox next to the Song name.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongDisabled extends BooleanChunk
 {
 
-	public ReturnedCount()
+	/**
+	 * Creates a new SongDisabled where song is enabled. You can change this value with {@see #setValue(boolean)}.
+	 */
+	public SongDisabled()
 	{
-		this(0);
+		this(false);
 	}
 
-	public ReturnedCount(long count)
+	/**
+	 * Creates a new SongDisabled with the assigned value. You can change this value with {@see #setValue(boolean)}.
+	 * 
+	 * @param <tt>disabled</tt> enables or disables this song.
+	 */
+	public SongDisabled(boolean disabled)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("asdb", "daap.songdisabled", disabled);
 	}
 }

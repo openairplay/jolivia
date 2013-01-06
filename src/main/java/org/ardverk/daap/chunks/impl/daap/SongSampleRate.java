@@ -15,27 +15,35 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
 import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * The sample rate of the Song in kHz.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongSampleRate extends UIntChunk
 {
 
-	public ReturnedCount()
+	public static final int KHZ_44100 = 44100;
+
+	/**
+	 * Creates a new SongSampleRate with 0 kHz You can change this value with {@see #setValue(int)}.
+	 */
+	public SongSampleRate()
 	{
-		this(0);
+		this(KHZ_44100);
 	}
 
-	public ReturnedCount(long count)
+	/**
+	 * Creates a new SongSampleRate with the assigned sample rate. You can change this value with {@see #setValue(int)}.
+	 * 
+	 * @param <tt>rate</tt> the rate of this song in kHz.
+	 */
+	public SongSampleRate(long rate)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("assr", "daap.songsamplerate", rate);
 	}
 }

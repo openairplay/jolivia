@@ -15,27 +15,30 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.dmap;
 
 import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * Seems to be the equivalent to HTTP/1.1 200 OK but it's never changing even if an error occurs.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class Status extends UIntChunk
 {
 
-	public ReturnedCount()
+	/**
+	 * The default status
+	 */
+	public static final int STATUS_200 = 200;
+
+	public Status()
 	{
-		this(0);
+		this(STATUS_200);
 	}
 
-	public ReturnedCount(long count)
+	public Status(long status)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("mstt", "dmap.status", status);
 	}
 }

@@ -15,27 +15,33 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
 import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * The start time of the Song in milliseconds. I.e. you can use it to skip n-milliseconds at the beginning.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongStartTime extends UIntChunk
 {
 
-	public ReturnedCount()
+	/**
+	 * Creates a new SongStartTime which starts at the beginning of the song. You can change this value with {@see #setValue(int)}.
+	 */
+	public SongStartTime()
 	{
 		this(0);
 	}
 
-	public ReturnedCount(long count)
+	/**
+	 * Creates a new SongStartTime at the assigned time. You can change this value with {@see #setValue(int)}.
+	 * 
+	 * @param <tt>time</tt> the start time of this song in milliseconds.
+	 */
+	public SongStartTime(long time)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("asst", "daap.songstarttime", time);
 	}
 }

@@ -15,27 +15,26 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.ContainerChunk;
+import org.ardverk.daap.chunks.impl.Listing;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * Container for the <tt>/databases</tt> request
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class ServerDatabases extends ContainerChunk
 {
 
-	public ReturnedCount()
+	public ServerDatabases()
 	{
-		this(0);
+		super("avdb", "daap.serverdatabases");
 	}
 
-	public ReturnedCount(long count)
+	public Listing getListing()
 	{
-		super("mrco", "dmap.returnedcount", count);
+		return getSingleChunk(Listing.class);
 	}
 }

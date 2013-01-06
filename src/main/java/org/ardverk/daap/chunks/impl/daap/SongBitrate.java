@@ -15,27 +15,33 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.UShortChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * The bitrate of this song in kilo bits per second (kbps).
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongBitrate extends UShortChunk
 {
 
-	public ReturnedCount()
+	/**
+	 * Creates a new SongBitrate with 0 kbps You can change this value with {@see #setValue(int)}.
+	 */
+	public SongBitrate()
 	{
 		this(0);
 	}
 
-	public ReturnedCount(long count)
+	/**
+	 * Creates a new SongBitrate with the assigned bit rate. You can change this value with {@see #setValue(int)}.
+	 * 
+	 * @param <tt>bitrate</tt> the bitrate of this song in kbps.
+	 */
+	public SongBitrate(int bitrate)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("asbr", "daap.songbitrate", bitrate);
 	}
 }

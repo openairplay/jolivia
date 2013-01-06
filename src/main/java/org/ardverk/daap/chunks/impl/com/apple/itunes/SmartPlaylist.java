@@ -15,27 +15,25 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.com.apple.itunes;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.BooleanChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * Used by Playlist to mark itself as smart or not smart (default). The only difference is a slightly different icon.
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SmartPlaylist extends BooleanChunk
 {
 
-	public ReturnedCount()
+	public SmartPlaylist()
 	{
-		this(0);
+		this(false);
 	}
 
-	public ReturnedCount(long count)
+	public SmartPlaylist(boolean smart)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("aeSP", "com.apple.itunes.smart-playlist", smart);
 	}
 }

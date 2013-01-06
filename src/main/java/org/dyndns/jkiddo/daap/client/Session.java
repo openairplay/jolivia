@@ -38,7 +38,7 @@ import org.ardverk.daap.chunks.impl.ItemName;
 import org.ardverk.daap.chunks.impl.ListingItem;
 import org.ardverk.daap.chunks.impl.LoginResponse;
 import org.ardverk.daap.chunks.impl.PersistentId;
-import org.ardverk.daap.chunks.impl.ServerDatabases;
+import org.ardverk.daap.chunks.impl.daap.ServerDatabases;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -215,7 +215,7 @@ public class Session
 	 * 
 	 * @throws Exception
 	 */
-	public void controlClearCue() throws Exception
+	private void controlClearCue() throws Exception
 	{
 		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=clear&session-id=%s", getRequestBase(), sessionId));
 	}
@@ -231,7 +231,7 @@ public class Session
 		// /ctrl-int/1/playspec?database-spec='dmap.persistentid:16621530181618731553'&playlist-spec='dmap.persistentid:9378496334192532210'&dacp.shufflestate=1&session-id=514488449
 		// (zero based index into playlist)
 
-		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=clear&session-id=%s", getRequestBase(), sessionId));
+		controlClearCue();
 		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=play&query='daap.songalbumid:%s'&index=%d&sort=album&session-id=%s", getRequestBase(), albumId, tracknum, sessionId));
 
 	}
@@ -250,7 +250,7 @@ public class Session
 		final String encodedArtist = Library.escapeUrlString(artist);
 		final int encodedIndex = index;
 
-		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=clear&session-id=%s", getRequestBase(), sessionId));
+		controlClearCue();
 		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=play&query='daap.songartist:%s'&index=%d&sort=album&session-id=%s", getRequestBase(), encodedArtist, encodedIndex, sessionId));
 	}
 
@@ -267,7 +267,7 @@ public class Session
 
 	public void controlPlayTrack(final String trackId) throws Exception
 	{
-		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=clear&session-id=%s", getRequestBase(), sessionId));
+		controlClearCue();
 		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=play&query='dmap.itemid:%s'&session-id=%s", getRequestBase(), trackId, sessionId));
 	}
 
@@ -275,7 +275,7 @@ public class Session
 	{
 		// /ctrl-int/1/cue?command=play&query=(('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:4','com.apple.itunes.mediakind:8')+'dmap.itemname:*F*')&index=4&sort=name&session-id=1550976127
 		final String encodedSearch = Library.escapeUrlString(search);
-		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=clear&session-id=%s", getRequestBase(), sessionId));
+		controlClearCue();
 		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=play&query=(('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:4','com.apple.itunes.mediakind:8')+('dmap.itemname:*%s*','daap.songartist:*%s*','daap.songalbum:*%s*'))&type=music&sort=name&index=%d&session-id=%s", getRequestBase(), encodedSearch, encodedSearch, encodedSearch, index, sessionId));
 	}
 
@@ -298,7 +298,7 @@ public class Session
 			{
 				// Fall back to choosing from the current album if there is
 				// one
-				RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=clear&session-id=%s", getRequestBase(), sessionId));
+				controlClearCue();
 				RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=play&query='daap.songalbumid:%s'&index=%d&sort=album&session-id=%s", getRequestBase(), albumid, tracknum, sessionId));
 			}
 		}
@@ -316,15 +316,9 @@ public class Session
 		RequestHelper.request(String.format("%s/ctrl-int/1/setproperty?dacp.fullscreen=%d&session-id=%s", this.getRequestBase(), enabled ? 1 : 0, this.sessionId));
 	}
 
-	// Query the media server about the content codes it handles
-	// print to stderr as a csv file
-	public void listContentCodes() throws Exception
+	public void controlPlayRadio(final long genreId, final long itemId) throws Exception
 	{
-		ContentCodesResponse contentcodes = RequestHelper.requestParsed(String.format("%s/content-codes?session-id=%s", this.getRequestBase(), this.sessionId));
-		for(Chunk contentCode : contentcodes)
-		{
-			logger.info(contentCode.getContentCodeString());
-		}
+		playSpec(radioDatabase.getItemId(), genreId, itemId);
 	}
 
 	public void playSpec(final long databaseId, final long containerId, final long itemId) throws Exception
@@ -334,8 +328,14 @@ public class Session
 		RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playspec?" + "database-spec='dmap.itemid:0x%x'" + "&container-spec='dmap.itemid:0x%x'" + "&item-spec='dmap.itemid:0x%x'" + "&session-id=%s", getRequestBase(), databaseId, containerId, itemId, sessionId));
 	}
 
-	public void controlPlayRadio(final long genreId, final long itemId) throws Exception
+	// Query the media server about the content codes it handles
+	// print to stderr as a csv file
+	public void listContentCodes() throws Exception
 	{
-		playSpec(radioDatabase.getItemId(), genreId, itemId);
+		ContentCodesResponse contentcodes = RequestHelper.requestParsed(String.format("%s/content-codes?session-id=%s", this.getRequestBase(), this.sessionId));
+		for(Chunk contentCode : contentcodes)
+		{
+			logger.info(contentCode.getContentCodeString());
+		}
 	}
 }

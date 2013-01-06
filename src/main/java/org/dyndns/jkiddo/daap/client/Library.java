@@ -63,7 +63,7 @@ public class Library
 	 *            the total items to return in this search
 	 * @return the count of records returned or -1 if nothing found
 	 */
-	public long readSearch(TagListener listener, String search, long start, long items)
+	public long readSearch(String search, long start, long items)
 	{
 		long total = -1;
 		try

@@ -15,27 +15,25 @@
  * limitations under the License.
  */
 
-package org.ardverk.daap.chunks.impl;
+package org.ardverk.daap.chunks.impl.daap;
 
-import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
+import org.ardverk.daap.chunks.DateChunk;
 
 /**
- * The number of items (e.g. the number of Songs in a Playlist) a DAAP response has. This chunk usually appears together with SpecifiedTotalCount.
+ * The date when the Song was added. Date is the difference between the current time and midnight, January 1, 1970 UTC in <u>seconds</u>! <code>int date = (int)(System.currentTimeMillis()/1000);</code>
  * 
- * @see SpecifiedTotalCount
  * @author Roger Kapsi
  */
-public class ReturnedCount extends UIntChunk
+public class SongDateAdded extends DateChunk
 {
 
-	public ReturnedCount()
+	public SongDateAdded()
 	{
-		this(0);
+		this(0l);
 	}
 
-	public ReturnedCount(long count)
+	public SongDateAdded(long seconds)
 	{
-		super("mrco", "dmap.returnedcount", count);
+		super("asda", "daap.songdateadded", seconds);
 	}
 }

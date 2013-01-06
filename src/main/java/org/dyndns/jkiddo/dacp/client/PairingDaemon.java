@@ -22,6 +22,7 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
 
 import org.dyndns.jkiddo.daap.client.Session;
+import org.dyndns.jkiddo.daap.client.Status;
 import org.dyndns.jkiddo.dacp.server.IRemoteControlResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,8 +84,9 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener
 	private void spawnClientTraverser(String server, String code) throws Exception
 	{
 		Session session = new Session(server, code);
-		session.listContentCodes();
-
+		Status status = new Status(session);
+		status.setSpeakers(status.getSpeakers());
+		status.setSpeakerVolume(0, 0, 0, 0, 0, 0);
 	}
 
 	@Override
