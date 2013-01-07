@@ -17,10 +17,10 @@
 
 package org.ardverk.daap.chunks;
 
-import org.ardverk.daap.chunks.impl.ContentCodesName;
-import org.ardverk.daap.chunks.impl.ContentCodesNumber;
-import org.ardverk.daap.chunks.impl.ContentCodesType;
-import org.ardverk.daap.chunks.impl.Dictionary;
+import org.ardverk.daap.chunks.impl.dmap.ContentCodesName;
+import org.ardverk.daap.chunks.impl.dmap.ContentCodesNumber;
+import org.ardverk.daap.chunks.impl.dmap.ContentCodesType;
+import org.ardverk.daap.chunks.impl.dmap.Dictionary;
 
 /**
  * A content code is essentially a description of a chunk.

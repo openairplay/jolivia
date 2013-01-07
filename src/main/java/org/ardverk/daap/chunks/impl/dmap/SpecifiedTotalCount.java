@@ -18,7 +18,6 @@
 package org.ardverk.daap.chunks.impl.dmap;
 
 import org.ardverk.daap.chunks.UIntChunk;
-import org.ardverk.daap.chunks.impl.ReturnedCount;
 
 /**
  * The total number of Songs, Databases or whatever the Library has. This chunk usually appears together with ReturnedCount.

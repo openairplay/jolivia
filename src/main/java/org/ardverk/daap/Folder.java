@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.ardverk.daap.chunks.impl.HasChildContainers;
-import org.ardverk.daap.chunks.impl.ParentContainerId;
+import org.ardverk.daap.chunks.impl.dmap.HasChildContainers;
+import org.ardverk.daap.chunks.impl.dmap.ParentContainerId;
 
 /**
  * A Folder is a Playlist of Playlists

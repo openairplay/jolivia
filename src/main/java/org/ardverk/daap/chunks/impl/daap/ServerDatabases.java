@@ -18,7 +18,7 @@
 package org.ardverk.daap.chunks.impl.daap;
 
 import org.ardverk.daap.chunks.ContainerChunk;
-import org.ardverk.daap.chunks.impl.Listing;
+import org.ardverk.daap.chunks.impl.dmap.Listing;
 
 /**
  * Container for the <tt>/databases</tt> request

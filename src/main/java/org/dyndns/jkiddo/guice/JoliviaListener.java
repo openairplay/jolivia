@@ -12,12 +12,12 @@ package org.dyndns.jkiddo.guice;
 
 import javax.jmdns.JmmDNS;
 
+import org.dyndns.jkiddo.PairingDaemon;
 import org.dyndns.jkiddo.daap.server.ILibraryResource;
 import org.dyndns.jkiddo.daap.server.LibraryManager;
 import org.dyndns.jkiddo.daap.server.LibraryResource;
 import org.dyndns.jkiddo.dacp.client.IDatabase;
 import org.dyndns.jkiddo.dacp.client.IPairingResource;
-import org.dyndns.jkiddo.dacp.client.PairingDaemon;
 import org.dyndns.jkiddo.dacp.client.PairingDatabase;
 import org.dyndns.jkiddo.dacp.client.PairingResource;
 import org.dyndns.jkiddo.dacp.server.IRemoteControlResource;

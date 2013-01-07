@@ -29,13 +29,15 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.ardverk.daap.chunks.impl.Dictionary;
-import org.ardverk.daap.chunks.impl.ItemName;
-import org.ardverk.daap.chunks.impl.RelativeVolume;
+import org.ardverk.daap.chunks.impl.dmap.Dictionary;
+import org.ardverk.daap.chunks.impl.dmap.ItemName;
+import org.ardverk.daap.chunks.impl.unknown.RelativeVolume;
 import org.ardverk.daap.chunks.impl.unknown.SpeakerActive;
 import org.ardverk.daap.chunks.impl.unknown.SpeakerList;
 import org.ardverk.daap.chunks.impl.unknown.UnknownGT;
 import org.ardverk.daap.chunks.impl.unknown.UnknownMA;
+import org.ardverk.daap.chunks.impl.unknown.StatusRevision;
+import org.ardverk.daap.chunks.impl.unknown.UnknownST;
 import org.ardverk.daap.chunks.impl.unknown.UnknownVD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,8 +54,6 @@ import android.graphics.Bitmap;
  */
 public class Status
 {
-
-	public final static String TAG = Status.class.toString();
 
 	/**
 	 * Constants
@@ -89,10 +89,6 @@ public class Status
 	public static String lastActivity, lastPlaylistId, lastPlaylistPersistentId;
 	public static String[] lastAlbum;
 
-	// This is used to fetch higher quality covers on high DPI devices
-	// Has to be initialised in ControlActivity
-	public static int screenHeight = 320;
-
 	public static final Logger logger = LoggerFactory.getLogger(Status.class);
 
 	protected final Thread keepalive = new Thread(new Runnable() {
@@ -114,7 +110,7 @@ public class Status
 				}
 				catch(Exception e)
 				{
-					e.printStackTrace();
+					logger.error(e.getMessage(), e);
 				}
 			}
 		}
@@ -125,7 +121,8 @@ public class Status
 		// using revision-number=1 will make sure we return
 		// instantly
 		// http://192.168.254.128:3689/ctrl-int/1/playstatusupdate?revision-number=1&session-id=1034286700
-		parseUpdate(RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), 1, session.getSessionId()), false));
+		UnknownST state = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), 1, session.getSessionId()));
+		revision = state.getSpecificChunk(StatusRevision.class).getValue();
 	}
 
 	protected void parseUpdate(Response resp) throws Exception
@@ -391,7 +388,7 @@ public class Status
 	 */
 	private void setAbsoluteVolume(long speakerId, int absoluteVolume) throws Exception
 	{
-		Object o = RequestHelper.request(String.format("%s/ctrl-int/1/setproperty?dmcp.volume=%d&include-speaker-id=%s" + "&session-id=%s", session.getRequestBase(), absoluteVolume, speakerId, session.getSessionId()), false);
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dmcp.volume=%d&include-speaker-id=%s" + "&session-id=%s", session.getRequestBase(), absoluteVolume, speakerId, session.getSessionId()));
 	}
 
 	/**
@@ -405,7 +402,7 @@ public class Status
 	 */
 	private void setRelativeVolume(long speakerId, int relativeVolume) throws Exception
 	{
-		Object o = RequestHelper.request(String.format("%s/ctrl-int/1/setproperty?speaker-id=%s&dmcp.volume=%d" + "&session-id=%s", session.getRequestBase(), speakerId, relativeVolume, session.getSessionId()), false);
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?speaker-id=%s&dmcp.volume=%d" + "&session-id=%s", session.getRequestBase(), speakerId, relativeVolume, session.getSessionId()));
 	}
 
 }
