@@ -11,7 +11,7 @@ public class GeniusSelectable extends UByteChunk
 
 	public GeniusSelectable(int value)
 	{
-		super("ceGS", "com.apple.itunes.unknown-GS", value);
+		super("ceGS", "com.apple.itunes.genius-selectable", value);
 	}
 
 }

@@ -174,6 +174,8 @@ public final class ChunkFactory
 		map.put(new Integer(0x61654773), org.ardverk.daap.chunks.impl.dmap.GeniusSeed.class); // aeGs
 		map.put(new Integer(0x63654753), org.ardverk.daap.chunks.impl.unknown.GeniusSelectable.class); // ceGs
 		map.put(new Integer(0x63617361), org.ardverk.daap.chunks.impl.unknown.UnknownSA.class); // casa
+		map.put(new Integer(0x63616e74), org.ardverk.daap.chunks.impl.unknown.ProgressRemain.class); // cant
+		map.put(new Integer(0x63617374), org.ardverk.daap.chunks.impl.unknown.ProgressTotal.class); // cant
 	}
 
 	public Class<? extends Chunk> getChunkClass(Integer contentCode)

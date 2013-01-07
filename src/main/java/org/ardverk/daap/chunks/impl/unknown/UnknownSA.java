@@ -1,8 +1,8 @@
 package org.ardverk.daap.chunks.impl.unknown;
 
-import org.ardverk.daap.chunks.UByteChunk;
+import org.ardverk.daap.chunks.UIntChunk;
 
-public class UnknownSA extends UByteChunk
+public class UnknownSA extends UIntChunk
 {
 	public UnknownSA()
 	{
