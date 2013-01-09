@@ -2,14 +2,14 @@ package org.ardverk.daap.chunks.impl.unknown;
 
 import org.ardverk.daap.chunks.StringChunk;
 
-public class NumberArtist extends StringChunk
+public class TrackArtist extends StringChunk
 {
-	public NumberArtist()
+	public TrackArtist()
 	{
 		this(null);
 	}
 	
-	public NumberArtist(String value)
+	public TrackArtist(String value)
 	{
 		super("cana", "com.apple.itunes.unknown-na", value);
 	}

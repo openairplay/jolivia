@@ -165,10 +165,10 @@ public final class ChunkFactory
 		map.put(new Integer(0x63617375), org.ardverk.daap.chunks.impl.unknown.UnknownSU.class); // casu
 		map.put(new Integer(0x63655175), org.ardverk.daap.chunks.impl.unknown.UnknownQU.class); // ceQu
 		map.put(new Integer(0x63616e70), org.ardverk.daap.chunks.impl.unknown.NowPlaying.class); // canp
-		map.put(new Integer(0x63616e6e), org.ardverk.daap.chunks.impl.unknown.NumberName.class); // cann
-		map.put(new Integer(0x63616e61), org.ardverk.daap.chunks.impl.unknown.NumberArtist.class); // cana
-		map.put(new Integer(0x63616e6c), org.ardverk.daap.chunks.impl.unknown.NumberAlbum.class); // canl
-		map.put(new Integer(0x63616e67), org.ardverk.daap.chunks.impl.unknown.NumberGenre.class); // cang
+		map.put(new Integer(0x63616e6e), org.ardverk.daap.chunks.impl.unknown.TrackName.class); // cann
+		map.put(new Integer(0x63616e61), org.ardverk.daap.chunks.impl.unknown.TrackArtist.class); // cana
+		map.put(new Integer(0x63616e6c), org.ardverk.daap.chunks.impl.unknown.TrackAlbum.class); // canl
+		map.put(new Integer(0x63616e67), org.ardverk.daap.chunks.impl.unknown.TrackGenre.class); // cang
 		map.put(new Integer(0x61736169), org.ardverk.daap.chunks.impl.daap.SongAlbumId.class); // asai
 		map.put(new Integer(0x636d6d6b), org.ardverk.daap.chunks.impl.unknown.UnknownMK.class); // cmmk
 		map.put(new Integer(0x61654773), org.ardverk.daap.chunks.impl.dmap.GeniusSeed.class); // aeGs

@@ -84,19 +84,13 @@ public class RequestHelper
 		return request(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemname,dmap.itemcount,dmap.itemid,dmap.persistentid,daap.baseplaylist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,com.apple.itunes.saved-genius,dmap.parentcontainerid,dmap.editcommandssupported", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterPlaylist().getItemId(), session.getSessionId()));
 	}
 
-	public static Response requestParsed(String url, boolean keepalive) throws Exception
-	{
-		logger.debug(url);
-		return ResponseParser.performParse(request(url, keepalive));
-	}
-
 	@SuppressWarnings("unchecked")
-	public static <T extends Chunk> T requestParsed(String url) throws Exception
+	public static <T extends Chunk> T requestParsed(String url, boolean keepalive) throws Exception
 	{
 		logger.debug(url);
 		// DAAP client start
 
-		byte[] array = request(url);
+		byte[] array = request(url, keepalive);
 		DaapInputStream inputStream = new DaapInputStream(new ByteArrayInputStream(array));
 
 		Chunk chunk = null;
@@ -107,6 +101,11 @@ public class RequestHelper
 		Closeables.closeQuietly(inputStream);
 		// DAAP client end
 		return (T) chunk;
+	}
+
+	public static <T extends Chunk> T requestParsed(String url) throws Exception
+	{
+		return requestParsed(url, false);
 	}
 
 	public static byte[] request(String remoteUrl) throws Exception

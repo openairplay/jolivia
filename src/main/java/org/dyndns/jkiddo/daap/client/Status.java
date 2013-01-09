@@ -26,27 +26,40 @@
 package org.dyndns.jkiddo.daap.client;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
 
+import org.ardverk.daap.chunks.Chunk;
+import org.ardverk.daap.chunks.impl.daap.DatabaseSongs;
+import org.ardverk.daap.chunks.impl.daap.PlaylistSongs;
+import org.ardverk.daap.chunks.impl.daap.SongAlbumId;
 import org.ardverk.daap.chunks.impl.dmap.Dictionary;
 import org.ardverk.daap.chunks.impl.dmap.ItemName;
+import org.ardverk.daap.chunks.impl.unknown.FullscreenStatus;
+import org.ardverk.daap.chunks.impl.unknown.GeniusSelectable;
+import org.ardverk.daap.chunks.impl.unknown.NowPlaying;
+import org.ardverk.daap.chunks.impl.unknown.PlayStatus;
+import org.ardverk.daap.chunks.impl.unknown.ProgressRemain;
+import org.ardverk.daap.chunks.impl.unknown.ProgressTotal;
 import org.ardverk.daap.chunks.impl.unknown.RelativeVolume;
+import org.ardverk.daap.chunks.impl.unknown.RepeatStatus;
+import org.ardverk.daap.chunks.impl.unknown.ShuffleStatus;
 import org.ardverk.daap.chunks.impl.unknown.SpeakerActive;
 import org.ardverk.daap.chunks.impl.unknown.SpeakerList;
+import org.ardverk.daap.chunks.impl.unknown.StatusRevision;
+import org.ardverk.daap.chunks.impl.unknown.TrackAlbum;
+import org.ardverk.daap.chunks.impl.unknown.TrackArtist;
+import org.ardverk.daap.chunks.impl.unknown.TrackGenre;
+import org.ardverk.daap.chunks.impl.unknown.TrackName;
 import org.ardverk.daap.chunks.impl.unknown.UnknownGT;
 import org.ardverk.daap.chunks.impl.unknown.UnknownMA;
-import org.ardverk.daap.chunks.impl.unknown.StatusRevision;
 import org.ardverk.daap.chunks.impl.unknown.UnknownST;
 import org.ardverk.daap.chunks.impl.unknown.UnknownVD;
+import org.ardverk.daap.chunks.impl.unknown.VisualizerStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Lists;
-
 import android.graphics.Bitmap;
+
+import com.google.common.collect.Lists;
 
 /**
  * Status handles status information, including background timer thread also subscribes to keep-alive event updates.
@@ -54,42 +67,17 @@ import android.graphics.Bitmap;
  */
 public class Status
 {
+	public static final Logger logger = LoggerFactory.getLogger(Status.class);
 
-	/**
-	 * Constants
-	 */
-	public final static int REPEAT_OFF = 0;
-	public final static int REPEAT_SINGLE = 1;
-	public final static int REPEAT_ALL = 2;
-	public final static int SHUFFLE_OFF = 0;
-	public final static int SHUFFLE_ON = 1;
-	public final static int STATE_PAUSED = 3;
-	public final static int STATE_PLAYING = 4;
-	public final static int UPDATE_PROGRESS = 2;
-	public final static int UPDATE_STATE = 3;
-	public final static int UPDATE_TRACK = 4;
-	public final static int UPDATE_COVER = 5;
-	public final static int UPDATE_RATING = 6;
-	public static final int UPDATE_SPEAKERS = 7;
+	private final Session session;
+	private long revision = 1;
+	private int screenHeight = 640;
+	private Bitmap coverCache;
 
 	public Status(Session session)
 	{
 		this.session = session;
 	}
-	/**
-	 * Fields
-	 */
-	public boolean coverEmpty = true;
-	public Bitmap coverCache = null;
-	protected int repeatStatus = REPEAT_OFF, shuffleStatus = SHUFFLE_OFF, playStatus = STATE_PAUSED;
-	protected boolean visualizer = false, fullscreen = false, geniusSelectable = false;
-	private final Session session;
-	private long revision = 1;
-
-	public static String lastActivity, lastPlaylistId, lastPlaylistPersistentId;
-	public static String[] lastAlbum;
-
-	public static final Logger logger = LoggerFactory.getLogger(Status.class);
 
 	protected final Thread keepalive = new Thread(new Runnable() {
 		@Override
@@ -106,7 +94,35 @@ public class Status
 					// using the next revision-number will make itunes keepalive
 					// until something happens
 					// http://192.168.254.128:3689/ctrl-int/1/playstatusupdate?revision-number=1&session-id=1034286700
-					parseUpdate(RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), revision, session.getSessionId()), true));
+					UnknownST state = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), revision, session.getSessionId()), true);
+					parseUpdate(state);
+				}
+				catch(Exception e)
+				{
+					logger.error(e.getMessage(), e);
+				}
+			}
+		}
+	});
+
+	protected final Thread update = new Thread(new Runnable() {
+		@Override
+		public void run()
+		{
+			while(true)
+			{
+				try
+				{
+					// sleep a few seconds to make sure we dont kill stuff
+					Thread.sleep(1000);
+
+					// try fetching next revision update using socket keepalive
+					// approach
+					// using the next revision-number will make itunes keepalive
+					// until something happens
+					// GET /update?revision-number=1&daap-no-disconnect=1&session-id=1250589827
+					UnknownST state = RequestHelper.requestParsed(String.format("%s/update?revision-number=%d&daap-no-disconnect=1&session-id=%s", session.getRequestBase(), revision, session.getSessionId()), true);
+					parseUpdate(state);
 				}
 				catch(Exception e)
 				{
@@ -122,136 +138,55 @@ public class Status
 		// instantly
 		// http://192.168.254.128:3689/ctrl-int/1/playstatusupdate?revision-number=1&session-id=1034286700
 		UnknownST state = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), 1, session.getSessionId()));
-		revision = state.getSpecificChunk(StatusRevision.class).getValue();
+		parseUpdate(state);
 	}
 
-	protected void parseUpdate(Response resp) throws Exception
+	protected void parseUpdate(UnknownST state) throws Exception
 	{
-		// keep track of the worst update that could happen
-		int updateType = UPDATE_PROGRESS;
+		revision = state.getSpecificChunk(StatusRevision.class).getValue();
 
-		resp = resp.getNested("cmst");
-		this.revision = resp.getNumberLong("cmsr");
+		long trackId = state.getSpecificChunk(NowPlaying.class).getTrackId();
 
-		// store now playing info
-		long databaseId = this.databaseId;
-		long playlistId = this.playlistId;
-		long containerItemId = this.containerItemId;
-		long trackId = this.trackId;
+		state.getSpecificChunk(PlayStatus.class);
+		state.getSpecificChunk(ShuffleStatus.class);
+		state.getSpecificChunk(RepeatStatus.class);
+		state.getSpecificChunk(VisualizerStatus.class);
+		state.getSpecificChunk(FullscreenStatus.class);
+		state.getSpecificChunk(GeniusSelectable.class);
 
-		// update now playing info
-		byte[] canp = resp.getRaw("canp");
-		if(canp != null)
-			extractNowPlaying(canp);
+		state.getSpecificChunk(TrackName.class);
+		state.getSpecificChunk(TrackArtist.class);
+		state.getSpecificChunk(TrackAlbum.class);
+		state.getSpecificChunk(TrackGenre.class);
+		state.getSpecificChunk(SongAlbumId.class);
 
-		int playStatus = (int) resp.getNumberLong("caps");
-		int shuffleStatus = (int) resp.getNumberLong("cash");
-		int repeatStatus = (int) resp.getNumberLong("carp");
-		boolean visualizer = (resp.getNumberLong("cavs") > 0);
-		boolean fullscreen = (resp.getNumberLong("cafs") > 0);
-		boolean geniusSelectable = resp.containsKey("ceGS");
+		fetchCover();
+		fetchRating(trackId);
 
-		// update state if changed
-		if(playStatus != this.playStatus || shuffleStatus != this.shuffleStatus || repeatStatus != this.repeatStatus || visualizer != this.visualizer || fullscreen != this.fullscreen || geniusSelectable != this.geniusSelectable)
-		{
-
-			updateType = UPDATE_STATE;
-			this.playStatus = playStatus;
-			this.shuffleStatus = shuffleStatus;
-			this.repeatStatus = repeatStatus;
-			this.visualizer = visualizer;
-			this.fullscreen = fullscreen;
-			this.geniusSelectable = geniusSelectable;
-
-			logger.debug(TAG, "about to interrupt #1");
-			this.progress.interrupt();
-		}
-
-		final String trackName = resp.getString("cann");
-		final String trackArtist = resp.getString("cana");
-		final String trackAlbum = resp.getString("canl");
-		final String trackGenre = resp.getString("cang");
-
-		this.albumId = resp.getNumberString("asai");
-
-		// update if track changed
-		if(trackId != this.trackId || containerItemId != this.containerItemId || playlistId != this.playlistId || databaseId != this.databaseId)
-		{
-
-			updateType = UPDATE_TRACK;
-			this.trackName = trackName;
-			this.trackArtist = trackArtist;
-			this.trackAlbum = trackAlbum;
-			this.trackGenre = trackGenre;
-
-			// clear any coverart cache
-			this.coverCache = null;
-			this.fetchCover();
-
-			// clear rating
-			this.rating = -1;
-			this.fetchRating();
-
-			// tell our progress updating thread about a new track
-			// this makes sure he doesnt count progress from last song against
-			// this
-			// new one
-			logger.debug(TAG, "about to interrupt #2");
-			this.progress.interrupt();
-		}
-
-		this.progressRemain = resp.getNumberLong("cant");
-		this.progressTotal = resp.getNumberLong("cast");
+		state.getSpecificChunk(ProgressRemain.class);
+		state.getSpecificChunk(ProgressTotal.class);
 	}
 
 	public void fetchCover() throws Exception
 	{
-		if(screenHeight > 640)
-		{
-			screenHeight = 640;
-		}
 		// http://192.168.254.128:3689/ctrl-int/1/nowplayingartwork?mw=320&mh=320&session-id=1940361390
 		coverCache = RequestHelper.requestBitmap(String.format("%s/ctrl-int/1/nowplayingartwork?mw=" + screenHeight + "&mh=" + screenHeight + "&session-id=%s", session.getRequestBase(), session.getSessionId()));
 	}
 
-	private void extractNowPlaying(byte[] bs)
+	public void fetchRating(long trackId) throws Exception
 	{
-		// This is a PITA in Java....
-		databaseId = 0;
-		databaseId = (bs[0] & 0xff) << 24;
-		databaseId |= (bs[1] & 0xff) << 16;
-		databaseId |= (bs[2] & 0xff) << 8;
-		databaseId |= bs[3] & 0xff;
-
-		playlistId = 0;
-		playlistId = (bs[4] & 0xff) << 24;
-		playlistId |= (bs[5] & 0xff) << 16;
-		playlistId |= (bs[6] & 0xff) << 8;
-		playlistId |= bs[7] & 0xff;
-
-		containerItemId = 0;
-		containerItemId = (bs[8] & 0xff) << 24;
-		containerItemId |= (bs[9] & 0xff) << 16;
-		containerItemId |= (bs[10] & 0xff) << 8;
-		containerItemId |= bs[11] & 0xff;
-
-		trackId = 0;
-		trackId = (bs[12] & 0xff) << 24;
-		trackId |= (bs[13] & 0xff) << 16;
-		trackId |= (bs[14] & 0xff) << 8;
-		trackId |= bs[15] & 0xff;
-	}
-
-	public void fetchRating() throws Exception
-	{
-		Object o = RequestHelper.requestParsed(String.format("%s/databases/%d/items?session-id=%s&meta=daap.songuserrating&type=music&query='dmap.itemid:%d'", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId(), trackId));
-		Response resp = RequestHelper.requestParsed(String.format("%s/databases/%d/items?session-id=%s&meta=daap.songuserrating&type=music&query='dmap.itemid:%d'", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId(), trackId));
-		// 2 different responses possible!
-		Response entry = resp.getNested("adbs"); // iTunes style
-		if(entry == null)
+		Chunk o = RequestHelper.requestParsed(String.format("%s/databases/%d/items?session-id=%s&meta=daap.songuserrating&type=music&query='dmap.itemid:%d'", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId(), trackId));
+		// iTunes
+		if(o instanceof DatabaseSongs)
 		{
-			entry = resp.getNested("apso"); // MonkeyTunes style
+			((DatabaseSongs) o).getName();
 		}
+		// MonkeyTunes style
+		else if(o instanceof PlaylistSongs)
+		{
+			((PlaylistSongs) o).getName();
+		}
+		// 2 different responses possible!
 		// rating = entry.getNested("mlcl").getNested("mlit").getNumberLong("asur");
 	}
 
