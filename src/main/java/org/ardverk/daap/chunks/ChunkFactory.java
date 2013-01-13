@@ -82,7 +82,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x6170736F), org.ardverk.daap.chunks.impl.daap.PlaylistSongs.class); // apso
 		map.put(new Integer(0x61655043), org.ardverk.daap.chunks.impl.com.apple.itunes.Podcast.class); // aePC
 		map.put(new Integer(0x61655050), org.ardverk.daap.chunks.impl.com.apple.itunes.PodcastPlaylist.class); // aePP
-		map.put(new Integer(0x636D766F), org.ardverk.daap.chunks.impl.unknown.RelativeVolume.class); // cmvo
+		map.put(new Integer(0x636D766F), org.ardverk.daap.chunks.impl.dacp.RelativeVolume.class); // cmvo
 		map.put(new Integer(0x6D727072), org.ardverk.daap.chunks.impl.dmap.RemotePersistentID.class); // mrpr
 		map.put(new Integer(0x61727376), org.ardverk.daap.chunks.impl.daap.Resolve.class); // arsv
 		map.put(new Integer(0x61726966), org.ardverk.daap.chunks.impl.daap.ResolveInfo.class); // arif
@@ -128,8 +128,8 @@ public final class ChunkFactory
 		map.put(new Integer(0x6173746E), org.ardverk.daap.chunks.impl.daap.SongTrackNumber.class); // astn
 		map.put(new Integer(0x61737572), org.ardverk.daap.chunks.impl.daap.SongUserRating.class); // asur
 		map.put(new Integer(0x61737972), org.ardverk.daap.chunks.impl.daap.SongYear.class); // asyr
-		map.put(new Integer(0x63616961), org.ardverk.daap.chunks.impl.unknown.SpeakerActive.class); // caia
-		map.put(new Integer(0x63617370), org.ardverk.daap.chunks.impl.unknown.SpeakerList.class); // casp
+		map.put(new Integer(0x63616961), org.ardverk.daap.chunks.impl.dacp.SpeakerActive.class); // caia
+		map.put(new Integer(0x63617370), org.ardverk.daap.chunks.impl.dacp.SpeakerList.class); // casp
 		map.put(new Integer(0x61655053), org.ardverk.daap.chunks.impl.com.apple.itunes.SpecialPlaylist.class); // aePS
 		map.put(new Integer(0x6D74636F), org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount.class); // mtco
 		map.put(new Integer(0x6D737474), org.ardverk.daap.chunks.impl.dmap.Status.class); // mstt
@@ -143,39 +143,46 @@ public final class ChunkFactory
 		map.put(new Integer(0x6D737273), org.ardverk.daap.chunks.impl.dmap.SupportsResolve.class); // msrs
 		map.put(new Integer(0x6D737570), org.ardverk.daap.chunks.impl.dmap.SupportsUpdate.class); // msup
 		map.put(new Integer(0x6D73746D), org.ardverk.daap.chunks.impl.dmap.TimeoutInterval.class); // mstm
-		map.put(new Integer(0x636D6774), org.ardverk.daap.chunks.impl.unknown.UnknownGT.class); // cmgt
-		map.put(new Integer(0x6165494D), org.ardverk.daap.chunks.impl.unknown.UnknownIM.class); // aeIM
-		map.put(new Integer(0x6D736D61), org.ardverk.daap.chunks.impl.unknown.UnknownMA.class); // msma
-		map.put(new Integer(0x6165524D), org.ardverk.daap.chunks.impl.unknown.UnknownRM.class); // aeRM
-		map.put(new Integer(0x63617664), org.ardverk.daap.chunks.impl.unknown.UnknownVD.class); // cavd
+		map.put(new Integer(0x636D6774), org.ardverk.daap.chunks.impl.dacp.UnknownGT.class); // cmgt
+		map.put(new Integer(0x6165494D), org.ardverk.daap.chunks.impl.dacp.UnknownIM.class); // aeIM
+		map.put(new Integer(0x6D736D61), org.ardverk.daap.chunks.impl.dacp.UnknownMA.class); // msma
+		map.put(new Integer(0x6165524D), org.ardverk.daap.chunks.impl.dacp.UnknownRM.class); // aeRM
+		map.put(new Integer(0x63617664), org.ardverk.daap.chunks.impl.dacp.UnknownVD.class); // cavd
 		map.put(new Integer(0x6D757064), org.ardverk.daap.chunks.impl.dmap.UpdateResponse.class); // mupd
 		map.put(new Integer(0x6D757479), org.ardverk.daap.chunks.impl.dmap.UpdateType.class); // muty
-		map.put(new Integer(0x636D7374), org.ardverk.daap.chunks.impl.unknown.UnknownST.class); // cmst
-		map.put(new Integer(0x636D7372), org.ardverk.daap.chunks.impl.unknown.StatusRevision.class); // cmsr
-		map.put(new Integer(0x63617073), org.ardverk.daap.chunks.impl.unknown.PlayStatus.class); // caps
-		map.put(new Integer(0x63617368), org.ardverk.daap.chunks.impl.unknown.ShuffleStatus.class); // cash
-		map.put(new Integer(0x63617270), org.ardverk.daap.chunks.impl.unknown.RepeatStatus.class); // carp
-		map.put(new Integer(0x63616673), org.ardverk.daap.chunks.impl.unknown.FullscreenStatus.class); // cafs
-		map.put(new Integer(0x63617673), org.ardverk.daap.chunks.impl.unknown.VisualizerStatus.class); // cavs
-		map.put(new Integer(0x63617663), org.ardverk.daap.chunks.impl.unknown.UnknownVC.class); // cavc
-		map.put(new Integer(0x63616173), org.ardverk.daap.chunks.impl.unknown.UnknownAS.class); // caas
-		map.put(new Integer(0x63616172), org.ardverk.daap.chunks.impl.unknown.UnknownAR.class); // caar
-		map.put(new Integer(0x63616665), org.ardverk.daap.chunks.impl.unknown.UnknownFE.class); // cafe
-		map.put(new Integer(0x63617665), org.ardverk.daap.chunks.impl.unknown.UnknownVE.class); // cave
-		map.put(new Integer(0x63617375), org.ardverk.daap.chunks.impl.unknown.UnknownSU.class); // casu
-		map.put(new Integer(0x63655175), org.ardverk.daap.chunks.impl.unknown.UnknownQU.class); // ceQu
-		map.put(new Integer(0x63616e70), org.ardverk.daap.chunks.impl.unknown.NowPlaying.class); // canp
-		map.put(new Integer(0x63616e6e), org.ardverk.daap.chunks.impl.unknown.TrackName.class); // cann
-		map.put(new Integer(0x63616e61), org.ardverk.daap.chunks.impl.unknown.TrackArtist.class); // cana
-		map.put(new Integer(0x63616e6c), org.ardverk.daap.chunks.impl.unknown.TrackAlbum.class); // canl
-		map.put(new Integer(0x63616e67), org.ardverk.daap.chunks.impl.unknown.TrackGenre.class); // cang
+		map.put(new Integer(0x636D7374), org.ardverk.daap.chunks.impl.dacp.UnknownST.class); // cmst
+		map.put(new Integer(0x636D7372), org.ardverk.daap.chunks.impl.dacp.StatusRevision.class); // cmsr
+		map.put(new Integer(0x63617073), org.ardverk.daap.chunks.impl.dacp.PlayStatus.class); // caps
+		map.put(new Integer(0x63617368), org.ardverk.daap.chunks.impl.dacp.ShuffleStatus.class); // cash
+		map.put(new Integer(0x63617270), org.ardverk.daap.chunks.impl.dacp.RepeatStatus.class); // carp
+		map.put(new Integer(0x63616673), org.ardverk.daap.chunks.impl.dacp.FullscreenStatus.class); // cafs
+		map.put(new Integer(0x63617673), org.ardverk.daap.chunks.impl.dacp.VisualizerStatus.class); // cavs
+		map.put(new Integer(0x63617663), org.ardverk.daap.chunks.impl.dacp.UnknownVC.class); // cavc
+		map.put(new Integer(0x63616173), org.ardverk.daap.chunks.impl.dacp.UnknownAS.class); // caas
+		map.put(new Integer(0x63616172), org.ardverk.daap.chunks.impl.dacp.UnknownAR.class); // caar
+		map.put(new Integer(0x63616665), org.ardverk.daap.chunks.impl.dacp.UnknownFE.class); // cafe
+		map.put(new Integer(0x63617665), org.ardverk.daap.chunks.impl.dacp.UnknownVE.class); // cave
+		map.put(new Integer(0x63617375), org.ardverk.daap.chunks.impl.dacp.UnknownSU.class); // casu
+		map.put(new Integer(0x63655175), org.ardverk.daap.chunks.impl.dacp.UnknownQU.class); // ceQu
+		map.put(new Integer(0x63616e70), org.ardverk.daap.chunks.impl.dacp.NowPlaying.class); // canp
+		map.put(new Integer(0x63616e6e), org.ardverk.daap.chunks.impl.dacp.TrackName.class); // cann
+		map.put(new Integer(0x63616e61), org.ardverk.daap.chunks.impl.dacp.TrackArtist.class); // cana
+		map.put(new Integer(0x63616e6c), org.ardverk.daap.chunks.impl.dacp.TrackAlbum.class); // canl
+		map.put(new Integer(0x63616e67), org.ardverk.daap.chunks.impl.dacp.TrackGenre.class); // cang
 		map.put(new Integer(0x61736169), org.ardverk.daap.chunks.impl.daap.SongAlbumId.class); // asai
-		map.put(new Integer(0x636d6d6b), org.ardverk.daap.chunks.impl.unknown.UnknownMK.class); // cmmk
+		map.put(new Integer(0x636d6d6b), org.ardverk.daap.chunks.impl.dacp.UnknownMK.class); // cmmk
 		map.put(new Integer(0x61654773), org.ardverk.daap.chunks.impl.dmap.GeniusSeed.class); // aeGs
-		map.put(new Integer(0x63654753), org.ardverk.daap.chunks.impl.unknown.GeniusSelectable.class); // ceGs
-		map.put(new Integer(0x63617361), org.ardverk.daap.chunks.impl.unknown.UnknownSA.class); // casa
-		map.put(new Integer(0x63616e74), org.ardverk.daap.chunks.impl.unknown.ProgressRemain.class); // cant
-		map.put(new Integer(0x63617374), org.ardverk.daap.chunks.impl.unknown.ProgressTotal.class); // cant
+		map.put(new Integer(0x63654753), org.ardverk.daap.chunks.impl.dacp.GeniusSelectable.class); // ceGs
+		map.put(new Integer(0x63617361), org.ardverk.daap.chunks.impl.dacp.UnknownSA.class); // casa
+		map.put(new Integer(0x63616e74), org.ardverk.daap.chunks.impl.dacp.ProgressRemain.class); // cant
+		map.put(new Integer(0x63617374), org.ardverk.daap.chunks.impl.dacp.ProgressTotal.class); // cant
+		map.put(new Integer(0x6d73686c), org.ardverk.daap.chunks.impl.dacp.UnknownHL.class); // mshl
+		map.put(new Integer(0x6d736863), org.ardverk.daap.chunks.impl.dacp.UnknownHC.class); // mshc
+		map.put(new Integer(0x6d736869), org.ardverk.daap.chunks.impl.dacp.UnknownHI.class); // mshi
+		map.put(new Integer(0x6d73686e), org.ardverk.daap.chunks.impl.dacp.UnknownHN.class); // mshn
+		map.put(new Integer(0x6167616c), org.ardverk.daap.chunks.impl.dacp.UnknownAL.class); // agal
+		map.put(new Integer(0x61736161), org.ardverk.daap.chunks.impl.dacp.AlbumArtist.class); // asaa
+
 	}
 
 	public Class<? extends Chunk> getChunkClass(Integer contentCode)

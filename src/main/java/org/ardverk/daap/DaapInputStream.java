@@ -31,9 +31,12 @@ import org.ardverk.daap.chunks.ContainerChunk;
 import org.ardverk.daap.chunks.DateChunk;
 import org.ardverk.daap.chunks.IntChunk;
 import org.ardverk.daap.chunks.LongChunk;
+import org.ardverk.daap.chunks.RawChunk;
 import org.ardverk.daap.chunks.ShortChunk;
 import org.ardverk.daap.chunks.StringChunk;
 import org.ardverk.daap.chunks.VersionChunk;
+import org.ardverk.daap.chunks.impl.daap.SongArtist;
+import org.ardverk.daap.chunks.impl.dmap.ListingItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,9 +47,18 @@ public class DaapInputStream extends FilterInputStream
 
 	private ChunkFactory factory = null;
 
+	private final boolean specialCaseProtocolViolation;
+
 	public DaapInputStream(InputStream in)
 	{
 		super(in);
+		this.specialCaseProtocolViolation = false;
+	}
+	
+	public DaapInputStream(InputStream in, boolean specialCaseProtocolViolation)
+	{
+		super(in);
+		this.specialCaseProtocolViolation = specialCaseProtocolViolation;
 	}
 
 	@Override
@@ -135,6 +147,14 @@ public class DaapInputStream extends FilterInputStream
 		}
 
 		Chunk chunk = factory.newChunk(contentCode);
+		
+		if(specialCaseProtocolViolation)
+		{
+			if(chunk.getClass().equals(ListingItem.class))
+			{
+				chunk = new SongArtist();
+			}
+		}
 
 		if(length > 0)
 		{
@@ -172,11 +192,17 @@ public class DaapInputStream extends FilterInputStream
 				checkLength(chunk, Chunk.VERSION_LENGTH, length);
 				((VersionChunk) chunk).setValue(readInt(length));
 			}
+			else if(chunk instanceof RawChunk)
+			{
+				byte[] b = new byte[length];
+				read(b, 0, b.length);
+				((RawChunk) chunk).setValue(b);
+			}
 			else if(chunk instanceof ContainerChunk)
 			{
 				byte[] b = new byte[length];
 				read(b, 0, b.length);
-				DaapInputStream in = new DaapInputStream(new ByteArrayInputStream(b));
+				DaapInputStream in = new DaapInputStream(new ByteArrayInputStream(b), this.specialCaseProtocolViolation);
 				while(in.available() > 0)
 				{
 					((ContainerChunk) chunk).add(in.readChunk());

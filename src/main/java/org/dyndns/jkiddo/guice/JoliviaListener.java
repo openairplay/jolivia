@@ -28,6 +28,7 @@ import org.dyndns.jkiddo.jetty.ProxyFilter;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.multibindings.Multibinder;
@@ -49,12 +50,13 @@ public class JoliviaListener extends GuiceServletContextListener
 	@Override
 	protected Injector getInjector()
 	{
-		return Guice.createInjector(new JerseyServletModule() {
+		return Guice.createInjector(new AbstractModule() {
+
 			@Override
-			protected void configureServlets()
+			protected void configure()
 			{
 				bind(JmmDNS.class).toInstance(JmmDNS.Factory.getInstance());
-				
+
 				Multibinder<IMusicStoreReader> multibinder = Multibinder.newSetBinder(binder(), IMusicStoreReader.class);
 				multibinder.addBinding().to(DeskMusicStoreReader.class).asEagerSingleton();
 
@@ -72,7 +74,12 @@ public class JoliviaListener extends GuiceServletContextListener
 
 				bind(JoliviaExceptionMapper.class);
 				bind(DMAPInterface.class).asEagerSingleton();
+			}
 
+		}, new JerseyServletModule() {
+			@Override
+			protected void configureServlets()
+			{
 				filter("*").through(ProxyFilter.class);
 				serve("/*").with(GuiceContainer.class);
 			}

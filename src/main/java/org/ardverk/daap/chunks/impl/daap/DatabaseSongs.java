@@ -18,6 +18,9 @@
 package org.ardverk.daap.chunks.impl.daap;
 
 import org.ardverk.daap.chunks.ContainerChunk;
+import org.ardverk.daap.chunks.impl.dmap.Listing;
+import org.ardverk.daap.chunks.impl.dmap.ReturnedCount;
+import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
 
 /**
  * Container for the <tt>/databases/id/items</tt> request.
@@ -30,5 +33,20 @@ public class DatabaseSongs extends ContainerChunk
 	public DatabaseSongs()
 	{
 		super("adbs", "daap.databasesongs");
+	}
+
+	public Listing getListing()
+	{
+		return getSingleChunk(Listing.class);
+	}
+	
+	public SpecifiedTotalCount getSpecifiedTotalCount()
+	{
+		return getSingleChunk(SpecifiedTotalCount.class);
+	}
+	
+	public ReturnedCount getReturnedCount()
+	{
+		return getSingleChunk(ReturnedCount.class);
 	}
 }

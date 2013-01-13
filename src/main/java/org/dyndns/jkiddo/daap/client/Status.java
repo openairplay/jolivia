@@ -27,33 +27,33 @@ package org.dyndns.jkiddo.daap.client;
 
 import java.util.List;
 
-import org.ardverk.daap.chunks.Chunk;
 import org.ardverk.daap.chunks.impl.daap.DatabaseSongs;
-import org.ardverk.daap.chunks.impl.daap.PlaylistSongs;
 import org.ardverk.daap.chunks.impl.daap.SongAlbumId;
+import org.ardverk.daap.chunks.impl.daap.SongUserRating;
+import org.ardverk.daap.chunks.impl.dacp.FullscreenStatus;
+import org.ardverk.daap.chunks.impl.dacp.GeniusSelectable;
+import org.ardverk.daap.chunks.impl.dacp.NowPlaying;
+import org.ardverk.daap.chunks.impl.dacp.PlayStatus;
+import org.ardverk.daap.chunks.impl.dacp.ProgressRemain;
+import org.ardverk.daap.chunks.impl.dacp.ProgressTotal;
+import org.ardverk.daap.chunks.impl.dacp.RelativeVolume;
+import org.ardverk.daap.chunks.impl.dacp.RepeatStatus;
+import org.ardverk.daap.chunks.impl.dacp.ShuffleStatus;
+import org.ardverk.daap.chunks.impl.dacp.SpeakerActive;
+import org.ardverk.daap.chunks.impl.dacp.SpeakerList;
+import org.ardverk.daap.chunks.impl.dacp.StatusRevision;
+import org.ardverk.daap.chunks.impl.dacp.TrackAlbum;
+import org.ardverk.daap.chunks.impl.dacp.TrackArtist;
+import org.ardverk.daap.chunks.impl.dacp.TrackGenre;
+import org.ardverk.daap.chunks.impl.dacp.TrackName;
+import org.ardverk.daap.chunks.impl.dacp.UnknownGT;
+import org.ardverk.daap.chunks.impl.dacp.UnknownMA;
+import org.ardverk.daap.chunks.impl.dacp.UnknownST;
+import org.ardverk.daap.chunks.impl.dacp.UnknownVD;
+import org.ardverk.daap.chunks.impl.dacp.VisualizerStatus;
 import org.ardverk.daap.chunks.impl.dmap.Dictionary;
 import org.ardverk.daap.chunks.impl.dmap.ItemName;
-import org.ardverk.daap.chunks.impl.unknown.FullscreenStatus;
-import org.ardverk.daap.chunks.impl.unknown.GeniusSelectable;
-import org.ardverk.daap.chunks.impl.unknown.NowPlaying;
-import org.ardverk.daap.chunks.impl.unknown.PlayStatus;
-import org.ardverk.daap.chunks.impl.unknown.ProgressRemain;
-import org.ardverk.daap.chunks.impl.unknown.ProgressTotal;
-import org.ardverk.daap.chunks.impl.unknown.RelativeVolume;
-import org.ardverk.daap.chunks.impl.unknown.RepeatStatus;
-import org.ardverk.daap.chunks.impl.unknown.ShuffleStatus;
-import org.ardverk.daap.chunks.impl.unknown.SpeakerActive;
-import org.ardverk.daap.chunks.impl.unknown.SpeakerList;
-import org.ardverk.daap.chunks.impl.unknown.StatusRevision;
-import org.ardverk.daap.chunks.impl.unknown.TrackAlbum;
-import org.ardverk.daap.chunks.impl.unknown.TrackArtist;
-import org.ardverk.daap.chunks.impl.unknown.TrackGenre;
-import org.ardverk.daap.chunks.impl.unknown.TrackName;
-import org.ardverk.daap.chunks.impl.unknown.UnknownGT;
-import org.ardverk.daap.chunks.impl.unknown.UnknownMA;
-import org.ardverk.daap.chunks.impl.unknown.UnknownST;
-import org.ardverk.daap.chunks.impl.unknown.UnknownVD;
-import org.ardverk.daap.chunks.impl.unknown.VisualizerStatus;
+import org.ardverk.daap.chunks.impl.dmap.ListingItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,7 +72,6 @@ public class Status
 	private final Session session;
 	private long revision = 1;
 	private int screenHeight = 640;
-	private Bitmap coverCache;
 
 	public Status(Session session)
 	{
@@ -132,20 +131,18 @@ public class Status
 		}
 	});
 
-	public void fetchUpdate() throws Exception
+	public long fetchUpdate() throws Exception
 	{
 		// using revision-number=1 will make sure we return
 		// instantly
 		// http://192.168.254.128:3689/ctrl-int/1/playstatusupdate?revision-number=1&session-id=1034286700
 		UnknownST state = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), 1, session.getSessionId()));
-		parseUpdate(state);
+		return parseUpdate(state);
 	}
 
-	protected void parseUpdate(UnknownST state) throws Exception
+	public long parseUpdate(UnknownST state) throws Exception
 	{
 		revision = state.getSpecificChunk(StatusRevision.class).getValue();
-
-		long trackId = state.getSpecificChunk(NowPlaying.class).getTrackId();
 
 		state.getSpecificChunk(PlayStatus.class);
 		state.getSpecificChunk(ShuffleStatus.class);
@@ -154,6 +151,7 @@ public class Status
 		state.getSpecificChunk(FullscreenStatus.class);
 		state.getSpecificChunk(GeniusSelectable.class);
 
+		long trackId = state.getSpecificChunk(NowPlaying.class).getTrackId();
 		state.getSpecificChunk(TrackName.class);
 		state.getSpecificChunk(TrackArtist.class);
 		state.getSpecificChunk(TrackAlbum.class);
@@ -165,29 +163,22 @@ public class Status
 
 		state.getSpecificChunk(ProgressRemain.class);
 		state.getSpecificChunk(ProgressTotal.class);
+
+		return trackId;
 	}
 
-	public void fetchCover() throws Exception
+	public Bitmap fetchCover() throws Exception
 	{
 		// http://192.168.254.128:3689/ctrl-int/1/nowplayingartwork?mw=320&mh=320&session-id=1940361390
-		coverCache = RequestHelper.requestBitmap(String.format("%s/ctrl-int/1/nowplayingartwork?mw=" + screenHeight + "&mh=" + screenHeight + "&session-id=%s", session.getRequestBase(), session.getSessionId()));
+		return RequestHelper.requestBitmap(String.format("%s/ctrl-int/1/nowplayingartwork?mw=" + screenHeight + "&mh=" + screenHeight + "&session-id=%s", session.getRequestBase(), session.getSessionId()));
 	}
 
-	public void fetchRating(long trackId) throws Exception
+	public long fetchRating(long trackId) throws Exception
 	{
-		Chunk o = RequestHelper.requestParsed(String.format("%s/databases/%d/items?session-id=%s&meta=daap.songuserrating&type=music&query='dmap.itemid:%d'", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId(), trackId));
-		// iTunes
-		if(o instanceof DatabaseSongs)
-		{
-			((DatabaseSongs) o).getName();
-		}
-		// MonkeyTunes style
-		else if(o instanceof PlaylistSongs)
-		{
-			((PlaylistSongs) o).getName();
-		}
-		// 2 different responses possible!
-		// rating = entry.getNested("mlcl").getNested("mlit").getNumberLong("asur");
+		// MonkeyTunes style would be with PlaylistSongs instead of DatabaseSongs
+		final DatabaseSongs databaseSongs = RequestHelper.requestParsed(String.format("%s/databases/%d/items?session-id=%s&meta=daap.songuserrating&type=music&query='dmap.itemid:%d'", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId(), trackId));
+		final ListingItem listingItem = databaseSongs.getListing().getSingleListingItemContainingClass(SongUserRating.class);
+		return listingItem.getSpecificChunk(SongUserRating.class).getValue();
 	}
 
 	public long getMasterVolume() throws Exception

@@ -21,7 +21,7 @@ import org.ardverk.daap.chunks.Chunk;
 import org.ardverk.daap.chunks.ContainerChunk;
 
 /**
- * This container is used to group Items. An such group repesents for example a Song.
+ * This container is used to group Items. An such group represents for example a Song.
  * 
  * @author Roger Kapsi
  */

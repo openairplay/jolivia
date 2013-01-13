@@ -31,4 +31,9 @@ public class DatabaseBrowse extends ContainerChunk
 	{
 		super("abro", "daap.databasebrowse");
 	}
+
+	public BrowseArtistListing getBrowseArtistListing()
+	{
+		return getSingleChunk(BrowseArtistListing.class);
+	}
 }

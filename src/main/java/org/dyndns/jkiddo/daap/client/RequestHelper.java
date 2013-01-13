@@ -35,6 +35,7 @@ import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 import org.ardverk.daap.DaapInputStream;
+import org.ardverk.daap.DaapUtil;
 import org.ardverk.daap.chunks.Chunk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,14 +85,21 @@ public class RequestHelper
 		return request(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemname,dmap.itemcount,dmap.itemid,dmap.persistentid,daap.baseplaylist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,com.apple.itunes.saved-genius,dmap.parentcontainerid,dmap.editcommandssupported", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterPlaylist().getItemId(), session.getSessionId()));
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <T extends Chunk> T requestParsed(String url, boolean keepalive) throws Exception
+	{
+		return requestParsed(url, keepalive, false);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Chunk> T requestParsed(String url, boolean keepalive, boolean specialCaseProtocolViolation) throws Exception
 	{
 		logger.debug(url);
 		// DAAP client start
 
 		byte[] array = request(url, keepalive);
-		DaapInputStream inputStream = new DaapInputStream(new ByteArrayInputStream(array));
+		System.out.println();
+		System.out.println(new String(array, DaapUtil.UTF_8));
+		DaapInputStream inputStream = new DaapInputStream(new ByteArrayInputStream(array), specialCaseProtocolViolation);
 
 		Chunk chunk = null;
 		while(inputStream.available() > 0)

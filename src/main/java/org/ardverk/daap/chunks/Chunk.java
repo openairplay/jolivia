@@ -82,6 +82,8 @@ public interface Chunk
 
 	/** Type for Container Chunks. Chunks that contain other Chunks */
 	public static final int CONTAINER_TYPE = 12;
+	
+	public static final int RAW_TYPE = 13;
 
 	/** */
 	public int getContentCode();

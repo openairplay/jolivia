@@ -62,6 +62,11 @@ public class Session
 		return database;
 	}
 
+	public final Database getRadioDatabase()
+	{
+		return radioDatabase;
+	}
+
 	public Session(String host, String pairingGuid) throws Exception
 	{
 		// start a session with the itunes server
@@ -220,7 +225,7 @@ public class Session
 		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=clear&session-id=%s", getRequestBase(), sessionId));
 	}
 
-	public void controlPlayAlbum(final String albumId, final int tracknum) throws Exception
+	public void controlPlayAlbum(final long albumId, final int tracknum) throws Exception
 	{
 
 		// http://192.168.254.128:3689/ctrl-int/1/cue?command=clear&session-id=130883770
@@ -236,7 +241,7 @@ public class Session
 
 	}
 
-	public void controlQueueAlbum(final String albumId) throws Exception
+	public void controlQueueAlbum(final long albumId) throws Exception
 	{
 		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=add&query='daap.songalbumid:%s'&session-id=%s", getRequestBase(), albumId, sessionId));
 	}
@@ -260,12 +265,12 @@ public class Session
 		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=add&query='daap.songartist:%s'&session-id=%s", getRequestBase(), encodedArtist, sessionId));
 	}
 
-	public void controlQueueTrack(final String trackId) throws Exception
+	public void controlQueueTrack(final long trackId) throws Exception
 	{
 		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=add&query='dmap.itemid:%s'&session-id=%s", getRequestBase(), trackId, sessionId));
 	}
 
-	public void controlPlayTrack(final String trackId) throws Exception
+	public void controlPlayTrack(final long trackId) throws Exception
 	{
 		controlClearCue();
 		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=play&query='dmap.itemid:%s'&session-id=%s", getRequestBase(), trackId, sessionId));

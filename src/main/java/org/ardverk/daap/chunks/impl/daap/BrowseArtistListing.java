@@ -31,4 +31,9 @@ public class BrowseArtistListing extends ContainerChunk
 	{
 		super("abar", "daap.browseartistlisting");
 	}
+
+	public Iterable<SongArtist> getSongArtists()
+	{
+		return getMultipleChunks(SongArtist.class);
+	}
 }
