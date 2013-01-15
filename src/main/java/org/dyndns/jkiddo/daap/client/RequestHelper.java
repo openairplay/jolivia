@@ -35,7 +35,6 @@ import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 import org.dyndns.jkiddo.protocol.dmap.DmapInputStream;
-import org.dyndns.jkiddo.protocol.dmap.DmapUtil;
 import org.dyndns.jkiddo.protocol.dmap.chunks.Chunk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,8 +96,6 @@ public class RequestHelper
 		// DAAP client start
 
 		byte[] array = request(url, keepalive);
-		System.out.println();
-		System.out.println(new String(array, DmapUtil.UTF_8));
 		DmapInputStream inputStream = new DmapInputStream(new ByteArrayInputStream(array), specialCaseProtocolViolation);
 
 		Chunk chunk = null;
@@ -138,7 +135,7 @@ public class RequestHelper
 	 * @throws Exception
 	 *             if any error occurs
 	 */
-	public static byte[] request(String remoteUrl, boolean keepalive) throws Exception
+	private static byte[] request(String remoteUrl, boolean keepalive) throws Exception
 	{
 		logger.debug(String.format("started request(remote=%s)", remoteUrl));
 
@@ -213,7 +210,7 @@ public class RequestHelper
 		return requestThumbnail(session, itemid, "");
 	}
 
-	public static Bitmap requestThumbnail(Session session, int itemid, String type) throws Exception
+	private static Bitmap requestThumbnail(Session session, int itemid, String type) throws Exception
 	{
 		// http://192.168.254.128:3689/databases/38/items/2854/extra_data/artwork?session-id=788509571&revision-number=196&mw=55&mh=55
 		try

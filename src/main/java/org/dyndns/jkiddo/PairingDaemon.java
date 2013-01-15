@@ -86,7 +86,12 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener
 	private void spawnClientTraverser(String server, String code) throws Exception
 	{
 		Session session = new Session(server, code);
-		new Status(session).fetchUpdate();
+		Status status = new Status(session);
+		status.getPlayStatusUpdate();
+//		status.getPlayStatusUpdateLocking();
+		status.getUpdateLocking();
+		status.getUpdateLocking();
+		
 		Library library = new Library(session);
 		library.readNowPlaying("16542428201115023184");
 	}

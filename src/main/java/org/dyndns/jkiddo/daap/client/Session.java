@@ -294,7 +294,7 @@ public class Session
 	{
 		try
 		{
-			RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=play&index=%d&sort=album&session-id=%s", getRequestBase(), tracknum, sessionId), false);
+			RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=play&index=%d&sort=album&session-id=%s", getRequestBase(), tracknum, sessionId));
 			// on iTunes this generates a 501 Not Implemented response
 		}
 		catch(Exception e)

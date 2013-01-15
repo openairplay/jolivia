@@ -10,6 +10,7 @@ import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.dmap.service.MDNSResource;
 import org.dyndns.jkiddo.protocol.dmap.DmapUtil;
 
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class ImageServer extends MDNSResource implements IImageServer
@@ -24,6 +25,7 @@ public class ImageServer extends MDNSResource implements IImageServer
 	private static final String PASSWORD_KEY = "Password";
 	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
 
+	@Inject
 	public ImageServer(JmmDNS mDNS, @Named(DPAP_SERVER_PORT_NAME) Integer port) throws IOException
 	{
 		super(mDNS, port);

@@ -31,4 +31,9 @@ public class UpdateResponse extends ContainerChunk
 	{
 		super("mupd", "dmap.updateresponse");
 	}
+
+	public ServerRevision getServerRevision()
+	{
+		return getSingleChunk(ServerRevision.class);
+	}
 }

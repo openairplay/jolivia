@@ -28,32 +28,18 @@ package org.dyndns.jkiddo.daap.client;
 import java.util.List;
 
 import org.dyndns.jkiddo.protocol.dmap.chunks.daap.DatabaseSongs;
-import org.dyndns.jkiddo.protocol.dmap.chunks.daap.SongAlbumId;
 import org.dyndns.jkiddo.protocol.dmap.chunks.daap.SongUserRating;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.FullscreenStatus;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.GeniusSelectable;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.NowPlaying;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.PlayStatus;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.ProgressRemain;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.ProgressTotal;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.RelativeVolume;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.RepeatStatus;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.ShuffleStatus;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.SpeakerActive;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.SpeakerList;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.StatusRevision;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.TrackAlbum;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.TrackArtist;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.TrackGenre;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.TrackName;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownGT;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownMA;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownST;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownVD;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.VisualizerStatus;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.Dictionary;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ItemName;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ListingItem;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.UpdateResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,98 +59,49 @@ public class Status
 	private long revision = 1;
 	private int screenHeight = 640;
 
-	public Status(Session session)
+	public Status(Session session) throws Exception
 	{
 		this.session = session;
+
+		// Update revision at once
+		getUpdateLocking();
 	}
 
-	protected final Thread keepalive = new Thread(new Runnable() {
-		@Override
-		public void run()
-		{
-			while(true)
-			{
-				try
-				{
-					Thread.sleep(1000);
+	public UnknownST getPlayStatusUpdateLocking() throws Exception
+	{
+		// try fetching next revision update using socket keepalive
+		// approach
+		// using the next revision-number will make itunes keepalive
+		// until something happens
+		// http://192.168.254.128:3689/ctrl-int/1/playstatusupdate?revision-number=1&session-id=1034286700
+		return RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), revision, session.getSessionId()), true);
+	}
 
-					// try fetching next revision update using socket keepalive
-					// approach
-					// using the next revision-number will make itunes keepalive
-					// until something happens
-					// http://192.168.254.128:3689/ctrl-int/1/playstatusupdate?revision-number=1&session-id=1034286700
-					UnknownST state = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), revision, session.getSessionId()), true);
-					parseUpdate(state);
-				}
-				catch(Exception e)
-				{
-					logger.error(e.getMessage(), e);
-				}
-			}
-		}
-	});
-
-	protected final Thread update = new Thread(new Runnable() {
-		@Override
-		public void run()
-		{
-			while(true)
-			{
-				try
-				{
-					// sleep a few seconds to make sure we dont kill stuff
-					Thread.sleep(1000);
-
-					// try fetching next revision update using socket keepalive
-					// approach
-					// using the next revision-number will make itunes keepalive
-					// until something happens
-					// GET /update?revision-number=1&daap-no-disconnect=1&session-id=1250589827
-					UnknownST state = RequestHelper.requestParsed(String.format("%s/update?revision-number=%d&daap-no-disconnect=1&session-id=%s", session.getRequestBase(), revision, session.getSessionId()), true);
-					parseUpdate(state);
-				}
-				catch(Exception e)
-				{
-					logger.error(e.getMessage(), e);
-				}
-			}
-		}
-	});
-
-	public long fetchUpdate() throws Exception
+	public UnknownST getPlayStatusUpdate() throws Exception
 	{
 		// using revision-number=1 will make sure we return
 		// instantly
 		// http://192.168.254.128:3689/ctrl-int/1/playstatusupdate?revision-number=1&session-id=1034286700
-		UnknownST state = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), 1, session.getSessionId()));
-		return parseUpdate(state);
+		return RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), 1, session.getSessionId()));
 	}
 
-	public long parseUpdate(UnknownST state) throws Exception
+	/**
+	 * What is currently known is that pausing a playing number does not release it.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public UpdateResponse getUpdateLocking() throws Exception
 	{
-		revision = state.getSpecificChunk(StatusRevision.class).getValue();
+		// try fetching next revision update using socket keepalive
+		// approach
+		// using the next revision-number will make itunes keepalive
+		// until something happens
+		// GET /update?revision-number=1&daap-no-disconnect=1&session-id=1250589827
 
-		state.getSpecificChunk(PlayStatus.class);
-		state.getSpecificChunk(ShuffleStatus.class);
-		state.getSpecificChunk(RepeatStatus.class);
-		state.getSpecificChunk(VisualizerStatus.class);
-		state.getSpecificChunk(FullscreenStatus.class);
-		state.getSpecificChunk(GeniusSelectable.class);
-
-		long trackId = state.getSpecificChunk(NowPlaying.class).getTrackId();
-		state.getSpecificChunk(TrackName.class);
-		state.getSpecificChunk(TrackArtist.class);
-		state.getSpecificChunk(TrackAlbum.class);
-		state.getSpecificChunk(TrackGenre.class);
-		state.getSpecificChunk(SongAlbumId.class);
-
-		fetchCover();
-		fetchRating(trackId);
-
-		state.getSpecificChunk(ProgressRemain.class);
-		state.getSpecificChunk(ProgressTotal.class);
-
-		return trackId;
+		UpdateResponse state = RequestHelper.requestParsed(String.format("%s/update?revision-number=%d&daap-no-disconnect=1&session-id=%s", session.getRequestBase(), revision, session.getSessionId()), true);
+		revision = state.getServerRevision().getUnsignedValue();
+		return state;
 	}
 
 	public Bitmap fetchCover() throws Exception
@@ -173,12 +110,12 @@ public class Status
 		return RequestHelper.requestBitmap(String.format("%s/ctrl-int/1/nowplayingartwork?mw=" + screenHeight + "&mh=" + screenHeight + "&session-id=%s", session.getRequestBase(), session.getSessionId()));
 	}
 
-	public long fetchRating(long trackId) throws Exception
+	public SongUserRating fetchRating(long trackId) throws Exception
 	{
 		// MonkeyTunes style would be with PlaylistSongs instead of DatabaseSongs
 		final DatabaseSongs databaseSongs = RequestHelper.requestParsed(String.format("%s/databases/%d/items?session-id=%s&meta=daap.songuserrating&type=music&query='dmap.itemid:%d'", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId(), trackId));
 		final ListingItem listingItem = databaseSongs.getListing().getSingleListingItemContainingClass(SongUserRating.class);
-		return listingItem.getSpecificChunk(SongUserRating.class).getValue();
+		return listingItem.getSpecificChunk(SongUserRating.class);
 	}
 
 	public long getMasterVolume() throws Exception
@@ -208,6 +145,7 @@ public class Status
 			SpeakerActive isActive = dictonary.getSpecificChunk(SpeakerActive.class);
 			if(dictonary.getSpecificChunk(UnknownVD.class) != null)
 			{
+				@SuppressWarnings("unused")
 				int vd = dictonary.getSpecificChunk(UnknownVD.class).getValue();
 			}
 
