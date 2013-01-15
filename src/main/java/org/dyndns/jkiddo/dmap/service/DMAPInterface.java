@@ -36,16 +36,17 @@ import com.google.inject.Singleton;
 @Singleton
 public class DMAPInterface implements IRemoteControlResource, IPairingResource, ILibraryResource
 {
-	@Inject
 	IRemoteControlResource remoteControlResource;
-	@Inject
 	IPairingResource pairingResource;
-	@Inject
 	ILibraryResource libraryResource;
 
 	@Inject
-	public DMAPInterface()
-	{}
+	public DMAPInterface(IRemoteControlResource remoteControlResource, IPairingResource pairingResource, ILibraryResource libraryResource)
+	{
+		this.remoteControlResource = remoteControlResource;
+		this.pairingResource = pairingResource;
+		this.libraryResource = libraryResource;
+	}
 
 	@Override
 	@Path("/server-info")
