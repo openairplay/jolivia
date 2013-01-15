@@ -18,12 +18,12 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import org.ardverk.daap.Database;
-import org.ardverk.daap.Library;
-import org.ardverk.daap.Song;
-import org.ardverk.daap.Transaction;
 import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
+import org.dyndns.jkiddo.protocol.dmap.Database;
+import org.dyndns.jkiddo.protocol.dmap.Library;
+import org.dyndns.jkiddo.protocol.dmap.Song;
+import org.dyndns.jkiddo.protocol.dmap.Transaction;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;

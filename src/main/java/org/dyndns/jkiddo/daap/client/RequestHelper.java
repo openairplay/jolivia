@@ -34,9 +34,9 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
-import org.ardverk.daap.DaapInputStream;
-import org.ardverk.daap.DaapUtil;
-import org.ardverk.daap.chunks.Chunk;
+import org.dyndns.jkiddo.protocol.dmap.DmapInputStream;
+import org.dyndns.jkiddo.protocol.dmap.DmapUtil;
+import org.dyndns.jkiddo.protocol.dmap.chunks.Chunk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,8 +98,8 @@ public class RequestHelper
 
 		byte[] array = request(url, keepalive);
 		System.out.println();
-		System.out.println(new String(array, DaapUtil.UTF_8));
-		DaapInputStream inputStream = new DaapInputStream(new ByteArrayInputStream(array), specialCaseProtocolViolation);
+		System.out.println(new String(array, DmapUtil.UTF_8));
+		DmapInputStream inputStream = new DmapInputStream(new ByteArrayInputStream(array), specialCaseProtocolViolation);
 
 		Chunk chunk = null;
 		while(inputStream.available() > 0)

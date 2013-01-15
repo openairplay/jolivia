@@ -31,50 +31,50 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
-import org.ardverk.daap.DaapUtil;
-import org.ardverk.daap.Database;
-import org.ardverk.daap.Playlist;
-import org.ardverk.daap.Song;
-import org.ardverk.daap.chunks.Chunk;
-import org.ardverk.daap.chunks.ContentCodesResponseImpl;
-import org.ardverk.daap.chunks.impl.daap.DaapProtocolVersion;
-import org.ardverk.daap.chunks.impl.daap.DatabasePlaylists;
-import org.ardverk.daap.chunks.impl.daap.DatabaseSongs;
-import org.ardverk.daap.chunks.impl.daap.PlaylistSongs;
-import org.ardverk.daap.chunks.impl.daap.ServerDatabases;
-import org.ardverk.daap.chunks.impl.dmap.AuthenticationMethod;
-import org.ardverk.daap.chunks.impl.dmap.AuthenticationSchemes;
-import org.ardverk.daap.chunks.impl.dmap.ContainerCount;
-import org.ardverk.daap.chunks.impl.dmap.DatabaseCount;
-import org.ardverk.daap.chunks.impl.dmap.DmapProtocolVersion;
-import org.ardverk.daap.chunks.impl.dmap.ItemCount;
-import org.ardverk.daap.chunks.impl.dmap.ItemId;
-import org.ardverk.daap.chunks.impl.dmap.ItemName;
-import org.ardverk.daap.chunks.impl.dmap.Listing;
-import org.ardverk.daap.chunks.impl.dmap.ListingItem;
-import org.ardverk.daap.chunks.impl.dmap.LoginRequired;
-import org.ardverk.daap.chunks.impl.dmap.LoginResponse;
-import org.ardverk.daap.chunks.impl.dmap.PersistentId;
-import org.ardverk.daap.chunks.impl.dmap.ReturnedCount;
-import org.ardverk.daap.chunks.impl.dmap.ServerInfoResponse;
-import org.ardverk.daap.chunks.impl.dmap.ServerRevision;
-import org.ardverk.daap.chunks.impl.dmap.SessionId;
-import org.ardverk.daap.chunks.impl.dmap.SpecifiedTotalCount;
-import org.ardverk.daap.chunks.impl.dmap.Status;
-import org.ardverk.daap.chunks.impl.dmap.SupportsAutoLogout;
-import org.ardverk.daap.chunks.impl.dmap.SupportsBrowse;
-import org.ardverk.daap.chunks.impl.dmap.SupportsExtensions;
-import org.ardverk.daap.chunks.impl.dmap.SupportsIndex;
-import org.ardverk.daap.chunks.impl.dmap.SupportsPersistentIds;
-import org.ardverk.daap.chunks.impl.dmap.SupportsQuery;
-import org.ardverk.daap.chunks.impl.dmap.SupportsUpdate;
-import org.ardverk.daap.chunks.impl.dmap.TimeoutInterval;
-import org.ardverk.daap.chunks.impl.dmap.UpdateResponse;
-import org.ardverk.daap.chunks.impl.dmap.UpdateType;
 import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.daap.server.LibraryManager.PasswordMethod;
-import org.dyndns.jkiddo.dmap.MDNSResource;
+import org.dyndns.jkiddo.dmap.service.MDNSResource;
+import org.dyndns.jkiddo.protocol.dmap.Database;
+import org.dyndns.jkiddo.protocol.dmap.DmapUtil;
+import org.dyndns.jkiddo.protocol.dmap.Playlist;
+import org.dyndns.jkiddo.protocol.dmap.Song;
+import org.dyndns.jkiddo.protocol.dmap.chunks.Chunk;
+import org.dyndns.jkiddo.protocol.dmap.chunks.ContentCodesResponseImpl;
+import org.dyndns.jkiddo.protocol.dmap.chunks.daap.DaapProtocolVersion;
+import org.dyndns.jkiddo.protocol.dmap.chunks.daap.DatabasePlaylists;
+import org.dyndns.jkiddo.protocol.dmap.chunks.daap.DatabaseSongs;
+import org.dyndns.jkiddo.protocol.dmap.chunks.daap.PlaylistSongs;
+import org.dyndns.jkiddo.protocol.dmap.chunks.daap.ServerDatabases;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.AuthenticationMethod;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.AuthenticationSchemes;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ContainerCount;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.DatabaseCount;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.DmapProtocolVersion;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ItemCount;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ItemId;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ItemName;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.Listing;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ListingItem;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.LoginRequired;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.LoginResponse;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.PersistentId;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ReturnedCount;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ServerInfoResponse;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ServerRevision;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.SessionId;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.SpecifiedTotalCount;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.Status;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.SupportsAutoLogout;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.SupportsBrowse;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.SupportsExtensions;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.SupportsIndex;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.SupportsPersistentIds;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.SupportsQuery;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.SupportsUpdate;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.TimeoutInterval;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.UpdateResponse;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.UpdateType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -123,20 +123,20 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 		records.put(DATABASE_ID_KEY, hash);
 		records.put(MACHINE_ID_KEY, hash);
 		records.put(MACHINE_NAME_KEY, hostname);
-		records.put(ITSH_VERSION_KEY, DaapUtil.MUSIC_SHARING_VERSION_201 + "");
-		records.put(DAAP_VERSION_KEY, DaapUtil.DAAP_VERSION_3 + "");
+		records.put(ITSH_VERSION_KEY, DmapUtil.MUSIC_SHARING_VERSION_201 + "");
+		records.put(DAAP_VERSION_KEY, DmapUtil.DAAP_VERSION_3 + "");
 		records.put(PASSWORD_KEY, "0");
 		return ServiceInfo.create(DAAP_SERVICE_TYPE, Jolivia.name, port, 0, 0, records);
 	}
 
 	Response buildResponse(Chunk chunk) throws IOException
 	{
-		return buildResponse().entity(DaapUtil.serialize(chunk, false)).build();// .header("Content-Encoding", "gzip").build();
+		return buildResponse().entity(DmapUtil.serialize(chunk, false)).build();// .header("Content-Encoding", "gzip").build();
 	}
 
 	Response buildAudioResponse(byte[] buffer, long position, long size)
 	{
-		ResponseBuilder response = new ResponseBuilderImpl().header("Date", DaapUtil.now()).header("DAAP-Server", libraryManager.getLibraryName()).header("Content-Type", "application/x-dmap-tagged").header("Connection", "close");
+		ResponseBuilder response = new ResponseBuilderImpl().header("Date", DmapUtil.now()).header("DAAP-Server", libraryManager.getLibraryName()).header("Content-Type", "application/x-dmap-tagged").header("Connection", "close");
 
 		if(position == 0)
 		{
@@ -156,7 +156,7 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 
 	ResponseBuilder buildResponse()
 	{
-		return new ResponseBuilderImpl().header("Date", DaapUtil.now()).header("DAAP-Server", libraryManager.getLibraryName()).header("Content-Type", "application/x-dmap-tagged").header("Connection", "Keep-Alive").status(Response.Status.OK);
+		return new ResponseBuilderImpl().header("Date", DmapUtil.now()).header("DAAP-Server", libraryManager.getLibraryName()).header("Content-Type", "application/x-dmap-tagged").header("Connection", "Keep-Alive").status(Response.Status.OK);
 	}
 
 	Response buildEmptyResponse()
@@ -172,8 +172,8 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 
 		serverInfoResponse.add(new Status(200));
-		serverInfoResponse.add(new DmapProtocolVersion(DaapUtil.DMAP_VERSION_201));
-		serverInfoResponse.add(new DaapProtocolVersion(DaapUtil.DAAP_VERSION_3));
+		serverInfoResponse.add(new DmapProtocolVersion(DmapUtil.DMAP_VERSION_201));
+		serverInfoResponse.add(new DaapProtocolVersion(DmapUtil.DAAP_VERSION_3));
 		serverInfoResponse.add(new ItemName(libraryManager.getLibraryName()));
 		serverInfoResponse.add(new TimeoutInterval(1800));
 		serverInfoResponse.add(new SupportsAutoLogout(true));
@@ -291,7 +291,7 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 	public Response songs(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
 	{
 		Set<Song> songs = libraryManager.getDatabase(databaseId).getSongs();
-		Iterable<String> parameters = DaapUtil.parseMeta(meta);
+		Iterable<String> parameters = DmapUtil.parseMeta(meta);
 
 		DatabaseSongs databaseSongs = new DatabaseSongs();
 
@@ -347,7 +347,7 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 	public Response playlists(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
 	{
 		Collection<Playlist> playlists = libraryManager.getDatabase(databaseId).getPlaylists();
-		Iterable<String> parameters = DaapUtil.parseMeta(meta);
+		Iterable<String> parameters = DmapUtil.parseMeta(meta);
 
 		DatabasePlaylists databasePlaylists = new DatabasePlaylists();
 
@@ -407,7 +407,7 @@ public class LibraryResource extends MDNSResource implements ILibraryResource
 		// throw new NotImplementedException();
 		// /databases/0/containers/1/items?session-id=1570434761&revision-number=2&delta=0&type=music&meta=dmap.itemkind,dmap.itemid,dmap.containeritemid
 		Playlist playlist = libraryManager.getDatabase(databaseId).getPlaylist(containerId);
-		Iterable<String> parameters = DaapUtil.parseMeta(meta);
+		Iterable<String> parameters = DmapUtil.parseMeta(meta);
 		PlaylistSongs playlistSongs = new PlaylistSongs();
 
 		playlistSongs.add(new Status(200));

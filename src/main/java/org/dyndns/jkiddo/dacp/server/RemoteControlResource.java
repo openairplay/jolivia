@@ -28,7 +28,7 @@ import javax.ws.rs.core.UriInfo;
 
 import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
-import org.dyndns.jkiddo.dmap.MDNSResource;
+import org.dyndns.jkiddo.dmap.service.MDNSResource;
 
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;

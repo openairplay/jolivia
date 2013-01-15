@@ -25,20 +25,20 @@
 
 package org.dyndns.jkiddo.daap.client;
 
-import org.ardverk.daap.Database;
-import org.ardverk.daap.Playlist;
-import org.ardverk.daap.chunks.Chunk;
-import org.ardverk.daap.chunks.impl.daap.BasePlaylist;
-import org.ardverk.daap.chunks.impl.daap.DatabasePlaylists;
-import org.ardverk.daap.chunks.impl.daap.ServerDatabases;
-import org.ardverk.daap.chunks.impl.dmap.ContentCodesResponse;
-import org.ardverk.daap.chunks.impl.dmap.DatabaseShareType;
-import org.ardverk.daap.chunks.impl.dmap.ItemCount;
-import org.ardverk.daap.chunks.impl.dmap.ItemId;
-import org.ardverk.daap.chunks.impl.dmap.ItemName;
-import org.ardverk.daap.chunks.impl.dmap.ListingItem;
-import org.ardverk.daap.chunks.impl.dmap.LoginResponse;
-import org.ardverk.daap.chunks.impl.dmap.PersistentId;
+import org.dyndns.jkiddo.protocol.dmap.Database;
+import org.dyndns.jkiddo.protocol.dmap.Playlist;
+import org.dyndns.jkiddo.protocol.dmap.chunks.Chunk;
+import org.dyndns.jkiddo.protocol.dmap.chunks.daap.BasePlaylist;
+import org.dyndns.jkiddo.protocol.dmap.chunks.daap.DatabasePlaylists;
+import org.dyndns.jkiddo.protocol.dmap.chunks.daap.ServerDatabases;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ContentCodesResponse;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.DatabaseShareType;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ItemCount;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ItemId;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ItemName;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ListingItem;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.LoginResponse;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.PersistentId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -13,7 +13,7 @@ package org.dyndns.jkiddo.logic.interfaces;
 import java.io.File;
 import java.util.Collection;
 
-import org.ardverk.daap.Song;
+import org.dyndns.jkiddo.protocol.dmap.Song;
 
 public interface IMusicStoreReader
 {

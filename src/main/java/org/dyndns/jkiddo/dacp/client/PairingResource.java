@@ -31,7 +31,7 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriInfo;
 
 import org.dyndns.jkiddo.Jolivia;
-import org.dyndns.jkiddo.dmap.MDNSResource;
+import org.dyndns.jkiddo.dmap.service.MDNSResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +49,7 @@ public class PairingResource extends MDNSResource implements IPairingResource
 	public final static Logger logger = LoggerFactory.getLogger(PairingResource.class);
 
 	private final IDatabase database;
-	private final String actualCode;
+	private final Integer actualCode;
 
 	private static MessageDigest md5;
 
@@ -66,7 +66,7 @@ public class PairingResource extends MDNSResource implements IPairingResource
 	}
 
 	@Inject
-	public PairingResource(JmmDNS mDNS, @Named(DACP_CLIENT_PORT_NAME) Integer port, IDatabase database, @Named(DACP_CLIENT_PAIRING_CODE) String code) throws IOException
+	public PairingResource(JmmDNS mDNS, @Named(DACP_CLIENT_PORT_NAME) Integer port, IDatabase database, @Named(DACP_CLIENT_PAIRING_CODE) Integer code) throws IOException
 	{
 		super(mDNS, port);
 		this.actualCode = code;
@@ -118,12 +118,12 @@ public class PairingResource extends MDNSResource implements IPairingResource
 		return ServiceInfo.create(REMOTE_TYPE, database.getServiceGuid(), this.port, 0, 0, values);
 	}
 
-	private static String expectedPairingCode(String actualCode, String databaseCode) throws IOException
+	private static String expectedPairingCode(Integer actualCode, String databaseCode) throws IOException
 	{
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		os.write(databaseCode.getBytes("UTF-8"));
 
-		byte codeAsBytes[] = actualCode.getBytes("UTF-8");
+		byte codeAsBytes[] = actualCode.toString().getBytes("UTF-8");
 		for(int c = 0; c < codeAsBytes.length; c++)
 		{
 			os.write(codeAsBytes[c]);
