@@ -63,7 +63,7 @@ public final class DmapUtil
 	private final static SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z", Locale.US);
 
 	/** DPAP 1.0.0 (iPhoto x.0) */
-	public static final int DPAP_VERSION_1 = 0x00010000; // 1.0.0
+	public static final int DPAP_VERSION_1 = 0x00010001; // 1.0.1
 	
 	/** DAAP 1.0.0 (iTunes 4.0) */
 	public static final int DAAP_VERSION_1 = 0x00010000; // 1.0.0

@@ -41,6 +41,7 @@ public abstract class MDNSResource implements NetworkTopologyListener
 		this.mDNS.addNetworkTopologyListener(this);
 	}
 
+	//http://www.dns-sd.org/ServiceTypes.html
 	abstract protected ServiceInfo getServiceInfoToRegister();
 
 	protected synchronized void registerServiceInfo() throws IOException

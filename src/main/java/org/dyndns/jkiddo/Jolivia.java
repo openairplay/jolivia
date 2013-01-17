@@ -15,7 +15,7 @@ import java.util.EnumSet;
 import javax.servlet.DispatcherType;
 
 import org.dyndns.jkiddo.guice.JoliviaListener;
-import org.dyndns.jkiddo.jetty.extension.DaapConnectionFactory;
+import org.dyndns.jkiddo.jetty.extension.DmapConnectionFactory;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -43,7 +43,7 @@ public class Jolivia
 	{
 		logger.info("Starting " + name + " on port " + port);
 		Server server = new Server(port);
-		ServerConnector sc = new ServerConnector(server, new DaapConnectionFactory());
+		ServerConnector sc = new ServerConnector(server, new DmapConnectionFactory());
 		sc.setPort(port);
 		server.setConnectors(new Connector[] { sc });
 		ServletContextHandler sch = new ServletContextHandler(server, "/");
