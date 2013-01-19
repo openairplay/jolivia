@@ -33,7 +33,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	private static final String IPSH_VERSION_KEY = "iPSh Version";
 	private static final String PASSWORD_KEY = "Password";
 	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
-	
+
 	private static final String DMAP_KEY = "DPAP-Server";
 
 	@Inject
@@ -62,6 +62,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response serverInfo() throws IOException
 	{
+		// See how it is done in MusicLibraryResource
 		// return
 		// msrv
 		// mstt
@@ -81,6 +82,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response login(@Context HttpServletRequest httpServletRequest) throws IOException
 	{
+		// See how it is done in MusicLibraryResource
 		// return
 		// mlog
 		// mstt
@@ -101,6 +103,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
 	{
+		// See how it is done in MusicLibraryResource
 		// return
 		// avdb
 		// mstt
@@ -128,6 +131,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
 	{
+		// See how it is done in MusicLibraryResource
 		// adbsmsttmutymtcomrcomlcltmlitmikdmiidpfdt
 		throw new NotImplementedException();
 	}
@@ -137,6 +141,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response containers(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
 	{
+		// See how it is done in MusicLibraryResource
 		// aplymsttmutymtcomrcomlclmlitLmikdmiidminmSome Name bibliotekabplmimcmlit3mikdmiidminm
 		// 03/04/2007mimcmlit4mikdmiidminmLast Importmimcmlit7mikdmiidminmLast 12 Monthsmimcmlit2mikdmiidminm tom mappemimcmlit:mikdmiidminmAlbum uden navn 3mimcmlit4mikdmiid9minmFamiliefestmimcmlit?mikdmiidminmEmner til fremkaldelsemimc0mlit:mikdmiid%minmAlbum uden navn 2mimcmlit0mikdmiidminmBettinamimcmlit1mikdmiidminmKalendermimc1mlit2mikdmiid!minm Fastelavnmimcmlit3mikdmiidminm
 		// Kbenhavnmimcmlit0mikdmiidminmFlaggedmimcmlit.mikdmiidminmTrashmimc
@@ -148,6 +153,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
 	{
+		// See how it is done in MusicLibraryResource
 		// apso)msttmutymtcomrcomlcl)zmlitmikdpasp1.5picd8m5pmiid
 		// pimfIMG_0041.JPGminmIMG_0041.JPGpifsf[pwthphgt pfmtJPEGpratplszf[mlitmikdpasp1.5picd8m5pmiid
 		// pimfIMG_0043.JPGminmIMG_0043.JPGpifsuYpwthphgt pfmtJPEGpratplszuYmlitmikdpasp1.5picd8m5qmiid
