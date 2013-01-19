@@ -131,6 +131,20 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
 	{
+		// Picture request
+		// GET dpap://192.168.1.2:8770/databases/1/items?session-id=1101478641&meta=dpap.hires,dmap.itemid,dpap.filedata&query=('dmap.itemid:2742') HTTP/1.1
+		//
+		// 5487
+		// HTTP/1.1 200 OK
+		// Date: Fri, 18 Jan 2013 18:57:33 GMT
+		// DPAP-Server: iPhoto/9.2.1 (Mac OS X)
+		// Content-Type: application/x-dmap-tagged
+		// Content-Length: 6510908
+		//
+		// adbscY4msttmutymtcomrcomlclcXmlitcXmikdmiid
+		// pfdtcX
+		// and the the binary image is added
+
 		// See how it is done in MusicLibraryResource
 		// adbsmsttmutymtcomrcomlcltmlitmikdmiidpfdt
 		throw new NotImplementedException();
