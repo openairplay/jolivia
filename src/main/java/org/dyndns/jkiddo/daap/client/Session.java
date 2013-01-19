@@ -76,8 +76,6 @@ public class Session
 		logger.debug(String.format("trying login for host=%s and guid=%s", host, pairingGuid));
 		LoginResponse loginResponse = RequestHelper.requestParsed(String.format("%s/login?pairing-guid=0x%s", this.getRequestBase(), pairingGuid));
 
-		// Response login = RequestHelper.requestParsed(String.format("%s/login?pairing-guid=0x%s", this.getRequestBase(), pairingGuid), false);
-		// this.sessionId = login.getNested("mlog").getNumberString("mlid");
 		this.sessionId = loginResponse.getSessionId().getValue();
 		logger.debug(String.format("found session-id=%s", this.sessionId));
 
@@ -149,55 +147,56 @@ public class Session
 	 */
 	public void logout() throws Exception
 	{
-		RequestHelper.request(String.format("%s/logout?session-id=%s", this.getRequestBase(), this.sessionId));
+		RequestHelper.dispatch(String.format("%s/logout?session-id=%s", this.getRequestBase(), this.sessionId));
 	}
 
 	public void controlPause() throws Exception
 	{
 		// http://192.168.254.128:3689/ctrl-int/1/pause?session-id=130883770
-		RequestHelper.request(String.format("%s/ctrl-int/1/pause?session-id=%s", this.getRequestBase(), this.sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/pause?session-id=%s", this.getRequestBase(), this.sessionId));
 	}
+	
 	public void controlPlay() throws Exception
 	{
 		// http://192.168.254.128:3689/ctrl-int/1/playpause?session-id=130883770
-		RequestHelper.request(String.format("%s/ctrl-int/1/playpause?session-id=%s", this.getRequestBase(), this.sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/playpause?session-id=%s", this.getRequestBase(), this.sessionId));
 	}
 
 	public void controlNext() throws Exception
 	{
 		// http://192.168.254.128:3689/ctrl-int/1/nextitem?session-id=130883770
-		RequestHelper.request(String.format("%s/ctrl-int/1/nextitem?session-id=%s", this.getRequestBase(), this.sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/nextitem?session-id=%s", this.getRequestBase(), this.sessionId));
 	}
 
 	public void controlPrev() throws Exception
 	{
 		// http://192.168.254.128:3689/ctrl-int/1/previtem?session-id=130883770
-		RequestHelper.request(String.format("%s/ctrl-int/1/previtem?session-id=%s", this.getRequestBase(), this.sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/previtem?session-id=%s", this.getRequestBase(), this.sessionId));
 	}
 
 	public void controlVolume(long volume) throws Exception
 	{
 		// http://192.168.254.128:3689/ctrl-int/1/setproperty?dmcp.volume=100.000000&session-id=130883770
-		RequestHelper.request(String.format("%s/ctrl-int/1/setproperty?dmcp.volume=%s&session-id=%s", this.getRequestBase(), volume, this.sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dmcp.volume=%s&session-id=%s", this.getRequestBase(), volume, this.sessionId));
 	}
 
 	public void controlProgress(int progressSeconds) throws Exception
 	{
 		// http://192.168.254.128:3689/ctrl-int/1/setproperty?dacp.playingtime=82784&session-id=130883770
-		RequestHelper.request(String.format("%s/ctrl-int/1/setproperty?dacp.playingtime=%d&session-id=%s", this.getRequestBase(), progressSeconds * 1000, this.sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dacp.playingtime=%d&session-id=%s", this.getRequestBase(), progressSeconds * 1000, this.sessionId));
 	}
 
 	public void controlShuffle(int shuffleMode) throws Exception
 	{
 		// /ctrl-int/1/setproperty?dacp.shufflestate=1&session-id=1873217009
-		RequestHelper.request(String.format("%s/ctrl-int/1/setproperty?dacp.shufflestate=%d&session-id=%s", this.getRequestBase(), shuffleMode, this.sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dacp.shufflestate=%d&session-id=%s", this.getRequestBase(), shuffleMode, this.sessionId));
 	}
 
 	public void controlRepeat(int repeatMode) throws Exception
 	{
 		// /ctrl-int/1/setproperty?dacp.repeatstate=2&session-id=1873217009
 		// HTTP/1.1
-		RequestHelper.request(String.format("%s/ctrl-int/1/setproperty?dacp.repeatstate=%d&session-id=%s", this.getRequestBase(), repeatMode, this.sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dacp.repeatstate=%d&session-id=%s", this.getRequestBase(), repeatMode, this.sessionId));
 	}
 
 	/**
@@ -212,7 +211,7 @@ public class Session
 	 */
 	public void controlRating(final long rating, final long trackId) throws Exception
 	{
-		RequestHelper.request(String.format("%s/ctrl-int/1/setproperty?dacp.userrating=%d&song-spec='dmap.itemid:%d'&session-id=%s", this.getRequestBase(), rating, trackId, this.sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dacp.userrating=%d&song-spec='dmap.itemid:%d'&session-id=%s", this.getRequestBase(), rating, trackId, this.sessionId));
 	}
 
 	/**
@@ -222,7 +221,7 @@ public class Session
 	 */
 	private void controlClearCue() throws Exception
 	{
-		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=clear&session-id=%s", getRequestBase(), sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=clear&session-id=%s", getRequestBase(), sessionId));
 	}
 
 	public void controlPlayAlbum(final long albumId, final int tracknum) throws Exception
@@ -237,13 +236,13 @@ public class Session
 		// (zero based index into playlist)
 
 		controlClearCue();
-		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=play&query='daap.songalbumid:%s'&index=%d&sort=album&session-id=%s", getRequestBase(), albumId, tracknum, sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=play&query='daap.songalbumid:%s'&index=%d&sort=album&session-id=%s", getRequestBase(), albumId, tracknum, sessionId));
 
 	}
 
 	public void controlQueueAlbum(final long albumId) throws Exception
 	{
-		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=add&query='daap.songalbumid:%s'&session-id=%s", getRequestBase(), albumId, sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=add&query='daap.songalbumid:%s'&session-id=%s", getRequestBase(), albumId, sessionId));
 	}
 
 	public void controlPlayArtist(String artist, int index) throws Exception
@@ -256,24 +255,24 @@ public class Session
 		final int encodedIndex = index;
 
 		controlClearCue();
-		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=play&query='daap.songartist:%s'&index=%d&sort=album&session-id=%s", getRequestBase(), encodedArtist, encodedIndex, sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=play&query='daap.songartist:%s'&index=%d&sort=album&session-id=%s", getRequestBase(), encodedArtist, encodedIndex, sessionId));
 	}
 
 	public void controlQueueArtist(String artist) throws Exception
 	{
 		final String encodedArtist = Library.escapeUrlString(artist);
-		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=add&query='daap.songartist:%s'&session-id=%s", getRequestBase(), encodedArtist, sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=add&query='daap.songartist:%s'&session-id=%s", getRequestBase(), encodedArtist, sessionId));
 	}
 
 	public void controlQueueTrack(final long trackId) throws Exception
 	{
-		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=add&query='dmap.itemid:%s'&session-id=%s", getRequestBase(), trackId, sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=add&query='dmap.itemid:%s'&session-id=%s", getRequestBase(), trackId, sessionId));
 	}
 
 	public void controlPlayTrack(final long trackId) throws Exception
 	{
 		controlClearCue();
-		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=play&query='dmap.itemid:%s'&session-id=%s", getRequestBase(), trackId, sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=play&query='dmap.itemid:%s'&session-id=%s", getRequestBase(), trackId, sessionId));
 	}
 
 	public void controlPlaySearch(final String search, final int index) throws Exception
@@ -281,20 +280,20 @@ public class Session
 		// /ctrl-int/1/cue?command=play&query=(('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:4','com.apple.itunes.mediakind:8')+'dmap.itemname:*F*')&index=4&sort=name&session-id=1550976127
 		final String encodedSearch = Library.escapeUrlString(search);
 		controlClearCue();
-		RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=play&query=(('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:4','com.apple.itunes.mediakind:8')+('dmap.itemname:*%s*','daap.songartist:*%s*','daap.songalbum:*%s*'))&type=music&sort=name&index=%d&session-id=%s", getRequestBase(), encodedSearch, encodedSearch, encodedSearch, index, sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=play&query=(('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:4','com.apple.itunes.mediakind:8')+('dmap.itemname:*%s*','daap.songartist:*%s*','daap.songalbum:*%s*'))&type=music&sort=name&index=%d&session-id=%s", getRequestBase(), encodedSearch, encodedSearch, encodedSearch, index, sessionId));
 	}
 
 	public void controlPlayPlaylist(final String playlistPersistentId, final String containerItemId) throws Exception
 	{
 		// /ctrl-int/1/playspec?database-spec='dmap.persistentid:0x9031099074C14E05'&container-spec='dmap.persistentid:0xA1E1854E0B9A1B'&container-item-spec='dmap.containeritemid:0x1b47'&session-id=7491138
-		RequestHelper.request(String.format("%s/ctrl-int/1/playspec?database-spec='dmap.persistentid:0x%s'&container-spec='dmap.persistentid:0x%s'&container-item-spec='dmap.containeritemid:0x%s'&session-id=%s", getRequestBase(), database.getPersistentId(), playlistPersistentId, containerItemId, sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/playspec?database-spec='dmap.persistentid:0x%s'&container-spec='dmap.persistentid:0x%s'&container-item-spec='dmap.containeritemid:0x%s'&session-id=%s", getRequestBase(), database.getPersistentId(), playlistPersistentId, containerItemId, sessionId));
 	}
 
 	public void controlPlayIndex(final String albumid, final int tracknum) throws Exception
 	{
 		try
 		{
-			RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=play&index=%d&sort=album&session-id=%s", getRequestBase(), tracknum, sessionId));
+			RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=play&index=%d&sort=album&session-id=%s", getRequestBase(), tracknum, sessionId));
 			// on iTunes this generates a 501 Not Implemented response
 		}
 		catch(Exception e)
@@ -304,7 +303,7 @@ public class Session
 				// Fall back to choosing from the current album if there is
 				// one
 				controlClearCue();
-				RequestHelper.request(String.format("%s/ctrl-int/1/cue?command=play&query='daap.songalbumid:%s'&index=%d&sort=album&session-id=%s", getRequestBase(), albumid, tracknum, sessionId));
+				RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=play&query='daap.songalbumid:%s'&index=%d&sort=album&session-id=%s", getRequestBase(), albumid, tracknum, sessionId));
 			}
 		}
 	}
@@ -312,13 +311,13 @@ public class Session
 	public void controlVisualiser(boolean enabled) throws Exception
 	{
 		// GET /ctrl-int/1/setproperty?dacp.visualizer=1&session-id=283658916
-		RequestHelper.request(String.format("%s/ctrl-int/1/setproperty?dacp.visualizer=%d&session-id=%s", this.getRequestBase(), enabled ? 1 : 0, this.sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dacp.visualizer=%d&session-id=%s", this.getRequestBase(), enabled ? 1 : 0, this.sessionId));
 	}
 
 	public void controlFullscreen(boolean enabled) throws Exception
 	{
 		// GET /ctrl-int/1/setproperty?dacp.fullscreen=1&session-id=283658916
-		RequestHelper.request(String.format("%s/ctrl-int/1/setproperty?dacp.fullscreen=%d&session-id=%s", this.getRequestBase(), enabled ? 1 : 0, this.sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dacp.fullscreen=%d&session-id=%s", this.getRequestBase(), enabled ? 1 : 0, this.sessionId));
 	}
 
 	public void controlPlayRadio(final long genreId, final long itemId) throws Exception
@@ -330,7 +329,7 @@ public class Session
 	{
 		// GET
 		// /ctrl-int/1/playspec?database-spec='dmap.itemid:0x6073'&container-spec='dmap.itemid:0x607B'&item-spec='dmap.itemid:0x7cbe'&session-id=345827905
-		RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playspec?" + "database-spec='dmap.itemid:0x%x'" + "&container-spec='dmap.itemid:0x%x'" + "&item-spec='dmap.itemid:0x%x'" + "&session-id=%s", getRequestBase(), databaseId, containerId, itemId, sessionId));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/playspec?" + "database-spec='dmap.itemid:0x%x'" + "&container-spec='dmap.itemid:0x%x'" + "&item-spec='dmap.itemid:0x%x'" + "&session-id=%s", getRequestBase(), databaseId, containerId, itemId, sessionId));
 	}
 
 	// Query the media server about the content codes it handles

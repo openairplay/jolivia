@@ -21,7 +21,6 @@ import javax.jmdns.NetworkTopologyListener;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
 
-import org.dyndns.jkiddo.daap.client.Library;
 import org.dyndns.jkiddo.daap.client.Session;
 import org.dyndns.jkiddo.daap.client.Status;
 import org.dyndns.jkiddo.dacp.client.IDatabase;
@@ -87,15 +86,11 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener
 	{
 		Session session = new Session(server, code);
 		Status status = new Status(session);
-		status.getPlayStatusUpdate();
-//		status.getPlayStatusUpdateLocking();
-		status.getUpdateLocking();
-		status.getUpdateLocking();
+		status.getPlayStatusUpdateBlocking();
+		status.getUpdateBlocking();
 		
-		Library library = new Library(session);
-		library.readNowPlaying("16542428201115023184");
+		// library.readNowPlaying("16542428201115023184");
 	}
-
 	@Override
 	public void inetAddressAdded(NetworkTopologyEvent event)
 	{

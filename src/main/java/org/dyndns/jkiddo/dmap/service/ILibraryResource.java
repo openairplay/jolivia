@@ -8,7 +8,7 @@
  * Contributors:
  *     Jens Kristian Villadsen - initial API and implementation
  ******************************************************************************/
-package org.dyndns.jkiddo.daap.server;
+package org.dyndns.jkiddo.dmap.service;
 
 import java.io.IOException;
 
@@ -23,7 +23,6 @@ import javax.ws.rs.core.Response;
 
 public interface ILibraryResource
 {
-	public static final String DAAP_SERVICE_TYPE = "_daap._tcp.local.";
 
 	@Path("/server-info")
 	@GET
@@ -47,23 +46,19 @@ public interface ILibraryResource
 
 	@Path("/databases/{databaseId}/items")
 	@GET
-	Response songs(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception;
+	Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception;
 
 	@Path("/databases/{databaseId}/containers")
 	@GET
-	Response playlists(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException;
+	Response containers(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException;
 
 	@Path("/databases/{databaseId}/containers/{containerId}/items")
 	@GET
-	Response playlistSongs(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException;
+	Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException;
 
 	@Path("/databases/{databaseId}/items/{itemId}.{format}")
 	@GET
-	Response song(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception;
-
-	@Path("/databases/{databaseId}/items/{itemId}/extra_data/artwork")
-	@GET
-	Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception;
+	Response item(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception;
 
 	@Path("/content-codes")
 	@GET

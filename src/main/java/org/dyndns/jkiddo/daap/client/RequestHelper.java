@@ -39,9 +39,6 @@ import org.dyndns.jkiddo.protocol.dmap.chunks.Chunk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import com.google.common.io.Closeables;
 
 public class RequestHelper
@@ -49,44 +46,57 @@ public class RequestHelper
 
 	public final static Logger logger = LoggerFactory.getLogger(RequestHelper.class);
 
-	// handle packaging a request off to itunes
-	// based on the enum type we might ask for incremental data (searches, full
-	// album list)
-	// also think about handling keep-alive requests
-	// this class also maintains session information
+	// // Legacy code from TunesRemote+ project
+	// private static PlaylistSongs requestSearch(Session session, String search, int start, int end) throws Exception
+	// {
+	// // http://192.168.254.128:3689/databases/36/containers/113/items?session-id=1535976870&revision-number=61&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum&type=music&sort=name&include-sort-headers=1&query='dmap.itemname:*sea*'&index=0-7
+	// // doesnt seem to listen to &sort=name
+	// String encodedSearch = Library.escapeUrlString(search);
+	// return requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum&type=music&include-sort-headers=1&query=(('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:4','com.apple.itunes.mediakind:8')+('dmap.itemname:*%s*','daap.songartist:*%s*','daap.songalbum:*%s*'))&sort=name&index=%d-%d", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterPlaylist().getItemId(), session.getSessionId(), encodedSearch, encodedSearch, encodedSearch, start, end));
+	// }
+	//
+	// private static PlaylistSongs requestTracks(Session session, String albumid) throws Exception
+	// {
+	// // http://192.168.254.128:3689/databases/36/containers/113/items?session-id=1301749047&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songtracknumber&type=music&sort=album&query='daap.songalbumid:11624070975347817354'
+	// return requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songtracknumber&type=music&sort=album&query='daap.songalbumid:%s'", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterPlaylist().getItemId(), session.getSessionId(), albumid));
+	// }
+	//
+	// private static PlaylistSongs requestAlbums(Session session, int start, int end) throws Exception
+	// {
+	// // http://192.168.254.128:3689/databases/36/groups?session-id=1034286700&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist&type=music&group-type=albums&sort=artist&include-sort-headers=1
+	// return requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist&type=music&group-type=albums&sort=artist&include-sort-headers=1&index=%d-%d", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterPlaylist().getItemId(), session.getSessionId(), start, end));
+	// }
+	//
+	// private static PlaylistSongs requestPlaylists(Session session) throws Exception
+	// {
+	// // http://192.168.254.128:3689/databases/36/containers?session-id=1686799903&meta=dmap.itemname,dmap.itemcount,dmap.itemid,dmap.persistentid,daap.baseplaylist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,com.apple.itunes.saved-genius,dmap.parentcontainerid,dmap.editcommandssupported
+	// return requestParsed(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemname,dmap.itemcount,dmap.itemid,dmap.persistentid,daap.baseplaylist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,com.apple.itunes.saved-genius,dmap.parentcontainerid,dmap.editcommandssupported", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterPlaylist().getItemId(), session.getSessionId()));
+	// }
+	//
+	// private static byte[] requestThumbnail(Session session, int itemid) throws Exception
+	// {
+	// // http://192.168.254.128:3689/databases/38/items/2854/extra_data/artwork?session-id=788509571&revision-number=196&mw=55&mh=55
+	// return request(String.format("%s/databases/%d/items/%d/extra_data/artwork?session-id=%s&mw=55&mh=55", session.getRequestBase(), session.getDatabase().getItemId(), itemid, session.getSessionId()), false);
+	// }
 
-	// also consider handling image requests separately? (for caching)
-	// we ask for cover art two ways:
-
-	public static byte[] requestSearch(Session session, String search, int start, int end) throws Exception
+	public static byte[] requestBitmap(String remote) throws Exception
 	{
-		// http://192.168.254.128:3689/databases/36/containers/113/items?session-id=1535976870&revision-number=61&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum&type=music&sort=name&include-sort-headers=1&query='dmap.itemname:*sea*'&index=0-7
-		// doesnt seem to listen to &sort=name
-		String encodedSearch = Library.escapeUrlString(search);
-		return request(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum&type=music&include-sort-headers=1&query=(('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:4','com.apple.itunes.mediakind:8')+('dmap.itemname:*%s*','daap.songartist:*%s*','daap.songalbum:*%s*'))&sort=name&index=%d-%d", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterPlaylist().getItemId(), session.getSessionId(), encodedSearch, encodedSearch, encodedSearch, start, end));
+		return request(remote, false);
 	}
 
-	public static byte[] requestTracks(Session session, String albumid) throws Exception
+	public static void dispatch(String remoteUrl) throws Exception
 	{
-		// http://192.168.254.128:3689/databases/36/containers/113/items?session-id=1301749047&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songtracknumber&type=music&sort=album&query='daap.songalbumid:11624070975347817354'
-		return request(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songtracknumber&type=music&sort=album&query='daap.songalbumid:%s'", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterPlaylist().getItemId(), session.getSessionId(), albumid));
-	}
-
-	public static byte[] requestAlbums(Session session, int start, int end) throws Exception
-	{
-		// http://192.168.254.128:3689/databases/36/groups?session-id=1034286700&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist&type=music&group-type=albums&sort=artist&include-sort-headers=1
-		return request(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist&type=music&group-type=albums&sort=artist&include-sort-headers=1&index=%d-%d", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterPlaylist().getItemId(), session.getSessionId(), start, end));
-	}
-
-	public static byte[] requestPlaylists(Session session) throws Exception
-	{
-		// http://192.168.254.128:3689/databases/36/containers?session-id=1686799903&meta=dmap.itemname,dmap.itemcount,dmap.itemid,dmap.persistentid,daap.baseplaylist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,com.apple.itunes.saved-genius,dmap.parentcontainerid,dmap.editcommandssupported
-		return request(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemname,dmap.itemcount,dmap.itemid,dmap.persistentid,daap.baseplaylist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,com.apple.itunes.saved-genius,dmap.parentcontainerid,dmap.editcommandssupported", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterPlaylist().getItemId(), session.getSessionId()));
+		request(remoteUrl, false);
 	}
 
 	public static <T extends Chunk> T requestParsed(String url, boolean keepalive) throws Exception
 	{
 		return requestParsed(url, keepalive, false);
+	}
+
+	public static <T extends Chunk> T requestParsed(String url) throws Exception
+	{
+		return requestParsed(url, false);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -106,21 +116,6 @@ public class RequestHelper
 		Closeables.closeQuietly(inputStream);
 		// DAAP client end
 		return (T) chunk;
-	}
-
-	public static <T extends Chunk> T requestParsed(String url) throws Exception
-	{
-		return requestParsed(url, false);
-	}
-
-	public static byte[] request(String remoteUrl) throws Exception
-	{
-		return request(remoteUrl, false);
-	}
-
-	public static void dispatch(String remoteUrl) throws Exception
-	{
-		request(remoteUrl, false);
 	}
 
 	/**
@@ -202,41 +197,5 @@ public class RequestHelper
 		}
 
 		return os.toByteArray();
-
 	}
-
-	public static Bitmap requestThumbnail(Session session, int itemid) throws Exception
-	{
-		return requestThumbnail(session, itemid, "");
-	}
-
-	private static Bitmap requestThumbnail(Session session, int itemid, String type) throws Exception
-	{
-		// http://192.168.254.128:3689/databases/38/items/2854/extra_data/artwork?session-id=788509571&revision-number=196&mw=55&mh=55
-		try
-		{
-			byte[] raw = request(String.format("%s/databases/%d/items/%d/extra_data/artwork?session-id=%s&mw=55&mh=55%s", session.getRequestBase(), session.getDatabase().getItemId(), itemid, session.getSessionId(), type));
-			return BitmapFactory.decodeByteArray(raw, 0, raw.length);
-		}
-		catch(OutOfMemoryError e)
-		{
-			logger.warn("Bitmap OOM:" + e.getMessage());
-			return null;
-		}
-	}
-
-	public static Bitmap requestBitmap(String remote) throws Exception
-	{
-		try
-		{
-			byte[] raw = request(remote, false);
-			return BitmapFactory.decodeByteArray(raw, 0, raw.length);
-		}
-		catch(OutOfMemoryError e)
-		{
-			logger.warn("Bitmap OOM:" + e.getMessage());
-			return null;
-		}
-	}
-
 }

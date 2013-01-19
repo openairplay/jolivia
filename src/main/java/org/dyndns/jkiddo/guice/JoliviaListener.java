@@ -13,9 +13,9 @@ package org.dyndns.jkiddo.guice;
 import javax.jmdns.JmmDNS;
 
 import org.dyndns.jkiddo.PairingDaemon;
-import org.dyndns.jkiddo.daap.server.ILibraryResource;
-import org.dyndns.jkiddo.daap.server.LibraryManager;
-import org.dyndns.jkiddo.daap.server.LibraryResource;
+import org.dyndns.jkiddo.daap.server.IMusicLibrary;
+import org.dyndns.jkiddo.daap.server.MusicLibraryManager;
+import org.dyndns.jkiddo.daap.server.MusicLibraryResource;
 import org.dyndns.jkiddo.dacp.client.IDatabase;
 import org.dyndns.jkiddo.dacp.client.IPairingResource;
 import org.dyndns.jkiddo.dacp.client.PairingDatabase;
@@ -23,8 +23,8 @@ import org.dyndns.jkiddo.dacp.client.PairingResource;
 import org.dyndns.jkiddo.dacp.server.IRemoteControlResource;
 import org.dyndns.jkiddo.dacp.server.RemoteControlResource;
 import org.dyndns.jkiddo.dmap.service.DMAPInterface;
-import org.dyndns.jkiddo.dpap.server.IImageServer;
-import org.dyndns.jkiddo.dpap.server.ImageServer;
+import org.dyndns.jkiddo.dpap.server.IImageLibrary;
+import org.dyndns.jkiddo.dpap.server.ImageResource;
 import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
 import org.dyndns.jkiddo.jetty.ProxyFilter;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
@@ -63,18 +63,18 @@ public class JoliviaListener extends GuiceServletContextListener
 				multibinder.addBinding().to(DeskMusicStoreReader.class).asEagerSingleton();
 
 				bind(Integer.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PAIRING_CODE)).toInstance(1337);
-				bind(Integer.class).annotatedWith(Names.named(LibraryResource.DAAP_PORT_NAME)).toInstance(hostingPort);
+				bind(Integer.class).annotatedWith(Names.named(MusicLibraryResource.DAAP_PORT_NAME)).toInstance(hostingPort);
 				bind(Integer.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PORT_NAME)).toInstance(hostingPort);
 				bind(Integer.class).annotatedWith(Names.named(RemoteControlResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);
-				bind(Integer.class).annotatedWith(Names.named(ImageServer.DPAP_SERVER_PORT_NAME)).toInstance(8770);
+				bind(Integer.class).annotatedWith(Names.named(ImageResource.DPAP_SERVER_PORT_NAME)).toInstance(8770);
 
-				bind(LibraryManager.class);
+				bind(MusicLibraryManager.class);
 				bind(IDatabase.class).toInstance(new PairingDatabase());
 				bind(PairingDaemon.class).asEagerSingleton();
-				bind(ILibraryResource.class).to(LibraryResource.class);
+				bind(IMusicLibrary.class).to(MusicLibraryResource.class);
 				bind(IPairingResource.class).to(PairingResource.class);
 				bind(IRemoteControlResource.class).to(RemoteControlResource.class);
-				bind(IImageServer.class).to(ImageServer.class);
+				bind(IImageLibrary.class).to(ImageResource.class);
 
 				bind(JoliviaExceptionMapper.class);
 				bind(DMAPInterface.class).asEagerSingleton();

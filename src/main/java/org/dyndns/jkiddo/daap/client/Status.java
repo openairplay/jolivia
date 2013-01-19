@@ -43,8 +43,6 @@ import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.UpdateResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.graphics.Bitmap;
-
 import com.google.common.collect.Lists;
 
 /**
@@ -63,11 +61,16 @@ public class Status
 	{
 		this.session = session;
 
-		// Update revision at once
-		getUpdateLocking();
+		// Update revision at once. As the initial call, this does not block but simply updates the revision.  
+		getUpdateBlocking();
 	}
 
-	public UnknownST getPlayStatusUpdateLocking() throws Exception
+	/**
+	 * This call blocks until something happens in iTunes, eg. pushing play.
+	 * @return
+	 * @throws Exception
+	 */
+	public UnknownST getPlayStatusUpdateBlocking() throws Exception
 	{
 		// try fetching next revision update using socket keepalive
 		// approach
@@ -86,12 +89,12 @@ public class Status
 	}
 
 	/**
-	 * What is currently known is that pausing a playing number does not release it.
+	 * What is currently known is that pausing a playing number does not release it, but eg. changing to next song does.
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
-	public UpdateResponse getUpdateLocking() throws Exception
+	public UpdateResponse getUpdateBlocking() throws Exception
 	{
 		// try fetching next revision update using socket keepalive
 		// approach
@@ -104,7 +107,7 @@ public class Status
 		return state;
 	}
 
-	public Bitmap fetchCover() throws Exception
+	public byte[] fetchCover() throws Exception
 	{
 		// http://192.168.254.128:3689/ctrl-int/1/nowplayingartwork?mw=320&mh=320&session-id=1940361390
 		return RequestHelper.requestBitmap(String.format("%s/ctrl-int/1/nowplayingartwork?mw=" + screenHeight + "&mh=" + screenHeight + "&session-id=%s", session.getRequestBase(), session.getSessionId()));

@@ -24,7 +24,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.dyndns.jkiddo.NotImplementedException;
-import org.dyndns.jkiddo.daap.server.ILibraryResource;
+import org.dyndns.jkiddo.daap.server.IMusicLibrary;
 import org.dyndns.jkiddo.dacp.client.IPairingResource;
 import org.dyndns.jkiddo.dacp.server.IRemoteControlResource;
 
@@ -34,18 +34,18 @@ import com.google.inject.Singleton;
 
 @Path("/")
 @Singleton
-public class DMAPInterface implements IRemoteControlResource, IPairingResource, ILibraryResource
+public class DMAPInterface implements IRemoteControlResource, IPairingResource, IMusicLibrary
 {
 	IRemoteControlResource remoteControlResource;
 	IPairingResource pairingResource;
-	ILibraryResource libraryResource;
+	IMusicLibrary musicLibraryResource;
 
 	@Inject
-	public DMAPInterface(IRemoteControlResource remoteControlResource, IPairingResource pairingResource, ILibraryResource libraryResource)
+	public DMAPInterface(IRemoteControlResource remoteControlResource, IPairingResource pairingResource, IMusicLibrary musicLibraryResource)
 	{
 		this.remoteControlResource = remoteControlResource;
 		this.pairingResource = pairingResource;
-		this.libraryResource = libraryResource;
+		this.musicLibraryResource = musicLibraryResource;
 	}
 
 	@Override
@@ -53,13 +53,13 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@GET
 	public Response serverInfo() throws IOException
 	{
-		return libraryResource.serverInfo();
+		return musicLibraryResource.serverInfo();
 	}
 
 	@Override
 	public Response login(@Context HttpServletRequest httpServletRequest) throws IOException
 	{
-		return libraryResource.login(httpServletRequest);
+		return musicLibraryResource.login(httpServletRequest);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@GET
 	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @Context HttpServletRequest httpServletRequest) throws IOException
 	{
-		return libraryResource.update(sessionId, revisionNumber, delta, httpServletRequest);
+		return musicLibraryResource.update(sessionId, revisionNumber, delta, httpServletRequest);
 	}
 
 	@Override
@@ -86,15 +86,15 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@GET
 	public Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
 	{
-		return libraryResource.databases(sessionId, revisionNumber, delta);
+		return musicLibraryResource.databases(sessionId, revisionNumber, delta);
 	}
 
 	@Override
 	@Path("/databases/{databaseId}/items")
 	@GET
-	public Response songs(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
+	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
 	{
-		return libraryResource.songs(databaseId, sessionId, revisionNumber, delta, type, meta);
+		return musicLibraryResource.items(databaseId, sessionId, revisionNumber, delta, type, meta);
 	}
 
 	@Override
@@ -102,23 +102,23 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@GET
 	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception
 	{
-		return libraryResource.artwork(databaseId, itemId, sessionId, revisionNumber, mw, mh);
+		return musicLibraryResource.artwork(databaseId, itemId, sessionId, revisionNumber, mw, mh);
 	}
 
 	@Override
 	@Path("/databases/{databaseId}/containers")
 	@GET
-	public Response playlists(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
+	public Response containers(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
 	{
-		return libraryResource.playlists(databaseId, sessionId, revisionNumber, delta, meta);
+		return musicLibraryResource.containers(databaseId, sessionId, revisionNumber, delta, meta);
 	}
 
 	@Override
 	@Path("/databases/{databaseId}/containers/{containerId}/items")
 	@GET
-	public Response playlistSongs(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
+	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
 	{
-		return libraryResource.playlistSongs(containerId, databaseId, sessionId, revisionNumber, delta, meta, type, group_type, sort, include_sort_headers, query, index);
+		return musicLibraryResource.containerItems(containerId, databaseId, sessionId, revisionNumber, delta, meta, type, group_type, sort, include_sort_headers, query, index);
 	}
 
 	@Override
@@ -126,7 +126,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@GET
 	public Response contentCodes() throws IOException
 	{
-		return libraryResource.contentCodes();
+		return musicLibraryResource.contentCodes();
 	}
 
 	// @Override
@@ -142,15 +142,15 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@GET
 	public Response resolve()
 	{
-		return libraryResource.resolve();
+		return musicLibraryResource.resolve();
 	}
 
 	@Override
 	@Path("/databases/{databaseId}/items/{itemId}.{format}")
 	@GET
-	public Response song(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
+	public Response item(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
 	{
-		return libraryResource.song(databaseId, itemId, format, rangeHeader);
+		return musicLibraryResource.item(databaseId, itemId, format, rangeHeader);
 	}
 
 	@Override
@@ -172,7 +172,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Path("logout")
 	public Response logout(@QueryParam("session-id") long sessionId)
 	{
-		Response libraryResponse = libraryResource.logout(sessionId);
+		Response musicLibraryResponse = musicLibraryResource.logout(sessionId);
 		Response remoteControlResponse = remoteControlResource.logout(sessionId);
 		throw new NotImplementedException();
 	}
@@ -262,7 +262,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@GET
 	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
 	{
-		return libraryResource.groups(databaseId, sessionId, meta, type, group_type, sort, include_sort_headers);
+		return musicLibraryResource.groups(databaseId, sessionId, meta, type, group_type, sort, include_sort_headers);
 	}
 
 	@Override

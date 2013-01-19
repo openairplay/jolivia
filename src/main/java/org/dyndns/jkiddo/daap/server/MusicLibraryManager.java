@@ -29,7 +29,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class LibraryManager
+public class MusicLibraryManager
 {
 	@Inject
 	private Set<IMusicStoreReader> setOfReaders;
@@ -38,7 +38,7 @@ public class LibraryManager
 	private Map<Integer, IMusicStoreReader> songToReader;
 
 	@Inject
-	public LibraryManager(Set<IMusicStoreReader> databases) throws Exception
+	public MusicLibraryManager(Set<IMusicStoreReader> databases) throws Exception
 	{
 		songToReader = new HashMap<Integer, IMusicStoreReader>();
 		library = new Library(LIBARY_NAME);
