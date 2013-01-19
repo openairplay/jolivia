@@ -29,12 +29,12 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.daap.server.MusicLibraryManager.PasswordMethod;
 import org.dyndns.jkiddo.dmap.service.MDNSResource;
+import org.dyndns.jkiddo.dmap.service.Util;
 import org.dyndns.jkiddo.protocol.dmap.Database;
 import org.dyndns.jkiddo.protocol.dmap.DmapUtil;
 import org.dyndns.jkiddo.protocol.dmap.Playlist;
@@ -82,7 +82,6 @@ import com.google.common.base.Strings;
 import com.google.common.io.Closeables;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
-import com.sun.jersey.core.spi.factory.ResponseBuilderImpl;
 
 @Singleton
 public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
@@ -99,9 +98,9 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 	private static final String DAAP_VERSION_KEY = "Version";
 	private static final String PASSWORD_KEY = "Password";
 
-	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
+	private static final String DMAP_KEY = "DAAP-Server";
 
-	private static final int PARTIAL_CONTENT = 206;
+	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
 
 	static Logger logger = LoggerFactory.getLogger(MusicLibraryResource.class);
 
@@ -127,41 +126,6 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 		records.put(DAAP_VERSION_KEY, DmapUtil.DAAP_VERSION_3 + "");
 		records.put(PASSWORD_KEY, "0");
 		return ServiceInfo.create(DAAP_SERVICE_TYPE, Jolivia.name, port, 0, 0, records);
-	}
-
-	Response buildResponse(Chunk chunk) throws IOException
-	{
-		return buildResponse().entity(DmapUtil.serialize(chunk, false)).build();// .header("Content-Encoding", "gzip").build();
-	}
-
-	Response buildAudioResponse(byte[] buffer, long position, long size)
-	{
-		ResponseBuilder response = new ResponseBuilderImpl().header("Date", DmapUtil.now()).header("DAAP-Server", libraryManager.getLibraryName()).header("Content-Type", "application/x-dmap-tagged").header("Connection", "close");
-
-		if(position == 0)
-		{
-			response.status(Response.Status.OK);
-			response.header("Content-Length", Long.toString(size));
-		}
-		else
-		{
-			response.status(PARTIAL_CONTENT);
-			response.header("Content-Length", Long.toString(size - position));
-			response.header("Content-Range", "bytes " + position + "-" + (size - 1) + "/" + size);
-		}
-		response.header("Accept-Ranges", "bytes");
-		response.entity(buffer);
-		return response.build();
-	}
-
-	ResponseBuilder buildResponse()
-	{
-		return new ResponseBuilderImpl().header("Date", DmapUtil.now()).header("DAAP-Server", libraryManager.getLibraryName()).header("Content-Type", "application/x-dmap-tagged").header("Connection", "Keep-Alive").status(Response.Status.OK);
-	}
-
-	Response buildEmptyResponse()
-	{
-		return buildResponse().status(Response.Status.NO_CONTENT).build();
 	}
 
 	@Override
@@ -212,7 +176,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 		serverInfoResponse.add(new DatabaseCount(libraryManager.getNrOfDatabases()));
 		serverInfoResponse.add(new SupportsUpdate(true));
 
-		return buildResponse(serverInfoResponse);
+		return Util.buildResponse(serverInfoResponse, DMAP_KEY, libraryManager.getLibraryName());
 	}
 
 	@Override
@@ -223,7 +187,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 		LoginResponse loginResponse = new LoginResponse();
 		loginResponse.add(new Status(200));
 		loginResponse.add(new SessionId(libraryManager.getSessionId(httpServletRequest.getRemoteHost())));
-		return buildResponse(loginResponse);
+		return Util.buildResponse(loginResponse, DMAP_KEY, libraryManager.getLibraryName());
 	}
 
 	@Override
@@ -238,7 +202,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 		UpdateResponse updateResponse = new UpdateResponse();
 		updateResponse.add(new Status(200));
 		updateResponse.add(new ServerRevision(libraryManager.getRevision(httpServletRequest.getRemoteHost(), sessionId)));
-		return buildResponse(updateResponse);
+		return Util.buildResponse(updateResponse, DMAP_KEY, libraryManager.getLibraryName());
 	}
 
 	@Override
@@ -282,7 +246,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 		// serverDatabases.add(deletedListing);
 		// }
 
-		return buildResponse(serverDatabases);
+		return Util.buildResponse(serverDatabases, DMAP_KEY, libraryManager.getLibraryName());
 	}
 
 	@Override
@@ -338,7 +302,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 		// databaseSongs.add(deletedListing);
 		// }
 
-		return buildResponse(databaseSongs);
+		return Util.buildResponse(databaseSongs, DMAP_KEY, libraryManager.getLibraryName());
 	}
 
 	@Override
@@ -396,7 +360,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 		// databasePlaylists.add(deletedListing);
 		// }
 
-		return buildResponse(databasePlaylists);
+		return Util.buildResponse(databasePlaylists, DMAP_KEY, libraryManager.getLibraryName());
 	}
 
 	@Override
@@ -452,7 +416,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 		// playlistSongs.add(deletedListing);
 		// }
 
-		return buildResponse(playlistSongs);
+		return Util.buildResponse(playlistSongs, DMAP_KEY, libraryManager.getLibraryName());
 	}
 
 	@Override
@@ -460,7 +424,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 	@GET
 	public Response contentCodes() throws IOException
 	{
-		return buildResponse(new ContentCodesResponseImpl());
+		return Util.buildResponse(new ContentCodesResponseImpl(), DMAP_KEY, libraryManager.getLibraryName());
 	}
 
 	@Override
@@ -468,7 +432,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 	@GET
 	public Response logout(@QueryParam("session-id") long sessionId)
 	{
-		return buildEmptyResponse();
+		return Util.buildEmptyResponse(DMAP_KEY, libraryManager.getLibraryName());
 	}
 
 	@Override
@@ -495,7 +459,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 		raf.seek(pos);
 		raf.readFully(buffer, 0, buffer.length);
 		Closeables.closeQuietly(raf);
-		return buildAudioResponse(buffer, pos, file.length());
+		return Util.buildAudioResponse(buffer, pos, file.length(), DMAP_KEY, libraryManager.getLibraryName());
 	}
 
 	static private long[] getRange(String rangeHeader, long position, long end)

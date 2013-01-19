@@ -48,7 +48,7 @@ public class PairingResource extends MDNSResource implements IPairingResource
 
 	public final static Logger logger = LoggerFactory.getLogger(PairingResource.class);
 
-	private final IDatabase database;
+	private final IPairingDatabase database;
 	private final Integer actualCode;
 
 	private static MessageDigest md5;
@@ -66,7 +66,7 @@ public class PairingResource extends MDNSResource implements IPairingResource
 	}
 
 	@Inject
-	public PairingResource(JmmDNS mDNS, @Named(DACP_CLIENT_PORT_NAME) Integer port, IDatabase database, @Named(DACP_CLIENT_PAIRING_CODE) Integer code) throws IOException
+	public PairingResource(JmmDNS mDNS, @Named(DACP_CLIENT_PORT_NAME) Integer port, IPairingDatabase database, @Named(DACP_CLIENT_PAIRING_CODE) Integer code) throws IOException
 	{
 		super(mDNS, port);
 		this.actualCode = code;

@@ -15,6 +15,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import org.dyndns.jkiddo.Jolivia;
+import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.dmap.service.MDNSResource;
 import org.dyndns.jkiddo.protocol.dmap.DmapUtil;
 
@@ -32,11 +33,14 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	private static final String IPSH_VERSION_KEY = "iPSh Version";
 	private static final String PASSWORD_KEY = "Password";
 	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
+	
+	private static final String DMAP_KEY = "DPAP-Server";
 
 	@Inject
 	public ImageResource(JmmDNS mDNS, @Named(DPAP_SERVER_PORT_NAME) Integer port) throws IOException
 	{
 		super(mDNS, port);
+		this.registerServiceInfo();
 	}
 
 	@Override
@@ -58,8 +62,18 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response serverInfo() throws IOException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		// return
+		// msrv
+		// mstt
+		// mpro
+		// ppro
+		// minm
+		// mslr
+		// mstm
+		// msal
+		// msix
+		// msdc
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -67,8 +81,11 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response login(@Context HttpServletRequest httpServletRequest) throws IOException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		// return
+		// mlog
+		// mstt
+		// mlid
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -76,8 +93,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @Context HttpServletRequest httpServletRequest) throws IOException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -85,17 +101,26 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		// return
+		// avdb
+		// mstt
+		// muty
+		// mtco
+		// mrco
+		// mlcl
+		// mlit
+		// miid
+		// minm
+		// mimc
+		// mctc
+		throw new NotImplementedException();
 	}
-
 	@Override
 	@Path("/databases/{databaseId}/groups")
 	@GET
 	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
 	{
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -103,8 +128,8 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
 	{
-		// TODO Auto-generated method stub
-		return null;
+		// adbsmsttmutymtcomrcomlcltmlitmikdmiidpfdt
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -112,8 +137,10 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response containers(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		// aplymsttmutymtcomrcomlclmlitLmikdmiidminmSome Name bibliotekabplmimcmlit3mikdmiidminm
+		// 03/04/2007mimcmlit4mikdmiidminmLast Importmimcmlit7mikdmiidminmLast 12 Monthsmimcmlit2mikdmiidminm tom mappemimcmlit:mikdmiidminmAlbum uden navn 3mimcmlit4mikdmiid9minmFamiliefestmimcmlit?mikdmiidminmEmner til fremkaldelsemimc0mlit:mikdmiid%minmAlbum uden navn 2mimcmlit0mikdmiidminmBettinamimcmlit1mikdmiidminmKalendermimc1mlit2mikdmiid!minm Fastelavnmimcmlit3mikdmiidminm
+		// Kbenhavnmimcmlit0mikdmiidminmFlaggedmimcmlit.mikdmiidminmTrashmimc
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -121,8 +148,16 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		// apso)msttmutymtcomrcomlcl)zmlitmikdpasp1.5picd8m5pmiid
+		// pimfIMG_0041.JPGminmIMG_0041.JPGpifsf[pwthphgt pfmtJPEGpratplszf[mlitmikdpasp1.5picd8m5pmiid
+		// pimfIMG_0043.JPGminmIMG_0043.JPGpifsuYpwthphgt pfmtJPEGpratplszuYmlitmikdpasp1.5picd8m5qmiid
+		// pimfIMG_0026.JPGminmIMG_0026.JPGpifsJpwthphgt pfmtJPEGpratplszJmlitmikdpasp1.5picd8m5qmiid
+		// pimfIMG_0039.JPGminmIMG_0039.JPGpifs]3pwthphgt pfmtJPEGpratplsz]3mlitmikdpasp1.5picd8m5qmiid
+		// pimfIMG_0047.JPGminmIMG_0047.JPGpifsnpwthphgt pfmtJPEGpratplsznmlitmikdpasp1.5picd8m5qmiid
+		// pimfIMG_0065.JPGminmIMG_0065.JPGpifs`pwthphgt pfmtJPEGpratplsz`mlitmikdpasp1.5picd8m5qmiid
+		// pimfIMG_0077.JPGminmIMG_0077.JPGpifs?"pwthphgt pfmtJPEGpratplsz?"mlitmikdpasp1.5picd8m5rmiid
+		// pimfIMG_0045.JPGminmIMG_0045.JPGpifs`\pwthphgt pfmtJPEGpratplsz`\mlitmikdpasp1.5picd8m5rm
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -130,8 +165,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response item(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
 	{
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -139,8 +173,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response contentCodes() throws IOException
 	{
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -148,8 +181,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response logout(@QueryParam("session-id") long sessionId)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -157,8 +189,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response resolve()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		throw new NotImplementedException();
 	}
 
 }

@@ -8,7 +8,7 @@
  * Contributors:
  *     Jens Kristian Villadsen - initial API and implementation
  ******************************************************************************/
-package org.dyndns.jkiddo;
+package org.dyndns.jkiddo.daap.client;
 
 import java.net.InetAddress;
 import java.util.HashMap;
@@ -21,9 +21,7 @@ import javax.jmdns.NetworkTopologyListener;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.ServiceListener;
 
-import org.dyndns.jkiddo.daap.client.Session;
-import org.dyndns.jkiddo.daap.client.Status;
-import org.dyndns.jkiddo.dacp.client.IDatabase;
+import org.dyndns.jkiddo.dacp.client.IPairingDatabase;
 import org.dyndns.jkiddo.dacp.server.IRemoteControlResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,16 +30,16 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class PairingDaemon implements ServiceListener, NetworkTopologyListener
+public class PairingDaemon implements ServiceListener, NetworkTopologyListener, IAutomatedClientSessionCreator
 {
 	public static final Logger logger = LoggerFactory.getLogger(PairingDaemon.class);
 
 	private final JmmDNS mDNS;
 	private final Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
-	private final IDatabase database;
+	private final IPairingDatabase database;
 
 	@Inject
-	public PairingDaemon(JmmDNS mDNS, IDatabase database)
+	public PairingDaemon(JmmDNS mDNS, IPairingDatabase database)
 	{
 		this.mDNS = mDNS;
 		this.database = database;
@@ -72,7 +70,7 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener
 			{
 				logger.debug("About to pair with " + event.getInfo().getServer());
 				// If code is != null, we previously have been paired with this library. It does not mean that we still are.
-				spawnClientTraverser(event.getInfo().getServer(), code);
+				createNewSession(event.getInfo().getServer(), event.getInfo().getPort(), code);
 			}
 			catch(Exception e)
 			{
@@ -82,15 +80,16 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener
 		}
 	}
 
-	private void spawnClientTraverser(String server, String code) throws Exception
+	@Override
+	public void createNewSession(String server, int port, String code) throws Exception
 	{
-		Session session = new Session(server, code);
-		Status status = new Status(session);
-		status.getPlayStatusUpdateBlocking();
-		status.getUpdateBlocking();
-		
-		// library.readNowPlaying("16542428201115023184");
+		Session session = new Session(server, port, code);
+		RemoteControl remoteControl = session.getRemoteControl();
+		Library library = session.getLibrary();
+
+		// Now do stuff with the remote control :-)
 	}
+
 	@Override
 	public void inetAddressAdded(NetworkTopologyEvent event)
 	{

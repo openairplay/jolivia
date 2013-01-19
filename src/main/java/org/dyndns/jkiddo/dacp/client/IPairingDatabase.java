@@ -1,6 +1,6 @@
 package org.dyndns.jkiddo.dacp.client;
 
-public interface IDatabase
+public interface IPairingDatabase
 {
 
 	String findCode(String serviceName);

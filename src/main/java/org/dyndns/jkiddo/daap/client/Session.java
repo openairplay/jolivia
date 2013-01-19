@@ -39,6 +39,7 @@ import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ItemName;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ListingItem;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.LoginResponse;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.PersistentId;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.UpdateResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,35 +50,60 @@ public class Session
 	public final static Logger logger = LoggerFactory.getLogger(Session.class);
 
 	private final String host;
-	private final int sessionId;
+	private long revision = 1;
+	private final int port, sessionId;
 	private final Database database, radioDatabase;
+
+	private final Library library;
+
+	private final RemoteControl remoteControl;
+
+	public final long getRevision()
+	{
+		return revision;
+	}
 
 	public final int getSessionId()
 	{
 		return sessionId;
 	}
 
-	public final Database getDatabase()
+	final Database getDatabase()
 	{
 		return database;
 	}
 
-	public final Database getRadioDatabase()
+	final Database getRadioDatabase()
 	{
 		return radioDatabase;
 	}
+	
+	public final Library getLibrary()
+	{
+		return library;
+	}
 
-	public Session(String host, String pairingGuid) throws Exception
+	public final RemoteControl getRemoteControl()
+	{
+		return remoteControl;
+	}
+
+	public Session(String host, int port, String pairingGuid) throws Exception
 	{
 		// start a session with the itunes server
 		this.host = host;
+		this.port = port;
 
 		// http://192.168.254.128:3689/login?pairing-guid=0x0000000000000001
 		logger.debug(String.format("trying login for host=%s and guid=%s", host, pairingGuid));
 		LoginResponse loginResponse = RequestHelper.requestParsed(String.format("%s/login?pairing-guid=0x%s", this.getRequestBase(), pairingGuid));
 
-		this.sessionId = loginResponse.getSessionId().getValue();
-		logger.debug(String.format("found session-id=%s", this.sessionId));
+		sessionId = loginResponse.getSessionId().getValue();
+
+		// Update revision at once. As the initial call, this does not block but simply updates the revision.
+		getUpdateBlocking();
+		library = new Library(this);
+		remoteControl = new RemoteControl(this);
 
 		// http://192.168.254.128:3689/databases?session-id=1301749047
 		ServerDatabases serverDatabases = RequestHelper.requestParsed(String.format("%s/databases?session-id=%s", this.getRequestBase(), this.sessionId));
@@ -137,7 +163,7 @@ public class Session
 
 	public String getRequestBase()
 	{
-		return String.format("http://%s:3689", host);
+		return String.format("http://%s:%d", host, port);
 	}
 
 	/**
@@ -150,188 +176,6 @@ public class Session
 		RequestHelper.dispatch(String.format("%s/logout?session-id=%s", this.getRequestBase(), this.sessionId));
 	}
 
-	public void controlPause() throws Exception
-	{
-		// http://192.168.254.128:3689/ctrl-int/1/pause?session-id=130883770
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/pause?session-id=%s", this.getRequestBase(), this.sessionId));
-	}
-	
-	public void controlPlay() throws Exception
-	{
-		// http://192.168.254.128:3689/ctrl-int/1/playpause?session-id=130883770
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/playpause?session-id=%s", this.getRequestBase(), this.sessionId));
-	}
-
-	public void controlNext() throws Exception
-	{
-		// http://192.168.254.128:3689/ctrl-int/1/nextitem?session-id=130883770
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/nextitem?session-id=%s", this.getRequestBase(), this.sessionId));
-	}
-
-	public void controlPrev() throws Exception
-	{
-		// http://192.168.254.128:3689/ctrl-int/1/previtem?session-id=130883770
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/previtem?session-id=%s", this.getRequestBase(), this.sessionId));
-	}
-
-	public void controlVolume(long volume) throws Exception
-	{
-		// http://192.168.254.128:3689/ctrl-int/1/setproperty?dmcp.volume=100.000000&session-id=130883770
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dmcp.volume=%s&session-id=%s", this.getRequestBase(), volume, this.sessionId));
-	}
-
-	public void controlProgress(int progressSeconds) throws Exception
-	{
-		// http://192.168.254.128:3689/ctrl-int/1/setproperty?dacp.playingtime=82784&session-id=130883770
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dacp.playingtime=%d&session-id=%s", this.getRequestBase(), progressSeconds * 1000, this.sessionId));
-	}
-
-	public void controlShuffle(int shuffleMode) throws Exception
-	{
-		// /ctrl-int/1/setproperty?dacp.shufflestate=1&session-id=1873217009
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dacp.shufflestate=%d&session-id=%s", this.getRequestBase(), shuffleMode, this.sessionId));
-	}
-
-	public void controlRepeat(int repeatMode) throws Exception
-	{
-		// /ctrl-int/1/setproperty?dacp.repeatstate=2&session-id=1873217009
-		// HTTP/1.1
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dacp.repeatstate=%d&session-id=%s", this.getRequestBase(), repeatMode, this.sessionId));
-	}
-
-	/**
-	 * Sets the rating stars of a particular song 0-100.
-	 * <p/>
-	 * 
-	 * @param rating
-	 *            the rating 0-100 to set for rating stars
-	 * @param trackId
-	 *            the id of the track to update the rating for
-	 * @throws Exception
-	 */
-	public void controlRating(final long rating, final long trackId) throws Exception
-	{
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dacp.userrating=%d&song-spec='dmap.itemid:%d'&session-id=%s", this.getRequestBase(), rating, trackId, this.sessionId));
-	}
-
-	/**
-	 * Command to clear the Now Playing cue.
-	 * 
-	 * @throws Exception
-	 */
-	private void controlClearCue() throws Exception
-	{
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=clear&session-id=%s", getRequestBase(), sessionId));
-	}
-
-	public void controlPlayAlbum(final long albumId, final int tracknum) throws Exception
-	{
-
-		// http://192.168.254.128:3689/ctrl-int/1/cue?command=clear&session-id=130883770
-		// http://192.168.254.128:3689/ctrl-int/1/cue?command=play&query=(('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:32')+'daap.songartist:Family%20Force%205')&index=0&sort=album&session-id=130883770
-		// /ctrl-int/1/cue?command=play&query='daap.songalbumid:16621530181618739404'&index=11&sort=album&session-id=514488449
-
-		// GET
-		// /ctrl-int/1/playspec?database-spec='dmap.persistentid:16621530181618731553'&playlist-spec='dmap.persistentid:9378496334192532210'&dacp.shufflestate=1&session-id=514488449
-		// (zero based index into playlist)
-
-		controlClearCue();
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=play&query='daap.songalbumid:%s'&index=%d&sort=album&session-id=%s", getRequestBase(), albumId, tracknum, sessionId));
-
-	}
-
-	public void controlQueueAlbum(final long albumId) throws Exception
-	{
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=add&query='daap.songalbumid:%s'&session-id=%s", getRequestBase(), albumId, sessionId));
-	}
-
-	public void controlPlayArtist(String artist, int index) throws Exception
-	{
-		// http://192.168.254.128:3689/ctrl-int/1/cue?command=clear&session-id=130883770
-		// /ctrl-int/1/cue?command=play&query=(('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:32')+'daap.songartist:Family%20Force%205')&index=0&sort=album&session-id=130883770
-		// /ctrl-int/1/cue?command=play&query='daap.songartist:%s'&index=0&sort=album&session-id=%s
-
-		final String encodedArtist = Library.escapeUrlString(artist);
-		final int encodedIndex = index;
-
-		controlClearCue();
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=play&query='daap.songartist:%s'&index=%d&sort=album&session-id=%s", getRequestBase(), encodedArtist, encodedIndex, sessionId));
-	}
-
-	public void controlQueueArtist(String artist) throws Exception
-	{
-		final String encodedArtist = Library.escapeUrlString(artist);
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=add&query='daap.songartist:%s'&session-id=%s", getRequestBase(), encodedArtist, sessionId));
-	}
-
-	public void controlQueueTrack(final long trackId) throws Exception
-	{
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=add&query='dmap.itemid:%s'&session-id=%s", getRequestBase(), trackId, sessionId));
-	}
-
-	public void controlPlayTrack(final long trackId) throws Exception
-	{
-		controlClearCue();
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=play&query='dmap.itemid:%s'&session-id=%s", getRequestBase(), trackId, sessionId));
-	}
-
-	public void controlPlaySearch(final String search, final int index) throws Exception
-	{
-		// /ctrl-int/1/cue?command=play&query=(('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:4','com.apple.itunes.mediakind:8')+'dmap.itemname:*F*')&index=4&sort=name&session-id=1550976127
-		final String encodedSearch = Library.escapeUrlString(search);
-		controlClearCue();
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=play&query=(('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:4','com.apple.itunes.mediakind:8')+('dmap.itemname:*%s*','daap.songartist:*%s*','daap.songalbum:*%s*'))&type=music&sort=name&index=%d&session-id=%s", getRequestBase(), encodedSearch, encodedSearch, encodedSearch, index, sessionId));
-	}
-
-	public void controlPlayPlaylist(final String playlistPersistentId, final String containerItemId) throws Exception
-	{
-		// /ctrl-int/1/playspec?database-spec='dmap.persistentid:0x9031099074C14E05'&container-spec='dmap.persistentid:0xA1E1854E0B9A1B'&container-item-spec='dmap.containeritemid:0x1b47'&session-id=7491138
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/playspec?database-spec='dmap.persistentid:0x%s'&container-spec='dmap.persistentid:0x%s'&container-item-spec='dmap.containeritemid:0x%s'&session-id=%s", getRequestBase(), database.getPersistentId(), playlistPersistentId, containerItemId, sessionId));
-	}
-
-	public void controlPlayIndex(final String albumid, final int tracknum) throws Exception
-	{
-		try
-		{
-			RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=play&index=%d&sort=album&session-id=%s", getRequestBase(), tracknum, sessionId));
-			// on iTunes this generates a 501 Not Implemented response
-		}
-		catch(Exception e)
-		{
-			if(albumid != null && albumid.length() > 0)
-			{
-				// Fall back to choosing from the current album if there is
-				// one
-				controlClearCue();
-				RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=play&query='daap.songalbumid:%s'&index=%d&sort=album&session-id=%s", getRequestBase(), albumid, tracknum, sessionId));
-			}
-		}
-	}
-
-	public void controlVisualiser(boolean enabled) throws Exception
-	{
-		// GET /ctrl-int/1/setproperty?dacp.visualizer=1&session-id=283658916
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dacp.visualizer=%d&session-id=%s", this.getRequestBase(), enabled ? 1 : 0, this.sessionId));
-	}
-
-	public void controlFullscreen(boolean enabled) throws Exception
-	{
-		// GET /ctrl-int/1/setproperty?dacp.fullscreen=1&session-id=283658916
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dacp.fullscreen=%d&session-id=%s", this.getRequestBase(), enabled ? 1 : 0, this.sessionId));
-	}
-
-	public void controlPlayRadio(final long genreId, final long itemId) throws Exception
-	{
-		playSpec(radioDatabase.getItemId(), genreId, itemId);
-	}
-
-	public void playSpec(final long databaseId, final long containerId, final long itemId) throws Exception
-	{
-		// GET
-		// /ctrl-int/1/playspec?database-spec='dmap.itemid:0x6073'&container-spec='dmap.itemid:0x607B'&item-spec='dmap.itemid:0x7cbe'&session-id=345827905
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/playspec?" + "database-spec='dmap.itemid:0x%x'" + "&container-spec='dmap.itemid:0x%x'" + "&item-spec='dmap.itemid:0x%x'" + "&session-id=%s", getRequestBase(), databaseId, containerId, itemId, sessionId));
-	}
-
 	// Query the media server about the content codes it handles
 	// print to stderr as a csv file
 	public void listContentCodes() throws Exception
@@ -341,5 +185,24 @@ public class Session
 		{
 			logger.info(contentCode.getContentCodeString());
 		}
+	}
+
+	/**
+	 * What is currently known is that pausing a playing number does not release it, but eg. changing to next song does.
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	public UpdateResponse getUpdateBlocking() throws Exception
+	{
+		// try fetching next revision update using socket keepalive
+		// approach
+		// using the next revision-number will make itunes keepalive
+		// until something happens
+		// GET /update?revision-number=1&daap-no-disconnect=1&session-id=1250589827
+
+		UpdateResponse state = RequestHelper.requestParsed(String.format("%s/update?revision-number=%d&daap-no-disconnect=1&session-id=%s", this.getRequestBase(), revision, sessionId), true);
+		revision = state.getServerRevision().getUnsignedValue();
+		return state;
 	}
 }

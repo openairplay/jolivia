@@ -28,8 +28,10 @@ package org.dyndns.jkiddo.daap.client;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -103,21 +105,11 @@ public class RequestHelper
 	public static <T extends Chunk> T requestParsed(String url, boolean keepalive, boolean specialCaseProtocolViolation) throws Exception
 	{
 		logger.debug(url);
-		// DAAP client start
-
-		byte[] array = request(url, keepalive);
-		DmapInputStream inputStream = new DmapInputStream(new ByteArrayInputStream(array), specialCaseProtocolViolation);
-
-		Chunk chunk = null;
-		while(inputStream.available() > 0)
-		{
-			chunk = inputStream.readChunk();
-		}
+		DmapInputStream inputStream = new DmapInputStream(new ByteArrayInputStream(request(url, keepalive)), specialCaseProtocolViolation);
+		Chunk chunk = inputStream.getChunk();
 		Closeables.closeQuietly(inputStream);
-		// DAAP client end
 		return (T) chunk;
 	}
-
 	/**
 	 * Performs the HTTP request and gathers the response from the server. The gzip and deflate headers are sent in case the server can respond with compressed answers saving network bandwidth and speeding up responses.
 	 * <p>
@@ -197,5 +189,29 @@ public class RequestHelper
 		}
 
 		return os.toByteArray();
+	}
+
+	/**
+	 * URL encode a string escaping single quotes first.
+	 * <p>
+	 * 
+	 * @param input
+	 *            the string to encode
+	 * @return the URL encoded string value
+	 */
+	public static String escapeUrlString(final String input)
+	{
+		String encoded = "";
+		try
+		{
+			encoded = URLEncoder.encode(input, "UTF-8");
+			encoded = encoded.replaceAll("\\+", "%20");
+			encoded = encoded.replaceAll("%27", "%5C'");
+		}
+		catch(UnsupportedEncodingException e)
+		{
+			logger.warn("escapeUrlString Exception:" + e.getMessage());
+		}
+		return encoded;
 	}
 }

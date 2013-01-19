@@ -11,7 +11,7 @@ import java.util.Random;
 import com.google.inject.Singleton;
 
 @Singleton
-public class PairingDatabase implements IDatabase
+public class PairingDatabase implements IPairingDatabase
 {
 
 	private static final String DB_NAME = "pairing.db";

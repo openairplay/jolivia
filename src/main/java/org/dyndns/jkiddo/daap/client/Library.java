@@ -25,18 +25,16 @@
 
 package org.dyndns.jkiddo.daap.client;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 import org.dyndns.jkiddo.protocol.dmap.chunks.daap.DatabaseBrowse;
+import org.dyndns.jkiddo.protocol.dmap.chunks.daap.DatabaseSongs;
 import org.dyndns.jkiddo.protocol.dmap.chunks.daap.PlaylistSongs;
+import org.dyndns.jkiddo.protocol.dmap.chunks.daap.SongUserRating;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownAL;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownST;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ListingItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Library
+class Library
 {
 
 	public final static Logger logger = LoggerFactory.getLogger(Library.class);
@@ -65,63 +63,63 @@ public class Library
 	 */
 	public PlaylistSongs readSearch(String search, long start, long items) throws Exception
 	{
-		final String encodedSearch = Library.escapeUrlString(search);
+		final String encodedSearch = RequestHelper.escapeUrlString(search);
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist,daap.songalbum,daap.songtime,daap.songuserrating,daap.songtracknumber&type=music&sort=name&include-sort-headers=1&query=(('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:4','com.apple.itunes.mediakind:8')+('dmap.itemname:*%s*','daap.songartist:*%s*','daap.songalbum:*%s*'))&index=%d-%d", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterPlaylist().getItemId(), session.getSessionId(), encodedSearch, encodedSearch, encodedSearch, start, items), false);
 	}
 
-	public DatabaseBrowse readArtists() throws Exception
+	public DatabaseBrowse getAllArtists() throws Exception
 	{
 		// request ALL artists for performance
 		// /databases/%d/browse/artists?session-id=%s&include-sort-headers=1&index=%d-%d
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/browse/artists?session-id=%s&include-sort-headers=1", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId()), false, true);
 	}
 
-	public UnknownAL readAlbums(String artist) throws Exception
+	public UnknownAL getAlbums(String artist) throws Exception
 	{
-		final String encodedArtist = Library.escapeUrlString(artist);
+		final String encodedArtist = RequestHelper.escapeUrlString(artist);
 		// make albums request for this artist
 		// http://192.168.254.128:3689/databases/36/groups?session-id=1034286700&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist&type=music&group-type=albums&sort=artist&include-sort-headers=1
 
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/groups?session-id=%s&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist&type=music&group-type=albums&sort=artist&include-sort-headers=1&query='daap.songartist:%s'", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId(), encodedArtist), false);
 	}
 
-	public UnknownAL readAlbums() throws Exception
+	public UnknownAL getAllAlbums() throws Exception
 	{
 		// make partial album list request
 		// http://192.168.254.128:3689/databases/36/groups?session-id=1034286700&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist&type=music&group-type=albums&sort=artist&include-sort-headers=1&index=0-50
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/groups?session-id=%s&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist&type=music&group-type=albums&sort=album&include-sort-headers=1", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId()), false);
 	}
 
-	public PlaylistSongs readAllTracks() throws Exception
+	public PlaylistSongs getAllTracks() throws Exception
 	{
 		// make tracks list request
 		// http://192.168.254.128:3689/databases/36/containers/113/items?session-id=1301749047&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songtracknumber&type=music&sort=album&query='daap.songalbumid:11624070975347817354'
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songuserrating,daap.songtracknumber&type=music&sort=album", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterPlaylist().getItemId(), session.getSessionId()), false);
 	}
 
-	public PlaylistSongs readTracks(String albumid) throws Exception
+	public PlaylistSongs getTracks(String albumid) throws Exception
 	{
 		// make tracks list request
 		// http://192.168.254.128:3689/databases/36/containers/113/items?session-id=1301749047&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songtracknumber&type=music&sort=album&query='daap.songalbumid:11624070975347817354'
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songuserrating,daap.songtracknumber&type=music&sort=album&query='daap.songalbumid:%s'", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterPlaylist().getItemId(), session.getSessionId(), albumid), false);
 	}
 
-	public PlaylistSongs readAllTracks(String artist) throws Exception
+	public PlaylistSongs getAllTracks(String artist) throws Exception
 	{
-		final String encodedArtist = Library.escapeUrlString(artist);
+		final String encodedArtist = RequestHelper.escapeUrlString(artist);
 
 		// make tracks list request
 		// http://192.168.254.128:3689/databases/36/containers/113/items?session-id=1301749047&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songtracknumber&type=music&sort=album&query='daap.songalbumid:11624070975347817354'
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songuserrating,daap.songtracknumber&type=music&sort=album&query='daap.songartist:%s'", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterPlaylist().getItemId(), session.getSessionId(), encodedArtist), false);
 	}
 
-	public PlaylistSongs readPlaylist(String playlistid) throws Exception
+	public PlaylistSongs getPlaylistSongs(String playlistid) throws Exception
 	{
 		// http://192.168.254.128:3689/databases/36/containers/1234/items?session-id=2025037772&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,dmap.containeritemid,com.apple.tunes.has-video
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%s/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songartst,daap.songalbum,daap.songtime,dmap.containeritemid,com.apple.tunes.has-video", session.getRequestBase(), session.getDatabase().getItemId(), playlistid, session.getSessionId()), false);
 	}
 
-	public PlaylistSongs readRadioPlaylist(String playlistid) throws Exception
+	public PlaylistSongs getRadioPlaylist(String playlistid) throws Exception
 	{
 		// GET /databases/24691/containers/24699/items?
 		// meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,
@@ -131,49 +129,11 @@ public class Library
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%s/items?" + "meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum," + "dmap.containeritemid,com.apple.itunes.has-video,daap.songdisabled," + "com.apple.itunes.mediakind,daap.songdescription" + "&type=music&session-id=%s", session.getRequestBase(), session.getRadioDatabase().getItemId(), playlistid, session.getSessionId()), false);
 	}
 
-	public UnknownST readNowPlaying(String albumid) throws Exception
+	public SongUserRating getTrackRating(long trackId) throws Exception
 	{
-		// Try Wilco (Alex W)'s nowplaying extension /ctrl-int/1/items
-		try
-		{
-			return RequestHelper.requestParsed(String.format("%s/ctrl-int/1/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songuserrating,daap.songtracknumber&type=music&sort=album&query='daap.songalbumid:%s'", session.getRequestBase(), session.getSessionId(), albumid), false);
-		}
-		catch(IOException e)
-		{
-			logger.debug(e.getMessage(), e);
-			return readCurrentSong();
-		}
-	}
-
-	public UnknownST readCurrentSong() throws Exception
-	{
-		// reads the current playing song as a one-item playlist
-		// Refactor response into one that looks like a normal items request
-		// and trigger listener
-		return RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=1&session-id=%s", session.getRequestBase(), session.getSessionId(), false));
-	}
-
-	/**
-	 * URL encode a string escaping single quotes first.
-	 * <p>
-	 * 
-	 * @param input
-	 *            the string to encode
-	 * @return the URL encoded string value
-	 */
-	public static String escapeUrlString(final String input)
-	{
-		String encoded = "";
-		try
-		{
-			encoded = URLEncoder.encode(input, "UTF-8");
-			encoded = encoded.replaceAll("\\+", "%20");
-			encoded = encoded.replaceAll("%27", "%5C'");
-		}
-		catch(UnsupportedEncodingException e)
-		{
-			logger.warn("escapeUrlString Exception:" + e.getMessage());
-		}
-		return encoded;
+		// MonkeyTunes style would be with PlaylistSongs instead of DatabaseSongs
+		final DatabaseSongs databaseSongs = RequestHelper.requestParsed(String.format("%s/databases/%d/items?session-id=%s&meta=daap.songuserrating&type=music&query='dmap.itemid:%d'", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId(), trackId));
+		final ListingItem listingItem = databaseSongs.getListing().getSingleListingItemContainingClass(SongUserRating.class);
+		return listingItem.getSpecificChunk(SongUserRating.class);
 	}
 }

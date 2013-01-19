@@ -12,11 +12,11 @@ package org.dyndns.jkiddo.guice;
 
 import javax.jmdns.JmmDNS;
 
-import org.dyndns.jkiddo.PairingDaemon;
+import org.dyndns.jkiddo.daap.client.PairingDaemon;
 import org.dyndns.jkiddo.daap.server.IMusicLibrary;
 import org.dyndns.jkiddo.daap.server.MusicLibraryManager;
 import org.dyndns.jkiddo.daap.server.MusicLibraryResource;
-import org.dyndns.jkiddo.dacp.client.IDatabase;
+import org.dyndns.jkiddo.dacp.client.IPairingDatabase;
 import org.dyndns.jkiddo.dacp.client.IPairingResource;
 import org.dyndns.jkiddo.dacp.client.PairingDatabase;
 import org.dyndns.jkiddo.dacp.client.PairingResource;
@@ -58,29 +58,47 @@ public class JoliviaListener extends GuiceServletContextListener
 			protected void configure()
 			{
 				bind(JmmDNS.class).toInstance(JmmDNS.Factory.getInstance());
-
-				Multibinder<IMusicStoreReader> multibinder = Multibinder.newSetBinder(binder(), IMusicStoreReader.class);
-				multibinder.addBinding().to(DeskMusicStoreReader.class).asEagerSingleton();
-
-				bind(Integer.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PAIRING_CODE)).toInstance(1337);
-				bind(Integer.class).annotatedWith(Names.named(MusicLibraryResource.DAAP_PORT_NAME)).toInstance(hostingPort);
-				bind(Integer.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PORT_NAME)).toInstance(hostingPort);
-				bind(Integer.class).annotatedWith(Names.named(RemoteControlResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);
-				bind(Integer.class).annotatedWith(Names.named(ImageResource.DPAP_SERVER_PORT_NAME)).toInstance(8770);
-
-				bind(MusicLibraryManager.class);
-				bind(IDatabase.class).toInstance(new PairingDatabase());
-				bind(PairingDaemon.class).asEagerSingleton();
-				bind(IMusicLibrary.class).to(MusicLibraryResource.class);
-				bind(IPairingResource.class).to(PairingResource.class);
-				bind(IRemoteControlResource.class).to(RemoteControlResource.class);
-				bind(IImageLibrary.class).to(ImageResource.class);
-
 				bind(JoliviaExceptionMapper.class);
 				bind(DMAPInterface.class).asEagerSingleton();
 			}
 
+		}, new AbstractModule() {
+
+			@Override
+			protected void configure()
+			{
+				bind(Integer.class).annotatedWith(Names.named(ImageResource.DPAP_SERVER_PORT_NAME)).toInstance(8770);
+				bind(IImageLibrary.class).to(ImageResource.class).asEagerSingleton();
+			}
+		}, new AbstractModule() {
+
+			@Override
+			protected void configure()
+			{
+				bind(Integer.class).annotatedWith(Names.named(MusicLibraryResource.DAAP_PORT_NAME)).toInstance(hostingPort);
+				bind(MusicLibraryManager.class);
+				bind(IMusicLibrary.class).to(MusicLibraryResource.class).asEagerSingleton();
+
+				Multibinder<IMusicStoreReader> multibinder = Multibinder.newSetBinder(binder(), IMusicStoreReader.class);
+				multibinder.addBinding().to(DeskMusicStoreReader.class).asEagerSingleton();
+
+			}
+		}, new AbstractModule() {
+
+			@Override
+			protected void configure()
+			{
+				bind(Integer.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PAIRING_CODE)).toInstance(1337);
+				bind(Integer.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PORT_NAME)).toInstance(hostingPort);
+				bind(Integer.class).annotatedWith(Names.named(RemoteControlResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);
+
+				bind(IPairingDatabase.class).toInstance(new PairingDatabase());
+				bind(PairingDaemon.class).asEagerSingleton();
+				bind(IPairingResource.class).to(PairingResource.class);
+				bind(IRemoteControlResource.class).to(RemoteControlResource.class);
+			}
 		}, new JerseyServletModule() {
+
 			@Override
 			protected void configureServlets()
 			{

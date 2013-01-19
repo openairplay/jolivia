@@ -76,19 +76,19 @@ public class DmapInputStream extends FilterInputStream
 	 * Re: skip(length-Chunk.XYZ_LENGTH); iTunes states in Content-Codes responses that Chunk X is of type Y and has hence the length Z. A Byte has for example the length 1. But in some cases iTunes uses a different length for Bytes! It's probably a bug in iTunes...
 	 */
 
-	public int read(int length) throws IOException
+	private int read(int length) throws IOException
 	{
 		skip(length - Chunk.BYTE_LENGTH);
 		return read();
 	}
 
-	public int readShort(int length) throws IOException
+	private int readShort(int length) throws IOException
 	{
 		skip(length - Chunk.SHORT_LENGTH);
 		return (read() << 8) | read();
 	}
 
-	public int readInt(int length) throws IOException
+	private int readInt(int length) throws IOException
 	{
 		skip(length - Chunk.INT_LENGTH);
 		int size = Chunk.INT_LENGTH;
@@ -101,7 +101,7 @@ public class DmapInputStream extends FilterInputStream
 		return buffer.getInt();
 	}
 
-	public long readLong(int length) throws IOException
+	private long readLong(int length) throws IOException
 	{
 		skip(length - Chunk.LONG_LENGTH);
 		int size = Chunk.LONG_LENGTH;
@@ -114,7 +114,7 @@ public class DmapInputStream extends FilterInputStream
 		return buffer.getLong();
 	}
 
-	public String readString(int length) throws IOException
+	private String readString(int length) throws IOException
 	{
 		if(length == 0)
 		{
@@ -126,17 +126,17 @@ public class DmapInputStream extends FilterInputStream
 		return new String(b, DmapUtil.UTF_8);
 	}
 
-	public int readContentCode() throws IOException
+	private int readContentCode() throws IOException
 	{
 		return readInt(Chunk.INT_LENGTH);
 	}
 
-	public int readLength() throws IOException
+	private int readLength() throws IOException
 	{
 		return readInt(Chunk.INT_LENGTH);
 	}
 
-	public Chunk readChunk() throws IOException
+	public Chunk getChunk() throws IOException
 	{
 		int contentCode = readContentCode();
 		int length = readLength();
@@ -205,7 +205,7 @@ public class DmapInputStream extends FilterInputStream
 				DmapInputStream in = new DmapInputStream(new ByteArrayInputStream(b), this.specialCaseProtocolViolation);
 				while(in.available() > 0)
 				{
-					((ContainerChunk) chunk).add(in.readChunk());
+					((ContainerChunk) chunk).add(in.getChunk());
 				}
 				in.close();
 			}

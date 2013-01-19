@@ -30,7 +30,7 @@ import org.dyndns.jkiddo.protocol.dmap.chunks.Chunk;
 public class PacketAnalyzer {
 
     private static Chunk newChunk(DmapInputStream in) throws Throwable {
-        Chunk chunk = in.readChunk();
+        Chunk chunk = in.getChunk();
         if (chunk instanceof BooleanChunk) {
             ((BooleanChunk) chunk).setValue(true);
         }
