@@ -74,7 +74,7 @@ public final class DmapUtil
 
 	/** DPAP 1.0.0 (iPhoto x.0) */
 	public static final int DPAP_VERSION_1 = 0x00010001; // 1.0.1
-	
+
 	/** DAAP 1.0.0 (iTunes 4.0) */
 	public static final int DAAP_VERSION_1 = 0x00010000; // 1.0.0
 
@@ -87,11 +87,17 @@ public final class DmapUtil
 	/** DAAP Version 3.0.2 (iTunes 5.0) */
 	public static final int DAAP_VERSION_302 = 0x003002; // 3.0.2
 
+	/** DPAP Version 3.0.2 (iPhoto 4.1.1) */
+	public static final int DPAP_VERSION_411 = 0x004011; // 4.1.1
+
 	/** DMAP Version 2.0.1 */
 	public static final int DMAP_VERSION_201 = 0x00020001; // 2.0.1
 
 	/** DMAP Version 2.0.1 (iTunes 5.0) */
 	public static final int DMAP_VERSION_202 = 0x00020002; // 2.0.2
+
+	/** DMAP Version 4.2.0 (iPhoto 9.4.2) ???? */
+	public static final int DMAP_VERSION_420 = 0x00040002; // 4.2.0
 
 	/** Music Sharing Version 2.0.1 */
 	public static final int MUSIC_SHARING_VERSION_201 = 0x00020001; // 2.0.1

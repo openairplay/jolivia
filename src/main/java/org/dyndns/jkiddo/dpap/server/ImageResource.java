@@ -27,7 +27,12 @@ import javax.ws.rs.core.Response;
 import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.dmap.service.MDNSResource;
+import org.dyndns.jkiddo.dmap.service.Util;
 import org.dyndns.jkiddo.protocol.dmap.DmapUtil;
+import org.dyndns.jkiddo.protocol.dmap.chunks.daap.DaapProtocolVersion;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.DmapProtocolVersion;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ServerInfoResponse;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.Status;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
@@ -78,15 +83,21 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 		// mstt
 		// mpro
 		// ppro
+
+		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
+		serverInfoResponse.add(new Status(200));
+		serverInfoResponse.add(new DmapProtocolVersion(DmapUtil.DMAP_VERSION_420));
+		serverInfoResponse.add(new DaapProtocolVersion(DmapUtil.DPAP_VERSION_411));
+
 		// minm
 		// mslr
 		// mstm
 		// msal
 		// msix
 		// msdc
-		throw new NotImplementedException();
-	}
 
+		return Util.buildResponse(serverInfoResponse, DMAP_KEY, "Some name");
+	}
 	@Override
 	@Path("/login")
 	@GET
