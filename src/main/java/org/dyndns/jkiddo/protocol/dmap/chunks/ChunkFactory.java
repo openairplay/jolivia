@@ -192,6 +192,8 @@ public final class ChunkFactory
 		map.put(new Integer(0x6d73686e), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownHN.class); // mshn
 		map.put(new Integer(0x6167616c), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownAL.class); // agal
 		map.put(new Integer(0x61736161), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.AlbumArtist.class); // asaa
+		map.put(new Integer(0x61746564), org.dyndns.jkiddo.protocol.dmap.chunks.daap.SupportsExtraData.class); // ated
+		map.put(new Integer(0x61736772), org.dyndns.jkiddo.protocol.dmap.chunks.daap.SupportsGroups.class); // asgr
 
 	}
 

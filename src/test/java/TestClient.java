@@ -14,10 +14,9 @@ import java.util.Hashtable;
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceInfo;
 
-import org.dyndns.jkiddo.dacp.client.PairingResource;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
+import org.dyndns.jkiddo.daap.client.RequestHelper;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ContentCodesResponse;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ServerInfoResponse;
 import org.junit.Test;
 
 public class TestClient
@@ -53,5 +52,14 @@ public class TestClient
 
 		ServiceInfo pairservice = ServiceInfo.create(REMOTE_TYPE, DEVICE_ID, PAIRING_SERVER_PORT, 0, 0, values);
 		JmDNS.create().registerService(pairservice);
+	}
+
+	@Test
+	public void testGetContentCodes() throws Exception
+	{
+		ContentCodesResponse ccr = RequestHelper.requestParsed("http://localhost:3689/content-codes");
+		System.out.println(ccr);
+		ServerInfoResponse sir = RequestHelper.requestParsed("http://localhost:3689/server-info");
+		System.out.println(sir);
 	}
 }

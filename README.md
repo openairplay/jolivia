@@ -33,7 +33,8 @@ This project has found great inspiration in many projects and the people behind 
  - [RPlay](https://github.com/bencall/RPlay)
  - [AirReceiver](https://github.com/fgp/AirReceiver)
  - [AP4J-Player](https://github.com/carsonmcdonald/AP4J-Player)
- - [JAirPort](https://github.com/froks/JAirPort).
+ - [JAirPort](https://github.com/froks/JAirPort)
+ - [rkapsi/daap](https://github.com/rkapsi/daap)
 
 This project is licensed under the license presented in the license.txt file.
 
