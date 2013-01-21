@@ -52,6 +52,11 @@
 			<version>8.1.7.v20120910</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+	<groupId>com.google.code.gson</groupId>
+	<artifactId>gson</artifactId>
+	<version>2.2.2</version>
+</dependency>
 		
 		<dependency>
 			<groupId>com.google.inject.extensions</groupId>
@@ -92,6 +97,21 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.2</version>
+		</dependency>
+		<dependency>
+	<groupId>io.netty</groupId>
+	<artifactId>netty</artifactId>
+	<version>3.6.1.Final</version>
+</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-ext-jdk16</artifactId>
+			<version>1.46</version>
+		</dependency>
+		<dependency>
+			<groupId>net.iharder</groupId>
+			<artifactId>base64</artifactId>
+			<version>2.3.8</version>
 		</dependency>
 	</dependencies>
 </project>

@@ -16,7 +16,7 @@ public class UnknownHN extends RawChunk
 {
 	public UnknownHN()
 	{
-		this(new byte[]{});
+		this(new byte[] {});
 	}
 
 	public UnknownHN(byte[] value)

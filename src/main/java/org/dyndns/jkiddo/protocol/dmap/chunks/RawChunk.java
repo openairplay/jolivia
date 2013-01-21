@@ -18,7 +18,7 @@ public abstract class RawChunk extends AbstractChunk
 	{
 		super(contentCode, name);
 	}
-	
+
 	protected RawChunk(String contentCode, String name, byte[] array)
 	{
 		super(contentCode, name);

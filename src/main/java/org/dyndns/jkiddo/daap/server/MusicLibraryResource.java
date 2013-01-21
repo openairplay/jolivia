@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import javax.jmdns.JmmDNS;
 import javax.jmdns.ServiceInfo;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -29,6 +30,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
@@ -430,7 +432,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 	@Override
 	@Path("/logout")
 	@GET
-	public Response logout(@QueryParam("session-id") long sessionId)
+	public Response logout(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId)
 	{
 		return Util.buildEmptyResponse(DMAP_KEY, libraryManager.getLibraryName());
 	}

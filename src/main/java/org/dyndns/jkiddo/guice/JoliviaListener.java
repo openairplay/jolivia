@@ -12,6 +12,8 @@ package org.dyndns.jkiddo.guice;
 
 import javax.jmdns.JmmDNS;
 
+import org.dyndns.jkiddo.ClientSessionListener;
+import org.dyndns.jkiddo.daap.client.IClientSessionListener;
 import org.dyndns.jkiddo.daap.client.PairingDaemon;
 import org.dyndns.jkiddo.daap.server.IMusicLibrary;
 import org.dyndns.jkiddo.daap.server.MusicLibraryManager;
@@ -96,6 +98,7 @@ public class JoliviaListener extends GuiceServletContextListener
 				bind(PairingDaemon.class).asEagerSingleton();
 				bind(IPairingResource.class).to(PairingResource.class);
 				bind(IRemoteControlResource.class).to(RemoteControlResource.class);
+				bind(IClientSessionListener.class).to(ClientSessionListener.class);
 			}
 		}, new JerseyServletModule() {
 

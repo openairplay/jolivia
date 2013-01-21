@@ -30,19 +30,21 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
 @Singleton
-public class PairingDaemon implements ServiceListener, NetworkTopologyListener, IAutomatedClientSessionCreator
+public class PairingDaemon implements ServiceListener, NetworkTopologyListener
 {
 	public static final Logger logger = LoggerFactory.getLogger(PairingDaemon.class);
 
 	private final JmmDNS mDNS;
 	private final Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
 	private final IPairingDatabase database;
+	private final IClientSessionListener clientSessionListener;
 
 	@Inject
-	public PairingDaemon(JmmDNS mDNS, IPairingDatabase database)
+	public PairingDaemon(JmmDNS mDNS, IPairingDatabase database, IClientSessionListener clientSessionListener)
 	{
 		this.mDNS = mDNS;
 		this.database = database;
+		this.clientSessionListener = clientSessionListener;
 		this.mDNS.addNetworkTopologyListener(this);
 	}
 
@@ -70,7 +72,7 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener, 
 			{
 				logger.debug("About to pair with " + event.getInfo().getServer());
 				// If code is != null, we previously have been paired with this library. It does not mean that we still are.
-				createNewSession(event.getInfo().getServer(), event.getInfo().getPort(), code);
+				this.clientSessionListener.registerNewSession(new Session(event.getInfo().getServer(), event.getInfo().getPort(), code));
 			}
 			catch(Exception e)
 			{
@@ -78,16 +80,6 @@ public class PairingDaemon implements ServiceListener, NetworkTopologyListener, 
 				database.updateCode(event.getInfo().getName(), null);
 			}
 		}
-	}
-
-	@Override
-	public void createNewSession(String server, int port, String code) throws Exception
-	{
-		Session session = new Session(server, port, code);
-		RemoteControl remoteControl = session.getRemoteControl();
-		Library library = session.getLibrary();
-
-		// Now do stuff with the remote control :-)
 	}
 
 	@Override

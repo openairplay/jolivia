@@ -19,7 +19,7 @@ public class UnknownAL extends ContainerChunk
 	{
 		super("agal", "com.apple.itunes.unknown-al");
 	}
-	
+
 	public Listing getListing()
 	{
 		return getSingleChunk(Listing.class);

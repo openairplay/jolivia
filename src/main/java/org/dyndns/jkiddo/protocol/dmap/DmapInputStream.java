@@ -64,7 +64,7 @@ public class DmapInputStream extends FilterInputStream
 		super(in);
 		this.specialCaseProtocolViolation = false;
 	}
-	
+
 	public DmapInputStream(InputStream in, boolean specialCaseProtocolViolation)
 	{
 		super(in);
@@ -157,7 +157,7 @@ public class DmapInputStream extends FilterInputStream
 		}
 
 		Chunk chunk = factory.newChunk(contentCode);
-		
+
 		if(specialCaseProtocolViolation)
 		{
 			if(chunk.getClass().equals(ListingItem.class))

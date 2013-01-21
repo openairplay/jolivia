@@ -150,7 +150,7 @@ public class Database
 	{
 		this(name, DATABASE_ID.getAndIncrement(), Library.nextPersistentId(), masterPlaylist);
 	}
-	
+
 	public Database(String name, long itemId, long persistentId)
 	{
 		this(name, itemId, persistentId, new Playlist(name));

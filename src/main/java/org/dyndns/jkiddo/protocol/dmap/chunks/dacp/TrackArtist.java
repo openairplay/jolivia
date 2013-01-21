@@ -18,7 +18,7 @@ public class TrackArtist extends StringChunk
 	{
 		this(null);
 	}
-	
+
 	public TrackArtist(String value)
 	{
 		super("cana", "com.apple.itunes.unknown-na", value);

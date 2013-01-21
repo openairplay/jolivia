@@ -37,67 +37,85 @@ import org.dyndns.jkiddo.protocol.dmap.chunks.AbstractChunk;
 import org.dyndns.jkiddo.protocol.dmap.chunks.BooleanChunk;
 import org.dyndns.jkiddo.protocol.dmap.chunks.Chunk;
 
-public class PacketAnalyzer {
+public class PacketAnalyzer
+{
 
-    private static Chunk newChunk(DmapInputStream in) throws Throwable {
-        Chunk chunk = in.getChunk();
-        if (chunk instanceof BooleanChunk) {
-            ((BooleanChunk) chunk).setValue(true);
-        }
-        return chunk;
-    }
+	private static Chunk newChunk(DmapInputStream in) throws Throwable
+	{
+		Chunk chunk = in.getChunk();
+		if(chunk instanceof BooleanChunk)
+		{
+			((BooleanChunk) chunk).setValue(true);
+		}
+		return chunk;
+	}
 
-    private static String process(File file) throws Throwable {
-        StringBuffer buffer = new StringBuffer();
-        DmapInputStream in = null;
+	private static String process(File file) throws Throwable
+	{
+		StringBuffer buffer = new StringBuffer();
+		DmapInputStream in = null;
 
-        try {
-            in = new DmapInputStream(new FileInputStream(file));
-            while (in.available() > 0) {
-                process(buffer, 0, in);
-            }
-        } finally {
-            if (in != null) {
-                in.close();
-            }
-        }
+		try
+		{
+			in = new DmapInputStream(new FileInputStream(file));
+			while(in.available() > 0)
+			{
+				process(buffer, 0, in);
+			}
+		}
+		finally
+		{
+			if(in != null)
+			{
+				in.close();
+			}
+		}
 
-        return buffer.toString();
-    }
+		return buffer.toString();
+	}
 
-    private static void process(StringBuffer buffer, int indent,
-            DmapInputStream in) throws Throwable {
-        AbstractChunk chunk = (AbstractChunk) newChunk(in);
-        buffer.append(chunk.toString(indent)).append("\n");
-    }
+	private static void process(StringBuffer buffer, int indent, DmapInputStream in) throws Throwable
+	{
+		AbstractChunk chunk = (AbstractChunk) newChunk(in);
+		buffer.append(chunk.toString(indent)).append("\n");
+	}
 
-    public static void main(String[] args) {
-        try {
-            File file = null;
+	public static void main(String[] args)
+	{
+		try
+		{
+			File file = null;
 
-            if (args.length == 0) {
-                FileDialog dialog = new FileDialog(new Frame(),
-                        "Select file...", FileDialog.LOAD);
-                dialog.show();
+			if(args.length == 0)
+			{
+				FileDialog dialog = new FileDialog(new Frame(), "Select file...", FileDialog.LOAD);
+				dialog.show();
 
-                String d = dialog.getDirectory();
-                String f = dialog.getFile();
+				String d = dialog.getDirectory();
+				String f = dialog.getFile();
 
-                if (d != null && f != null) {
-                    args = new String[] { d + f };
-                } else {
-                    System.out.println("No file selected... Bye!");
-                    System.exit(0);
-                }
-            }
+				if(d != null && f != null)
+				{
+					args = new String[] { d + f };
+				}
+				else
+				{
+					System.out.println("No file selected... Bye!");
+					System.exit(0);
+				}
+			}
 
-            file = new File(args[0]);
-            String result = process(file);
-            System.out.println(result);
-        } catch (Throwable t) {
-            t.printStackTrace();
-        } finally {
-            System.exit(0);
-        }
-    }
+			file = new File(args[0]);
+			String result = process(file);
+			System.out.println(result);
+		}
+		catch(Throwable t)
+		{
+			t.printStackTrace();
+		}
+		finally
+		{
+			System.exit(0);
+		}
+	}
 }

@@ -13,6 +13,7 @@ package org.dyndns.jkiddo.dacp.server;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -32,7 +33,7 @@ public interface IRemoteControlResource
 
 	@GET
 	@Path("logout")
-	Response logout(@QueryParam("session-id") long session_id);
+	Response logout(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int/1/pause")

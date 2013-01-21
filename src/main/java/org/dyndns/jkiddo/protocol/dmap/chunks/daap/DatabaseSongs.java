@@ -49,12 +49,12 @@ public class DatabaseSongs extends ContainerChunk
 	{
 		return getSingleChunk(Listing.class);
 	}
-	
+
 	public SpecifiedTotalCount getSpecifiedTotalCount()
 	{
 		return getSingleChunk(SpecifiedTotalCount.class);
 	}
-	
+
 	public ReturnedCount getReturnedCount()
 	{
 		return getSingleChunk(ReturnedCount.class);

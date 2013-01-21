@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.daap.client;
 
-public interface IAutomatedClientSessionCreator
+public interface IClientSessionListener
 {
-	void createNewSession(String server, int port, String code) throws Exception;
+	void registerNewSession(Session session) throws Exception;
 }

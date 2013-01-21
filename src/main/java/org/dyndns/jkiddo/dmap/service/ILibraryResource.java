@@ -13,6 +13,7 @@ package org.dyndns.jkiddo.dmap.service;
 import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -20,6 +21,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 public interface ILibraryResource
 {
@@ -66,7 +68,7 @@ public interface ILibraryResource
 
 	@Path("/logout")
 	@GET
-	Response logout(@QueryParam("session-id") long sessionId);
+	Response logout(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId);
 
 	@Path("/resolve")
 	@GET

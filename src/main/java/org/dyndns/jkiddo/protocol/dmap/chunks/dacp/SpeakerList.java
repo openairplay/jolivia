@@ -19,7 +19,7 @@ public class SpeakerList extends ContainerChunk
 	{
 		super("casp", "com.apple.itunes.unknown-sp");
 	}
-	
+
 	public Iterable<Dictionary> getDictionaries()
 	{
 		return getMultipleChunks(Dictionary.class);

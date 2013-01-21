@@ -170,10 +170,14 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@GET
 	@Path("logout")
-	public Response logout(@QueryParam("session-id") long sessionId)
+	public Response logout(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId)
 	{
-		Response musicLibraryResponse = musicLibraryResource.logout(sessionId);
-		Response remoteControlResponse = remoteControlResource.logout(sessionId);
+		// through the protocol (it either starts with daap, dpap or something else, is should be possible to check which ressource the logout is targeted)
+		// if httpServletRequest.getProtocol() starts with daap, logout is from musicLibraryResource
+		// if httpServletRequest.getProtocol() starts with http, logout is from remoteControlResource
+		// if httpServletRequest.getProtocol() starts with dpap, logout is from imageLibrary
+		Response musicLibraryResponse = musicLibraryResource.logout(uri, httpServletRequest, httpServletResponse, sessionId);
+		Response remoteControlResponse = remoteControlResource.logout(uri, httpServletRequest, httpServletResponse, sessionId);
 		throw new NotImplementedException();
 	}
 

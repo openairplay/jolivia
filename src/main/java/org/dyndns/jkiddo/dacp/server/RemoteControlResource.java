@@ -17,6 +17,7 @@ import javax.inject.Inject;
 import javax.jmdns.JmmDNS;
 import javax.jmdns.ServiceInfo;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -56,7 +57,7 @@ public class RemoteControlResource extends MDNSResource implements IRemoteContro
 	@Override
 	@GET
 	@Path("logout")
-	public Response logout(@QueryParam("session-id") final long session_id)
+	public Response logout(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") final long session_id)
 	{
 		throw new NotImplementedException();
 	}

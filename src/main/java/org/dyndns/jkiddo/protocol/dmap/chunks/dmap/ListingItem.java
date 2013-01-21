@@ -42,7 +42,7 @@ public class ListingItem extends ContainerChunk
 	{
 		super("mlit", "dmap.listingitem");
 	}
-	
+
 	public <T extends Chunk> T getSpecificChunk(Class<T> clazz)
 	{
 		return getSingleChunk(clazz);
