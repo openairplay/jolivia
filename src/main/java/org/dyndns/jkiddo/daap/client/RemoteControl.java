@@ -41,12 +41,12 @@ import java.util.List;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.RelativeVolume;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.SpeakerActive;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.SpeakerList;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownGT;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownMA;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownST;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownVD;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.Dictionary;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ItemName;
+import org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownGT;
+import org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownMA;
+import org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownST;
+import org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownVD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -8,11 +8,25 @@
  * Contributors:
  *     Jens Kristian Villadsen - Lead developer, owner and creator
  ******************************************************************************/
-package org.dyndns.jkiddo.protocol.dmap.chunks.dacp;
+package org.dyndns.jkiddo.protocol.dmap.chunks.unknown;
 
 import org.dyndns.jkiddo.protocol.dmap.chunks.Chunk;
 import org.dyndns.jkiddo.protocol.dmap.chunks.ContainerChunk;
 import org.dyndns.jkiddo.protocol.dmap.chunks.daap.SongAlbumId;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.FullscreenStatus;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.GeniusSelectable;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.NowPlaying;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.PlayStatus;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.ProgressRemain;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.ProgressTotal;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.RepeatStatus;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.ShuffleStatus;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.StatusRevision;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.TrackAlbum;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.TrackArtist;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.TrackGenre;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.TrackName;
+import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.VisualizerStatus;
 
 public class UnknownST extends ContainerChunk
 {

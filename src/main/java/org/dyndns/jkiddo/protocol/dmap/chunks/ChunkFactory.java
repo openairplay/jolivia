@@ -153,47 +153,60 @@ public final class ChunkFactory
 		map.put(new Integer(0x6D737273), org.dyndns.jkiddo.protocol.dmap.chunks.dmap.SupportsResolve.class); // msrs
 		map.put(new Integer(0x6D737570), org.dyndns.jkiddo.protocol.dmap.chunks.dmap.SupportsUpdate.class); // msup
 		map.put(new Integer(0x6D73746D), org.dyndns.jkiddo.protocol.dmap.chunks.dmap.TimeoutInterval.class); // mstm
-		map.put(new Integer(0x636D6774), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownGT.class); // cmgt
-		map.put(new Integer(0x6165494D), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownIM.class); // aeIM
-		map.put(new Integer(0x6D736D61), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownMA.class); // msma
-		map.put(new Integer(0x6165524D), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownRM.class); // aeRM
-		map.put(new Integer(0x63617664), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownVD.class); // cavd
+		map.put(new Integer(0x636D6774), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownGT.class); // cmgt
+		map.put(new Integer(0x6165494D), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownIM.class); // aeIM
+		map.put(new Integer(0x6D736D61), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownMA.class); // msma
+		map.put(new Integer(0x6165524D), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownRM.class); // aeRM
+		map.put(new Integer(0x63617664), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownVD.class); // cavd
 		map.put(new Integer(0x6D757064), org.dyndns.jkiddo.protocol.dmap.chunks.dmap.UpdateResponse.class); // mupd
 		map.put(new Integer(0x6D757479), org.dyndns.jkiddo.protocol.dmap.chunks.dmap.UpdateType.class); // muty
-		map.put(new Integer(0x636D7374), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownST.class); // cmst
+		map.put(new Integer(0x636D7374), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownST.class); // cmst
 		map.put(new Integer(0x636D7372), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.StatusRevision.class); // cmsr
 		map.put(new Integer(0x63617073), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.PlayStatus.class); // caps
 		map.put(new Integer(0x63617368), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.ShuffleStatus.class); // cash
 		map.put(new Integer(0x63617270), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.RepeatStatus.class); // carp
 		map.put(new Integer(0x63616673), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.FullscreenStatus.class); // cafs
 		map.put(new Integer(0x63617673), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.VisualizerStatus.class); // cavs
-		map.put(new Integer(0x63617663), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownVC.class); // cavc
-		map.put(new Integer(0x63616173), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownAS.class); // caas
-		map.put(new Integer(0x63616172), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownAR.class); // caar
-		map.put(new Integer(0x63616665), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownFE.class); // cafe
-		map.put(new Integer(0x63617665), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownVE.class); // cave
-		map.put(new Integer(0x63617375), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownSU.class); // casu
-		map.put(new Integer(0x63655175), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownQU.class); // ceQu
+		map.put(new Integer(0x63617663), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownVC.class); // cavc
+		map.put(new Integer(0x63616173), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownAS.class); // caas
+		map.put(new Integer(0x63616172), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownAR.class); // caar
+		map.put(new Integer(0x63616665), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownFE.class); // cafe
+		map.put(new Integer(0x63617665), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownVE.class); // cave
+		map.put(new Integer(0x63617375), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownSU.class); // casu
+		map.put(new Integer(0x63655175), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownQU.class); // ceQu
 		map.put(new Integer(0x63616e70), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.NowPlaying.class); // canp
 		map.put(new Integer(0x63616e6e), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.TrackName.class); // cann
 		map.put(new Integer(0x63616e61), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.TrackArtist.class); // cana
 		map.put(new Integer(0x63616e6c), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.TrackAlbum.class); // canl
 		map.put(new Integer(0x63616e67), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.TrackGenre.class); // cang
 		map.put(new Integer(0x61736169), org.dyndns.jkiddo.protocol.dmap.chunks.daap.SongAlbumId.class); // asai
-		map.put(new Integer(0x636d6d6b), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownMK.class); // cmmk
+		map.put(new Integer(0x636d6d6b), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownMK.class); // cmmk
 		map.put(new Integer(0x61654773), org.dyndns.jkiddo.protocol.dmap.chunks.dmap.GeniusSeed.class); // aeGs
 		map.put(new Integer(0x63654753), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.GeniusSelectable.class); // ceGs
-		map.put(new Integer(0x63617361), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownSA.class); // casa
+		map.put(new Integer(0x63617361), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownSA.class); // casa
 		map.put(new Integer(0x63616e74), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.ProgressRemain.class); // cant
 		map.put(new Integer(0x63617374), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.ProgressTotal.class); // cant
-		map.put(new Integer(0x6d73686c), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownHL.class); // mshl
-		map.put(new Integer(0x6d736863), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownHC.class); // mshc
-		map.put(new Integer(0x6d736869), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownHI.class); // mshi
-		map.put(new Integer(0x6d73686e), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownHN.class); // mshn
-		map.put(new Integer(0x6167616c), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownAL.class); // agal
+		map.put(new Integer(0x6d73686c), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownHL.class); // mshl
+		map.put(new Integer(0x6d736863), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownHC.class); // mshc
+		map.put(new Integer(0x6d736869), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownHI.class); // mshi
+		map.put(new Integer(0x6d73686e), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownHN.class); // mshn
+		map.put(new Integer(0x6167616c), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownAL.class); // agal
 		map.put(new Integer(0x61736161), org.dyndns.jkiddo.protocol.dmap.chunks.dacp.AlbumArtist.class); // asaa
 		map.put(new Integer(0x61746564), org.dyndns.jkiddo.protocol.dmap.chunks.daap.SupportsExtraData.class); // ated
 		map.put(new Integer(0x61736772), org.dyndns.jkiddo.protocol.dmap.chunks.daap.SupportsGroups.class); // asgr
+		map.put(new Integer(0x61737365), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownSE.class); // asse
+		map.put(new Integer(0x61654d51), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownMQ.class); // aeMQ
+		map.put(new Integer(0x61654652), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownFR.class); // aeFR
+		map.put(new Integer(0x61655472), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownTr.class); // aeTr
+		map.put(new Integer(0x6165534c), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownSL.class); // aeSL
+		map.put(new Integer(0x61655352), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownSR.class); // aeSR
+		map.put(new Integer(0x61654650), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownFP.class); // aeFP
+		map.put(new Integer(0x61655358), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownSX.class); // aeSX
+		map.put(new Integer(0x7070726f), org.dyndns.jkiddo.protocol.dmap.chunks.dpap.ProtocolVersion.class); // ppro
+		map.put(new Integer(0x6d736564), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.Unknowned.class); // msed
+		map.put(new Integer(0x6d736d6c), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.Unknownml.class); // msml
+		map.put(new Integer(0x6d737463), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.Unknowntc.class); // mstc
+		map.put(new Integer(0x6d73746f), org.dyndns.jkiddo.protocol.dmap.chunks.unknown.Unknownto.class); // msto
 
 	}
 

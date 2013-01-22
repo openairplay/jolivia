@@ -8,19 +8,20 @@
  * Contributors:
  *     Jens Kristian Villadsen - Lead developer, owner and creator
  ******************************************************************************/
-package org.dyndns.jkiddo.protocol.dmap.chunks.dacp;
+package org.dyndns.jkiddo.protocol.dmap.chunks.unknown;
 
-import org.dyndns.jkiddo.protocol.dmap.chunks.UByteChunk;
+import org.dyndns.jkiddo.protocol.dmap.chunks.UIntChunk;
 
-public class UnknownSU extends UByteChunk
+public class UnknownMK extends UIntChunk
 {
-	public UnknownSU()
+	public UnknownMK()
 	{
 		this(0);
 	}
 
-	public UnknownSU(int value)
+	public UnknownMK(int value)
 	{
-		super("casu", "com.apple.itunes.unknown-su", value);
+		super("cmmk", "com.apple.itunes.unknown-mk", value);
 	}
+
 }

@@ -8,20 +8,14 @@
  * Contributors:
  *     Jens Kristian Villadsen - Lead developer, owner and creator
  ******************************************************************************/
-package org.dyndns.jkiddo.protocol.dmap.chunks.dacp;
+package org.dyndns.jkiddo.protocol.dmap.chunks.unknown;
 
-import org.dyndns.jkiddo.protocol.dmap.chunks.UIntChunk;
+import org.dyndns.jkiddo.protocol.dmap.chunks.ContainerChunk;
 
-public class UnknownAR extends UIntChunk
+public class UnknownHL extends ContainerChunk
 {
-	public UnknownAR()
+	public UnknownHL()
 	{
-		this(0);
+		super("mshl", "com.apple.itunes.unknown-hl");
 	}
-
-	public UnknownAR(int value)
-	{
-		super("caar", "com.apple.itunes.unknown-ar", value);
-	}
-
 }

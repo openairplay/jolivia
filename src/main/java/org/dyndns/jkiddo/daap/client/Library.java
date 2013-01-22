@@ -39,8 +39,8 @@ import org.dyndns.jkiddo.protocol.dmap.chunks.daap.DatabaseBrowse;
 import org.dyndns.jkiddo.protocol.dmap.chunks.daap.DatabaseSongs;
 import org.dyndns.jkiddo.protocol.dmap.chunks.daap.PlaylistSongs;
 import org.dyndns.jkiddo.protocol.dmap.chunks.daap.SongUserRating;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dacp.UnknownAL;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ListingItem;
+import org.dyndns.jkiddo.protocol.dmap.chunks.unknown.UnknownAL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -19,6 +19,10 @@ import org.dyndns.jkiddo.protocol.dmap.chunks.VersionChunk;
  */
 public class ProtocolVersion extends VersionChunk
 {
+	public ProtocolVersion()
+	{
+		this(0);
+	}
 
 	public ProtocolVersion(int version)
 	{
@@ -29,5 +33,4 @@ public class ProtocolVersion extends VersionChunk
 	{
 		super("ppro", "dpap.protocolversion", major, minor, patch);
 	}
-
 }
