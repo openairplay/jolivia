@@ -13,4 +13,6 @@ package org.dyndns.jkiddo.daap.client;
 public interface IClientSessionListener
 {
 	void registerNewSession(Session session) throws Exception;
+
+	void tearDownSession(String server, int port);
 }

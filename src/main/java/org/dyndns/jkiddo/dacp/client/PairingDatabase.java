@@ -33,8 +33,6 @@ public class PairingDatabase implements IPairingDatabase
 	private final static String KEY_SERVICE_GUID = "serviceguid";
 	private final static String KEY_LAST_SESSION = "lastsession";
 
-	protected final static byte[] CHAR_TABLE = new byte[] { (byte) '0', (byte) '1', (byte) '2', (byte) '3', (byte) '4', (byte) '5', (byte) '6', (byte) '7', (byte) '8', (byte) '9', (byte) 'A', (byte) 'B', (byte) 'C', (byte) 'D', (byte) 'E', (byte) 'F' };
-
 	private static String configDirectory = "";
 
 	private Connection connection = null;

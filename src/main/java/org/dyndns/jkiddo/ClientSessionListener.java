@@ -16,7 +16,13 @@ public class ClientSessionListener implements IClientSessionListener
 
 		// Now do stuff :)
 
-		remoteControl.play();
+		remoteControl.pause();
 		library.getAllAlbums();
+	}
+
+	@Override
+	public void tearDownSession(String hostname, int port)
+	{
+		
 	}
 }

@@ -14,7 +14,7 @@ import javax.jmdns.JmmDNS;
 
 import org.dyndns.jkiddo.ClientSessionListener;
 import org.dyndns.jkiddo.daap.client.IClientSessionListener;
-import org.dyndns.jkiddo.daap.client.PairingDaemon;
+import org.dyndns.jkiddo.daap.client.PairedRemoteDiscoverer;
 import org.dyndns.jkiddo.daap.server.IMusicLibrary;
 import org.dyndns.jkiddo.daap.server.MusicLibraryManager;
 import org.dyndns.jkiddo.daap.server.MusicLibraryResource;
@@ -31,6 +31,9 @@ import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
 import org.dyndns.jkiddo.jetty.ProxyFilter;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
+import org.dyndns.jkiddo.raop.client.ISpeakerListener;
+import org.dyndns.jkiddo.raop.client.RemoteSpeakerDiscoverer;
+import org.dyndns.jkiddo.raop.client.SpeakerListener;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -95,10 +98,18 @@ public class JoliviaListener extends GuiceServletContextListener
 				bind(Integer.class).annotatedWith(Names.named(RemoteControlResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);
 
 				bind(IPairingDatabase.class).toInstance(new PairingDatabase());
-				bind(PairingDaemon.class).asEagerSingleton();
+				bind(PairedRemoteDiscoverer.class).asEagerSingleton();
 				bind(IPairingResource.class).to(PairingResource.class);
 				bind(IRemoteControlResource.class).to(RemoteControlResource.class);
 				bind(IClientSessionListener.class).to(ClientSessionListener.class);
+			}
+		}, new AbstractModule() {
+
+			@Override
+			protected void configure()
+			{
+				bind(RemoteSpeakerDiscoverer.class).asEagerSingleton();
+				bind(ISpeakerListener.class).to(SpeakerListener.class);
 			}
 		}, new JerseyServletModule() {
 
