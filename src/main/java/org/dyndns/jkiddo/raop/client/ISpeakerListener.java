@@ -1,6 +1,6 @@
 package org.dyndns.jkiddo.raop.client;
 
-import org.dyndns.jkiddo.raop.client.service.model.Device;
+import org.dyndns.jkiddo.raop.client.model.Device;
 
 public interface ISpeakerListener
 {

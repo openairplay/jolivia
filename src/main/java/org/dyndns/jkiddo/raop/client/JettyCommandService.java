@@ -13,13 +13,13 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.dyndns.jkiddo.raop.client.service.command.PlayCommand;
-import org.dyndns.jkiddo.raop.client.service.command.RateCommand;
-import org.dyndns.jkiddo.raop.client.service.command.ScrubCommand;
-import org.dyndns.jkiddo.raop.client.service.command.StopCommand;
-import org.dyndns.jkiddo.raop.client.service.model.Device;
-import org.dyndns.jkiddo.raop.client.service.model.DeviceConnection;
-import org.dyndns.jkiddo.raop.client.service.model.DeviceResponse;
+import org.dyndns.jkiddo.raop.client.command.PlayCommand;
+import org.dyndns.jkiddo.raop.client.command.RateCommand;
+import org.dyndns.jkiddo.raop.client.command.ScrubCommand;
+import org.dyndns.jkiddo.raop.client.command.StopCommand;
+import org.dyndns.jkiddo.raop.client.model.Device;
+import org.dyndns.jkiddo.raop.client.model.DeviceConnection;
+import org.dyndns.jkiddo.raop.client.model.DeviceResponse;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 

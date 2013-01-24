@@ -20,7 +20,7 @@ import javax.jmdns.NetworkTopologyEvent;
 import javax.jmdns.ServiceEvent;
 
 import org.dyndns.jkiddo.IDiscoverer;
-import org.dyndns.jkiddo.raop.client.service.model.Device;
+import org.dyndns.jkiddo.raop.client.model.Device;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

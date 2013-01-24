@@ -1,4 +1,4 @@
-package org.dyndns.jkiddo.raop.client.service.model;
+package org.dyndns.jkiddo.raop.client.model;
 
 import java.util.HashMap;
 import java.util.Map;
