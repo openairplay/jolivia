@@ -13,11 +13,10 @@ A Java application/library implementation of the DMAP family (DAAP, DACP, DPAP) 
 
  * DAAP share as provided by iTunes including Zeroconf service discovery/publication. (*Have a look at classes implementing the interface org.dyndns.jkiddo.dmap.service.ILibraryResource*)
  * DACP pairing and remote control functions. (*Have a look at classes implementing the interface org.dyndns.jkiddo.dacp.client.IPairingResource and org.dyndns.jkiddo.daap.client.IAutomatedClientSessionCreator*)
-
+ * RAOP Streaming aka. Airport Express emulation.
 ## Planned functionality ##
 
- * Support for RAOP, effectively making jolivia a Headless OS-independent version of iTunes.
-  * RAOP could be implemented as in [RPlay](https://github.com/bencall/RPlay), [AirReceiver](https://github.com/fgp/AirReceiver), [AP4J-Player](https://github.com/carsonmcdonald/AP4J-Player) or [JAirPort](https://github.com/froks/JAirPort).
+ * RAOP could be implemented as in [RPlay](https://github.com/bencall/RPlay), [AirReceiver](https://github.com/fgp/AirReceiver), [AP4J-Player](https://github.com/carsonmcdonald/AP4J-Player), [qtunes](https://launchpad.net/qtunes) or [JAirPort](https://github.com/froks/JAirPort).
  * DPAP implementation (ongoing ... ).
 
 ## Far future functionality ##
@@ -35,6 +34,7 @@ This project has found great inspiration in many projects and the people behind 
  - [AP4J-Player](https://github.com/carsonmcdonald/AP4J-Player)
  - [JAirPort](https://github.com/froks/JAirPort)
  - [rkapsi/daap](https://github.com/rkapsi/daap)
+ - [qtunes](https://launchpad.net/qtunes)
 
 This project is licensed under the license presented in the license.txt file.
 
