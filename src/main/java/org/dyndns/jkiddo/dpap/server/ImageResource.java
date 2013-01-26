@@ -57,7 +57,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	public ImageResource(JmmDNS mDNS, @Named(DPAP_SERVER_PORT_NAME) Integer port) throws IOException
 	{
 		super(mDNS, port);
-		this.registerServiceInfo();
+		this.signUp();
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/server-info")
 	@GET
-	public Response serverInfo() throws IOException
+	public Response serverInfo(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
 	{
 		// See how it is done in MusicLibraryResource
 		// return
@@ -124,7 +124,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/databases")
 	@GET
-	public Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
+	public Response databases(@Context UriInfo uri, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
 	{
 		// See how it is done in MusicLibraryResource
 		// return

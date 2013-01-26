@@ -51,9 +51,9 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@Path("/server-info")
 	@GET
-	public Response serverInfo() throws IOException
+	public Response serverInfo(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
 	{
-		return musicLibraryResource.serverInfo();
+		return musicLibraryResource.serverInfo(uri, httpServletRequest, httpServletResponse);
 	}
 
 	@Override
@@ -84,9 +84,9 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@Path("/databases")
 	@GET
-	public Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
+	public Response databases(@Context UriInfo uri, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
 	{
-		return musicLibraryResource.databases(sessionId, revisionNumber, delta);
+		return musicLibraryResource.databases(uri, sessionId, revisionNumber, delta);
 	}
 
 	@Override

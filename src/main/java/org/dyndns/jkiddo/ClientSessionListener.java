@@ -16,7 +16,7 @@ public class ClientSessionListener implements IClientSessionListener
 
 		// Now do stuff :)
 
-		remoteControl.pause();
+		remoteControl.getNowPlaying();
 		library.getAllAlbums();
 	}
 

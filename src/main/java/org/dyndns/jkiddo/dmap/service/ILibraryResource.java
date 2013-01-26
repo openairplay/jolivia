@@ -28,7 +28,7 @@ public interface ILibraryResource
 
 	@Path("/server-info")
 	@GET
-	Response serverInfo() throws IOException;
+	Response serverInfo(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException;
 
 	@Path("/login")
 	@GET
@@ -40,7 +40,7 @@ public interface ILibraryResource
 
 	@Path("/databases")
 	@GET
-	Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException;
+	Response databases(@Context UriInfo uri, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException;
 
 	@Path("/databases/{databaseId}/groups")
 	@GET

@@ -43,7 +43,7 @@ public class RemoteControlResource extends MDNSResource implements IRemoteContro
 	public RemoteControlResource(JmmDNS mDNS, @Named(DACP_SERVER_PORT_NAME) Integer port) throws IOException
 	{
 		super(mDNS, port);
-		this.registerServiceInfo();
+		this.signUp();
 	}
 
 	@Override

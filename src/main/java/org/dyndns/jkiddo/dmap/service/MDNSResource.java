@@ -38,20 +38,25 @@ public abstract class MDNSResource implements NetworkTopologyListener
 	{
 		this.mDNS = mDNS;
 		this.port = port;
-		this.mDNS.addNetworkTopologyListener(this);
 	}
 
 	// http://www.dns-sd.org/ServiceTypes.html
 	abstract protected ServiceInfo getServiceInfoToRegister();
 
-	protected synchronized void registerServiceInfo() throws IOException
+	protected void cleanup()
+	{
+		this.mDNS.unregisterAllServices();
+	}
+
+	protected synchronized void signUp() throws IOException
 	{
 		serviceInfo = getServiceInfoToRegister();
-
+		mDNS.registerService(serviceInfo);
 		for(JmDNS mdns : interfaces.keySet())
 		{
 			mdns.registerService(serviceInfo);
 		}
+		this.mDNS.addNetworkTopologyListener(this);
 	}
 
 	@Override

@@ -41,8 +41,7 @@ public class RemoteSpeakerDiscoverer implements IDiscoverer
 	{
 		this.mDNS = mDNS;
 		this.speakerListener = speakerListener;
-//		this.mDNS.addServiceListener(ISpeakerListener.AIR_PLAY, this);
-		this.mDNS.addServiceListener(ISpeakerListener.AIR_PORT, this);
+		this.mDNS.addServiceListener(ISpeakerListener.AIRPORT, this);
 		this.mDNS.addNetworkTopologyListener(this);
 	}
 
@@ -73,8 +72,7 @@ public class RemoteSpeakerDiscoverer implements IDiscoverer
 		JmDNS mdns = event.getDNS();
 		InetAddress address = event.getInetAddress();
 		logger.info("Registered RemoteSpeakerDiscoverer @ " + address.getHostAddress());
-//		mdns.addServiceListener(ISpeakerListener.AIR_PLAY, this);
-		mdns.addServiceListener(ISpeakerListener.AIR_PORT, this);
+		mdns.addServiceListener(ISpeakerListener.AIRPORT, this);
 		interfaces.put(mdns, address);
 	}
 
@@ -82,8 +80,7 @@ public class RemoteSpeakerDiscoverer implements IDiscoverer
 	public void inetAddressRemoved(NetworkTopologyEvent event)
 	{
 		JmDNS mdns = event.getDNS();
-//		mdns.removeServiceListener(ISpeakerListener.AIR_PLAY, this);
-		mdns.removeServiceListener(ISpeakerListener.AIR_PORT, this);
+		mdns.removeServiceListener(ISpeakerListener.AIRPORT, this);
 		mdns.unregisterAllServices();
 		interfaces.remove(mdns);
 	}

@@ -111,7 +111,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 	{
 		super(mDNS, port);
 		this.libraryManager = libraryManager;
-		this.registerServiceInfo();
+		this.signUp();
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 	@Override
 	@Path("/server-info")
 	@GET
-	public Response serverInfo() throws IOException
+	public Response serverInfo(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
 	{
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 
@@ -210,7 +210,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 	@Override
 	@Path("/databases")
 	@GET
-	public Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
+	public Response databases(@Context UriInfo uri, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
 	{
 		ServerDatabases serverDatabases = new ServerDatabases();
 

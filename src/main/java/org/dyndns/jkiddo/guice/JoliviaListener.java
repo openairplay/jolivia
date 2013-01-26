@@ -13,6 +13,7 @@ package org.dyndns.jkiddo.guice;
 import javax.jmdns.JmmDNS;
 
 import org.dyndns.jkiddo.ClientSessionListener;
+import org.dyndns.jkiddo.SpeakerListener;
 import org.dyndns.jkiddo.daap.client.IClientSessionListener;
 import org.dyndns.jkiddo.daap.client.PairedRemoteDiscoverer;
 import org.dyndns.jkiddo.daap.server.IMusicLibrary;
@@ -33,7 +34,7 @@ import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.raop.client.ISpeakerListener;
 import org.dyndns.jkiddo.raop.client.RemoteSpeakerDiscoverer;
-import org.dyndns.jkiddo.raop.client.SpeakerListener;
+import org.dyndns.jkiddo.raop.server.AirPlayResourceWrapper;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -46,12 +47,24 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 public class JoliviaListener extends GuiceServletContextListener
 {
-	private int hostingPort;
+	final private Integer hostingPort;
+	final private Integer pairingCode;
+	final private Integer airplayPort;
 
-	public JoliviaListener(int port)
+	public JoliviaListener(Integer port, Integer airplayPort, Integer pairingCode)
 	{
 		super();
-		hostingPort = port;
+		this.hostingPort = port;
+		this.pairingCode = pairingCode;
+		this.airplayPort = airplayPort;
+	}
+
+	public JoliviaListener(Integer port)
+	{
+		super();
+		this.hostingPort = port;
+		this.pairingCode = 1337;
+		this.airplayPort = 5000;
 	}
 
 	@Override
@@ -72,7 +85,7 @@ public class JoliviaListener extends GuiceServletContextListener
 			@Override
 			protected void configure()
 			{
-				bind(Integer.class).annotatedWith(Names.named(ImageResource.DPAP_SERVER_PORT_NAME)).toInstance(8770);
+				bind(Integer.class).annotatedWith(Names.named(ImageResource.DPAP_SERVER_PORT_NAME)).toInstance(hostingPort);
 				bind(IImageLibrary.class).to(ImageResource.class).asEagerSingleton();
 			}
 		}, new AbstractModule() {
@@ -93,7 +106,7 @@ public class JoliviaListener extends GuiceServletContextListener
 			@Override
 			protected void configure()
 			{
-				bind(Integer.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PAIRING_CODE)).toInstance(1337);
+				bind(Integer.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PAIRING_CODE)).toInstance(pairingCode);
 				bind(Integer.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PORT_NAME)).toInstance(hostingPort);
 				bind(Integer.class).annotatedWith(Names.named(RemoteControlResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);
 
@@ -111,7 +124,17 @@ public class JoliviaListener extends GuiceServletContextListener
 				bind(RemoteSpeakerDiscoverer.class).asEagerSingleton();
 				bind(ISpeakerListener.class).to(SpeakerListener.class);
 			}
-		}, new JerseyServletModule() {
+		}, new AbstractModule() {
+
+			@Override
+			protected void configure()
+			{
+				bind(Integer.class).annotatedWith(Names.named(AirPlayResourceWrapper.RAOP_PORT_NAME)).toInstance(airplayPort);
+				bind(AirPlayResourceWrapper.class).asEagerSingleton();
+			}
+		}
+
+		, new JerseyServletModule() {
 
 			@Override
 			protected void configureServlets()
