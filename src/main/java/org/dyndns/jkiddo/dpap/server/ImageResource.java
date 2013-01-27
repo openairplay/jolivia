@@ -26,10 +26,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.dmap.service.MDNSResource;
 import org.dyndns.jkiddo.dmap.service.Util;
+import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.protocol.dmap.DmapUtil;
 import org.dyndns.jkiddo.protocol.dmap.chunks.daap.DaapProtocolVersion;
 import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.DmapProtocolVersion;
@@ -53,10 +53,13 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 
 	private static final String DMAP_KEY = "DPAP-Server";
 
+	private final String name;
+
 	@Inject
-	public ImageResource(JmmDNS mDNS, @Named(DPAP_SERVER_PORT_NAME) Integer port) throws IOException
+	public ImageResource(JmmDNS mDNS, @Named(DPAP_SERVER_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName) throws IOException
 	{
 		super(mDNS, port);
+		this.name = applicationName;
 		this.signUp();
 	}
 
@@ -71,7 +74,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 		records.put(IPSH_VERSION_KEY, 0x20000 + "");
 		records.put(MACHINE_ID_KEY, hash);
 		records.put(PASSWORD_KEY, "0");
-		return ServiceInfo.create(DPAP_SERVICE_TYPE, Jolivia.name, port, 0, 0, records);
+		return ServiceInfo.create(DPAP_SERVICE_TYPE, name, port, 0, 0, records);
 	}
 
 	@Override

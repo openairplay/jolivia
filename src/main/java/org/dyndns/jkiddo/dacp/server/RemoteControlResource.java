@@ -27,9 +27,9 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.dmap.service.MDNSResource;
+import org.dyndns.jkiddo.guice.JoliviaListener;
 
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -38,11 +38,13 @@ import com.google.inject.name.Named;
 public class RemoteControlResource extends MDNSResource implements IRemoteControlResource
 {
 	public static final String DACP_SERVER_PORT_NAME = "DACP_SERVER_PORT_NAME";
+	private final String name;
 
 	@Inject
-	public RemoteControlResource(JmmDNS mDNS, @Named(DACP_SERVER_PORT_NAME) Integer port) throws IOException
+	public RemoteControlResource(JmmDNS mDNS, @Named(DACP_SERVER_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName) throws IOException
 	{
 		super(mDNS, port);
+		this.name = applicationName;
 		this.signUp();
 	}
 
@@ -207,7 +209,7 @@ public class RemoteControlResource extends MDNSResource implements IRemoteContro
 		hash = (hash + hash).substring(0, 13);
 
 		final HashMap<String, String> records = new HashMap<String, String>();
-		records.put("CtlN", Jolivia.name + " on " + hostname);
+		records.put("CtlN", name + " on " + hostname);
 		records.put("OSsi", "0x1F6");
 		records.put("Ver", "131073");
 		records.put("txtvers", "1");

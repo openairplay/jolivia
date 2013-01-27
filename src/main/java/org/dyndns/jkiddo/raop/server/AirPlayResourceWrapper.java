@@ -14,8 +14,8 @@ import java.util.concurrent.Executors;
 import javax.jmdns.JmmDNS;
 import javax.jmdns.ServiceInfo;
 
-import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.dmap.service.MDNSResource;
+import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.raop.server.AirReceiver.RaopRtspPipelineFactory;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -47,10 +47,13 @@ public class AirPlayResourceWrapper extends MDNSResource
 	private final byte[] hardwareAddressBytes = getHardwareAddress();
 	private final String hardwareAddressString = toHexString(hardwareAddressBytes);
 
+	private final String name;
+
 	@Inject
-	public AirPlayResourceWrapper(JmmDNS mDNS, @Named(RAOP_PORT_NAME) Integer port) throws IOException
+	public AirPlayResourceWrapper(JmmDNS mDNS, @Named(RAOP_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName) throws IOException
 	{
 		super(mDNS, port);
+		this.name = applicationName;
 		this.signUp();
 		SimpleChannelUpstreamHandler channel = new SimpleChannelUpstreamHandler() {
 			@Override
@@ -85,7 +88,7 @@ public class AirPlayResourceWrapper extends MDNSResource
 		map.put("cn", "0,1");
 		map.put("vn", "3");
 
-		return ServiceInfo.create(RAOP_SERVICE_TYPE, hardwareAddressString + "@" + Jolivia.name + "@" + hostname, this.port, 0 /* weight */, 0 /* priority */, map);
+		return ServiceInfo.create(RAOP_SERVICE_TYPE, hardwareAddressString + "@" + name + "@" + hostname, this.port, 0, 0, map);
 	}
 
 	@Override

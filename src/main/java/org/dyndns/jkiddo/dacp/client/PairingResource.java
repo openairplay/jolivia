@@ -29,8 +29,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.dmap.service.MDNSResource;
+import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +49,7 @@ public class PairingResource extends MDNSResource implements IPairingResource
 
 	private final IPairingDatabase database;
 	private final Integer actualCode;
+	private final String name;
 
 	private static MessageDigest md5;
 
@@ -65,11 +66,12 @@ public class PairingResource extends MDNSResource implements IPairingResource
 	}
 
 	@Inject
-	public PairingResource(JmmDNS mDNS, @Named(DACP_CLIENT_PORT_NAME) Integer port, IPairingDatabase database, @Named(DACP_CLIENT_PAIRING_CODE) Integer code) throws IOException
+	public PairingResource(JmmDNS mDNS, @Named(DACP_CLIENT_PORT_NAME) Integer port, IPairingDatabase database, @Named(DACP_CLIENT_PAIRING_CODE) Integer code, @Named(JoliviaListener.APPLICATION_NAME) String applicationName) throws IOException
 	{
 		super(mDNS, port);
 		this.actualCode = code;
 		this.database = database;
+		this.name = applicationName;
 		this.signUp();
 	}
 
@@ -107,7 +109,7 @@ public class PairingResource extends MDNSResource implements IPairingResource
 	protected ServiceInfo getServiceInfoToRegister()
 	{
 		final Map<String, String> values = new HashMap<String, String>();
-		values.put("DvNm", "Use " + actualCode + " as code for " + Jolivia.name);
+		values.put("DvNm", "Use " + actualCode + " as code for " + name);
 		values.put("RemV", "10000");
 		values.put("DvTy", "iPod");
 		values.put("RemN", "Remote");

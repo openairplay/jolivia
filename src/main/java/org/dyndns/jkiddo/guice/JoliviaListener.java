@@ -12,8 +12,6 @@ package org.dyndns.jkiddo.guice;
 
 import javax.jmdns.JmmDNS;
 
-import org.dyndns.jkiddo.ClientSessionListener;
-import org.dyndns.jkiddo.SpeakerListener;
 import org.dyndns.jkiddo.daap.client.IClientSessionListener;
 import org.dyndns.jkiddo.daap.client.PairedRemoteDiscoverer;
 import org.dyndns.jkiddo.daap.server.IMusicLibrary;
@@ -50,21 +48,22 @@ public class JoliviaListener extends GuiceServletContextListener
 	final private Integer hostingPort;
 	final private Integer pairingCode;
 	final private Integer airplayPort;
+	final private String name;
+	final private IClientSessionListener clientSessionListener;
+	final private ISpeakerListener speakerListener;
 
-	public JoliviaListener(Integer port, Integer airplayPort, Integer pairingCode)
+	public static final String APPLICATION_NAME = "APPLICATION_NAME";
+
+	public JoliviaListener(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener)
 	{
 		super();
 		this.hostingPort = port;
 		this.pairingCode = pairingCode;
 		this.airplayPort = airplayPort;
-	}
-
-	public JoliviaListener(Integer port)
-	{
-		super();
-		this.hostingPort = port;
-		this.pairingCode = 1337;
-		this.airplayPort = 5000;
+		this.name = name;
+		this.clientSessionListener = clientSessionListener;
+		this.speakerListener = speakerListener;
+		
 	}
 
 	@Override
@@ -78,6 +77,7 @@ public class JoliviaListener extends GuiceServletContextListener
 				bind(JmmDNS.class).toInstance(JmmDNS.Factory.getInstance());
 				bind(JoliviaExceptionMapper.class);
 				bind(DMAPInterface.class).asEagerSingleton();
+				bind(String.class).annotatedWith(Names.named(APPLICATION_NAME)).toInstance(name);
 			}
 
 		}, new AbstractModule() {
@@ -114,7 +114,7 @@ public class JoliviaListener extends GuiceServletContextListener
 				bind(PairedRemoteDiscoverer.class).asEagerSingleton();
 				bind(IPairingResource.class).to(PairingResource.class);
 				bind(IRemoteControlResource.class).to(RemoteControlResource.class);
-				bind(IClientSessionListener.class).to(ClientSessionListener.class);
+				bind(IClientSessionListener.class).toInstance(clientSessionListener);
 			}
 		}, new AbstractModule() {
 
@@ -122,7 +122,7 @@ public class JoliviaListener extends GuiceServletContextListener
 			protected void configure()
 			{
 				bind(RemoteSpeakerDiscoverer.class).asEagerSingleton();
-				bind(ISpeakerListener.class).to(SpeakerListener.class);
+				bind(ISpeakerListener.class).toInstance(speakerListener);
 			}
 		}, new AbstractModule() {
 

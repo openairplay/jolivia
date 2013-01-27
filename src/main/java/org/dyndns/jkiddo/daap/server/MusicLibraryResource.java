@@ -32,11 +32,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.daap.server.MusicLibraryManager.PasswordMethod;
 import org.dyndns.jkiddo.dmap.service.MDNSResource;
 import org.dyndns.jkiddo.dmap.service.Util;
+import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.protocol.dmap.Database;
 import org.dyndns.jkiddo.protocol.dmap.DmapUtil;
 import org.dyndns.jkiddo.protocol.dmap.Playlist;
@@ -88,8 +88,9 @@ import com.google.inject.name.Named;
 @Singleton
 public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 {
-	@Inject
-	MusicLibraryManager libraryManager;
+	private final MusicLibraryManager libraryManager;
+
+	private final String name;
 
 	private static final String TXT_VERSION = "1";
 	private static final String TXT_VERSION_KEY = "txtvers";
@@ -107,12 +108,12 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 	static Logger logger = LoggerFactory.getLogger(MusicLibraryResource.class);
 
 	@Inject
-	public MusicLibraryResource(JmmDNS mDNS, @Named(DAAP_PORT_NAME) Integer port, MusicLibraryManager libraryManager) throws IOException
+	public MusicLibraryResource(JmmDNS mDNS, @Named(DAAP_PORT_NAME) Integer port, MusicLibraryManager libraryManager, @Named(JoliviaListener.APPLICATION_NAME) String applicationName) throws IOException
 	{
 		super(mDNS, port);
 		this.libraryManager = libraryManager;
-		this.signUp();
-	}
+		this.name = applicationName;
+		this.signUp();	}
 
 	@Override
 	protected ServiceInfo getServiceInfoToRegister()
@@ -127,7 +128,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 		records.put(ITSH_VERSION_KEY, DmapUtil.MUSIC_SHARING_VERSION_201 + "");
 		records.put(DAAP_VERSION_KEY, DmapUtil.DAAP_VERSION_3 + "");
 		records.put(PASSWORD_KEY, "0");
-		return ServiceInfo.create(DAAP_SERVICE_TYPE, Jolivia.name, port, 0, 0, records);
+		return ServiceInfo.create(DAAP_SERVICE_TYPE, name, port, 0, 0, records);
 	}
 
 	@Override

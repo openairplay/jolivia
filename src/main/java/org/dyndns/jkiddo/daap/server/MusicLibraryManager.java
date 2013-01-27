@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-import org.dyndns.jkiddo.Jolivia;
+import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.protocol.dmap.Database;
 import org.dyndns.jkiddo.protocol.dmap.Library;
@@ -27,22 +27,22 @@ import org.dyndns.jkiddo.protocol.dmap.Transaction;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 @Singleton
 public class MusicLibraryManager
 {
-	@Inject
-	private Set<IMusicStoreReader> setOfReaders;
-	private Library library;
-	private Database database;
-	private Map<Integer, IMusicStoreReader> songToReader;
+	private final Library library;
+	private final Database database;
+	private final Map<Integer, IMusicStoreReader> songToReader;
 
 	@Inject
-	public MusicLibraryManager(Set<IMusicStoreReader> databases) throws Exception
+	public MusicLibraryManager(Set<IMusicStoreReader> databases, @Named(JoliviaListener.APPLICATION_NAME) String applicationName) throws Exception
 	{
-		songToReader = new HashMap<Integer, IMusicStoreReader>();
-		library = new Library(LIBARY_NAME);
-		database = new Database(LIBARY_NAME);
+		this.libraryName = applicationName;
+		this.songToReader = new HashMap<Integer, IMusicStoreReader>();
+		this.library = new Library(libraryName);
+		this.database = new Database(libraryName);
 		Transaction txn = library.beginTransaction();
 
 		Set<Song> collectionOfSongs = new HashSet<Song>();
@@ -61,7 +61,7 @@ public class MusicLibraryManager
 		txn.commit();
 	}
 
-	private static final String LIBARY_NAME = Jolivia.name;
+	private final String libraryName;
 
 	public enum PasswordMethod
 	{
@@ -98,7 +98,7 @@ public class MusicLibraryManager
 
 	public String getLibraryName()
 	{
-		return LIBARY_NAME;
+		return library.getName();
 	}
 
 	public File getTune(long databaseId, long itemId) throws Exception

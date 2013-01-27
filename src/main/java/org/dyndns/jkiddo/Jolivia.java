@@ -14,8 +14,12 @@ import java.util.EnumSet;
 
 import javax.servlet.DispatcherType;
 
+import org.dyndns.jkiddo.daap.client.IClientSessionListener;
+import org.dyndns.jkiddo.daap.client.Session;
 import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.jetty.extension.DmapConnectionFactory;
+import org.dyndns.jkiddo.raop.client.ISpeakerListener;
+import org.dyndns.jkiddo.raop.client.model.Device;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -23,34 +27,70 @@ import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.servlet.GuiceFilter;
 
 public class Jolivia
 {
-	public static final String name = "joliv1a";
 	static Logger logger = LoggerFactory.getLogger(Jolivia.class);
-	// http://randomizedsort.blogspot.dk/2011/05/using-guice-ified-jersey-in-embedded.html
-	// http://blog.palominolabs.com/2011/08/15/a-simple-java-web-stack-with-guice-jetty-jersey-and-jackson/
-	// https://github.com/teamlazerbeez/simple-web-stack
+
 	public static void main(String[] args) throws Exception
 	{
-		new Jolivia();
-	}
-	static int port = 4002;
+		SLF4JBridgeHandler.removeHandlersForRootLogger();
+		SLF4JBridgeHandler.install();
 
-	public Jolivia() throws Exception
+		new Jolivia(new IClientSessionListener() {
+
+			@Override
+			public void tearDownSession(String server, int port)
+			{
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void registerNewSession(Session session) throws Exception
+			{
+				// TODO Auto-generated method stub
+
+			}
+		}, new ISpeakerListener() {
+
+			@Override
+			public void removeAvailableSpeaker(String server, int port)
+			{
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void registerAvailableSpeaker(Device device)
+			{
+				// TODO Auto-generated method stub
+
+			}
+		});
+	}
+
+	public Jolivia(IClientSessionListener clientSessionListener, ISpeakerListener speakerListener) throws Exception
 	{
+		this(4000, 5000, 1337, "Jolivia", clientSessionListener, speakerListener);
+	}
+
+	public Jolivia(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener) throws Exception
+	{
+		Preconditions.checkArgument(!(pairingCode > 9999), "Pairingcode must be expressed within 4 ciphers");
 		logger.info("Starting " + name + " on port " + port);
 		Server server = new Server(port);
 		ServerConnector sc = new ServerConnector(server, new DmapConnectionFactory());
 		sc.setPort(port);
 		server.setConnectors(new Connector[] { sc });
 		ServletContextHandler sch = new ServletContextHandler(server, "/");
-		sch.addEventListener(new JoliviaListener(port));
+		sch.addEventListener(new JoliviaListener(port, airplayPort, pairingCode, name, clientSessionListener, speakerListener));
 		sch.addFilter(GuiceFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 		sch.addServlet(DefaultServlet.class, "/");
-//		server.setSendServerVersion(false);
 		server.start();
 		logger.info(name + " started");
 		server.join();
