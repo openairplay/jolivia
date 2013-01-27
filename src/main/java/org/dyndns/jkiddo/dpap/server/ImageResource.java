@@ -77,7 +77,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/server-info")
 	@GET
-	public Response serverInfo(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
+	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
 	{
 		// See how it is done in MusicLibraryResource
 		// return
@@ -103,7 +103,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/login")
 	@GET
-	public Response login(@Context HttpServletRequest httpServletRequest) throws IOException
+	public Response login(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
 	{
 		// See how it is done in MusicLibraryResource
 		// return
@@ -116,7 +116,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/update")
 	@GET
-	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @Context HttpServletRequest httpServletRequest) throws IOException
+	public Response update(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
 	{
 		throw new NotImplementedException();
 	}
@@ -124,7 +124,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/databases")
 	@GET
-	public Response databases(@Context UriInfo uri, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
+	public Response databases(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
 	{
 		// See how it is done in MusicLibraryResource
 		// return
@@ -144,7 +144,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/databases/{databaseId}/groups")
 	@GET
-	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
+	public Response groups(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
 	{
 		throw new NotImplementedException();
 	}
@@ -152,7 +152,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/databases/{databaseId}/items")
 	@GET
-	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
+	public Response items(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
 	{
 		// Picture request
 		// GET dpap://192.168.1.2:8770/databases/1/items?session-id=1101478641&meta=dpap.hires,dmap.itemid,dpap.filedata&query=('dmap.itemid:2742') HTTP/1.1
@@ -176,7 +176,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/databases/{databaseId}/containers")
 	@GET
-	public Response containers(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
+	public Response containers(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
 	{
 		// See how it is done in MusicLibraryResource
 		// aplymsttmutymtcomrcomlclmlitLmikdmiidminmSome Name bibliotekabplmimcmlit3mikdmiidminm
@@ -188,7 +188,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/databases/{databaseId}/containers/{containerId}/items")
 	@GET
-	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
+	public Response containerItems(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
 	{
 		// See how it is done in MusicLibraryResource
 		// apso)msttmutymtcomrcomlcl)zmlitmikdpasp1.5picd8m5pmiid
@@ -206,7 +206,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/databases/{databaseId}/items/{itemId}.{format}")
 	@GET
-	public Response item(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
+	public Response item(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
 	{
 		throw new NotImplementedException();
 	}
@@ -214,7 +214,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/content-codes")
 	@GET
-	public Response contentCodes() throws IOException
+	public Response contentCodes(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
 	{
 		throw new NotImplementedException();
 	}
@@ -222,7 +222,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/logout")
 	@GET
-	public Response logout(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId)
+	public Response logout(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId)
 	{
 		throw new NotImplementedException();
 	}
@@ -230,9 +230,8 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/resolve")
 	@GET
-	public Response resolve()
+	public Response resolve(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse)
 	{
 		throw new NotImplementedException();
 	}
-
 }

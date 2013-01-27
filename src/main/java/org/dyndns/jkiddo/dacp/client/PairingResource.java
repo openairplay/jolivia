@@ -28,7 +28,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriInfo;
 
 import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.dmap.service.MDNSResource;
@@ -89,7 +88,7 @@ public class PairingResource extends MDNSResource implements IPairingResource
 	@Override
 	@GET
 	@Path("pair")
-	public Response pair(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairingcode") String pairingcode, @QueryParam("servicename") String servicename) throws IOException
+	public Response pair(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairingcode") String pairingcode, @QueryParam("servicename") String servicename) throws IOException
 	{
 		byte[] code = new byte[8];
 		new Random().nextBytes(code);

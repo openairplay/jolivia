@@ -1,11 +1,8 @@
 package org.dyndns.jkiddo;
 
 import org.dyndns.jkiddo.raop.client.ISpeakerListener;
-import org.dyndns.jkiddo.raop.client.command.StatusCommand;
-import org.dyndns.jkiddo.raop.client.command.StopCommand;
 import org.dyndns.jkiddo.raop.client.model.Device;
 import org.dyndns.jkiddo.raop.client.model.DeviceConnection;
-import org.dyndns.jkiddo.raop.client.model.DeviceResponse;
 
 import com.google.inject.Singleton;
 

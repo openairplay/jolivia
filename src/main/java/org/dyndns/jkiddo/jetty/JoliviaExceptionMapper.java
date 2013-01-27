@@ -11,6 +11,7 @@
 package org.dyndns.jkiddo.jetty;
 
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
@@ -18,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.inject.Singleton;
+import com.sun.jersey.core.spi.factory.ResponseBuilderImpl;
 
 @Provider
 @Singleton
@@ -29,7 +31,6 @@ public class JoliviaExceptionMapper implements ExceptionMapper<Throwable>
 	public Response toResponse(Throwable exception)
 	{
 		logger.warn(exception.getMessage(), exception);
-		return null;
+		return new ResponseBuilderImpl().status(Status.INTERNAL_SERVER_ERROR).build();
 	}
-
 }

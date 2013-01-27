@@ -29,73 +29,85 @@ public interface IRemoteControlResource
 
 	@GET
 	@Path("login")
-	Response login(@Context HttpServletRequest httpServletRequest, @QueryParam("pairing-guid") String guid) throws IOException;
+	public Response login(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException;
 
 	@GET
 	@Path("logout")
-	Response logout(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long session_id);
+	public Response logout(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int/1/pause")
-	String pause(@QueryParam("session-id") long session_id);
+	public String pause(@QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int/1/stop")
-	String stop(@QueryParam("session-id") long session_id);
+	public String stop(@QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int/1/playpause")
-	String playpause(@QueryParam("session-id") long session_id);
+	public String playpause(@QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int/1/nextitem")
-	String nextitem(@QueryParam("session-id") long session_id);
+	public String nextitem(@QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int/1/previtem")
-	String previtem(@QueryParam("session-id") long session_id);
+	public String previtem(@QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int/1/playlist")
-	String playlist(@QueryParam("session-id") long session_id);
+	public String playlist(@QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int/1/setproperty")
-	String setproperty(@Context UriInfo uriInfo, @QueryParam("dmcp.volume") String dmcpVolume, @QueryParam("dacp.playingtime") String dacpPlayingtime, @QueryParam("dacp.shufflestate") String dacpShufflestate, @QueryParam("dacp.repeatstate") String dacpRepeatstate, @QueryParam("session-id") long session_id);
+	public String setproperty(@Context UriInfo uriInfo, @QueryParam("dmcp.volume") String dmcpVolume, @QueryParam("dacp.playingtime") String dacpPlayingtime, @QueryParam("dacp.shufflestate") String dacpShufflestate, @QueryParam("dacp.repeatstate") String dacpRepeatstate, @QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int/1/getproperty")
-	String getproperty(@Context UriInfo uriInfo, @QueryParam("properties") String properties, @QueryParam("session-id") long session_id);
+	public String getproperty(@Context UriInfo uriInfo, @QueryParam("properties") String properties, @QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int/1/playstatusupdate")
-	String playstatusupdate(@QueryParam("revision-number") long revisionNumber, @QueryParam("session-id") long session_id);
+	public String playstatusupdate(@QueryParam("revision-number") long revisionNumber, @QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int/1/cue")
-	String cue(@QueryParam("commmand") String command, @QueryParam("query") String query, @QueryParam("index") String index, @QueryParam("sort") String sort, @QueryParam("session-id") long session_id);
+	public String cue(@QueryParam("commmand") String command, @QueryParam("query") String query, @QueryParam("index") String index, @QueryParam("sort") String sort, @QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int/1/getspeakers")
-	String getspeakers(@QueryParam("session-id") long session_id);
+	public String getspeakers(@QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int/1/setspeakers")
-	String setspeakers(@QueryParam("speaker-id") String speaker_id, @QueryParam("session-id") long session_id);
+	public String setspeakers(@QueryParam("speaker-id") String speaker_id, @QueryParam("session-id") long session_id);
 
 	@GET
-	@Path("/ctrl-int/1/playspec")
-	String playspec(@QueryParam("container-item-spec") String container_item_spec, @QueryParam("item-spec") String item_spec, @QueryParam("container-spec") String container_spec, @QueryParam("dacp.shufflestate") String dacp_shufflestate, @QueryParam("database-spec") String database_spec, @QueryParam("playlist-spec") String playlist_spec, @QueryParam("session-id") long session_id);
+	@Path("ctrl-int/1/playspec")
+	public String playspec(@QueryParam("container-item-spec") String container_item_spec, @QueryParam("item-spec") String item_spec, @QueryParam("container-spec") String container_spec, @QueryParam("dacp.shufflestate") String dacp_shufflestate, @QueryParam("database-spec") String database_spec, @QueryParam("playlist-spec") String playlist_spec, @QueryParam("session-id") long session_id);
 
 	@GET
-	@Path("/ctrl-int/1/nowplayingartwork")
-	String nowplayingartwork(@QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("session-id") long session_id);
+	@Path("ctrl-int/1/playqueue-contents")
+	public String playQueueContents(@QueryParam("span") int span, @QueryParam("session-id") long session_id);
 
 	@GET
-	@Path("/ctrl-int/1/set-genius-seed")
-	String editGenius(@QueryParam("database-spec") String database_spec, @QueryParam("item-spec") String item_spec, @QueryParam("session-id") long session_id);
+	@Path("ctrl-int/1/nowplayingartwork")
+	public String nowplayingartwork(@QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("session-id") long session_id);
 
-	@Path("/databases/{databaseId}/edit")
 	@GET
-	String editPlaylist(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("action") String action, @QueryParam("edit-params") String edit_params) throws IOException;
+	@Path("ctrl-int/1/set-genius-seed")
+	public String editGenius(@QueryParam("database-spec") String database_spec, @QueryParam("item-spec") String item_spec, @QueryParam("session-id") long session_id);
+
+	@GET
+	@Path("fp-setup")
+	public String fpSetup(@QueryParam("session-id") long session_id);
+
+	@Path("databases/{databaseId}/edit")
+	@GET
+	public String editPlaylist(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("action") String action, @QueryParam("edit-params") String edit_params) throws IOException;
+
+	@Path("update")
+	@GET
+	public Response update(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException;
 }

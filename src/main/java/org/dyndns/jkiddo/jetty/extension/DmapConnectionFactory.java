@@ -14,7 +14,7 @@ import org.eclipse.jetty.http.HttpParser;
 import org.eclipse.jetty.io.Connection;
 import org.eclipse.jetty.io.EndPoint;
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.HttpChannelConfig;
+import org.eclipse.jetty.server.HttpConfiguration;
 import org.eclipse.jetty.server.HttpConnection;
 import org.eclipse.jetty.server.HttpConnectionFactory;
 
@@ -28,12 +28,12 @@ public class DmapConnectionFactory extends HttpConnectionFactory
 	@Override
 	public Connection newConnection(Connector connector, EndPoint endPoint)
 	{
-		return configure(new DaapConnection(getHttpChannelConfig(), connector, endPoint), connector, endPoint);
+		return configure(new DaapConnection(getHttpConfiguration(), connector, endPoint), connector, endPoint);
 	}
 
 	class DaapConnection extends HttpConnection
 	{
-		public DaapConnection(HttpChannelConfig config, Connector connector, EndPoint endPoint)
+		public DaapConnection(HttpConfiguration config, Connector connector, EndPoint endPoint)
 		{
 			super(config, connector, endPoint);
 		}
@@ -41,7 +41,7 @@ public class DmapConnectionFactory extends HttpConnectionFactory
 		@Override
 		protected HttpParser newHttpParser()
 		{
-			return new DmapParser(newRequestHandler(), getHttpChannelConfig().getRequestHeaderSize());
+			return new DmapParser(newRequestHandler(), getHttpConfiguration().getRequestHeaderSize());
 		}
 	}
 }

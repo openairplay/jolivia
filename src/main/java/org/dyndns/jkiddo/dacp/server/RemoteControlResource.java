@@ -46,10 +46,9 @@ public class RemoteControlResource extends MDNSResource implements IRemoteContro
 		this.signUp();
 	}
 
-	@Override
 	@GET
 	@Path("login")
-	public Response login(@Context HttpServletRequest httpServletRequest, @QueryParam("pairing-guid") final String guid)
+	public Response login(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info, @QueryParam("pairing-guid") final String guid, @QueryParam("hasFP") int value)
 	{
 		throw new NotImplementedException();
 	}
@@ -57,7 +56,7 @@ public class RemoteControlResource extends MDNSResource implements IRemoteContro
 	@Override
 	@GET
 	@Path("logout")
-	public Response logout(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") final long session_id)
+	public Response logout(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") final long session_id)
 	{
 		throw new NotImplementedException();
 	}
@@ -217,5 +216,37 @@ public class RemoteControlResource extends MDNSResource implements IRemoteContro
 		records.put("DbId", hash);
 
 		return ServiceInfo.create(TOUCH_ABLE_TYPE, hash, port, 0, 0, records);
+	}
+
+	@Override
+	@GET
+	@Path("ctrl-int/1/playqueue-contents")
+	public String playQueueContents(@QueryParam("span") int span, @QueryParam("session-id") long session_id)
+	{
+		throw new NotImplementedException();
+	}
+
+	@Override
+	@GET
+	@Path("fp-setup")
+	public String fpSetup(@QueryParam("session-id") long session_id)
+	{
+		throw new NotImplementedException();
+	}
+
+	@Override
+	@GET
+	@Path("login")
+	public Response login(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException
+	{
+		throw new NotImplementedException();
+	}
+
+	@Override
+	@Path("update")
+	@GET
+	public Response update(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
+	{
+		throw new NotImplementedException();
 	}
 }

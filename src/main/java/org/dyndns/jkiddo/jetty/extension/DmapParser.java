@@ -13,6 +13,7 @@ package org.dyndns.jkiddo.jetty.extension;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import org.eclipse.jetty.http.HttpField;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.http.HttpHeaderValue;
 import org.eclipse.jetty.http.HttpMethod;
@@ -23,18 +24,20 @@ import org.eclipse.jetty.http.HttpTokens.EndOfContent;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.util.BufferUtil;
 import org.eclipse.jetty.util.StringUtil;
+import org.eclipse.jetty.util.Trie;
 import org.eclipse.jetty.util.Utf8StringBuilder;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Logger;
 
 public class DmapParser extends HttpParser
 {
-	public static final Logger LOG = Log.getLogger(HttpParser.class);
+	public static final Logger LOG = Log.getLogger(DmapParser.class);
 
 	private final HttpHandler<ByteBuffer> _handler;
 	private final RequestHandler<ByteBuffer> _requestHandler;
 	private final ResponseHandler<ByteBuffer> _responseHandler;
 	private final int _maxHeaderBytes;
+	private HttpField _field;
 	private HttpHeader _header;
 	private String _headerString;
 	private HttpHeaderValue _value;
@@ -57,6 +60,8 @@ public class DmapParser extends HttpParser
 	private int _chunkPosition;
 	private boolean _headResponse;
 	private ByteBuffer _contentChunk;
+	// private final Trie<HttpField> _connectionFields=(Trie<HttpField>)HttpField.CONNECTION.clone();
+	private final Trie<HttpField> _connectionFields = new Trie<HttpField>(512);
 
 	private int _length;
 	private final StringBuilder _string = new StringBuilder();
@@ -69,13 +74,13 @@ public class DmapParser extends HttpParser
 	}
 
 	/* ------------------------------------------------------------------------------- */
-	public DmapParser(ResponseHandler<ByteBuffer> handler)
+	public DmapParser(HttpParser.ResponseHandler<ByteBuffer> handler)
 	{
 		this(handler, -1);
 	}
 
 	/* ------------------------------------------------------------------------------- */
-	public DmapParser(RequestHandler<ByteBuffer> handler, int maxHeaderBytes)
+	public DmapParser(HttpParser.RequestHandler<ByteBuffer> handler, int maxHeaderBytes)
 	{
 		super(handler, maxHeaderBytes);
 		_handler = handler;
@@ -85,7 +90,7 @@ public class DmapParser extends HttpParser
 	}
 
 	/* ------------------------------------------------------------------------------- */
-	public DmapParser(ResponseHandler<ByteBuffer> handler, int maxHeaderBytes)
+	public DmapParser(HttpParser.ResponseHandler<ByteBuffer> handler, int maxHeaderBytes)
 	{
 		super(handler, maxHeaderBytes);
 		_handler = handler;
@@ -395,7 +400,7 @@ public class DmapParser extends HttpParser
 						setState(State.END);
 						BufferUtil.clear(buffer);
 						return_from_parse |= _handler.headerComplete();
-						return_from_parse |= _handler.messageComplete(_contentPosition);
+						return_from_parse |= _handler.messageComplete();
 					}
 					else
 						_utf8.append(ch);
@@ -445,7 +450,7 @@ public class DmapParser extends HttpParser
 							setState(State.END);
 							BufferUtil.clear(buffer);
 							return_from_parse |= _handler.headerComplete();
-							return_from_parse |= _handler.messageComplete(_contentPosition);
+							return_from_parse |= _handler.messageComplete();
 						}
 					}
 					break;
@@ -494,11 +499,104 @@ public class DmapParser extends HttpParser
 		return return_from_parse;
 	}
 
+	private boolean handleKnownHeaders(ByteBuffer buffer)
+	{
+		boolean add_to_connection_trie = false;
+		switch(_header)
+		{
+			case CONTENT_LENGTH:
+				if(_endOfContent != EndOfContent.CHUNKED_CONTENT)
+				{
+					try
+					{
+						_contentLength = Long.parseLong(_valueString);
+					}
+					catch(NumberFormatException e)
+					{
+						LOG.ignore(e);
+						badMessage(buffer, HttpStatus.BAD_REQUEST_400, "Bad Content-Length");
+						return true;
+					}
+					if(_contentLength <= 0)
+						_endOfContent = EndOfContent.NO_CONTENT;
+					else
+						_endOfContent = EndOfContent.CONTENT_LENGTH;
+				}
+				break;
+
+			case TRANSFER_ENCODING:
+				if(_value == HttpHeaderValue.CHUNKED)
+					_endOfContent = EndOfContent.CHUNKED_CONTENT;
+				else
+				{
+					if(_valueString.endsWith(HttpHeaderValue.CHUNKED.toString()))
+						_endOfContent = EndOfContent.CHUNKED_CONTENT;
+					else if(_valueString.indexOf(HttpHeaderValue.CHUNKED.toString()) >= 0)
+					{
+						badMessage(buffer, HttpStatus.BAD_REQUEST_400, "Bad chunking");
+						return true;
+					}
+				}
+				break;
+
+			case HOST:
+				add_to_connection_trie = _field == null;
+				_host = true;
+				String host = _valueString;
+				int port = 0;
+				if(host == null || host.length() == 0)
+				{
+					badMessage(buffer, HttpStatus.BAD_REQUEST_400, "Bad Host header");
+					return true;
+				}
+
+				loop: for(int i = host.length(); i-- > 0;)
+				{
+					char c2 = (char) (0xff & host.charAt(i));
+					switch(c2)
+					{
+						case ']':
+							break loop;
+
+						case ':':
+							try
+							{
+								port = StringUtil.toInt(host.substring(i + 1));
+							}
+							catch(NumberFormatException e)
+							{
+								LOG.debug(e);
+								badMessage(buffer, HttpStatus.BAD_REQUEST_400, "Bad Host header");
+								return true;
+							}
+							host = host.substring(0, i);
+							break loop;
+					}
+				}
+				if(_requestHandler != null)
+					_requestHandler.parsedHostHeader(host, port);
+
+				break;
+
+			case USER_AGENT:
+			case ACCEPT:
+			case ACCEPT_LANGUAGE:
+				add_to_connection_trie = _field == null;
+		}
+
+		if(add_to_connection_trie)
+		{
+			_field = new HttpField.CachedHttpField(_header, _valueString);
+			_connectionFields.put(_field);
+		}
+
+		return false;
+	}
+
 	/* ------------------------------------------------------------------------------- */
 	/*
 	 * Parse the message headers and return true if the handler has signaled for a return
 	 */
-	@SuppressWarnings("incomplete-switch")
 	private boolean parseHeaders(ByteBuffer buffer)
 	{
 		boolean return_from_parse = false;
@@ -532,8 +630,14 @@ public class DmapParser extends HttpParser
 						case HttpTokens.TAB:
 						{
 							// header value without name - continuation?
-							_length = -1;
 							_string.setLength(0);
+							if(_valueString != null)
+							{
+								_string.append(_valueString);
+								_string.append(' ');
+							}
+							_length = _string.length();
+							_valueString = null;
 							setState(State.HEADER_VALUE);
 							break;
 						}
@@ -544,88 +648,20 @@ public class DmapParser extends HttpParser
 							if(_headerString != null || _valueString != null)
 							{
 								// Handle known headers
-								if(_header != null)
+								if(_header != null && handleKnownHeaders(buffer))
 								{
-									switch(_header)
-									{
-										case CONTENT_LENGTH:
-											if(_endOfContent != EndOfContent.CHUNKED_CONTENT && _responseStatus != 304 && _responseStatus != 204 && (_responseStatus < 100 || _responseStatus >= 200))
-											{
-												try
-												{
-													_contentLength = Long.parseLong(_valueString);
-												}
-												catch(NumberFormatException e)
-												{
-													LOG.ignore(e);
-													badMessage(buffer, HttpStatus.BAD_REQUEST_400, "Bad Content-Length");
-													return true;
-												}
-												if(_contentLength <= 0)
-													_endOfContent = EndOfContent.NO_CONTENT;
-												else
-													_endOfContent = EndOfContent.CONTENT_LENGTH;
-											}
-											break;
-
-										case TRANSFER_ENCODING:
-											if(_value == HttpHeaderValue.CHUNKED)
-												_endOfContent = EndOfContent.CHUNKED_CONTENT;
-											else
-											{
-												if(_valueString.endsWith(HttpHeaderValue.CHUNKED.toString()))
-													_endOfContent = EndOfContent.CHUNKED_CONTENT;
-												else if(_valueString.indexOf(HttpHeaderValue.CHUNKED.toString()) >= 0)
-												{
-													badMessage(buffer, HttpStatus.BAD_REQUEST_400, "Bad chunking");
-													return true;
-												}
-											}
-											break;
-
-										case HOST:
-											_host = true;
-											String host = _valueString;
-											int port = 0;
-											if(host == null || host.length() == 0)
-											{
-												badMessage(buffer, HttpStatus.BAD_REQUEST_400, "Bad Host header");
-												return true;
-											}
-
-											loop: for(int i = host.length(); i-- > 0;)
-											{
-												char c2 = (char) (0xff & host.charAt(i));
-												switch(c2)
-												{
-													case ']':
-														break loop;
-
-													case ':':
-														try
-														{
-															port = StringUtil.toInt(host.substring(i + 1));
-														}
-														catch(NumberFormatException e)
-														{
-															LOG.debug(e);
-															badMessage(buffer, HttpStatus.BAD_REQUEST_400, "Bad Host header");
-															return true;
-														}
-														host = host.substring(0, i);
-														break loop;
-												}
-											}
-											if(_requestHandler != null)
-												_requestHandler.parsedHostHeader(host, port);
-									}
+									_headerString = _valueString = null;
+									_header = null;
+									_value = null;
+									_field = null;
+									return true;
 								}
-
-								return_from_parse |= _handler.parsedHeader(_header, _headerString, _valueString);
+								return_from_parse |= _handler.parsedHeader(_field != null ? _field : new HttpField(_header, _headerString, _valueString));
 							}
 							_headerString = _valueString = null;
 							_header = null;
 							_value = null;
+							_field = null;
 
 							// now handle the ch
 							if(ch == HttpTokens.CARRIAGE_RETURN || ch == HttpTokens.LINE_FEED)
@@ -645,8 +681,15 @@ public class DmapParser extends HttpParser
 									// return true;
 								}
 
-								// so work out the _content demarcation
-								if(_endOfContent == EndOfContent.UNKNOWN_CONTENT)
+								// is it a response that cannot have a body?
+								if(_responseHandler != null && // response
+								(_responseStatus == 304 || // not-modified response
+										_responseStatus == 204 || // no-content response
+								_responseStatus < 200)) // 1xx response
+									_endOfContent = EndOfContent.NO_CONTENT; // ignore any other headers set
+
+								// else if we don't know framing
+								else if(_endOfContent == EndOfContent.UNKNOWN_CONTENT)
 								{
 									if(_responseStatus == 0 // request
 											|| _responseStatus == 304 // not-modified response
@@ -673,7 +716,7 @@ public class DmapParser extends HttpParser
 									case NO_CONTENT:
 										return_from_parse |= _handler.headerComplete();
 										setState(State.END);
-										return_from_parse |= _handler.messageComplete(_contentPosition);
+										return_from_parse |= _handler.messageComplete();
 										break;
 
 									default:
@@ -684,16 +727,44 @@ public class DmapParser extends HttpParser
 							}
 							else
 							{
-								if(buffer.remaining() > 6 && buffer.hasArray())
+								if(buffer.remaining() > 6)
 								{
-									// Try a look ahead for the known headers.
-									_header = HttpHeader.lookAheadGet(buffer.array(), buffer.arrayOffset() + buffer.position() - 1, buffer.arrayOffset() + buffer.limit());
+									// Try a look ahead for the known header name and value.
+									_field = _connectionFields.getBest(buffer, -1, buffer.remaining());
+									if(_field == null)
+										_field = HttpField.CACHE.getBest(buffer, -1, buffer.remaining());
 
+									// _field=HttpField.CACHE.getBest(buffer.array(),buffer.arrayOffset()+buffer.position()-1,buffer.remaining()+1);
+									if(_field != null)
+									{
+										_header = _field.getHeader();
+										_headerString = _field.getName();
+										_valueString = _field.getValue();
+										if(_valueString == null)
+										{
+											setState(State.HEADER_VALUE);
+											buffer.position(buffer.position() + _headerString.length() + 1);
+											_string.setLength(0);
+											_length = 0;
+											_field = null;
+										}
+										else
+										{
+											setState(State.HEADER_IN_VALUE);
+											buffer.position(buffer.position() + _headerString.length() + _valueString.length() + 1);
+										}
+										break;
+									}
+
+									// Try a look ahead for the known header name.
+									_header = HttpHeader.CACHE.getBest(buffer, -1, buffer.remaining());
+									// _header=HttpHeader.CACHE.getBest(buffer.array(),buffer.arrayOffset()+buffer.position()-1,buffer.remaining()+1);
 									if(_header != null)
 									{
 										_headerString = _header.asString();
-										buffer.position(buffer.position() + _headerString.length());
-										setState(buffer.get(buffer.position() - 1) == ':' ? State.HEADER_VALUE : State.HEADER_NAME);
+										_string.setLength(0);
+										setState(State.HEADER_IN_NAME);
+										buffer.position(buffer.position() + _headerString.length() - 1);
 										break;
 									}
 								}
@@ -715,8 +786,11 @@ public class DmapParser extends HttpParser
 						case HttpTokens.CARRIAGE_RETURN:
 						case HttpTokens.LINE_FEED:
 							consumeCRLF(ch, buffer);
-							_headerString = takeLengthString();
-							_header = HttpHeader.CACHE.get(_headerString);
+							if(_headerString == null)
+							{
+								_headerString = takeLengthString();
+								_header = HttpHeader.CACHE.get(_headerString);
+							}
 							setState(State.HEADER);
 
 							break;
@@ -735,15 +809,6 @@ public class DmapParser extends HttpParser
 							break;
 						default:
 						{
-							if(_header != null)
-							{
-								_string.setLength(0);
-								_string.append(_header.asString());
-								_string.append(' ');
-								_length = _string.length();
-								_header = null;
-								_headerString = null;
-							}
 							_string.append((char) ch);
 							_length = _string.length();
 							setState(State.HEADER_IN_NAME);
@@ -775,10 +840,26 @@ public class DmapParser extends HttpParser
 							break;
 						case HttpTokens.SPACE:
 						case HttpTokens.TAB:
+							if(_header != null)
+							{
+								_string.setLength(0);
+								_string.append(_header.asString());
+								_length = _string.length();
+								_header = null;
+								_headerString = null;
+							}
 							setState(State.HEADER_NAME);
 							_string.append((char) ch);
 							break;
 						default:
+							if(_header != null)
+							{
+								_string.setLength(0);
+								_string.append(_header.asString());
+								_length = _string.length();
+								_header = null;
+								_headerString = null;
+							}
 							_string.append((char) ch);
 							_length++;
 					}
@@ -831,13 +912,7 @@ public class DmapParser extends HttpParser
 							consumeCRLF(ch, buffer);
 							if(_length > 0)
 							{
-								if(_valueString != null)
-								{
-									// multi line value!
-									_value = null;
-									_valueString += " " + takeString();
-								}
-								else if(HttpHeaderValue.hasKnownValues(_header))
+								if(HttpHeaderValue.hasKnownValues(_header))
 								{
 									_valueString = takeString();
 									_value = HttpHeaderValue.CACHE.get(_valueString);
@@ -853,10 +928,26 @@ public class DmapParser extends HttpParser
 							break;
 						case HttpTokens.SPACE:
 						case HttpTokens.TAB:
+							if(_valueString != null)
+							{
+								_string.setLength(0);
+								_string.append(_valueString);
+								_length = _valueString.length();
+								_valueString = null;
+								_field = null;
+							}
 							_string.append((char) ch);
 							setState(State.HEADER_VALUE);
 							break;
 						default:
+							if(_valueString != null)
+							{
+								_string.setLength(0);
+								_string.append(_valueString);
+								_length = _valueString.length();
+								_valueString = null;
+								_field = null;
+							}
 							_string.append((char) ch);
 							_length++;
 					}
@@ -888,7 +979,6 @@ public class DmapParser extends HttpParser
 	 * 
 	 * @return True if an {@link RequestHandler} method was called and it returned true;
 	 */
-	@SuppressWarnings("incomplete-switch")
 	@Override
 	public boolean parseNext(ByteBuffer buffer)
 	{
@@ -911,7 +1001,7 @@ public class DmapParser extends HttpParser
 					if(_contentPosition == _contentLength)
 					{
 						setState(State.END);
-						if(_handler.messageComplete(_contentPosition))
+						if(_handler.messageComplete())
 							return true;
 					}
 					break;
@@ -929,7 +1019,7 @@ public class DmapParser extends HttpParser
 							Thread.sleep(100);
 							String chars = BufferUtil.toDetailString(buffer);
 							BufferUtil.clear(buffer);
-							throw new IllegalStateException(String.format("%s %d/%d data when CLOSED:%s", this, len, _headerBytes, chars));
+							throw new IllegalStateException(String.format("%s %d/%d>%d data when CLOSED:%s", this, len, _headerBytes, _maxHeaderBytes, chars));
 						}
 						BufferUtil.clear(buffer);
 					}
@@ -949,7 +1039,7 @@ public class DmapParser extends HttpParser
 			if(_responseStatus > 0 && _headResponse)
 			{
 				setState(State.END);
-				if(_handler.messageComplete(_contentLength))
+				if(_handler.messageComplete())
 					return true;
 			}
 
@@ -980,7 +1070,7 @@ public class DmapParser extends HttpParser
 						if(remaining == 0)
 						{
 							setState(State.END);
-							if(_handler.messageComplete(_contentPosition))
+							if(_handler.messageComplete())
 								return true;
 						}
 						else
@@ -1004,7 +1094,7 @@ public class DmapParser extends HttpParser
 							if(_contentPosition == _contentLength)
 							{
 								setState(State.END);
-								if(_handler.messageComplete(_contentPosition))
+								if(_handler.messageComplete())
 									return true;
 							}
 						}
@@ -1039,7 +1129,7 @@ public class DmapParser extends HttpParser
 								if(_eol == HttpTokens.CARRIAGE_RETURN && buffer.hasRemaining() && buffer.get(buffer.position()) == HttpTokens.LINE_FEED)
 									_eol = buffer.get();
 								setState(State.END);
-								if(_handler.messageComplete(_contentPosition))
+								if(_handler.messageComplete())
 									return true;
 							}
 							else
@@ -1069,7 +1159,7 @@ public class DmapParser extends HttpParser
 								if(_eol == HttpTokens.CARRIAGE_RETURN && buffer.hasRemaining() && buffer.get(buffer.position()) == HttpTokens.LINE_FEED)
 									_eol = buffer.get();
 								setState(State.END);
-								if(_handler.messageComplete(_contentPosition))
+								if(_handler.messageComplete())
 									return true;
 							}
 							else
@@ -1113,6 +1203,7 @@ public class DmapParser extends HttpParser
 		}
 		catch(Exception e)
 		{
+			e.printStackTrace();
 			BufferUtil.clear(buffer);
 			if(isClosed())
 			{
@@ -1138,9 +1229,9 @@ public class DmapParser extends HttpParser
 	}
 
 	/**
-	 * Notifies this parser that I/O code read a -1 and therefore no more data will arrive to be parsed. Calling this method may result in an invocation to {@link HttpHandler#messageComplete(long)}, for example when the content is delimited by the close of the connection. If the parser is already in a state that does not need data (for example, it is idle waiting for a request/response to be parsed), then calling this method is a no-operation.
+	 * Notifies this parser that I/O code read a -1 and therefore no more data will arrive to be parsed. Calling this method may result in an invocation to {@link HttpHandler#messageComplete()}, for example when the content is delimited by the close of the connection. If the parser is already in a state that does not need data (for example, it is idle waiting for a request/response to be parsed), then calling this method is a no-operation.
 	 * 
-	 * @return the result of the invocation to {@link HttpHandler#messageComplete(long)} if there has been one, or false otherwise.
+	 * @return the result of the invocation to {@link HttpHandler#messageComplete()} if there has been one, or false otherwise.
 	 */
 	@Override
 	public boolean shutdownInput()
@@ -1156,7 +1247,7 @@ public class DmapParser extends HttpParser
 
 			case EOF_CONTENT:
 				setState(State.END);
-				return _handler.messageComplete(_contentPosition);
+				return _handler.messageComplete();
 
 			case CLOSED:
 				break;
@@ -1165,7 +1256,7 @@ public class DmapParser extends HttpParser
 				setState(State.END);
 				if(!_headResponse)
 					_handler.earlyEOF();
-				return _handler.messageComplete(_contentPosition);
+				return _handler.messageComplete();
 		}
 
 		return false;
@@ -1220,5 +1311,12 @@ public class DmapParser extends HttpParser
 	{
 		return String.format("%s{s=%s,%d of %d}", getClass().getSimpleName(), _state, _contentPosition, _contentLength);
 	}
+
+	/* ------------------------------------------------------------ */
+	/* ------------------------------------------------------------ */
+	/* ------------------------------------------------------------ */
+	/*
+	 * Event Handler interface These methods return true if they want parsing to return to the caller.
+	 */
 
 }

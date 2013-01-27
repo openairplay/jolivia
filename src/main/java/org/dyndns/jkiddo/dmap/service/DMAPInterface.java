@@ -27,6 +27,7 @@ import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.daap.server.IMusicLibrary;
 import org.dyndns.jkiddo.dacp.client.IPairingResource;
 import org.dyndns.jkiddo.dacp.server.IRemoteControlResource;
+import org.dyndns.jkiddo.dpap.server.IImageLibrary;
 
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
@@ -34,150 +35,194 @@ import com.google.inject.Singleton;
 
 @Path("/")
 @Singleton
-public class DMAPInterface implements IRemoteControlResource, IPairingResource, IMusicLibrary
+public class DMAPInterface implements IRemoteControlResource, IPairingResource, IMusicLibrary, IImageLibrary
 {
-	IRemoteControlResource remoteControlResource;
-	IPairingResource pairingResource;
-	IMusicLibrary musicLibraryResource;
+	private final IRemoteControlResource remoteControlResource;
+	private final IPairingResource pairingResource;
+	private final IMusicLibrary musicLibraryResource;
+	private final IImageLibrary imageLibraryResource;
+
+	private static final String REMOTE_HEADER_NAME = "Viewer-Only-Client";
+	private static final String REMOTE_USER_AGENT = "Remote";
+	private static final String DAAP_HEADER_NAME = "Client-DAAP-Version";
+	private static final String DPAP_HEADER_NAME = "Client-DPAP-Version";
+
+	private static boolean isDaapRequest(HttpServletRequest httpServletRequest)
+	{
+		if(Strings.isNullOrEmpty(httpServletRequest.getHeader(DAAP_HEADER_NAME)))
+			return false;
+		return true;
+	}
+
+	private static boolean isDpapRequest(HttpServletRequest httpServletRequest)
+	{
+		if(Strings.isNullOrEmpty(httpServletRequest.getHeader(DPAP_HEADER_NAME)))
+			return false;
+		return true;
+	}
+
+	private static boolean isRemoteControlRequest(HttpServletRequest httpServletRequest)
+	{
+		if(Strings.isNullOrEmpty(httpServletRequest.getHeader(REMOTE_HEADER_NAME)))
+			return false;
+		if(!httpServletRequest.getHeader("User-Agent").startsWith(REMOTE_USER_AGENT))
+			return false;
+		return true;
+	}
 
 	@Inject
-	public DMAPInterface(IRemoteControlResource remoteControlResource, IPairingResource pairingResource, IMusicLibrary musicLibraryResource)
+	public DMAPInterface(IRemoteControlResource remoteControlResource, IPairingResource pairingResource, IMusicLibrary musicLibraryResource, IImageLibrary imageLibraryResource)
 	{
 		this.remoteControlResource = remoteControlResource;
 		this.pairingResource = pairingResource;
 		this.musicLibraryResource = musicLibraryResource;
+		this.imageLibraryResource = imageLibraryResource;
 	}
 
 	@Override
-	@Path("/server-info")
+	@Path("server-info")
 	@GET
-	public Response serverInfo(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
+	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
 	{
-		return musicLibraryResource.serverInfo(uri, httpServletRequest, httpServletResponse);
+		if(isDaapRequest(httpServletRequest))
+			return musicLibraryResource.serverInfo(httpServletRequest, httpServletResponse);
+		if(isDpapRequest(httpServletRequest))
+			return imageLibraryResource.serverInfo(httpServletRequest, httpServletResponse);
+		throw new NotImplementedException();
 	}
 
 	@Override
-	public Response login(@Context HttpServletRequest httpServletRequest) throws IOException
+	public Response login(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
 	{
-		return musicLibraryResource.login(httpServletRequest);
+		if(isDaapRequest(httpServletRequest))
+			return musicLibraryResource.login(httpServletRequest, httpServletResponse);
+		if(isDpapRequest(httpServletRequest))
+			return imageLibraryResource.login(httpServletRequest, httpServletResponse);
+		throw new NotImplementedException();
 	}
-
 	@Override
-	@Path("/login")
+	@Path("login")
 	@GET
-	public Response login(@Context HttpServletRequest httpServletRequest, @QueryParam("pairing-guid") String guid) throws IOException
+	public Response login(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException
 	{
-		if(Strings.isNullOrEmpty(guid))
-			return login(httpServletRequest);
-		// TODO: Don't know what else to do as of now
-		return login(httpServletRequest);
+		if(isRemoteControlRequest(httpServletRequest))
+			return remoteControlResource.login(httpServletRequest, httpServletResponse, guid, value);
+		return login(httpServletRequest, httpServletResponse);
 	}
 
 	@Override
-	@Path("/update")
+	@Path("update")
 	@GET
-	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @Context HttpServletRequest httpServletRequest) throws IOException
+	public Response update(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
 	{
-		return musicLibraryResource.update(sessionId, revisionNumber, delta, httpServletRequest);
+		if(isRemoteControlRequest(httpServletRequest))
+			return remoteControlResource.update(httpServletRequest, httpServletResponse, info, sessionId, revisionNumber, delta, daapNoDisconnect);
+		if(isDaapRequest(httpServletRequest))
+			return musicLibraryResource.update(httpServletRequest, httpServletResponse, info, sessionId, revisionNumber, delta, daapNoDisconnect);
+		if(isDpapRequest(httpServletRequest))
+			return imageLibraryResource.update(httpServletRequest, httpServletResponse, info, sessionId, revisionNumber, delta, daapNoDisconnect);
+		throw new NotImplementedException();
 	}
 
 	@Override
-	@Path("/databases")
+	@Path("databases")
 	@GET
-	public Response databases(@Context UriInfo uri, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
+	public Response databases(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
 	{
-		return musicLibraryResource.databases(uri, sessionId, revisionNumber, delta);
+		if(isDaapRequest(httpServletRequest))
+			return musicLibraryResource.databases(httpServletRequest, httpServletResponse, sessionId, revisionNumber, delta);
+		if(isDpapRequest(httpServletRequest))
+			return imageLibraryResource.databases(httpServletRequest, httpServletResponse, sessionId, revisionNumber, delta);
+		throw new NotImplementedException();
 	}
 
 	@Override
-	@Path("/databases/{databaseId}/items")
+	@Path("databases/{databaseId}/items")
 	@GET
-	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
+	public Response items(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
 	{
-		return musicLibraryResource.items(databaseId, sessionId, revisionNumber, delta, type, meta);
+		if(isDaapRequest(httpServletRequest))
+			return musicLibraryResource.items(httpServletRequest, httpServletResponse, databaseId, sessionId, revisionNumber, delta, type, meta);
+		if(isDpapRequest(httpServletRequest))
+			return imageLibraryResource.items(httpServletRequest, httpServletResponse, databaseId, sessionId, revisionNumber, delta, type, meta);
+		throw new NotImplementedException();
 	}
 
 	@Override
-	@Path("/databases/{databaseId}/items/{itemId}/extra_data/artwork")
+	@Path("databases/{databaseId}/containers")
 	@GET
-	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception
+	public Response containers(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
 	{
-		return musicLibraryResource.artwork(databaseId, itemId, sessionId, revisionNumber, mw, mh);
+		if(isDaapRequest(httpServletRequest))
+			return musicLibraryResource.containers(httpServletRequest, httpServletResponse, databaseId, sessionId, revisionNumber, delta, meta);
+		if(isDpapRequest(httpServletRequest))
+			return imageLibraryResource.containers(httpServletRequest, httpServletResponse, databaseId, sessionId, revisionNumber, delta, meta);
+		throw new NotImplementedException();
 	}
 
 	@Override
-	@Path("/databases/{databaseId}/containers")
+	@Path("databases/{databaseId}/containers/{containerId}/items")
 	@GET
-	public Response containers(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
+	public Response containerItems(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
 	{
-		return musicLibraryResource.containers(databaseId, sessionId, revisionNumber, delta, meta);
+		if(isDaapRequest(httpServletRequest))
+			return musicLibraryResource.containerItems(httpServletRequest, httpServletResponse, containerId, databaseId, sessionId, revisionNumber, delta, meta, type, group_type, sort, include_sort_headers, query, index);
+		if(isDpapRequest(httpServletRequest))
+			return imageLibraryResource.containerItems(httpServletRequest, httpServletResponse, containerId, databaseId, sessionId, revisionNumber, delta, meta, type, group_type, sort, include_sort_headers, query, index);
+		throw new NotImplementedException();
 	}
 
 	@Override
-	@Path("/databases/{databaseId}/containers/{containerId}/items")
+	@Path("content-codes")
 	@GET
-	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
+	public Response contentCodes(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
 	{
-		return musicLibraryResource.containerItems(containerId, databaseId, sessionId, revisionNumber, delta, meta, type, group_type, sort, include_sort_headers, query, index);
+		if(isDaapRequest(httpServletRequest))
+			return musicLibraryResource.contentCodes(httpServletRequest, httpServletResponse);
+		if(isDpapRequest(httpServletRequest))
+			return imageLibraryResource.contentCodes(httpServletRequest, httpServletResponse);
+		throw new NotImplementedException();
 	}
 
 	@Override
-	@Path("/content-codes")
+	@Path("resolve")
 	@GET
-	public Response contentCodes() throws IOException
+	public Response resolve(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse)
 	{
-		return musicLibraryResource.contentCodes();
-	}
-
-	// @Override
-	// @Path("/logout")
-	// @GET
-	// public Response logout()
-	// {
-	// return libraryResource.logout();
-	// }
-
-	@Override
-	@Path("/resolve")
-	@GET
-	public Response resolve()
-	{
-		return musicLibraryResource.resolve();
+		if(isDaapRequest(httpServletRequest))
+			return musicLibraryResource.resolve(httpServletRequest, httpServletResponse);
+		if(isDpapRequest(httpServletRequest))
+			return imageLibraryResource.resolve(httpServletRequest, httpServletResponse);
+		throw new NotImplementedException();
 	}
 
 	@Override
-	@Path("/databases/{databaseId}/items/{itemId}.{format}")
+	@Path("databases/{databaseId}/items/{itemId}.{format}")
 	@GET
-	public Response item(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
+	public Response item(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
 	{
-		return musicLibraryResource.item(databaseId, itemId, format, rangeHeader);
+		return musicLibraryResource.item(httpServletRequest, httpServletResponse, databaseId, itemId, format, rangeHeader);
 	}
 
 	@Override
 	@GET
 	@Path("pair")
-	public Response pair(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairingcode") String pairingcode, @QueryParam("servicename") String servicename) throws IOException
+	public Response pair(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairingcode") String pairingcode, @QueryParam("servicename") String servicename) throws IOException
 	{
-		return pairingResource.pair(uri, httpServletRequest, httpServletResponse, pairingcode, servicename);
+		return pairingResource.pair(httpServletRequest, httpServletResponse, pairingcode, servicename);
 	}
-
-	// @Override
-	// public Response login(@QueryParam("pairing-guid") String guid)
-	// {
-	// return remoteControlResource.login(guid);
-	// }
 
 	@Override
 	@GET
 	@Path("logout")
-	public Response logout(@Context UriInfo uri, @Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId)
+	public Response logout(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId)
 	{
-		// through the protocol (it either starts with daap, dpap or something else, is should be possible to check which ressource the logout is targeted)
-		// if httpServletRequest.getProtocol() starts with daap, logout is from musicLibraryResource
-		// if httpServletRequest.getProtocol() starts with http, logout is from remoteControlResource
-		// if httpServletRequest.getProtocol() starts with dpap, logout is from imageLibrary
-		Response musicLibraryResponse = musicLibraryResource.logout(uri, httpServletRequest, httpServletResponse, sessionId);
-		Response remoteControlResponse = remoteControlResource.logout(uri, httpServletRequest, httpServletResponse, sessionId);
+		if(isRemoteControlRequest(httpServletRequest))
+			return remoteControlResource.logout(httpServletRequest, httpServletResponse, sessionId);
+		if(isDaapRequest(httpServletRequest))
+			return musicLibraryResource.logout(httpServletRequest, httpServletResponse, sessionId);
+		if(isDpapRequest(httpServletRequest))
+			return imageLibraryResource.logout(httpServletRequest, httpServletResponse, sessionId);
 		throw new NotImplementedException();
 	}
 
@@ -255,18 +300,22 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 
 	@Override
 	@GET
-	@Path("/ctrl-int/1/playspec")
+	@Path("ctrl-int/1/playspec")
 	public String playspec(@QueryParam("container-item-spec") String container_item_spec, @QueryParam("item-spec") String item_spec, @QueryParam("container-spec") String container_spec, @QueryParam("dacp.shufflestate") String dacp_shufflestate, @QueryParam("database-spec") String database_spec, @QueryParam("playlist-spec") String playlist_spec, @QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.playspec(container_item_spec, item_spec, container_spec, dacp_shufflestate, database_spec, playlist_spec, session_id);
 	}
 
 	@Override
-	@Path("/databases/{databaseId}/groups")
+	@Path("databases/{databaseId}/groups")
 	@GET
-	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
+	public Response groups(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
 	{
-		return musicLibraryResource.groups(databaseId, sessionId, meta, type, group_type, sort, include_sort_headers);
+		if(isDaapRequest(httpServletRequest))
+			return musicLibraryResource.groups(httpServletRequest, httpServletResponse, databaseId, sessionId, meta, type, group_type, sort, include_sort_headers);
+		if(isDpapRequest(httpServletRequest))
+			return imageLibraryResource.groups(httpServletRequest, httpServletResponse, databaseId, sessionId, meta, type, group_type, sort, include_sort_headers);
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -295,25 +344,47 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 
 	@Override
 	@GET
-	@Path("/ctrl-int/1/nowplayingartwork")
+	@Path("ctrl-int/1/nowplayingartwork")
 	public String nowplayingartwork(@QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("session-id") long session_id)
 	{
-		return nowplayingartwork(mw, mh, session_id);
+		return remoteControlResource.nowplayingartwork(mw, mh, session_id);
 	}
 
 	@Override
 	@GET
-	@Path("/ctrl-int/1/set-genius-seed")
+	@Path("ctrl-int/1/set-genius-seed")
 	public String editGenius(@QueryParam("database-spec") String database_spec, @QueryParam("item-spec") String item_spec, @QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.editGenius(database_spec, item_spec, session_id);
 	}
 
 	@Override
-	@Path("/databases/{databaseId}/edit")
+	@Path("databases/{databaseId}/edit")
 	@GET
 	public String editPlaylist(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("action") String action, @QueryParam("edit-params") String edit_params) throws IOException
 	{
 		return remoteControlResource.editPlaylist(databaseId, sessionId, action, edit_params);
+	}
+
+	@Override
+	@Path("databases/{databaseId}/items/{itemId}/extra_data/artwork")
+	@GET
+	public Response artwork(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception
+	{
+		return musicLibraryResource.artwork(httpServletRequest, httpServletResponse, databaseId, itemId, sessionId, revisionNumber, mw, mh);
+	}
+	@Override
+	@GET
+	@Path("ctrl-int/1/playqueue-contents")
+	public String playQueueContents(@QueryParam("span") int span, @QueryParam("session-id") long session_id)
+	{
+		return remoteControlResource.playQueueContents(span, session_id);
+	}
+	@Override
+	@GET
+	@Path("fp-setup")
+	public String fpSetup(@QueryParam("session-id") long session_id)
+	{
+		return remoteControlResource.fpSetup(session_id);
 	}
 }

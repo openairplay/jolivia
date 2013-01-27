@@ -50,7 +50,7 @@ public class Jolivia
 		sch.addEventListener(new JoliviaListener(port));
 		sch.addFilter(GuiceFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 		sch.addServlet(DefaultServlet.class, "/");
-		server.setSendServerVersion(false);
+//		server.setSendServerVersion(false);
 		server.start();
 		logger.info(name + " started");
 		server.join();
