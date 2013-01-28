@@ -14,12 +14,12 @@ import java.util.EnumSet;
 
 import javax.servlet.DispatcherType;
 
-import org.dyndns.jkiddo.daap.client.IClientSessionListener;
-import org.dyndns.jkiddo.daap.client.Session;
 import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.jetty.extension.DmapConnectionFactory;
 import org.dyndns.jkiddo.raop.client.ISpeakerListener;
 import org.dyndns.jkiddo.raop.client.model.Device;
+import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
+import org.dyndns.jkiddo.service.daap.client.Session;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;

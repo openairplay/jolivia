@@ -8,9 +8,9 @@
  * Contributors:
  *     Jens Kristian Villadsen - Lead developer, owner and creator
  ******************************************************************************/
-import org.dyndns.jkiddo.daap.client.RequestHelper;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ContentCodesResponse;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ServerInfoResponse;
+import org.dyndns.jkiddo.dmap.chunks.dmap.ContentCodesResponse;
+import org.dyndns.jkiddo.dmap.chunks.dmap.ServerInfoResponse;
+import org.dyndns.jkiddo.service.daap.client.RequestHelper;
 import org.junit.Test;
 
 public class TestClient

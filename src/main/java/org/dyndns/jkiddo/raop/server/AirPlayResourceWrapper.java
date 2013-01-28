@@ -14,9 +14,9 @@ import java.util.concurrent.Executors;
 import javax.jmdns.JmmDNS;
 import javax.jmdns.ServiceInfo;
 
-import org.dyndns.jkiddo.dmap.service.MDNSResource;
 import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.raop.server.AirReceiver.RaopRtspPipelineFactory;
+import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;

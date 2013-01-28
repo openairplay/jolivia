@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dpap.server;
 
-import org.dyndns.jkiddo.dmap.service.ILibraryResource;
+import org.dyndns.jkiddo.service.dmap.ILibraryResource;
 
 public interface IImageLibrary extends ILibraryResource
 {

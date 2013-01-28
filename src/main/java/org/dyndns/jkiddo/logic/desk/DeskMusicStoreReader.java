@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.dyndns.jkiddo.dmap.Song;
+import org.dyndns.jkiddo.dmap.Transaction;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
-import org.dyndns.jkiddo.protocol.dmap.Song;
-import org.dyndns.jkiddo.protocol.dmap.Transaction;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
 import org.jaudiotagger.audio.exceptions.CannotReadException;

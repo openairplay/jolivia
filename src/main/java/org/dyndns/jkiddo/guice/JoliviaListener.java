@@ -12,18 +12,6 @@ package org.dyndns.jkiddo.guice;
 
 import javax.jmdns.JmmDNS;
 
-import org.dyndns.jkiddo.daap.client.IClientSessionListener;
-import org.dyndns.jkiddo.daap.client.PairedRemoteDiscoverer;
-import org.dyndns.jkiddo.daap.server.IMusicLibrary;
-import org.dyndns.jkiddo.daap.server.MusicLibraryManager;
-import org.dyndns.jkiddo.daap.server.MusicLibraryResource;
-import org.dyndns.jkiddo.dacp.client.IPairingDatabase;
-import org.dyndns.jkiddo.dacp.client.IPairingResource;
-import org.dyndns.jkiddo.dacp.client.PairingDatabase;
-import org.dyndns.jkiddo.dacp.client.PairingResource;
-import org.dyndns.jkiddo.dacp.server.IRemoteControlResource;
-import org.dyndns.jkiddo.dacp.server.RemoteControlResource;
-import org.dyndns.jkiddo.dmap.service.DMAPInterface;
 import org.dyndns.jkiddo.dpap.server.IImageLibrary;
 import org.dyndns.jkiddo.dpap.server.ImageResource;
 import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
@@ -33,6 +21,18 @@ import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.raop.client.ISpeakerListener;
 import org.dyndns.jkiddo.raop.client.RemoteSpeakerDiscoverer;
 import org.dyndns.jkiddo.raop.server.AirPlayResourceWrapper;
+import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
+import org.dyndns.jkiddo.service.daap.client.PairedRemoteDiscoverer;
+import org.dyndns.jkiddo.service.daap.server.IMusicLibrary;
+import org.dyndns.jkiddo.service.daap.server.MusicLibraryManager;
+import org.dyndns.jkiddo.service.daap.server.MusicLibraryResource;
+import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
+import org.dyndns.jkiddo.service.dacp.client.IPairingResource;
+import org.dyndns.jkiddo.service.dacp.client.PairingDatabase;
+import org.dyndns.jkiddo.service.dacp.client.PairingResource;
+import org.dyndns.jkiddo.service.dacp.server.IRemoteControlResource;
+import org.dyndns.jkiddo.service.dacp.server.RemoteControlResource;
+import org.dyndns.jkiddo.service.dmap.DMAPInterface;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;

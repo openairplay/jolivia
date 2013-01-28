@@ -1,9 +1,9 @@
 package org.dyndns.jkiddo;
 
-import org.dyndns.jkiddo.daap.client.IClientSessionListener;
-import org.dyndns.jkiddo.daap.client.Library;
-import org.dyndns.jkiddo.daap.client.RemoteControl;
-import org.dyndns.jkiddo.daap.client.Session;
+import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
+import org.dyndns.jkiddo.service.daap.client.Library;
+import org.dyndns.jkiddo.service.daap.client.RemoteControl;
+import org.dyndns.jkiddo.service.daap.client.Session;
 
 public class ClientSessionListener implements IClientSessionListener
 {

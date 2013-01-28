@@ -27,14 +27,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.dyndns.jkiddo.NotImplementedException;
-import org.dyndns.jkiddo.dmap.service.MDNSResource;
-import org.dyndns.jkiddo.dmap.service.Util;
+import org.dyndns.jkiddo.dmap.DmapUtil;
+import org.dyndns.jkiddo.dmap.chunks.daap.DaapProtocolVersion;
+import org.dyndns.jkiddo.dmap.chunks.dmap.DmapProtocolVersion;
+import org.dyndns.jkiddo.dmap.chunks.dmap.ServerInfoResponse;
+import org.dyndns.jkiddo.dmap.chunks.dmap.Status;
 import org.dyndns.jkiddo.guice.JoliviaListener;
-import org.dyndns.jkiddo.protocol.dmap.DmapUtil;
-import org.dyndns.jkiddo.protocol.dmap.chunks.daap.DaapProtocolVersion;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.DmapProtocolVersion;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.ServerInfoResponse;
-import org.dyndns.jkiddo.protocol.dmap.chunks.dmap.Status;
+import org.dyndns.jkiddo.service.dmap.MDNSResource;
+import org.dyndns.jkiddo.service.dmap.Util;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
