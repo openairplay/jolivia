@@ -53,7 +53,7 @@ public class Jolivia
 			@Override
 			public void registerNewSession(Session session) throws Exception
 			{
-				// TODO Auto-generated method stub
+				session.getRemoteControl().play();
 
 			}
 		}, new ISpeakerListener() {

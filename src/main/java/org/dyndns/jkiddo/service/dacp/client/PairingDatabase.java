@@ -10,21 +10,47 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.service.dacp.client;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Random;
 
+import org.skife.jdbi.v2.DBI;
+import org.skife.jdbi.v2.sqlobject.Bind;
+import org.skife.jdbi.v2.sqlobject.SqlQuery;
+import org.skife.jdbi.v2.sqlobject.SqlUpdate;
+
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 
 @Singleton
 public class PairingDatabase implements IPairingDatabase
 {
+	public static final String DB_URL = "DB_URL";
 
-	private static final String DB_NAME = "pairing.db";
+	@Inject
+	public PairingDatabase(@Named(DB_URL) String url) throws ClassNotFoundException
+	{
+		Class.forName("org.sqlite.JDBC");
+
+		dbi = new DBI(url);
+		dbHandler = dbi.open().attach(PairingDatabaseCommands.class);
+		dbHandler.createTable();
+
+		Random random = new Random();
+
+		// generate pair code
+		byte[] pair = new byte[8];
+		random.nextBytes(pair);
+		dbHandler.updateEntry(KEY_PAIRING_CODE, toHex(pair));
+
+		// generate remote guid
+		// this is the thing that uniquely identifies this remote
+		byte[] serviceguid = new byte[20];
+		random.nextBytes(serviceguid);
+		dbHandler.updateEntry(KEY_SERVICE_GUID, toHex(serviceguid));
+	}
+
+	private final DBI dbi;
+	private final PairingDatabaseCommands dbHandler;
 
 	private final static String TABLE_PAIR = "pairing";
 	private final static String FIELD_PAIR_SERVICENAME = "servicename";
@@ -33,121 +59,32 @@ public class PairingDatabase implements IPairingDatabase
 	private final static String KEY_SERVICE_GUID = "serviceguid";
 	private final static String KEY_LAST_SESSION = "lastsession";
 
-	private static String configDirectory = "";
-
-	private Connection connection = null;
-
-	public static void setConfigDirectory(String configDirectory)
+	private interface PairingDatabaseCommands
 	{
-		if(configDirectory != null)
-		{
-			PairingDatabase.configDirectory = new String(configDirectory + File.separator);
-		}
-	}
+		@SqlUpdate("CREATE TABLE IF NOT EXISTS " + TABLE_PAIR + " (" + FIELD_PAIR_SERVICENAME + " text primary key, " + FIELD_PAIR_GUID + " text)")
+		public void createTable();
 
-	private void initDBConnection()
-	{
-		if(connection == null)
-		{
-			try
-			{
-				System.setProperty("sqlite.purejava", "true");
-				Class.forName("org.sqlite.JDBC");
+		@SqlUpdate("insert or replace into " + TABLE_PAIR + " (" + FIELD_PAIR_SERVICENAME + "," + FIELD_PAIR_GUID + ") VALUES (:" + FIELD_PAIR_SERVICENAME + ", :" + FIELD_PAIR_GUID + ")")
+		public void updateEntry(@Bind(FIELD_PAIR_SERVICENAME) String serviceName, @Bind(FIELD_PAIR_GUID) String guid);
 
-				// create a database connection
-				try
-				{
-					Statement statement = null;
-
-					this.connection = DriverManager.getConnection("jdbc:sqlite:" + configDirectory + DB_NAME);
-
-					statement = connection.createStatement();
-					statement.setQueryTimeout(30); // set timeout to 30 sec.
-
-					statement.executeUpdate("create table if not exists " + TABLE_PAIR + "(" + FIELD_PAIR_SERVICENAME + " text primary key, " + FIELD_PAIR_GUID + " text)");
-
-					Random random = new Random();
-
-					// generate pair code
-					byte[] pair = new byte[8];
-					random.nextBytes(pair);
-					statement.executeUpdate("insert or ignore into " + TABLE_PAIR + " values ('" + KEY_PAIRING_CODE + "', '" + toHex(pair) + "');");
-
-					// generate remote guid
-					// this is the thing that uniquely identifies this remote
-					byte[] serviceguid = new byte[20];
-					random.nextBytes(serviceguid);
-					statement.executeUpdate("insert or ignore into " + TABLE_PAIR + " values ('" + KEY_SERVICE_GUID + "', '" + toHex(serviceguid) + "');");
-
-					statement.close();
-				}
-				catch(SQLException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			catch(ClassNotFoundException e)
-			{
-				e.printStackTrace();
-				// sqlite distributed with app. real problems if we get here so exit
-				System.exit(1);
-			}
-		}
+		@SqlQuery("select " + FIELD_PAIR_GUID + " from " + TABLE_PAIR + " where " + FIELD_PAIR_SERVICENAME + " = :" + FIELD_PAIR_SERVICENAME + "")
+		public String getCode(@Bind(FIELD_PAIR_SERVICENAME) String servicename);
 	}
 
 	@Override
 	public String findCode(String serviceName)
 	{
-		initDBConnection();
-
-		String result = null;
-
-		if(serviceName != null)
-		{
-			try
-			{
-				Statement statement = connection.createStatement();
-
-				ResultSet rs = statement.executeQuery("select " + FIELD_PAIR_GUID + " from " + TABLE_PAIR + " where " + FIELD_PAIR_SERVICENAME + " = '" + serviceName + "';");
-
-				if(rs.next())
-				{
-					result = rs.getString(FIELD_PAIR_GUID);
-				}
-
-				statement.close();
-			}
-			catch(SQLException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return result;
+		return dbHandler.getCode(serviceName);
 	}
 
 	@Override
 	public void updateCode(String serviceName, String guid)
 	{
-		initDBConnection();
-
 		if(serviceName != null && guid != null)
 		{
-			try
-			{
-				Statement statement = connection.createStatement();
-				statement.executeUpdate("insert or replace into " + TABLE_PAIR + " values ('" + serviceName + "', '" + guid + "');");
-				statement.close();
-			}
-			catch(SQLException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			dbHandler.updateEntry(serviceName, guid);
 		}
 	}
-
 	@Override
 	public String getPairCode()
 	{

@@ -63,7 +63,7 @@ public class JoliviaListener extends GuiceServletContextListener
 		this.name = name;
 		this.clientSessionListener = clientSessionListener;
 		this.speakerListener = speakerListener;
-		
+
 	}
 
 	@Override
@@ -110,7 +110,8 @@ public class JoliviaListener extends GuiceServletContextListener
 				bind(Integer.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PORT_NAME)).toInstance(hostingPort);
 				bind(Integer.class).annotatedWith(Names.named(RemoteControlResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);
 
-				bind(IPairingDatabase.class).toInstance(new PairingDatabase());
+				bind(String.class).annotatedWith(Names.named(PairingDatabase.DB_URL)).toInstance(new String("jdbc:sqlite:db"));
+				bind(IPairingDatabase.class).to(PairingDatabase.class).asEagerSingleton();
 				bind(PairedRemoteDiscoverer.class).asEagerSingleton();
 				bind(IPairingResource.class).to(PairingResource.class);
 				bind(IRemoteControlResource.class).to(RemoteControlResource.class);
