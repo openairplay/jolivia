@@ -13,13 +13,13 @@ package org.dyndns.jkiddo.logic.interfaces;
 import java.io.File;
 import java.util.Collection;
 
-import org.dyndns.jkiddo.dmap.Song;
+import org.dyndns.jkiddo.dmap.Item;
 
 public interface IMusicStoreReader
 {
-	public Collection<Song> readTunes() throws Exception;
+	public Collection<Item> readTunes() throws Exception;
 
-	public File getTune(Song tune) throws Exception;
+	public File getTune(Item tune) throws Exception;
 
 	public String getLibraryName();
 }

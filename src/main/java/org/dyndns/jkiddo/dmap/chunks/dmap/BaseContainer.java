@@ -25,38 +25,25 @@
  * limitations under the License.
  */
 
-package org.dyndns.jkiddo.dmap.chunks.daap;
+package org.dyndns.jkiddo.dmap.chunks.dmap;
 
-import org.dyndns.jkiddo.dmap.chunks.ContainerChunk;
-import org.dyndns.jkiddo.dmap.chunks.dmap.Listing;
-import org.dyndns.jkiddo.dmap.chunks.dmap.ReturnedCount;
-import org.dyndns.jkiddo.dmap.chunks.dmap.SpecifiedTotalCount;
+import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
 
 /**
- * Container for the <tt>/databases/id/containers/id/items</tt> request
+ * Indicates if the container is a 'natural root'.
  * 
  * @author Roger Kapsi
  */
-public class PlaylistSongs extends ContainerChunk
+public class BaseContainer extends UByteChunk
 {
 
-	public PlaylistSongs()
+	public BaseContainer()
 	{
-		super("apso", "daap.playlistsongs");
+		this(0);
 	}
 
-	public Listing getListing()
+	public BaseContainer(int playlist)
 	{
-		return getSingleChunk(Listing.class);
-	}
-
-	public SpecifiedTotalCount getSpecifiedTotalCount()
-	{
-		return getSingleChunk(SpecifiedTotalCount.class);
-	}
-
-	public ReturnedCount getReturnedCount()
-	{
-		return getSingleChunk(ReturnedCount.class);
+		super("abpl", "dmap.basecontainer", playlist);
 	}
 }

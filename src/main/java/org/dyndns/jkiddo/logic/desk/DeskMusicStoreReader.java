@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.dyndns.jkiddo.dmap.Song;
+import org.dyndns.jkiddo.dmap.Item;
 import org.dyndns.jkiddo.dmap.Transaction;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.jaudiotagger.audio.AudioFile;
@@ -39,23 +39,23 @@ import com.google.common.base.Strings;
 public class DeskMusicStoreReader implements IMusicStoreReader
 {
 	private static final Logger logger = LoggerFactory.getLogger(DeskMusicStoreReader.class);
-	private Map<Song, File> mapOfSongToFile;
+	private Map<Item, File> mapOfSongToFile;
 	private String path;
 
 	public DeskMusicStoreReader(String path)
 	{
-		this.mapOfSongToFile = new HashMap<Song, File>();
+		this.mapOfSongToFile = new HashMap<Item, File>();
 		this.path = path;
 	}
 
 	public DeskMusicStoreReader()
 	{
 		this(System.getProperty("user.dir") + System.getProperty("file.separator") + "etc");
-		this.mapOfSongToFile = new HashMap<Song, File>();
+		this.mapOfSongToFile = new HashMap<Item, File>();
 	}
 
 	@Override
-	public Set<Song> readTunes()
+	public Set<Item> readTunes()
 	{
 		try
 		{
@@ -97,7 +97,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 	}
 
-	private Song populateSong(File file) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException
+	private Item populateSong(File file) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException
 	{
 		AudioFile f = AudioFileIO.read(file);
 		Tag tag = f.getTag();
@@ -116,7 +116,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 
 		Transaction t = null;
-		Song song = new Song();
+		Item song = new Item();
 		song.setArtist(t, tag.getFirst(FieldKey.ARTIST));
 		song.setAlbum(t, tag.getFirst(FieldKey.ALBUM));
 		song.setName(t, tag.getFirst(FieldKey.TITLE));
@@ -141,7 +141,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	}
 
 	@Override
-	public File getTune(Song tune) throws Exception
+	public File getTune(Item tune) throws Exception
 	{
 		if(tune != null)
 		{

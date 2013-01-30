@@ -25,25 +25,38 @@
  * limitations under the License.
  */
 
-package org.dyndns.jkiddo.dmap.chunks.daap;
+package org.dyndns.jkiddo.dmap.chunks.dmap;
 
-import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
+import org.dyndns.jkiddo.dmap.chunks.ContainerChunk;
+import org.dyndns.jkiddo.dmap.chunks.dmap.Listing;
+import org.dyndns.jkiddo.dmap.chunks.dmap.ReturnedCount;
+import org.dyndns.jkiddo.dmap.chunks.dmap.SpecifiedTotalCount;
 
 /**
- * Unknown purpose.
+ * Container for the <tt>/databases/id/containers/id/items</tt> request
  * 
  * @author Roger Kapsi
  */
-public class BasePlaylist extends UByteChunk
+public class ItemsContainer extends ContainerChunk
 {
 
-	public BasePlaylist()
+	public ItemsContainer()
 	{
-		this(0);
+		super("apso", "dMap.playlistitems");
 	}
 
-	public BasePlaylist(int playlist)
+	public Listing getListing()
 	{
-		super("abpl", "daap.baseplaylist", playlist);
+		return getSingleChunk(Listing.class);
+	}
+
+	public SpecifiedTotalCount getSpecifiedTotalCount()
+	{
+		return getSingleChunk(SpecifiedTotalCount.class);
+	}
+
+	public ReturnedCount getReturnedCount()
+	{
+		return getSingleChunk(ReturnedCount.class);
 	}
 }

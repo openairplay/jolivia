@@ -24,10 +24,10 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.dyndns.jkiddo.NotImplementedException;
-import org.dyndns.jkiddo.dpap.server.IImageLibrary;
 import org.dyndns.jkiddo.service.daap.server.IMusicLibrary;
 import org.dyndns.jkiddo.service.dacp.client.IPairingResource;
 import org.dyndns.jkiddo.service.dacp.server.IRemoteControlResource;
+import org.dyndns.jkiddo.service.dpap.server.IImageLibrary;
 
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
@@ -139,12 +139,12 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@Path("databases/{databaseId}/items")
 	@GET
-	public Response items(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta) throws Exception
+	public Response items(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query) throws Exception
 	{
 		if(isDaapRequest(httpServletRequest))
-			return musicLibraryResource.items(httpServletRequest, httpServletResponse, databaseId, sessionId, revisionNumber, delta, type, meta);
+			return musicLibraryResource.items(httpServletRequest, httpServletResponse, databaseId, sessionId, revisionNumber, delta, type, meta, query);
 		if(isDpapRequest(httpServletRequest))
-			return imageLibraryResource.items(httpServletRequest, httpServletResponse, databaseId, sessionId, revisionNumber, delta, type, meta);
+			return imageLibraryResource.items(httpServletRequest, httpServletResponse, databaseId, sessionId, revisionNumber, delta, type, meta, query);
 		throw new NotImplementedException();
 	}
 

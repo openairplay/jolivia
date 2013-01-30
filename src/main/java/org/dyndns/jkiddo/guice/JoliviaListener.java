@@ -12,8 +12,6 @@ package org.dyndns.jkiddo.guice;
 
 import javax.jmdns.JmmDNS;
 
-import org.dyndns.jkiddo.dpap.server.IImageLibrary;
-import org.dyndns.jkiddo.dpap.server.ImageResource;
 import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
 import org.dyndns.jkiddo.jetty.ProxyFilter;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
@@ -33,6 +31,8 @@ import org.dyndns.jkiddo.service.dacp.client.PairingResource;
 import org.dyndns.jkiddo.service.dacp.server.IRemoteControlResource;
 import org.dyndns.jkiddo.service.dacp.server.RemoteControlResource;
 import org.dyndns.jkiddo.service.dmap.DMAPInterface;
+import org.dyndns.jkiddo.service.dpap.server.IImageLibrary;
+import org.dyndns.jkiddo.service.dpap.server.ImageResource;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;

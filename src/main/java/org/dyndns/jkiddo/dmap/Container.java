@@ -61,10 +61,10 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Roger Kapsi
  */
-public class Playlist
+public class Container
 {
 
-	private static final Logger LOG = LoggerFactory.getLogger(Playlist.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Container.class);
 
 	/** playlistId is an 32bit unsigned value! */
 	private static final AtomicLong PLAYLIST_ID = new AtomicLong(1);
@@ -93,12 +93,12 @@ public class Playlist
 	private final Map<String, Chunk> chunks = new HashMap<String, Chunk>();
 
 	/** Set of Songs */
-	private final List<Song> songs = new ArrayList<Song>();
+	private final List<Item> songs = new ArrayList<Item>();
 
 	/** Set of deleted Songs */
-	private Set<Song> deletedSongs = null;
+	private Set<Item> deletedSongs = null;
 
-	public Playlist(Playlist playlist, Transaction txn)
+	public Container(Container playlist, Transaction txn)
 	{
 		this.itemId.setValue(playlist.itemId.getValue());
 		this.itemName.setValue(playlist.itemName.getValue());
@@ -111,7 +111,7 @@ public class Playlist
 			playlist.deletedSongs = null;
 		}
 
-		for(Song song : playlist.songs)
+		for(Item song : playlist.songs)
 		{
 			if(txn.modified(song))
 			{
@@ -133,7 +133,7 @@ public class Playlist
 	 * @param name
 	 *            the Name of the Playlist
 	 */
-	public Playlist(String name)
+	public Container(String name)
 	{
 		this.itemName.setValue(name);
 		this.persistentId.setValue(Library.nextPersistentId());
@@ -141,7 +141,7 @@ public class Playlist
 		init();
 	}
 
-	public Playlist(String name, long persistentId, long itemId, long itemCount)
+	public Container(String name, long persistentId, long itemId, long itemCount)
 	{
 		this.itemName.setValue(name);
 		this.persistentId.setValue(persistentId);
@@ -322,7 +322,7 @@ public class Playlist
 	/**
 	 * Retuns an unmodifiable set of all songs
 	 */
-	public List<Song> getSongs()
+	public List<Item> getItems()
 	{
 		return Collections.unmodifiableList(songs);
 	}
@@ -330,7 +330,7 @@ public class Playlist
 	/**
 	 * Returns a set of deleted Songs or null if no Songs were removed from this Playlist
 	 */
-	public Set<Song> getDeletedSongs()
+	public Set<Item> getDeletedSongs()
 	{
 		return deletedSongs;
 	}
@@ -341,7 +341,7 @@ public class Playlist
 	 * @param song
 	 * @throws DaapTransactionException
 	 */
-	public void addSong(Transaction txn, final Song song)
+	public void addSong(Transaction txn, final Item song)
 	{
 		if(txn != null)
 		{
@@ -360,7 +360,7 @@ public class Playlist
 		}
 	}
 
-	private void addSongP(Transaction txn, Song song)
+	private void addSongP(Transaction txn, Item song)
 	{
 		if(!containsSong(song) && songs.add(song))
 		{
@@ -372,7 +372,7 @@ public class Playlist
 		}
 	}
 
-	public void setSongs(Transaction txn, final Collection<Song> songs)
+	public void setSongs(Transaction txn, final Collection<Item> songs)
 	{
 		if(txn != null)
 		{
@@ -391,7 +391,7 @@ public class Playlist
 		}
 	}
 
-	private void setSongsP(Transaction txn, Collection<Song> songsCollection)
+	private void setSongsP(Transaction txn, Collection<Item> songsCollection)
 	{
 		this.songs.addAll(songsCollection);
 		itemCount.setValue(songsCollection.size());
@@ -403,7 +403,7 @@ public class Playlist
 	 * @param song
 	 * @throws DaapTransactionException
 	 */
-	public void removeSong(Transaction txn, final Song song)
+	public void removeSong(Transaction txn, final Item song)
 	{
 		if(txn != null)
 		{
@@ -421,14 +421,14 @@ public class Playlist
 		}
 	}
 
-	private void removeSongP(Transaction txn, Song song)
+	private void removeSongP(Transaction txn, Item song)
 	{
 		if(songs.remove(song))
 		{
 			itemCount.setValue(songs.size());
 			if(deletedSongs == null)
 			{
-				deletedSongs = new HashSet<Song>();
+				deletedSongs = new HashSet<Item>();
 			}
 			deletedSongs.add(song);
 		}
@@ -440,10 +440,10 @@ public class Playlist
 	 * @param songId
 	 * @return
 	 */
-	public Song getSong(String itemId)
+	public Item getSong(String itemId)
 	{
 		long songId = Long.parseLong(itemId);
-		for(Song song : songs)
+		for(Item song : songs)
 		{
 			if(song.getItemId() == songId)
 			{
@@ -456,7 +456,7 @@ public class Playlist
 	/**
 	 * Returns <code>true</code> if the provided <code>song</code> is in this Playlist.
 	 */
-	public boolean containsSong(Song song)
+	public boolean containsSong(Item song)
 	{
 		return songs.contains(song);
 	}
@@ -470,12 +470,12 @@ public class Playlist
 	@Override
 	public boolean equals(Object o)
 	{
-		if(!(o instanceof Playlist))
+		if(!(o instanceof Container))
 		{
 			return false;
 		}
 
-		return ((Playlist) o).getItemId() == getItemId();
+		return ((Container) o).getItemId() == getItemId();
 	}
 
 	@Override
@@ -557,7 +557,7 @@ public class Playlist
 		try
 		{
 
-			Field field = Playlist.class.getDeclaredField(fieldName);
+			Field field = Container.class.getDeclaredField(fieldName);
 			field.setAccessible(true);
 
 			Chunk chunk = (Chunk) field.get(this);

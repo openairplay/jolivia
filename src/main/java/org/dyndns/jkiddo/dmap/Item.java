@@ -104,7 +104,7 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.PersistentId;
  * 
  * @author Roger Kapsi
  */
-public class Song
+public class Item
 {
 
 	/** songId is an 32bit unsigned value! */
@@ -179,7 +179,7 @@ public class Song
 	/**
 	 * Creates a new Song
 	 */
-	public Song()
+	public Item()
 	{
 		persistentId.setValue(itemId.getValue());
 		containerItemId.setValue(itemId.getValue());
@@ -189,7 +189,7 @@ public class Song
 	/**
 	 * Creates a new Song with the provided name
 	 */
-	public Song(String name)
+	public Item(String name)
 	{
 		this();
 		itemName.setValue(name);
@@ -1021,12 +1021,12 @@ public class Song
 	@Override
 	public boolean equals(Object o)
 	{
-		if(!(o instanceof Song))
+		if(!(o instanceof Item))
 		{
 			return false;
 		}
 
-		return ((Song) o).getItemId() == getItemId();
+		return ((Item) o).getItemId() == getItemId();
 	}
 
 	protected void setBooleanValue(Transaction txn, String fieldName, boolean value)
@@ -1268,7 +1268,7 @@ public class Song
 		try
 		{
 
-			Field field = Song.class.getDeclaredField(fieldName);
+			Field field = Item.class.getDeclaredField(fieldName);
 			field.setAccessible(true);
 
 			Chunk chunk = (Chunk) field.get(this);

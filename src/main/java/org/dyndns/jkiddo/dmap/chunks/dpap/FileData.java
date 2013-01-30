@@ -13,7 +13,7 @@ package org.dyndns.jkiddo.dmap.chunks.dpap;
 import org.dyndns.jkiddo.dmap.chunks.RawChunk;
 
 /**
- * DPAP.FileDate This tag holds the raw file data of a picture or thumb nail. The data the is stored depends on what is requested by the client. This differs from the DAAP protocol where the file is requested separately from the tag.
+ * DPAP.FileDate This tag holds the raw file data of a picture or thumb nail. The data that is stored depends on what is requested by the client. This differs from the DAAP protocol where the file is requested separately from the tag.
  * 
  * @author Charles Ikeson
  */

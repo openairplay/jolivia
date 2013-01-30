@@ -20,7 +20,7 @@ import java.util.Set;
 
 import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.Library;
-import org.dyndns.jkiddo.dmap.Song;
+import org.dyndns.jkiddo.dmap.Item;
 import org.dyndns.jkiddo.dmap.Transaction;
 import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
@@ -45,12 +45,12 @@ public class MusicLibraryManager
 		this.database = new Database(libraryName);
 		Transaction txn = library.beginTransaction();
 
-		Set<Song> collectionOfSongs = new HashSet<Song>();
+		Set<Item> collectionOfSongs = new HashSet<Item>();
 		for(IMusicStoreReader reader : databases)
 		{
-			Collection<Song> songs = reader.readTunes();
+			Collection<Item> songs = reader.readTunes();
 			collectionOfSongs.addAll(songs);
-			for(Song s : songs)
+			for(Item s : songs)
 			{
 				songToReader.put(s.hashCode(), reader);
 			}
@@ -104,7 +104,7 @@ public class MusicLibraryManager
 	public File getTune(long databaseId, long itemId) throws Exception
 	{
 		IMusicStoreReader reader = songToReader.get(new Integer((int) itemId));
-		Song song = library.getDatabase(databaseId + "").getSong(itemId + "");
+		Item song = library.getDatabase(databaseId + "").getSong(itemId + "");
 		return reader.getTune(song);
 	}
 

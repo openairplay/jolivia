@@ -71,16 +71,16 @@ public class Database
 	private int totalSongCount = 0;
 
 	/** A List of Playlists */
-	private final List<Playlist> playlists = new ArrayList<Playlist>();
+	private final List<Container> playlists = new ArrayList<Container>();
 
 	/** Set of deleted playlists */
-	private Set<Playlist> deletedPlaylists = null;
+	private Set<Container> deletedPlaylists = null;
 
 	/** Set of deleted Songs */
-	private Set<Song> deletedSongs = null;
+	private Set<Item> deletedSongs = null;
 
 	/** master playlist */
-	private Playlist masterPlaylist = null;
+	private Container masterPlaylist = null;
 
 	protected Database(Database database, Transaction txn)
 	{
@@ -94,15 +94,15 @@ public class Database
 			database.deletedPlaylists = null;
 		}
 
-		Set<Song> songs = database.getSongs();
+		Set<Item> songs = database.getItems();
 
-		for(Playlist playlist : database.playlists)
+		for(Container playlist : database.playlists)
 		{
 			if(txn.modified(playlist))
 			{
 				if(deletedPlaylists == null || !deletedPlaylists.contains(playlist))
 				{
-					Playlist clone = new Playlist(playlist, txn);
+					Container clone = new Container(playlist, txn);
 					playlists.add(clone);
 
 					if(playlist == database.masterPlaylist)
@@ -111,12 +111,12 @@ public class Database
 					}
 				}
 
-				Set<Song> deletedSongs = playlist.getDeletedSongs();
+				Set<Item> deletedSongs = playlist.getDeletedSongs();
 				if(deletedSongs != null && !deletedSongs.isEmpty())
 				{
 					if(this.deletedSongs == null)
 					{
-						this.deletedSongs = new HashSet<Song>(deletedSongs);
+						this.deletedSongs = new HashSet<Item>(deletedSongs);
 					}
 					else
 					{
@@ -137,7 +137,7 @@ public class Database
 
 	public Database(String name)
 	{
-		this(name, new Playlist(name));
+		this(name, new Container(name));
 	}
 
 	/**
@@ -146,17 +146,17 @@ public class Database
 	 * @param name
 	 *            a name for this Database
 	 */
-	public Database(String name, Playlist masterPlaylist)
+	public Database(String name, Container masterPlaylist)
 	{
 		this(name, DATABASE_ID.getAndIncrement(), Library.nextPersistentId(), masterPlaylist);
 	}
 
 	public Database(String name, long itemId, long persistentId)
 	{
-		this(name, itemId, persistentId, new Playlist(name));
+		this(name, itemId, persistentId, new Container(name));
 	}
 
-	public Database(String name, long itemId, long persistentId, Playlist playlist)
+	public Database(String name, long itemId, long persistentId, Container playlist)
 	{
 		this.itemId = itemId;
 		this.persistentId = persistentId;
@@ -233,7 +233,7 @@ public class Database
 	 * 
 	 * @return the master Playlist
 	 */
-	public Playlist getMasterPlaylist()
+	public Container getMasterPlaylist()
 	{
 		return masterPlaylist;
 	}
@@ -243,14 +243,14 @@ public class Database
 	 * 
 	 * @return unmodifiable Set of Playlists
 	 */
-	public List<Playlist> getPlaylists()
+	public List<Container> getPlaylists()
 	{
 		return Collections.unmodifiableList(playlists);
 	}
 
-	public void addPlaylists(Transaction txn, final Collection<Playlist> playlists)
+	public void addPlaylists(Transaction txn, final Collection<Container> playlists)
 	{
-		for(Playlist p : playlists)
+		for(Container p : playlists)
 		{
 			addPlaylist(txn, p);
 		}
@@ -263,7 +263,7 @@ public class Database
 	 * @param playlist
 	 *            the Playliost to add
 	 */
-	public void addPlaylist(Transaction txn, final Playlist playlist)
+	public void addPlaylist(Transaction txn, final Container playlist)
 	{
 		if(masterPlaylist.equals(playlist))
 		{
@@ -287,7 +287,7 @@ public class Database
 		}
 	}
 
-	private void addPlaylistP(Transaction txn, Playlist playlist)
+	private void addPlaylistP(Transaction txn, Container playlist)
 	{
 		if(!containsPlaylist(playlist) && playlists.add(playlist))
 		{
@@ -307,7 +307,7 @@ public class Database
 	 * @param playlist
 	 *            the Playlist to remove
 	 */
-	public void removePlaylist(Transaction txn, final Playlist playlist)
+	public void removePlaylist(Transaction txn, final Container playlist)
 	{
 		if(masterPlaylist.equals(playlist))
 		{
@@ -330,7 +330,7 @@ public class Database
 		}
 	}
 
-	private void removePlaylistP(Transaction txn, Playlist playlist)
+	private void removePlaylistP(Transaction txn, Container playlist)
 	{
 		if(playlists.remove(playlist))
 		{
@@ -338,7 +338,7 @@ public class Database
 
 			if(deletedPlaylists == null)
 			{
-				deletedPlaylists = new HashSet<Playlist>();
+				deletedPlaylists = new HashSet<Container>();
 			}
 			deletedPlaylists.add(playlist);
 		}
@@ -358,7 +358,7 @@ public class Database
 	 * @param playlist
 	 * @return true if Database contains playlist
 	 */
-	public boolean containsPlaylist(Playlist playlist)
+	public boolean containsPlaylist(Container playlist)
 	{
 		return playlists.contains(playlist);
 	}
@@ -388,20 +388,20 @@ public class Database
 	/**
 	 * Returns all Songs in this Database
 	 */
-	public Set<Song> getSongs()
+	public Set<Item> getItems()
 	{
-		Set<Song> songs = null;
-		for(Playlist playlist : playlists)
+		Set<Item> songs = null;
+		for(Container playlist : playlists)
 		{
 			if(!(playlist instanceof Folder))
 			{
 				if(songs == null)
 				{
-					songs = new HashSet<Song>(playlist.getSongs());
+					songs = new HashSet<Item>(playlist.getItems());
 				}
 				else
 				{
-					songs.addAll(playlist.getSongs());
+					songs.addAll(playlist.getItems());
 				}
 			}
 		}
@@ -417,15 +417,15 @@ public class Database
 	 */
 	public int getSongCount()
 	{
-		return getSongs().size();
+		return getItems().size();
 	}
 
 	/**
 	 * Returns true if song is in this Database
 	 */
-	public boolean containsSong(Song song)
+	public boolean containsSong(Item song)
 	{
-		for(Playlist playlist : playlists)
+		for(Container playlist : playlists)
 		{
 			if(playlist.containsSong(song))
 			{
@@ -441,9 +441,9 @@ public class Database
 	 * @param txn
 	 * @param song
 	 */
-	public void addSong(Transaction txn, Song song)
+	public void addSong(Transaction txn, Item song)
 	{
-		for(Playlist playlist : playlists)
+		for(Container playlist : playlists)
 		{
 			if(!(playlist instanceof Folder))
 			{
@@ -452,9 +452,9 @@ public class Database
 		}
 	}
 
-	public void setSongs(Transaction txn, Collection<Song> songs)
+	public void setSongs(Transaction txn, Collection<Item> songs)
 	{
-		for(Playlist playlist : playlists)
+		for(Container playlist : playlists)
 		{
 			if(!(playlist instanceof Folder))
 			{
@@ -469,9 +469,9 @@ public class Database
 	 * @param txn
 	 * @param song
 	 */
-	public void removeSong(Transaction txn, Song song)
+	public void removeSong(Transaction txn, Item song)
 	{
-		for(Playlist playlist : playlists)
+		for(Container playlist : playlists)
 		{
 			if(!(playlist instanceof Folder))
 			{
@@ -480,16 +480,16 @@ public class Database
 		}
 	}
 
-	public Set<Playlist> getSongPlaylists(Song song)
+	public Set<Container> getSongPlaylists(Item song)
 	{
-		Set<Playlist> ret = null;
-		for(Playlist playlist : playlists)
+		Set<Container> ret = null;
+		for(Container playlist : playlists)
 		{
 			if(playlist.containsSong(song))
 			{
 				if(ret == null)
 				{
-					ret = new HashSet<Playlist>();
+					ret = new HashSet<Container>();
 				}
 				ret.add(playlist);
 			}
@@ -509,13 +509,13 @@ public class Database
 	 * @param songId
 	 * @return
 	 */
-	public Song getSong(String itemId)
+	public Item getSong(String itemId)
 	{
-		for(Playlist playlist : playlists)
+		for(Container playlist : playlists)
 		{
 			if(!(playlist instanceof Folder))
 			{
-				Song song = playlist.getSong(itemId);
+				Item song = playlist.getSong(itemId);
 				if(song != null)
 				{
 					return song;
@@ -531,9 +531,9 @@ public class Database
 	 * @param playlistId
 	 * @return
 	 */
-	public Playlist getPlaylist(long playlistId)
+	public Container getPlaylist(long playlistId)
 	{
-		for(Playlist playlist : playlists)
+		for(Container playlist : playlists)
 		{
 			if(playlist.getItemId() == playlistId)
 			{

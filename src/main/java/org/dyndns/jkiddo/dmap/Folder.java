@@ -40,7 +40,7 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.ParentContainerId;
  * @since iTunes 5.0
  * @author Roger Kapsi
  */
-public class Folder extends Playlist
+public class Folder extends Container
 {
 
 	/** */
@@ -50,9 +50,9 @@ public class Folder extends Playlist
 	private final HasChildContainers hasChildContainers = new HasChildContainers(true);
 
 	/** */
-	private List<Playlist> playlists = null;
+	private List<Container> playlists = null;
 
-	protected Folder(Playlist playlist, Transaction txn)
+	protected Folder(Container playlist, Transaction txn)
 	{
 		super(playlist, txn);
 		parentContainerId.setValue(getItemId());
@@ -73,19 +73,19 @@ public class Folder extends Playlist
 	}
 
 	@Override
-	public void addSong(Transaction txn, Song song)
+	public void addSong(Transaction txn, Item song)
 	{
 		throw new UnsupportedOperationException("Songs cannot be added to Folders");
 	}
 
 	@Override
-	public void removeSong(Transaction txn, Song song)
+	public void removeSong(Transaction txn, Item song)
 	{
 		throw new UnsupportedOperationException("Songs cannot be removed from Folders");
 	}
 
 	@Override
-	public boolean containsSong(Song song)
+	public boolean containsSong(Item song)
 	{
 		return false;
 	}
@@ -97,12 +97,12 @@ public class Folder extends Playlist
 	}
 
 	@Override
-	public List<Song> getSongs()
+	public List<Item> getItems()
 	{
 		return Collections.emptyList();
 	}
 
-	public void addPlaylist(Transaction txn, final Playlist playlist)
+	public void addPlaylist(Transaction txn, final Container playlist)
 	{
 		if(playlist instanceof Folder)
 		{
@@ -126,11 +126,11 @@ public class Folder extends Playlist
 		}
 	}
 
-	private void addPlaylistP(Transaction txn, Playlist playlist)
+	private void addPlaylistP(Transaction txn, Container playlist)
 	{
 		if(playlists == null)
 		{
-			playlists = new ArrayList<Playlist>();
+			playlists = new ArrayList<Container>();
 		}
 
 		if(!containsPlaylist(playlist) && playlists.add(playlist))
@@ -139,7 +139,7 @@ public class Folder extends Playlist
 		}
 	}
 
-	public void removePlaylist(Transaction txn, final Playlist playlist)
+	public void removePlaylist(Transaction txn, final Container playlist)
 	{
 		if(playlist instanceof Folder)
 		{
@@ -163,7 +163,7 @@ public class Folder extends Playlist
 		}
 	}
 
-	private void removePlaylistP(Transaction txn, Playlist playlist)
+	private void removePlaylistP(Transaction txn, Container playlist)
 	{
 		if(playlists == null)
 		{
@@ -186,7 +186,7 @@ public class Folder extends Playlist
 		return getPlaylists().size();
 	}
 
-	public List<Playlist> getPlaylists()
+	public List<Container> getPlaylists()
 	{
 		if(playlists != null)
 		{
@@ -195,7 +195,7 @@ public class Folder extends Playlist
 		return Collections.emptyList();
 	}
 
-	public boolean containsPlaylist(Playlist playlist)
+	public boolean containsPlaylist(Container playlist)
 	{
 		return getPlaylists().contains(playlist);
 	}

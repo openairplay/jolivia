@@ -35,12 +35,12 @@
 
 package org.dyndns.jkiddo.service.daap.client;
 
+import org.dyndns.jkiddo.dmap.Container;
 import org.dyndns.jkiddo.dmap.Database;
-import org.dyndns.jkiddo.dmap.Playlist;
 import org.dyndns.jkiddo.dmap.chunks.Chunk;
-import org.dyndns.jkiddo.dmap.chunks.daap.BasePlaylist;
 import org.dyndns.jkiddo.dmap.chunks.daap.DatabasePlaylists;
 import org.dyndns.jkiddo.dmap.chunks.daap.ServerDatabases;
+import org.dyndns.jkiddo.dmap.chunks.dmap.BaseContainer;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ContentCodesResponse;
 import org.dyndns.jkiddo.dmap.chunks.dmap.DatabaseShareType;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ItemCount;
@@ -137,9 +137,9 @@ public class Session
 			DatabasePlaylists allPlaylists = RequestHelper.requestParsed(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemname,dmap.itemcount,dmap.itemid,dmap.persistentid,daap.baseplaylist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,com.apple.itunes.saved-genius,dmap.parentcontainerid,dmap.editcommandssupported", this.getRequestBase(), itemId, this.sessionId));
 
 			// For now, the BasePlayList is sufficient
-			ListingItem item = allPlaylists.getListing().getSingleListingItemContainingClass(BasePlaylist.class);
+			ListingItem item = allPlaylists.getListing().getSingleListingItemContainingClass(BaseContainer.class);
 
-			Playlist playlist = new Playlist(item.getSpecificChunk(ItemName.class).getValue(), item.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue(), item.getSpecificChunk(ItemId.class).getUnsignedValue(), item.getSpecificChunk(ItemCount.class).getUnsignedValue());
+			Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), item.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue(), item.getSpecificChunk(ItemId.class).getUnsignedValue(), item.getSpecificChunk(ItemCount.class).getUnsignedValue());
 			database = new Database(databaseName, itemId, persistentId, playlist);
 		}
 
@@ -163,7 +163,7 @@ public class Session
 			Iterable<ListingItem> items = allPlaylists.getListing().getListingItems();
 			for(ListingItem item : items)
 			{
-				Playlist playlist = new Playlist(item.getSpecificChunk(ItemName.class).getValue(), 0, item.getSpecificChunk(ItemId.class).getUnsignedValue(), item.getSpecificChunk(ItemCount.class).getUnsignedValue());
+				Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), 0, item.getSpecificChunk(ItemId.class).getUnsignedValue(), item.getSpecificChunk(ItemCount.class).getUnsignedValue());
 				logger.debug(String.format("found radio genre=%s", playlist.getName()));
 				radioDatabase.addPlaylist(null, playlist);
 

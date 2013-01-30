@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 
-package org.dyndns.jkiddo.dmap.chunks.daap;
+package org.dyndns.jkiddo.dmap.chunks.dmap;
 
 import org.dyndns.jkiddo.dmap.chunks.ContainerChunk;
 import org.dyndns.jkiddo.dmap.chunks.dmap.Listing;
@@ -37,12 +37,12 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.SpecifiedTotalCount;
  * 
  * @author Roger Kapsi
  */
-public class DatabaseSongs extends ContainerChunk
+public class DatabaseItems extends ContainerChunk
 {
 
-	public DatabaseSongs()
+	public DatabaseItems()
 	{
-		super("adbs", "daap.databasesongs");
+		super("adbs", "dmap.databaseitems");
 	}
 
 	public Listing getListing()

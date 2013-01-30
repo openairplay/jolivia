@@ -194,7 +194,7 @@ public class Transaction
 			return true;
 		}
 
-		Iterator<Playlist> it = database.getPlaylists().iterator();
+		Iterator<Container> it = database.getPlaylists().iterator();
 		while(it.hasNext())
 		{
 			if(modified(it.next()))
@@ -210,14 +210,14 @@ public class Transaction
 	/**
 	 * Returns true if Playlist or one of its Songs was modified
 	 */
-	public synchronized boolean modified(Playlist playlist)
+	public synchronized boolean modified(Container playlist)
 	{
 		if(txnMap.containsKey(playlist))
 		{
 			return true;
 		}
 
-		for(Song song : playlist.getSongs())
+		for(Item song : playlist.getItems())
 		{
 			if(modified(song))
 			{
@@ -233,7 +233,7 @@ public class Transaction
 	/**
 	 * Returns true if Song was modified
 	 */
-	public synchronized boolean modified(Song song)
+	public synchronized boolean modified(Item song)
 	{
 		return txnMap.containsKey(song);
 	}

@@ -8,7 +8,7 @@
  * Contributors:
  *     Jens Kristian Villadsen - Lead developer, owner and creator
  ******************************************************************************/
-package org.dyndns.jkiddo.dpap.server;
+package org.dyndns.jkiddo.service.dpap.server;
 
 import org.dyndns.jkiddo.service.dmap.ILibraryResource;
 

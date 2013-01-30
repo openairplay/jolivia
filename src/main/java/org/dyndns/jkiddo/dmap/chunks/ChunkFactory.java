@@ -43,7 +43,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x6D736175), org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationMethod.class); // msau
 		map.put(new Integer(0x6D736173), org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationSchemes.class); // msas
 		map.put(new Integer(0x6D62636C), org.dyndns.jkiddo.dmap.chunks.dmap.Bag.class); // mbcl
-		map.put(new Integer(0x6162706C), org.dyndns.jkiddo.dmap.chunks.daap.BasePlaylist.class); // abpl
+		map.put(new Integer(0x6162706C), org.dyndns.jkiddo.dmap.chunks.dmap.BaseContainer.class); // abpl
 		map.put(new Integer(0x6162616C), org.dyndns.jkiddo.dmap.chunks.daap.BrowseAlbumListing.class); // abal
 		map.put(new Integer(0x61626172), org.dyndns.jkiddo.dmap.chunks.daap.BrowseArtistListing.class); // abar
 		map.put(new Integer(0x61626370), org.dyndns.jkiddo.dmap.chunks.daap.BrowseComposerListing.class); // abcp
@@ -60,7 +60,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x6D736463), org.dyndns.jkiddo.dmap.chunks.dmap.DatabaseCount.class); // msdc
 		map.put(new Integer(0x61706C79), org.dyndns.jkiddo.dmap.chunks.daap.DatabasePlaylists.class); // aply
 		map.put(new Integer(0x6D64626B), org.dyndns.jkiddo.dmap.chunks.dmap.DatabaseShareType.class); // mdbk
-		map.put(new Integer(0x61646273), org.dyndns.jkiddo.dmap.chunks.daap.DatabaseSongs.class); // adbs
+		map.put(new Integer(0x61646273), org.dyndns.jkiddo.dmap.chunks.dmap.DatabaseItems.class); // adbs
 		map.put(new Integer(0x6D75646C), org.dyndns.jkiddo.dmap.chunks.dmap.DeletedIdListing.class); // mudl
 		map.put(new Integer(0x6D64636C), org.dyndns.jkiddo.dmap.chunks.dmap.Dictionary.class); // mdcl
 		map.put(new Integer(0x6D70726F), org.dyndns.jkiddo.dmap.chunks.dmap.DmapProtocolVersion.class); // mpro
@@ -89,7 +89,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x6D706572), org.dyndns.jkiddo.dmap.chunks.dmap.PersistentId.class); // mper
 		map.put(new Integer(0x6170726D), org.dyndns.jkiddo.dmap.chunks.daap.PlaylistRepeatMode.class); // aprm
 		map.put(new Integer(0x6170736D), org.dyndns.jkiddo.dmap.chunks.daap.PlaylistShuffleMode.class); // apsm
-		map.put(new Integer(0x6170736F), org.dyndns.jkiddo.dmap.chunks.daap.PlaylistSongs.class); // apso
+		map.put(new Integer(0x6170736F), org.dyndns.jkiddo.dmap.chunks.dmap.ItemsContainer.class); // apso
 		map.put(new Integer(0x61655043), org.dyndns.jkiddo.dmap.chunks.com.apple.itunes.Podcast.class); // aePC
 		map.put(new Integer(0x61655050), org.dyndns.jkiddo.dmap.chunks.com.apple.itunes.PodcastPlaylist.class); // aePP
 		map.put(new Integer(0x636D766F), org.dyndns.jkiddo.dmap.chunks.dacp.RelativeVolume.class); // cmvo
