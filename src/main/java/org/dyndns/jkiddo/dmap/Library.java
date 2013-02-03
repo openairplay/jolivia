@@ -36,16 +36,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author Roger Kapsi
  */
 public class Library
 {
-
-	private static final Logger LOG = LoggerFactory.getLogger(Library.class);
 
 	private static final AtomicLong PERISTENT_ID = new AtomicLong(1);
 

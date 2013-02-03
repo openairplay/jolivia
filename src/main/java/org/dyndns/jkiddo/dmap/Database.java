@@ -35,9 +35,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * A Database is a container for Playlists and it keeps track of all Songs in the Database whereat it is not responsible for the actual management of the Songs (it's only interested in the Song IDs).
  * 
@@ -45,8 +42,6 @@ import org.slf4j.LoggerFactory;
  */
 public class Database
 {
-
-	private static final Logger LOG = LoggerFactory.getLogger(Database.class);
 
 	/** databaseId is an 32bit unsigned value! */
 	private static final AtomicLong DATABASE_ID = new AtomicLong();
@@ -243,7 +238,7 @@ public class Database
 	 * 
 	 * @return unmodifiable Set of Playlists
 	 */
-	public List<Container> getPlaylists()
+	public Collection<Container> getContainers()
 	{
 		return Collections.unmodifiableList(playlists);
 	}

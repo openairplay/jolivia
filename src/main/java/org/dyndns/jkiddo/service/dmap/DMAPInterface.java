@@ -82,12 +82,12 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	@Override
 	@Path("server-info")
 	@GET
-	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
+	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info) throws IOException
 	{
 		if(isDaapRequest(httpServletRequest))
-			return musicLibraryResource.serverInfo(httpServletRequest, httpServletResponse);
+			return musicLibraryResource.serverInfo(httpServletRequest, httpServletResponse, info);
 		if(isDpapRequest(httpServletRequest))
-			return imageLibraryResource.serverInfo(httpServletRequest, httpServletResponse);
+			return imageLibraryResource.serverInfo(httpServletRequest, httpServletResponse, info);
 		throw new NotImplementedException();
 	}
 
@@ -181,18 +181,6 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 			return musicLibraryResource.contentCodes(httpServletRequest, httpServletResponse);
 		if(isDpapRequest(httpServletRequest))
 			return imageLibraryResource.contentCodes(httpServletRequest, httpServletResponse);
-		throw new NotImplementedException();
-	}
-
-	@Override
-	@Path("resolve")
-	@GET
-	public Response resolve(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse)
-	{
-		if(isDaapRequest(httpServletRequest))
-			return musicLibraryResource.resolve(httpServletRequest, httpServletResponse);
-		if(isDpapRequest(httpServletRequest))
-			return imageLibraryResource.resolve(httpServletRequest, httpServletResponse);
 		throw new NotImplementedException();
 	}
 

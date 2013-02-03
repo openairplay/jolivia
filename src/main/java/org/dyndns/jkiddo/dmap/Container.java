@@ -53,8 +53,6 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.ItemCount;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ItemId;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ItemName;
 import org.dyndns.jkiddo.dmap.chunks.dmap.PersistentId;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The name is self explaining. A Playlist is a set of Songs.
@@ -63,8 +61,6 @@ import org.slf4j.LoggerFactory;
  */
 public class Container
 {
-
-	private static final Logger LOG = LoggerFactory.getLogger(Container.class);
 
 	/** playlistId is an 32bit unsigned value! */
 	private static final AtomicLong PLAYLIST_ID = new AtomicLong(1);

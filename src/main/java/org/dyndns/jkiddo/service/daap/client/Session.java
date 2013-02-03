@@ -38,7 +38,7 @@ package org.dyndns.jkiddo.service.daap.client;
 import org.dyndns.jkiddo.dmap.Container;
 import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.chunks.Chunk;
-import org.dyndns.jkiddo.dmap.chunks.daap.DatabasePlaylists;
+import org.dyndns.jkiddo.dmap.chunks.daap.DatabaseContainerns;
 import org.dyndns.jkiddo.dmap.chunks.daap.ServerDatabases;
 import org.dyndns.jkiddo.dmap.chunks.dmap.BaseContainer;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ContentCodesResponse;
@@ -49,6 +49,7 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.ItemName;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ListingItem;
 import org.dyndns.jkiddo.dmap.chunks.dmap.LoginResponse;
 import org.dyndns.jkiddo.dmap.chunks.dmap.PersistentId;
+import org.dyndns.jkiddo.dmap.chunks.dmap.ServerInfoResponse;
 import org.dyndns.jkiddo.dmap.chunks.dmap.UpdateResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -134,7 +135,7 @@ public class Session
 			long persistentId = localDatabase.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue();
 
 			// fetch playlists to find the overall magic "Music" playlist
-			DatabasePlaylists allPlaylists = RequestHelper.requestParsed(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemname,dmap.itemcount,dmap.itemid,dmap.persistentid,daap.baseplaylist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,com.apple.itunes.saved-genius,dmap.parentcontainerid,dmap.editcommandssupported", this.getRequestBase(), itemId, this.sessionId));
+			DatabaseContainerns allPlaylists = RequestHelper.requestParsed(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemname,dmap.itemcount,dmap.itemid,dmap.persistentid,daap.baseplaylist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,com.apple.itunes.saved-genius,dmap.parentcontainerid,dmap.editcommandssupported", this.getRequestBase(), itemId, this.sessionId));
 
 			// For now, the BasePlayList is sufficient
 			ListingItem item = allPlaylists.getListing().getSingleListingItemContainingClass(BaseContainer.class);
@@ -158,7 +159,7 @@ public class Session
 			long persistentId = database.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue();
 			radioDatabase = new Database(databaseName, itemId, persistentId);
 
-			DatabasePlaylists allPlaylists = RequestHelper.requestParsed(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemname,dmap.itemcount,dmap.itemid,dmap.persistentid,daap.baseplaylist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,com.apple.itunes.saved-genius,dmap.parentcontainerid,dmap.editcommandssupported", this.getRequestBase(), itemId, this.sessionId));
+			DatabaseContainerns allPlaylists = RequestHelper.requestParsed(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemname,dmap.itemcount,dmap.itemid,dmap.persistentid,daap.baseplaylist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,com.apple.itunes.saved-genius,dmap.parentcontainerid,dmap.editcommandssupported", this.getRequestBase(), itemId, this.sessionId));
 
 			Iterable<ListingItem> items = allPlaylists.getListing().getListingItems();
 			for(ListingItem item : items)
@@ -171,7 +172,7 @@ public class Session
 		}
 	}
 
-	public String getRequestBase()
+	String getRequestBase()
 	{
 		return String.format("http://%s:%d", host, port);
 	}
@@ -186,15 +187,22 @@ public class Session
 		RequestHelper.dispatch(String.format("%s/logout?session-id=%s", this.getRequestBase(), this.sessionId));
 	}
 
+	public ServerInfoResponse getServerInfo() throws Exception
+	{
+		ServerInfoResponse serverInfoResponse = RequestHelper.requestParsed(String.format("%s/server-info", this.getRequestBase()));
+		return serverInfoResponse;
+	}
+
 	// Query the media server about the content codes it handles
 	// print to stderr as a csv file
-	public void listContentCodes() throws Exception
+	public ContentCodesResponse getContentCodes() throws Exception
 	{
 		ContentCodesResponse contentcodes = RequestHelper.requestParsed(String.format("%s/content-codes?session-id=%s", this.getRequestBase(), this.sessionId));
 		for(Chunk contentCode : contentcodes)
 		{
 			logger.info(contentCode.getContentCodeString());
 		}
+		return contentcodes;
 	}
 
 	/**

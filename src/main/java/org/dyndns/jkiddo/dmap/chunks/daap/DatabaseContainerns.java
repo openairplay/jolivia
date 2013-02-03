@@ -35,10 +35,10 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.Listing;
  * 
  * @author Roger Kapsi
  */
-public class DatabasePlaylists extends ContainerChunk
+public class DatabaseContainerns extends ContainerChunk
 {
 
-	public DatabasePlaylists()
+	public DatabaseContainerns()
 	{
 		super("aply", "dmap.databaseplaylists");
 	}

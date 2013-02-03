@@ -102,6 +102,22 @@ public final class DmapUtil
 	/** Music Sharing Version 2.0.1 */
 	public static final int MUSIC_SHARING_VERSION_201 = 0x00020001; // 2.0.1
 
+	/**
+	 * NEWEST BELOW
+	 */
+
+	/** DMAP Version 2.0.9 (iTunes 11.0.1.12) */
+	public static final int DMAP_VERSION_209 = 0x00020009; // 2.0.9
+	
+	/** DMAP Version 2.0.0 (iPhoto 9.4.2) */
+	public static final int DMAP_VERSION_200 = 0x00020000; // 2.0.0
+
+	/** DAAP Version 3.0.11 (iTunes 11.0.1.12) */
+	public static final int DAAP_VERSION_3011 = 0x0003000B; // 3.0.11
+
+	/** DPAP Version 2.0.0 (iPhoto 9.4.2) */
+	public static final int DPAP_VERSION_101 = 0x00010001; // 2.0.0
+
 	/** 0, 1, ... F */
 	private static final char[] HEX = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 

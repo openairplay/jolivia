@@ -10,19 +10,19 @@ public class ImageLibraryManager
 	public String getLibraryName()
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return "Jolyaadeee";
 	}
 
 	public int getNrOfDatabases()
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	public long getSessionId(String remoteHost)
 	{
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
 	}
 
 	public Collection<Database> getDatabases()

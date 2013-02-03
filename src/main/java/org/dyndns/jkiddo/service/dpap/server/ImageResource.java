@@ -20,7 +20,6 @@ import javax.jmdns.ServiceInfo;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -29,13 +28,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.dyndns.jkiddo.NotImplementedException;
+import org.dyndns.jkiddo.dmap.Container;
 import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.DmapUtil;
 import org.dyndns.jkiddo.dmap.Item;
-import org.dyndns.jkiddo.dmap.Container;
 import org.dyndns.jkiddo.dmap.chunks.Chunk;
-import org.dyndns.jkiddo.dmap.chunks.daap.DaapProtocolVersion;
-import org.dyndns.jkiddo.dmap.chunks.daap.DatabasePlaylists;
+import org.dyndns.jkiddo.dmap.chunks.daap.DatabaseContainerns;
 import org.dyndns.jkiddo.dmap.chunks.daap.ServerDatabases;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ContainerCount;
 import org.dyndns.jkiddo.dmap.chunks.dmap.DatabaseCount;
@@ -44,11 +42,11 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.DmapProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ItemCount;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ItemId;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ItemName;
+import org.dyndns.jkiddo.dmap.chunks.dmap.ItemsContainer;
 import org.dyndns.jkiddo.dmap.chunks.dmap.Listing;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ListingItem;
 import org.dyndns.jkiddo.dmap.chunks.dmap.LoginRequired;
 import org.dyndns.jkiddo.dmap.chunks.dmap.LoginResponse;
-import org.dyndns.jkiddo.dmap.chunks.dmap.ItemsContainer;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ReturnedCount;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ServerInfoResponse;
 import org.dyndns.jkiddo.dmap.chunks.dmap.SessionId;
@@ -58,6 +56,7 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsAutoLogout;
 import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsIndex;
 import org.dyndns.jkiddo.dmap.chunks.dmap.TimeoutInterval;
 import org.dyndns.jkiddo.dmap.chunks.dmap.UpdateType;
+import org.dyndns.jkiddo.dmap.chunks.dpap.ProtocolVersion;
 import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.dyndns.jkiddo.service.dmap.Util;
@@ -109,20 +108,20 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Override
 	@Path("/server-info")
 	@GET
-	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
+	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info) throws IOException
 	{
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 		serverInfoResponse.add(new Status(200));
-		serverInfoResponse.add(new DmapProtocolVersion(DmapUtil.DMAP_VERSION_420));
-		serverInfoResponse.add(new DaapProtocolVersion(DmapUtil.DPAP_VERSION_411));
+		serverInfoResponse.add(new DmapProtocolVersion(DmapUtil.DMAP_VERSION_200));
+		serverInfoResponse.add(new ProtocolVersion(DmapUtil.DPAP_VERSION_101));
 		serverInfoResponse.add(new ItemName(imageLibraryManager.getLibraryName()));
-		serverInfoResponse.add(new LoginRequired(true));
+		serverInfoResponse.add(new LoginRequired(false));
 		serverInfoResponse.add(new TimeoutInterval(1800));
-		serverInfoResponse.add(new SupportsAutoLogout(true));
-		serverInfoResponse.add(new SupportsIndex(true));
+		serverInfoResponse.add(new SupportsAutoLogout(false));
+		serverInfoResponse.add(new SupportsIndex(false));
 		serverInfoResponse.add(new DatabaseCount(imageLibraryManager.getNrOfDatabases()));
 
-		return Util.buildResponse(serverInfoResponse, DMAP_KEY, "Some name");
+		return Util.buildResponse(serverInfoResponse, DMAP_KEY, imageLibraryManager.getLibraryName());
 	}
 	@Override
 	@Path("/login")
@@ -199,6 +198,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response items(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query) throws Exception
 	{
+		// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:2730','dmap.itemid:2731','dmap.itemid:2732','dmap.itemid:2733','dmap.itemid:2734','dmap.itemid:2735','dmap.itemid:2736','dmap.itemid:2737','dmap.itemid:2738','dmap.itemid:2739','dmap.itemid:2740','dmap.itemid:2741','dmap.itemid:2742','dmap.itemid:2743','dmap.itemid:2744','dmap.itemid:2745','dmap.itemid:2746','dmap.itemid:2747','dmap.itemid:2748','dmap.itemid:2749')
 		// Picture request
 		// GET dpap://192.168.1.2:8770/databases/1/items?session-id=1101478641&meta=dpap.hires,dmap.itemid,dpap.filedata&query=('dmap.itemid:2742') HTTP/1.1
 		//
@@ -209,8 +209,8 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 		// Content-Type: application/x-dmap-tagged
 		// Content-Length: 6510908
 
-		//Number of listings should be returned according to query string
-		
+		// Number of listings should be returned according to query string
+
 		Set<Item> images = imageLibraryManager.getDatabase(databaseId).getItems();
 		Iterable<String> parameters = DmapUtil.parseMeta(meta);
 
@@ -296,10 +296,10 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 		// Last 12 Monthsmimcmlit2mikdmiidminm tom mappemimcmlit:mikdmiidminmAlbum uden navn 3mimcmlit4mikdmiid9minmFamiliefestmimcmlit?mikdmiidminmEmner til fremkaldelsemimc0mlit:mikdmiid%minmAlbum uden navn 2mimcmlit0mikdmiidminmBettinamimcmlit1mikdmiidminmKalendermimc1mlit2mikdmiid!minm Fastelavnmimcmlit3mikdmiidminm
 		// Kbenhavnmimcmlit0mikdmiidminmFlaggedmimcmlit.mikdmiidminmTrashmimc
 
-		Collection<Container> playlists = imageLibraryManager.getDatabase(databaseId).getPlaylists();
+		Collection<Container> playlists = imageLibraryManager.getDatabase(databaseId).getContainers();
 		Iterable<String> parameters = DmapUtil.parseMeta(meta);
 
-		DatabasePlaylists databasePlaylists = new DatabasePlaylists();
+		DatabaseContainerns databasePlaylists = new DatabaseContainerns();
 
 		databasePlaylists.add(new Status(200));
 		databasePlaylists.add(new UpdateType(0));// Maybe used
@@ -356,6 +356,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@GET
 	public Response containerItems(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
 	{
+		// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/containers/5292/items?session-id=1101478641&meta=dpap.aspectratio,dmap.itemid,dmap.itemname,dpap.imagefilename,dpap.imagefilesize,dpap.creationdate,dpap.imagepixelwidth,dpap.imagepixelheight,dpap.imageformat,dpap.imagerating,dpap.imagecomments,dpap.imagelargefilesize&type=photo
 		// See how it is done in MusicLibraryResource
 		// apso)
 		// mstt
@@ -398,13 +399,13 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 
 		Listing listing = new Listing();
 
-		for(Item song : container.getItems())
+		for(Item item : container.getItems())
 		{
 			ListingItem listingItem = new ListingItem();
 
 			for(String key : parameters)
 			{
-				Chunk chunk = song.getChunk(key);
+				Chunk chunk = item.getChunk(key);
 
 				if(chunk != null)
 				{
@@ -450,14 +451,6 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	}
 
 	@Override
-	@Path("/databases/{databaseId}/items/{itemId}.{format}")
-	@GET
-	public Response item(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
-	{
-		throw new NotImplementedException();
-	}
-
-	@Override
 	@Path("/content-codes")
 	@GET
 	public Response contentCodes(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
@@ -469,14 +462,6 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	@Path("/logout")
 	@GET
 	public Response logout(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId)
-	{
-		throw new NotImplementedException();
-	}
-
-	@Override
-	@Path("/resolve")
-	@GET
-	public Response resolve(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse)
 	{
 		throw new NotImplementedException();
 	}

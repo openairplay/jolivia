@@ -53,6 +53,8 @@ public class Jolivia
 			@Override
 			public void registerNewSession(Session session) throws Exception
 			{
+				session.getServerInfo();
+				session.getLibrary().getAllAlbums();
 				session.getRemoteControl().play();
 
 			}

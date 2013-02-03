@@ -58,7 +58,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x6170726F), org.dyndns.jkiddo.dmap.chunks.daap.DaapProtocolVersion.class); // apro
 		map.put(new Integer(0x6162726F), org.dyndns.jkiddo.dmap.chunks.daap.DatabaseBrowse.class); // abro
 		map.put(new Integer(0x6D736463), org.dyndns.jkiddo.dmap.chunks.dmap.DatabaseCount.class); // msdc
-		map.put(new Integer(0x61706C79), org.dyndns.jkiddo.dmap.chunks.daap.DatabasePlaylists.class); // aply
+		map.put(new Integer(0x61706C79), org.dyndns.jkiddo.dmap.chunks.daap.DatabaseContainerns.class); // aply
 		map.put(new Integer(0x6D64626B), org.dyndns.jkiddo.dmap.chunks.dmap.DatabaseShareType.class); // mdbk
 		map.put(new Integer(0x61646273), org.dyndns.jkiddo.dmap.chunks.dmap.DatabaseItems.class); // adbs
 		map.put(new Integer(0x6D75646C), org.dyndns.jkiddo.dmap.chunks.dmap.DeletedIdListing.class); // mudl

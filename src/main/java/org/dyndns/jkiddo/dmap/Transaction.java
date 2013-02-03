@@ -194,7 +194,7 @@ public class Transaction
 			return true;
 		}
 
-		Iterator<Container> it = database.getPlaylists().iterator();
+		Iterator<Container> it = database.getContainers().iterator();
 		while(it.hasNext())
 		{
 			if(modified(it.next()))

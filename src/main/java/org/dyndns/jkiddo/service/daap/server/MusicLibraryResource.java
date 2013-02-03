@@ -40,7 +40,7 @@ import org.dyndns.jkiddo.dmap.Container;
 import org.dyndns.jkiddo.dmap.chunks.Chunk;
 import org.dyndns.jkiddo.dmap.chunks.ContentCodesResponseImpl;
 import org.dyndns.jkiddo.dmap.chunks.daap.DaapProtocolVersion;
-import org.dyndns.jkiddo.dmap.chunks.daap.DatabasePlaylists;
+import org.dyndns.jkiddo.dmap.chunks.daap.DatabaseContainerns;
 import org.dyndns.jkiddo.dmap.chunks.daap.ServerDatabases;
 import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationMethod;
 import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationSchemes;
@@ -135,7 +135,7 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 	@Override
 	@Path("/server-info")
 	@GET
-	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
+	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info) throws IOException
 	{
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 
@@ -313,10 +313,10 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 	@GET
 	public Response containers(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
 	{
-		Collection<Container> playlists = libraryManager.getDatabase(databaseId).getPlaylists();
+		Collection<Container> playlists = libraryManager.getDatabase(databaseId).getContainers();
 		Iterable<String> parameters = DmapUtil.parseMeta(meta);
 
-		DatabasePlaylists databasePlaylists = new DatabasePlaylists();
+		DatabaseContainerns databasePlaylists = new DatabaseContainerns();
 
 		databasePlaylists.add(new Status(200));
 		databasePlaylists.add(new UpdateType(0));// Maybe used
@@ -436,14 +436,6 @@ public class MusicLibraryResource extends MDNSResource implements IMusicLibrary
 	public Response logout(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId)
 	{
 		return Util.buildEmptyResponse(DMAP_KEY, libraryManager.getLibraryName());
-	}
-
-	@Override
-	@Path("/resolve")
-	@GET
-	public Response resolve(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse)
-	{
-		throw new NotImplementedException();
 	}
 
 	@Override
