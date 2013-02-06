@@ -330,9 +330,8 @@ public class Library
 		}
 	}
 
-	public Database getDatabase(String itemId)
+	public Database getDatabase(long databaseId)
 	{
-		long databaseId = Long.parseLong(itemId);
 		for(Database database : databases)
 		{
 			if(database.getItemId() == databaseId)

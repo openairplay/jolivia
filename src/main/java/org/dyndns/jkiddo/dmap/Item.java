@@ -31,6 +31,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -976,6 +978,11 @@ public class Item
 	public Chunk getChunk(String name)
 	{
 		return chunks.get(name);
+	}
+	
+	public Collection<Chunk> getChunks()
+	{
+		return Collections.unmodifiableCollection(chunks.values());
 	}
 
 	/**

@@ -436,9 +436,8 @@ public class Container
 	 * @param songId
 	 * @return
 	 */
-	public Item getSong(String itemId)
+	public Item getSong(long songId)
 	{
-		long songId = Long.parseLong(itemId);
 		for(Item song : songs)
 		{
 			if(song.getItemId() == songId)

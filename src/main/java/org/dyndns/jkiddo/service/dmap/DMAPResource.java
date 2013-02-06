@@ -45,6 +45,7 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.UpdateType;
 public abstract class DMAPResource extends MDNSResource implements ILibraryResource
 {
 	final protected IItemManager itemManager;
+	protected String name;
 
 	public DMAPResource(JmmDNS mDNS, Integer port, IItemManager itemManager) throws IOException
 	{
@@ -60,7 +61,7 @@ public abstract class DMAPResource extends MDNSResource implements ILibraryResou
 		LoginResponse loginResponse = new LoginResponse();
 		loginResponse.add(new Status(200));
 		loginResponse.add(new SessionId(itemManager.getSessionId(httpServletRequest.getRemoteHost())));
-		return Util.buildResponse(loginResponse, itemManager.getDMAPKey(), itemManager.getLibraryName());
+		return Util.buildResponse(loginResponse, itemManager.getDMAPKey(), name);
 	}
 
 	@Override
@@ -75,7 +76,7 @@ public abstract class DMAPResource extends MDNSResource implements ILibraryResou
 		UpdateResponse updateResponse = new UpdateResponse();
 		updateResponse.add(new Status(200));
 		updateResponse.add(new ServerRevision(itemManager.getRevision(httpServletRequest.getRemoteHost(), sessionId)));
-		return Util.buildResponse(updateResponse, itemManager.getDMAPKey(), itemManager.getLibraryName());
+		return Util.buildResponse(updateResponse, itemManager.getDMAPKey(), name);
 	}
 
 	@Override
@@ -118,7 +119,7 @@ public abstract class DMAPResource extends MDNSResource implements ILibraryResou
 		// serverDatabases.add(deletedListing);
 		// }
 
-		return Util.buildResponse(serverDatabases, itemManager.getDMAPKey(), itemManager.getLibraryName());
+		return Util.buildResponse(serverDatabases, itemManager.getDMAPKey(), name);
 	}
 
 	@Override
@@ -155,7 +156,7 @@ public abstract class DMAPResource extends MDNSResource implements ILibraryResou
 				}
 				else
 				{
-					logger.debug("Unknown chunk type: " + key);
+					logger.info("Unknown chunk type: " + key);
 				}
 			}
 
@@ -176,7 +177,7 @@ public abstract class DMAPResource extends MDNSResource implements ILibraryResou
 		// databasePlaylists.add(deletedListing);
 		// }
 
-		return Util.buildResponse(databaseContainers, itemManager.getDMAPKey(), itemManager.getLibraryName());
+		return Util.buildResponse(databaseContainers, itemManager.getDMAPKey(), name);
 	}
 
 	@Override
@@ -214,7 +215,7 @@ public abstract class DMAPResource extends MDNSResource implements ILibraryResou
 				}
 				else
 				{
-					logger.debug("Unknown chunk type: " + key);
+					logger.info("Unknown chunk type: " + key);
 				}
 			}
 
@@ -234,7 +235,7 @@ public abstract class DMAPResource extends MDNSResource implements ILibraryResou
 		// playlistSongs.add(deletedListing);
 		// }
 
-		return Util.buildResponse(itemsContainer, itemManager.getDMAPKey(), itemManager.getLibraryName());
+		return Util.buildResponse(itemsContainer, itemManager.getDMAPKey(), name);
 	}
 
 	@Override
@@ -269,17 +270,30 @@ public abstract class DMAPResource extends MDNSResource implements ILibraryResou
 		{
 			ListingItem listingItem = new ListingItem();
 
-			for(String key : parameters)
+			if("all".equals(meta))
 			{
-				Chunk chunk = item.getChunk(key);
-
-				if(chunk != null)
+				listingItem.add(item.getChunk("dmap.itemkind"));
+				for(Chunk chunk : item.getChunks())
 				{
+					if(chunk.getName().equals("dmap.itemkind"))
+						continue;
 					listingItem.add(chunk);
 				}
-				else
+			}
+			else
+			{
+				for(String key : parameters)
 				{
-					logger.debug("Unknown chunk type: " + key);
+					Chunk chunk = item.getChunk(key);
+
+					if(chunk != null)
+					{
+						listingItem.add(chunk);
+					}
+					else
+					{
+						logger.info("Unknown chunk type: " + key);
+					}
 				}
 			}
 
@@ -300,7 +314,7 @@ public abstract class DMAPResource extends MDNSResource implements ILibraryResou
 		// databaseSongs.add(deletedListing);
 		// }
 
-		return Util.buildResponse(databaseSongs, itemManager.getDMAPKey(), itemManager.getLibraryName());
+		return Util.buildResponse(databaseSongs, itemManager.getDMAPKey(), name);
 	}
 
 	@Override
@@ -308,7 +322,7 @@ public abstract class DMAPResource extends MDNSResource implements ILibraryResou
 	@GET
 	public Response contentCodes(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
 	{
-		return Util.buildResponse(new ContentCodesResponseImpl(), itemManager.getDMAPKey(), itemManager.getLibraryName());
+		return Util.buildResponse(new ContentCodesResponseImpl(), itemManager.getDMAPKey(), name);
 	}
 
 	@Override
@@ -316,7 +330,7 @@ public abstract class DMAPResource extends MDNSResource implements ILibraryResou
 	@GET
 	public Response logout(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId)
 	{
-		return Util.buildEmptyResponse(itemManager.getDMAPKey(), itemManager.getLibraryName());
+		return Util.buildEmptyResponse(itemManager.getDMAPKey(), name);
 	}
 
 	@Override

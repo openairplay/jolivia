@@ -72,51 +72,29 @@ public final class DmapUtil
 
 	private final static SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z", Locale.US);
 
-	/** DPAP 1.0.0 (iPhoto x.0) */
-	public static final int DPAP_VERSION_1 = 0x00010001; // 1.0.1
-
-	/** DAAP 1.0.0 (iTunes 4.0) */
-	public static final int DAAP_VERSION_1 = 0x00010000; // 1.0.0
-
-	/** DAAP 2.0.0 (iTunes 4.1, 4.2) */
-	public static final int DAAP_VERSION_2 = 0x00020000; // 2.0.0
-
-	/** DAAP Version 3.0.0 (iTunes 4.5, 4.6) */
-	public static final int DAAP_VERSION_3 = 0x00030000; // 3.0.0
-
-	/** DAAP Version 3.0.2 (iTunes 5.0) */
-	public static final int DAAP_VERSION_302 = 0x003002; // 3.0.2
-
-	/** DPAP Version 3.0.2 (iPhoto 4.1.1) */
-	public static final int DPAP_VERSION_411 = 0x004011; // 4.1.1
-
-	/** DMAP Version 2.0.1 */
-	public static final int DMAP_VERSION_201 = 0x00020001; // 2.0.1
-
-	/** DMAP Version 2.0.1 (iTunes 5.0) */
-	public static final int DMAP_VERSION_202 = 0x00020002; // 2.0.2
-
-	/** DMAP Version 4.2.0 (iPhoto 9.4.2) ???? */
-	public static final int DMAP_VERSION_420 = 0x00040002; // 4.2.0
-
 	/** Music Sharing Version 2.0.1 */
-	public static final int MUSIC_SHARING_VERSION_201 = 0x00020001; // 2.0.1
+	public static final int MUSIC_SHARING_VERSION_201 = 0x00020001;
+
+	public static final int MUSIC_SHARING_VERSION_200 = 0x00020000;
 
 	/**
 	 * NEWEST BELOW
 	 */
 
-	/** DMAP Version 2.0.9 (iTunes 11.0.1.12) */
-	public static final int DMAP_VERSION_209 = 0x00020009; // 2.0.9
-	
-	/** DMAP Version 2.0.0 (iPhoto 9.4.2) */
-	public static final int DMAP_VERSION_200 = 0x00020000; // 2.0.0
+	/** MPRO Version 2.0.9 (iTunes 11.0.1.12) */
+	public static final int MPRO_VERSION_209 = 0x00020009;
 
-	/** DAAP Version 3.0.11 (iTunes 11.0.1.12) */
-	public static final int DAAP_VERSION_3011 = 0x0003000B; // 3.0.11
+	/** PPRO Version 2.0.0 (iTunes 11.0.1.12) */
+	public static final int PPRO_VERSION_200 = 0x00020000;
 
-	/** DPAP Version 2.0.0 (iPhoto 9.4.2) */
-	public static final int DPAP_VERSION_101 = 0x00010001; // 2.0.0
+	/** APRO Version 3.0.11 (iTunes 11.0.1.12) */
+	public static final int APRO_VERSION_3011 = 0x0003000B;
+
+	/** PPRO Version 1.0.1 (iPhoto 9.4.2) */
+	public static final int DPAP_VERSION_101 = 0x00010001;
+
+	/** MPRO Version 2.0.0 (iPhoto 9.4.2) */
+	public static final int MPRO_VERSION_200 = 0x00020000;
 
 	/** 0, 1, ... F */
 	private static final char[] HEX = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };

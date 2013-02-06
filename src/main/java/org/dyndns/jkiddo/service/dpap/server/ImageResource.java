@@ -80,10 +80,10 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 
 	private final String name;
 
-	private final ImageLibraryManager imageLibraryManager;
+	private final ImageItemManager imageLibraryManager;
 
 	@Inject
-	public ImageResource(JmmDNS mDNS, @Named(DPAP_SERVER_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName, ImageLibraryManager imageLibraryManager) throws IOException
+	public ImageResource(JmmDNS mDNS, @Named(DPAP_SERVER_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName, ImageItemManager imageLibraryManager) throws IOException
 	{
 		super(mDNS, port);
 		this.name = applicationName;
@@ -98,8 +98,8 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 		hash = (hash + hash).substring(0, 13);
 		HashMap<String, String> records = new HashMap<String, String>();
 		records.put(TXT_VERSION_KEY, TXT_VERSION);
-		records.put(DPAP_VERSION_KEY, DmapUtil.DPAP_VERSION_1 + "");
-		records.put(IPSH_VERSION_KEY, 0x20000 + "");
+		records.put(DPAP_VERSION_KEY, DmapUtil.PPRO_VERSION_200 + "");
+		records.put(IPSH_VERSION_KEY, DmapUtil.MUSIC_SHARING_VERSION_200 + "");
 		records.put(MACHINE_ID_KEY, hash);
 		records.put(PASSWORD_KEY, "0");
 		return ServiceInfo.create(DPAP_SERVICE_TYPE, name, port, 0, 0, records);
@@ -112,7 +112,7 @@ public class ImageResource extends MDNSResource implements IImageLibrary
 	{
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 		serverInfoResponse.add(new Status(200));
-		serverInfoResponse.add(new DmapProtocolVersion(DmapUtil.DMAP_VERSION_200));
+		serverInfoResponse.add(new DmapProtocolVersion(DmapUtil.PPRO_VERSION_200));
 		serverInfoResponse.add(new ProtocolVersion(DmapUtil.DPAP_VERSION_101));
 		serverInfoResponse.add(new ItemName(imageLibraryManager.getLibraryName()));
 		serverInfoResponse.add(new LoginRequired(false));

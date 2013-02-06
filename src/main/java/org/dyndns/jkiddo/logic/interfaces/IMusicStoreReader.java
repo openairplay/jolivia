@@ -11,15 +11,36 @@
 package org.dyndns.jkiddo.logic.interfaces;
 
 import java.io.File;
-import java.util.Collection;
-
-import org.dyndns.jkiddo.dmap.Item;
+import java.util.Set;
 
 public interface IMusicStoreReader
 {
-	public Collection<Item> readTunes() throws Exception;
+	public Set<IMusicItem> readTunes() throws Exception;
 
-	public File getTune(Item tune) throws Exception;
+	public File getTune(IMusicItem tune) throws Exception;
 
-	public String getLibraryName();
+	interface IMusicItem
+	{
+
+		String getArtist();
+
+		String getAlbum();
+
+		void setArtist(String artist);
+
+		void setAlbum(String album);
+
+		void setName(String name);
+
+		void setComposer(String composer);
+
+		void setGenre(String genre);
+
+		void setTrackNumber(int trackNumber);
+
+		void setYear(int Year);
+
+		void setSize(long size);
+
+	}
 }

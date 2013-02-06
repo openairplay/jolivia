@@ -504,7 +504,7 @@ public class Database
 	 * @param songId
 	 * @return
 	 */
-	public Item getSong(String itemId)
+	public Item getSong(long itemId)
 	{
 		for(Container playlist : playlists)
 		{

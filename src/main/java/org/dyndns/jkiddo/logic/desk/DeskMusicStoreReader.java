@@ -13,13 +13,12 @@ package org.dyndns.jkiddo.logic.desk;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.dyndns.jkiddo.dmap.Item;
-import org.dyndns.jkiddo.dmap.Transaction;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.jaudiotagger.audio.AudioFile;
 import org.jaudiotagger.audio.AudioFileIO;
@@ -39,23 +38,23 @@ import com.google.common.base.Strings;
 public class DeskMusicStoreReader implements IMusicStoreReader
 {
 	private static final Logger logger = LoggerFactory.getLogger(DeskMusicStoreReader.class);
-	private Map<Item, File> mapOfSongToFile;
+	private Map<IMusicItem, File> mapOfSongToFile;
 	private String path;
 
 	public DeskMusicStoreReader(String path)
 	{
-		this.mapOfSongToFile = new HashMap<Item, File>();
+		this.mapOfSongToFile = new HashMap<IMusicItem, File>();
 		this.path = path;
 	}
 
 	public DeskMusicStoreReader()
 	{
 		this(System.getProperty("user.dir") + System.getProperty("file.separator") + "etc");
-		this.mapOfSongToFile = new HashMap<Item, File>();
+		this.mapOfSongToFile = new HashMap<IMusicItem, File>();
 	}
 
 	@Override
-	public Set<Item> readTunes()
+	public Set<IMusicItem> readTunes()
 	{
 		try
 		{
@@ -65,7 +64,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		{
 			e.printStackTrace();
 		}
-		return mapOfSongToFile.keySet();
+		return Collections.unmodifiableSet(mapOfSongToFile.keySet());
 	}
 
 	protected void traverseRootPathRecursively(File f) throws FileNotFoundException, IOException, InterruptedException
@@ -97,7 +96,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 	}
 
-	private Item populateSong(File file) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException
+	private IMusicItem populateSong(File file) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException
 	{
 		AudioFile f = AudioFileIO.read(file);
 		Tag tag = f.getTag();
@@ -115,20 +114,19 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 			}
 		}
 
-		Transaction t = null;
-		Item song = new Item();
-		song.setArtist(t, tag.getFirst(FieldKey.ARTIST));
-		song.setAlbum(t, tag.getFirst(FieldKey.ALBUM));
-		song.setName(t, tag.getFirst(FieldKey.TITLE));
-		song.setComposer(t, tag.getFirst(FieldKey.COMPOSER));
-		song.setGenre(t, tag.getFirst(FieldKey.GENRE));
+		IMusicItem song = new MusicItem();
+		song.setArtist(tag.getFirst(FieldKey.ARTIST));
+		song.setAlbum(tag.getFirst(FieldKey.ALBUM));
+		song.setName(tag.getFirst(FieldKey.TITLE));
+		song.setComposer(tag.getFirst(FieldKey.COMPOSER));
+		song.setGenre(tag.getFirst(FieldKey.GENRE));
 		if(!Strings.isNullOrEmpty(tag.getFirst(FieldKey.TRACK)))
-			song.setTrackNumber(t, Integer.parseInt(tag.getFirst(FieldKey.TRACK)));
+			song.setTrackNumber(Integer.parseInt(tag.getFirst(FieldKey.TRACK)));
 		if(!Strings.isNullOrEmpty(tag.getFirst(FieldKey.YEAR)))
-			song.setYear(t, Integer.parseInt(tag.getFirst(FieldKey.YEAR)));
+			song.setYear(Integer.parseInt(tag.getFirst(FieldKey.YEAR)));
 		// f.setTag(tag);
 		// AudioFileIO.write(f);
-		song.setSize(t, file.length());
+		song.setSize(file.length());
 		// song.setTime(t, 217778);
 		return song;
 	}
@@ -141,7 +139,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	}
 
 	@Override
-	public File getTune(Item tune) throws Exception
+	public File getTune(IMusicItem tune) throws Exception
 	{
 		if(tune != null)
 		{
@@ -150,9 +148,78 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		return mapOfSongToFile.get(tune);
 	}
 
-	@Override
-	public String getLibraryName()
+	class MusicItem implements IMusicItem
 	{
-		return getClass().getName();
+		private String artist;
+		private String album;
+
+		@Override
+		public String getArtist()
+		{
+			return artist;
+		}
+
+		@Override
+		public String getAlbum()
+		{
+			return album;
+		}
+
+		@Override
+		public void setArtist(String artist)
+		{
+			this.artist = artist;
+
+		}
+
+		@Override
+		public void setAlbum(String album)
+		{
+			this.album = album;
+
+		}
+
+		@Override
+		public void setName(String name)
+		{
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void setComposer(String composer)
+		{
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void setGenre(String genre)
+		{
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void setTrackNumber(int trackNumber)
+		{
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void setYear(int Year)
+		{
+			// TODO Auto-generated method stub
+
+		}
+
+		@Override
+		public void setSize(long size)
+		{
+			// TODO Auto-generated method stub
+
+		}
+
 	}
 }

@@ -28,16 +28,28 @@
 package org.dyndns.jkiddo.dmap.chunks.dmap;
 
 import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
+import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationMethod.PasswordMethod;
 
 /**
  * @author Roger Kapsi
  */
 public class AuthenticationMethod extends UByteChunk
 {
+	public enum PasswordMethod
+	{
+		NO_PASSWORD(NONE), USERNAME_AND_PASSWORD(USERNAME_PASSWORD_METHOD), PASSWORD(PASSWORD_METHOD);
 
-	public static final int NONE = 0x00;
-	public static final int USERNAME_PASSWORD_METHOD = 0x01;
-	public static final int PASSWORD_METHOD = 0x02;
+		private int value;
+
+		PasswordMethod(int value)
+		{
+			this.value = value;
+		}
+	}
+
+	private static final int NONE = 0x00;
+	private static final int USERNAME_PASSWORD_METHOD = 0x01;
+	private static final int PASSWORD_METHOD = 0x02;
 
 	public AuthenticationMethod()
 	{
@@ -47,5 +59,10 @@ public class AuthenticationMethod extends UByteChunk
 	public AuthenticationMethod(int method)
 	{
 		super("msau", "dmap.authenticationmethod", method);
+	}
+
+	public AuthenticationMethod(PasswordMethod password)
+	{
+		this(password.value);
 	}
 }

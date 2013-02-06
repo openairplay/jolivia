@@ -5,13 +5,11 @@ import java.util.Collection;
 
 import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
-import org.dyndns.jkiddo.service.daap.server.MusicLibraryManager.PasswordMethod;
+import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationMethod;
 
 public interface IItemManager
 {
-	String getLibraryName();
-
-	PasswordMethod getAuthenticationMethod();
+	AuthenticationMethod.PasswordMethod getAuthenticationMethod();
 
 	VersionChunk getDmapProtocolVersion();
 

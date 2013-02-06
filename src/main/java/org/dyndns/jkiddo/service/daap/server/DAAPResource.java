@@ -22,6 +22,7 @@ import javax.ws.rs.core.UriInfo;
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.dmap.DmapUtil;
 import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationMethod;
+import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationSchemes;
 import org.dyndns.jkiddo.dmap.chunks.dmap.DatabaseCount;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ItemName;
@@ -36,17 +37,20 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsPersistentIds;
 import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsQuery;
 import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsUpdate;
 import org.dyndns.jkiddo.dmap.chunks.dmap.TimeoutInterval;
-import org.dyndns.jkiddo.service.daap.server.MusicLibraryManager.PasswordMethod;
+import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
-import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
 
 import com.google.common.base.Strings;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
+import com.google.inject.name.Named;
 
 public class DAAPResource extends DMAPResource implements IMusicLibrary
 {
+	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
+	public static final String DAAP_RESOURCE = "DAAP_IMPLEMENTATION";
+
 	private static final String TXT_VERSION = "1";
 	private static final String TXT_VERSION_KEY = "txtvers";
 	private static final String DATABASE_ID_KEY = "Database ID";
@@ -57,9 +61,11 @@ public class DAAPResource extends DMAPResource implements IMusicLibrary
 	private static final String PASSWORD_KEY = "Password";
 
 	@Inject
-	public DAAPResource(JmmDNS mDNS, Integer port, IItemManager itemManager) throws IOException
+	public DAAPResource(JmmDNS mDNS, @Named(DAAP_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName, MusicItemManager itemManager) throws IOException
 	{
 		super(mDNS, port, itemManager);
+		this.name = applicationName;
+		this.signUp();
 	}
 
 	@Override
@@ -73,9 +79,9 @@ public class DAAPResource extends DMAPResource implements IMusicLibrary
 		records.put(MACHINE_ID_KEY, hash);
 		records.put(MACHINE_NAME_KEY, hostname);
 		records.put(ITSH_VERSION_KEY, DmapUtil.MUSIC_SHARING_VERSION_201 + "");
-		records.put(DAAP_VERSION_KEY, DmapUtil.DAAP_VERSION_3 + "");
+		records.put(DAAP_VERSION_KEY, DmapUtil.APRO_VERSION_3011 + "");
 		records.put(PASSWORD_KEY, "0");
-		return ServiceInfo.create(DAAP_SERVICE_TYPE, itemManager.getLibraryName(), port, 0, 0, records);
+		return ServiceInfo.create(DAAP_SERVICE_TYPE, name, port, 0, 0, records);
 	}
 
 	@Override
@@ -89,7 +95,7 @@ public class DAAPResource extends DMAPResource implements IMusicLibrary
 		serverInfoResponse.add(itemManager.getDmapProtocolVersion());
 		serverInfoResponse.add(itemManager.getDaapProtocolVersion());
 		serverInfoResponse.add(itemManager.getDpapProtocolVersion());
-		serverInfoResponse.add(new ItemName(itemManager.getLibraryName()));
+		serverInfoResponse.add(new ItemName(name));
 		serverInfoResponse.add(new TimeoutInterval(1800));
 		serverInfoResponse.add(new SupportsAutoLogout(true));
 
@@ -109,28 +115,28 @@ public class DAAPResource extends DMAPResource implements IMusicLibrary
 		serverInfoResponse.add(new SupportsPersistentIds(true));
 
 		PasswordMethod authenticationMethod = itemManager.getAuthenticationMethod();
-		if(!authenticationMethod.equals(PasswordMethod.NO_PASSWORD))
+		if(!(authenticationMethod == PasswordMethod.NO_PASSWORD))
 		{
-			if(authenticationMethod.equals(PasswordMethod.PASSWORD))
+			if(authenticationMethod == PasswordMethod.PASSWORD)
 			{
-				serverInfoResponse.add(new AuthenticationMethod(AuthenticationMethod.PASSWORD_METHOD));
+				serverInfoResponse.add(new AuthenticationMethod(PasswordMethod.PASSWORD));
 			}
 			else
 			{
-				serverInfoResponse.add(new AuthenticationMethod(AuthenticationMethod.USERNAME_PASSWORD_METHOD));
+				serverInfoResponse.add(new AuthenticationMethod(PasswordMethod.USERNAME_AND_PASSWORD));
 			}
 
 			serverInfoResponse.add(new AuthenticationSchemes(AuthenticationSchemes.BASIC_SCHEME | AuthenticationSchemes.DIGEST_SCHEME));
 		}
 		else
 		{
-			serverInfoResponse.add(new AuthenticationMethod(AuthenticationMethod.NONE));
+			serverInfoResponse.add(new AuthenticationMethod(AuthenticationMethod.PasswordMethod.NO_PASSWORD));
 		}
 
 		serverInfoResponse.add(new DatabaseCount(itemManager.getDatabases().size()));
 		serverInfoResponse.add(new SupportsUpdate(true));
 
-		return Util.buildResponse(serverInfoResponse, itemManager.getDMAPKey(), itemManager.getLibraryName());
+		return Util.buildResponse(serverInfoResponse, itemManager.getDMAPKey(), name);
 	}
 
 	@Override
@@ -149,7 +155,7 @@ public class DAAPResource extends DMAPResource implements IMusicLibrary
 		raf.seek(pos);
 		raf.readFully(buffer, 0, buffer.length);
 		Closeables.closeQuietly(raf);
-		return Util.buildAudioResponse(buffer, pos, file.length(), itemManager.getDMAPKey(), itemManager.getLibraryName());
+		return Util.buildAudioResponse(buffer, pos, file.length(), itemManager.getDMAPKey(), name);
 	}
 
 	static private long[] getRange(String rangeHeader, long position, long end)

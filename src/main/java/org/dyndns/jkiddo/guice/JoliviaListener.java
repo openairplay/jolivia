@@ -10,8 +10,14 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.guice;
 
+import java.io.File;
+import java.util.Collection;
+
 import javax.jmdns.JmmDNS;
 
+import org.dyndns.jkiddo.dmap.Database;
+import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
+import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
 import org.dyndns.jkiddo.jetty.ProxyFilter;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
@@ -21,9 +27,9 @@ import org.dyndns.jkiddo.raop.client.RemoteSpeakerDiscoverer;
 import org.dyndns.jkiddo.raop.server.AirPlayResourceWrapper;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
 import org.dyndns.jkiddo.service.daap.client.PairedRemoteDiscoverer;
+import org.dyndns.jkiddo.service.daap.server.DAAPResource;
 import org.dyndns.jkiddo.service.daap.server.IMusicLibrary;
-import org.dyndns.jkiddo.service.daap.server.MusicLibraryManager;
-import org.dyndns.jkiddo.service.daap.server.MusicLibraryResource;
+import org.dyndns.jkiddo.service.daap.server.MusicItemManager;
 import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
 import org.dyndns.jkiddo.service.dacp.client.IPairingResource;
 import org.dyndns.jkiddo.service.dacp.client.PairingDatabase;
@@ -31,13 +37,13 @@ import org.dyndns.jkiddo.service.dacp.client.PairingResource;
 import org.dyndns.jkiddo.service.dacp.server.IRemoteControlResource;
 import org.dyndns.jkiddo.service.dacp.server.RemoteControlResource;
 import org.dyndns.jkiddo.service.dmap.DMAPInterface;
+import org.dyndns.jkiddo.service.dmap.IItemManager;
+import org.dyndns.jkiddo.service.dpap.server.DPAPResource;
 import org.dyndns.jkiddo.service.dpap.server.IImageLibrary;
-import org.dyndns.jkiddo.service.dpap.server.ImageResource;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.multibindings.Multibinder;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
@@ -85,20 +91,101 @@ public class JoliviaListener extends GuiceServletContextListener
 			@Override
 			protected void configure()
 			{
-				bind(Integer.class).annotatedWith(Names.named(ImageResource.DPAP_SERVER_PORT_NAME)).toInstance(hostingPort);
-				bind(IImageLibrary.class).to(ImageResource.class).asEagerSingleton();
+				bind(Integer.class).annotatedWith(Names.named(DPAPResource.DPAP_SERVER_PORT_NAME)).toInstance(hostingPort);
+				bind(IImageLibrary.class).to(DPAPResource.class).asEagerSingleton();
+				bind(IItemManager.class).annotatedWith(Names.named(DPAPResource.DPAP_RESOURCE)).toInstance(new IItemManager() {
+					
+					@Override
+					public void waitForUpdate()
+					{
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public long getSessionId(String remoteHost)
+					{
+						// TODO Auto-generated method stub
+						return 0;
+					}
+					
+					@Override
+					public long getRevision(String remoteHost, long sessionId)
+					{
+						// TODO Auto-generated method stub
+						return 0;
+					}
+					
+					@Override
+					public File getItemAsFile(long databaseId, long itemId)
+					{
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public VersionChunk getDpapProtocolVersion()
+					{
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public VersionChunk getDmapProtocolVersion()
+					{
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public Collection<Database> getDatabases()
+					{
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public Database getDatabase(long databaseId)
+					{
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public VersionChunk getDaapProtocolVersion()
+					{
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public String getDMAPKey()
+					{
+						// TODO Auto-generated method stub
+						return null;
+					}
+					
+					@Override
+					public PasswordMethod getAuthenticationMethod()
+					{
+						// TODO Auto-generated method stub
+						return null;
+					}
+				});
 			}
 		}, new AbstractModule() {
 
 			@Override
 			protected void configure()
 			{
-				bind(Integer.class).annotatedWith(Names.named(MusicLibraryResource.DAAP_PORT_NAME)).toInstance(hostingPort);
-				bind(MusicLibraryManager.class);
-				bind(IMusicLibrary.class).to(MusicLibraryResource.class).asEagerSingleton();
-
-				Multibinder<IMusicStoreReader> multibinder = Multibinder.newSetBinder(binder(), IMusicStoreReader.class);
-				multibinder.addBinding().to(DeskMusicStoreReader.class).asEagerSingleton();
+				bind(Integer.class).annotatedWith(Names.named(DAAPResource.DAAP_PORT_NAME)).toInstance(hostingPort);
+				//bind(MusicLibraryManager.class);
+				// bind(IMusicLibrary.class).to(MusicLibraryResource.class).asEagerSingleton();
+				bind(IMusicLibrary.class).to(DAAPResource.class).asEagerSingleton();
+				bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(MusicItemManager.class);
+				bind(IMusicStoreReader.class).to(DeskMusicStoreReader.class).asEagerSingleton();
+				//Multibinder<IMusicStoreReader> multibinder = Multibinder.newSetBinder(binder(), IMusicStoreReader.class);
+				//multibinder.addBinding().to(DeskMusicStoreReader.class).asEagerSingleton();
 
 			}
 		}, new AbstractModule() {
