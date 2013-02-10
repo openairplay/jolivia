@@ -2,14 +2,51 @@ package org.dyndns.jkiddo.service.dpap.server;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Map;
 
 import org.dyndns.jkiddo.dmap.Database;
+import org.dyndns.jkiddo.dmap.DmapUtil;
+import org.dyndns.jkiddo.dmap.Item;
+import org.dyndns.jkiddo.dmap.Library;
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationMethod.PasswordMethod;
+import org.dyndns.jkiddo.dmap.chunks.dmap.DmapProtocolVersion;
+import org.dyndns.jkiddo.dmap.chunks.dpap.ProtocolVersion;
+import org.dyndns.jkiddo.guice.JoliviaListener;
+import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
+import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader.IImageItem;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
+
+import com.google.common.base.Function;
+import com.google.common.collect.Maps;
+import com.google.inject.name.Named;
 
 public class ImageItemManager implements IItemManager
 {
+	private static final VersionChunk dpapProtocolVersion = new ProtocolVersion(DmapUtil.PPRO_VERSION_101);
+	private static final VersionChunk dmapProtocolVersion = new DmapProtocolVersion(DmapUtil.MPRO_VERSION_200);
+	
+	private final Library library;
+	private final IImageStoreReader reader;
+	private final Map<Item, IImageItem> itemToIImageItem;
+
+	public ImageItemManager(@Named(JoliviaListener.APPLICATION_NAME) String applicationName, IImageStoreReader reader) throws Exception
+	{
+		this.reader = reader;
+		this.itemToIImageItem = Maps.uniqueIndex(reader.readImages(), new Function<IImageItem, Item>() {
+			@Override
+			public Item apply(IImageItem iMusicItem)
+			{
+				Item item = new Item();
+				return item;
+			}
+		});
+
+		this.library = new Library(applicationName);
+		Database database = new Database(applicationName);
+		database.setSongs(null, itemToIImageItem.keySet());
+		this.library.addDatabase(null, database);
+	}
 
 	@Override
 	public PasswordMethod getAuthenticationMethod()
@@ -20,22 +57,19 @@ public class ImageItemManager implements IItemManager
 	@Override
 	public VersionChunk getDmapProtocolVersion()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return dmapProtocolVersion;
 	}
 
 	@Override
 	public VersionChunk getDaapProtocolVersion()
 	{
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public VersionChunk getDpapProtocolVersion()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return dpapProtocolVersion;
 	}
 
 	@Override
@@ -47,43 +81,52 @@ public class ImageItemManager implements IItemManager
 	@Override
 	public long getSessionId(String remoteHost)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return 42;
 	}
 
 	@Override
 	public void waitForUpdate()
 	{
-		// TODO Auto-generated method stub
-
+		try
+		{
+			Thread.sleep(100000000);
+		}
+		catch(InterruptedException ie)
+		{
+			ie.printStackTrace();
+		}
 	}
 
 	@Override
 	public long getRevision(String remoteHost, long sessionId)
 	{
-		// TODO Auto-generated method stub
-		return 0;
+		return library.getRevision();
 	}
 
 	@Override
 	public Collection<Database> getDatabases()
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return library.getDatabases();
 	}
 
 	@Override
 	public Database getDatabase(long databaseId)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		return library.getDatabase(databaseId);
 	}
 
 	@Override
 	public File getItemAsFile(long databaseId, long itemId)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		Item image = library.getDatabase(databaseId).getMasterContainer().getSong(itemId);
+		try
+		{
+			return reader.getImage(itemToIImageItem.get(image));
+		}
+		catch(Exception e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
 }

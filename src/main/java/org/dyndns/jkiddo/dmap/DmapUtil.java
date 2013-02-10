@@ -91,7 +91,7 @@ public final class DmapUtil
 	public static final int APRO_VERSION_3011 = 0x0003000B;
 
 	/** PPRO Version 1.0.1 (iPhoto 9.4.2) */
-	public static final int DPAP_VERSION_101 = 0x00010001;
+	public static final int PPRO_VERSION_101 = 0x00010001;
 
 	/** MPRO Version 2.0.0 (iPhoto 9.4.2) */
 	public static final int MPRO_VERSION_200 = 0x00020000;

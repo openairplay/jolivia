@@ -124,7 +124,7 @@ public class MusicItemManager implements IItemManager
 	@Override
 	public File getItemAsFile(long databaseId, long itemId)
 	{
-		Item song = library.getDatabase(databaseId).getMasterPlaylist().getSong(itemId);
+		Item song = library.getDatabase(databaseId).getMasterContainer().getSong(itemId);
 		try
 		{
 			return reader.getTune(itemToIMusicItem.get(song));

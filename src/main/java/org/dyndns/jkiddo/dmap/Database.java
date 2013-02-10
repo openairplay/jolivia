@@ -228,7 +228,7 @@ public class Database
 	 * 
 	 * @return the master Playlist
 	 */
-	public Container getMasterPlaylist()
+	public Container getMasterContainer()
 	{
 		return masterPlaylist;
 	}
