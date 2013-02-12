@@ -15,7 +15,7 @@ public class ClientSessionListener implements IClientSessionListener
 		Library library = session.getLibrary();
 
 		// Now do stuff :)
-
+		remoteControl.play();
 		remoteControl.getNowPlaying();
 		library.getAllAlbums();
 	}

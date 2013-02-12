@@ -24,9 +24,11 @@ import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.raop.client.ISpeakerListener;
 import org.dyndns.jkiddo.raop.client.RemoteSpeakerDiscoverer;
+import org.dyndns.jkiddo.raop.client.model.Device;
 import org.dyndns.jkiddo.raop.server.AirPlayResourceWrapper;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
 import org.dyndns.jkiddo.service.daap.client.PairedRemoteDiscoverer;
+import org.dyndns.jkiddo.service.daap.client.Session;
 import org.dyndns.jkiddo.service.daap.server.DAAPResource;
 import org.dyndns.jkiddo.service.daap.server.IMusicLibrary;
 import org.dyndns.jkiddo.service.daap.server.MusicItemManager;
@@ -67,9 +69,52 @@ public class JoliviaListener extends GuiceServletContextListener
 		this.pairingCode = pairingCode;
 		this.airplayPort = airplayPort;
 		this.name = name;
-		this.clientSessionListener = clientSessionListener;
-		this.speakerListener = speakerListener;
+		if(clientSessionListener == null)
+		{
+			this.clientSessionListener = new IClientSessionListener() {
 
+				@Override
+				public void tearDownSession(String server, int port)
+				{
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void registerNewSession(Session session) throws Exception
+				{
+					// TODO Auto-generated method stub
+
+				}
+			};
+		}
+		else
+		{
+			this.clientSessionListener = clientSessionListener;
+		}
+		if(speakerListener == null)
+		{
+			this.speakerListener = new ISpeakerListener() {
+
+				@Override
+				public void removeAvailableSpeaker(String server, int port)
+				{
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void registerAvailableSpeaker(Device device)
+				{
+					// TODO Auto-generated method stub
+
+				}
+			};
+		}
+		else
+		{
+			this.speakerListener = speakerListener;
+		}
 	}
 
 	@Override
@@ -94,77 +139,77 @@ public class JoliviaListener extends GuiceServletContextListener
 				bind(Integer.class).annotatedWith(Names.named(DPAPResource.DPAP_SERVER_PORT_NAME)).toInstance(hostingPort);
 				bind(IImageLibrary.class).to(DPAPResource.class).asEagerSingleton();
 				bind(IItemManager.class).annotatedWith(Names.named(DPAPResource.DPAP_RESOURCE)).toInstance(new IItemManager() {
-					
+
 					@Override
 					public void waitForUpdate()
 					{
 						// TODO Auto-generated method stub
-						
+
 					}
-					
+
 					@Override
 					public long getSessionId(String remoteHost)
 					{
 						// TODO Auto-generated method stub
 						return 0;
 					}
-					
+
 					@Override
 					public long getRevision(String remoteHost, long sessionId)
 					{
 						// TODO Auto-generated method stub
 						return 0;
 					}
-					
+
 					@Override
 					public File getItemAsFile(long databaseId, long itemId)
 					{
 						// TODO Auto-generated method stub
 						return null;
 					}
-					
+
 					@Override
 					public VersionChunk getDpapProtocolVersion()
 					{
 						// TODO Auto-generated method stub
 						return null;
 					}
-					
+
 					@Override
 					public VersionChunk getDmapProtocolVersion()
 					{
 						// TODO Auto-generated method stub
 						return null;
 					}
-					
+
 					@Override
 					public Collection<Database> getDatabases()
 					{
 						// TODO Auto-generated method stub
 						return null;
 					}
-					
+
 					@Override
 					public Database getDatabase(long databaseId)
 					{
 						// TODO Auto-generated method stub
 						return null;
 					}
-					
+
 					@Override
 					public VersionChunk getDaapProtocolVersion()
 					{
 						// TODO Auto-generated method stub
 						return null;
 					}
-					
+
 					@Override
 					public String getDMAPKey()
 					{
 						// TODO Auto-generated method stub
 						return null;
 					}
-					
+
 					@Override
 					public PasswordMethod getAuthenticationMethod()
 					{
@@ -179,13 +224,13 @@ public class JoliviaListener extends GuiceServletContextListener
 			protected void configure()
 			{
 				bind(Integer.class).annotatedWith(Names.named(DAAPResource.DAAP_PORT_NAME)).toInstance(hostingPort);
-				//bind(MusicLibraryManager.class);
+				// bind(MusicLibraryManager.class);
 				// bind(IMusicLibrary.class).to(MusicLibraryResource.class).asEagerSingleton();
 				bind(IMusicLibrary.class).to(DAAPResource.class).asEagerSingleton();
 				bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(MusicItemManager.class);
 				bind(IMusicStoreReader.class).to(DeskMusicStoreReader.class).asEagerSingleton();
-				//Multibinder<IMusicStoreReader> multibinder = Multibinder.newSetBinder(binder(), IMusicStoreReader.class);
-				//multibinder.addBinding().to(DeskMusicStoreReader.class).asEagerSingleton();
+				// Multibinder<IMusicStoreReader> multibinder = Multibinder.newSetBinder(binder(), IMusicStoreReader.class);
+				// multibinder.addBinding().to(DeskMusicStoreReader.class).asEagerSingleton();
 
 			}
 		}, new AbstractModule() {

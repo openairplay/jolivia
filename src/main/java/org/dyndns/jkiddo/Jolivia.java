@@ -81,6 +81,11 @@ public class Jolivia
 		this(4000, 5000, 1337, "Jolivia", clientSessionListener, speakerListener);
 	}
 
+	public Jolivia() throws Exception
+	{
+		this(4000, 5000, 1337, "Jolivia", null, null);
+	}
+
 	public Jolivia(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener) throws Exception
 	{
 		Preconditions.checkArgument(!(pairingCode > 9999), "Pairingcode must be expressed within 4 ciphers");
