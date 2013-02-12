@@ -19,6 +19,8 @@ import org.dyndns.jkiddo.jetty.extension.DmapConnectionFactory;
 import org.dyndns.jkiddo.raop.client.ISpeakerListener;
 import org.dyndns.jkiddo.raop.client.model.Device;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
+import org.dyndns.jkiddo.service.daap.client.Library;
+import org.dyndns.jkiddo.service.daap.client.RemoteControl;
 import org.dyndns.jkiddo.service.daap.client.Session;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -53,9 +55,11 @@ public class Jolivia
 			@Override
 			public void registerNewSession(Session session) throws Exception
 			{
-				session.getServerInfo();
-				session.getLibrary().getAllAlbums();
-				session.getRemoteControl().play();
+				Library library = session.getLibrary();
+				library.getAllTracks().getListing().getListingItems();
+				RemoteControl remoteControl = session.getRemoteControl();
+				remoteControl.pause();
+				remoteControl.play();
 
 			}
 		}, new ISpeakerListener() {
@@ -74,6 +78,16 @@ public class Jolivia
 
 			}
 		});
+	}
+	
+	public Jolivia(IClientSessionListener clientSessionListener) throws Exception
+	{
+		this(4000, 5000, 1337, "Jolivia", clientSessionListener, null);
+	}
+	
+	public Jolivia(ISpeakerListener speakerListener) throws Exception
+	{
+		this(4000, 5000, 1337, "Jolivia", null, speakerListener);
 	}
 
 	public Jolivia(IClientSessionListener clientSessionListener, ISpeakerListener speakerListener) throws Exception
