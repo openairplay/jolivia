@@ -24,9 +24,8 @@ I'll just give you a brief introduction to how the DACP protocol works (you can 
 
 The session is your 'remote control' instance. On a session you can do the remote control stuff or eg. traverse the library. See the following code example:
 
-//A single instance of Jolivia pr. process should be sufficient for almost all scenarioes
-
-`new Jolivia(new IClientSessionListener() {`
+			//A single instance of Jolivia pr. process should be sufficient for almost all scenarioes
+			new Jolivia(new IClientSessionListener() {
 
 			@Override
 			public void tearDownSession(String server, int port)
