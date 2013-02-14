@@ -16,12 +16,11 @@ import javax.servlet.DispatcherType;
 
 import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.jetty.extension.DmapConnectionFactory;
+import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
+import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
+import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.raop.client.ISpeakerListener;
-import org.dyndns.jkiddo.raop.client.model.Device;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
-import org.dyndns.jkiddo.service.daap.client.Library;
-import org.dyndns.jkiddo.service.daap.client.RemoteControl;
-import org.dyndns.jkiddo.service.daap.client.Session;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -43,64 +42,80 @@ public class Jolivia
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
 
-		new Jolivia(new IClientSessionListener() {
-
-			@Override
-			public void tearDownSession(String server, int port)
-			{
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void registerNewSession(Session session) throws Exception
-			{
-				Library library = session.getLibrary();
-				library.getAllTracks().getListing().getListingItems();
-				RemoteControl remoteControl = session.getRemoteControl();
-				remoteControl.pause();
-				remoteControl.play();
-
-			}
-		}, new ISpeakerListener() {
-
-			@Override
-			public void removeAvailableSpeaker(String server, int port)
-			{
-				// TODO Auto-generated method stub
-
-			}
-
-			@Override
-			public void registerAvailableSpeaker(Device device)
-			{
-				// TODO Auto-generated method stub
-
-			}
-		});
+		new Jolivia(new DeskMusicStoreReader());
 	}
 	
 	public Jolivia(IClientSessionListener clientSessionListener) throws Exception
 	{
-		this(4000, 5000, 1337, "Jolivia", clientSessionListener, null);
+		this(4000, 5000, 1337, "Jolivia", clientSessionListener, null, null, null);
+	}
+	
+	public Jolivia(IClientSessionListener clientSessionListener, IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
+	{
+		this(4000, 5000, 1337, "Jolivia", clientSessionListener, null, musicStoreReader, imageStoreReader);
+	}
+	
+	public Jolivia(IClientSessionListener clientSessionListener, IImageStoreReader imageStoreReader) throws Exception
+	{
+		this(4000, 5000, 1337, "Jolivia", clientSessionListener, null, null, imageStoreReader);
+	}
+	
+	public Jolivia(IClientSessionListener clientSessionListener, IMusicStoreReader musicStoreReader) throws Exception
+	{
+		this(4000, 5000, 1337, "Jolivia", clientSessionListener, null, musicStoreReader, null);
 	}
 	
 	public Jolivia(ISpeakerListener speakerListener) throws Exception
 	{
-		this(4000, 5000, 1337, "Jolivia", null, speakerListener);
+		this(4000, 5000, 1337, "Jolivia", null, speakerListener, null, null);
+	}
+	
+	public Jolivia(ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader) throws Exception
+	{
+		this(4000, 5000, 1337, "Jolivia", null, speakerListener, musicStoreReader, null);
+	}
+	
+	public Jolivia(ISpeakerListener speakerListener, IImageStoreReader imageStoreReader) throws Exception
+	{
+		this(4000, 5000, 1337, "Jolivia", null, speakerListener, null, imageStoreReader);
+	}
+	
+	public Jolivia(ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
+	{
+		this(4000, 5000, 1337, "Jolivia", null, speakerListener, musicStoreReader, imageStoreReader);
+	}
+	
+	public Jolivia(IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
+	{
+		this(4000, 5000, 1337, "Jolivia", clientSessionListener, speakerListener, musicStoreReader, imageStoreReader);
+	}
+	
+	public Jolivia(IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader) throws Exception
+	{
+		this(4000, 5000, 1337, "Jolivia", clientSessionListener, speakerListener, musicStoreReader, null);
+	}
+	
+	public Jolivia(IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IImageStoreReader imageStoreReader) throws Exception
+	{
+		this(4000, 5000, 1337, "Jolivia", clientSessionListener, speakerListener, null, imageStoreReader);
 	}
 
 	public Jolivia(IClientSessionListener clientSessionListener, ISpeakerListener speakerListener) throws Exception
 	{
-		this(4000, 5000, 1337, "Jolivia", clientSessionListener, speakerListener);
+		this(4000, 5000, 1337, "Jolivia", clientSessionListener, speakerListener, null, null);
 	}
 
-	public Jolivia() throws Exception
+	public Jolivia(IImageStoreReader imageStoreReader) throws Exception
 	{
-		this(4000, 5000, 1337, "Jolivia", null, null);
+		this(4000, 5000, 1337, "Jolivia", null, null, null, imageStoreReader);
+	}
+	
+	public Jolivia(IMusicStoreReader musicStoreReader) throws Exception
+	{
+		this(4000, 5000, 1337, "Jolivia", null, null, musicStoreReader, null);
 	}
 
-	public Jolivia(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener) throws Exception
+	public Jolivia(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
 	{
 		Preconditions.checkArgument(!(pairingCode > 9999), "Pairingcode must be expressed within 4 ciphers");
 		logger.info("Starting " + name + " on port " + port);
@@ -109,7 +124,7 @@ public class Jolivia
 		sc.setPort(port);
 		server.setConnectors(new Connector[] { sc });
 		ServletContextHandler sch = new ServletContextHandler(server, "/");
-		sch.addEventListener(new JoliviaListener(port, airplayPort, pairingCode, name, clientSessionListener, speakerListener));
+		sch.addEventListener(new JoliviaListener(port, airplayPort, pairingCode, name, clientSessionListener, speakerListener, imageStoreReader, musicStoreReader));
 		sch.addFilter(GuiceFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 		sch.addServlet(DefaultServlet.class, "/");
 		server.start();

@@ -11,16 +11,13 @@
 package org.dyndns.jkiddo.guice;
 
 import java.io.File;
-import java.util.Collection;
+import java.util.Set;
 
 import javax.jmdns.JmmDNS;
 
-import org.dyndns.jkiddo.dmap.Database;
-import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
-import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
 import org.dyndns.jkiddo.jetty.ProxyFilter;
-import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
+import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.raop.client.ISpeakerListener;
 import org.dyndns.jkiddo.raop.client.RemoteSpeakerDiscoverer;
@@ -42,7 +39,9 @@ import org.dyndns.jkiddo.service.dmap.DMAPInterface;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dpap.server.DPAPResource;
 import org.dyndns.jkiddo.service.dpap.server.IImageLibrary;
+import org.dyndns.jkiddo.service.dpap.server.ImageItemManager;
 
+import com.google.common.collect.Sets;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -59,10 +58,12 @@ public class JoliviaListener extends GuiceServletContextListener
 	final private String name;
 	final private IClientSessionListener clientSessionListener;
 	final private ISpeakerListener speakerListener;
+	final private IImageStoreReader imageStoreReader;
+	final private IMusicStoreReader musicStoreReader;
 
 	public static final String APPLICATION_NAME = "APPLICATION_NAME";
 
-	public JoliviaListener(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener)
+	public JoliviaListener(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IImageStoreReader imageStoreReader, IMusicStoreReader musicStoreReader)
 	{
 		super();
 		this.hostingPort = port;
@@ -115,6 +116,48 @@ public class JoliviaListener extends GuiceServletContextListener
 		{
 			this.speakerListener = speakerListener;
 		}
+		if(musicStoreReader == null)
+		{
+			this.musicStoreReader = new IMusicStoreReader() {
+				
+				@Override
+				public Set<IMusicItem> readTunes() throws Exception {
+					
+					return Sets.newHashSet();
+				}
+				
+				@Override
+				public File getTune(IMusicItem tune) throws Exception {
+					// TODO Auto-generated method stub
+					return null;
+				}
+			};
+		}
+		else
+		{
+			this.musicStoreReader = musicStoreReader;
+		}
+		if(imageStoreReader == null)
+		{
+			this.imageStoreReader = new IImageStoreReader() {
+				
+				@Override
+				public Set<IImageItem> readImages() throws Exception {
+					
+					return Sets.newHashSet();
+				}
+				
+				@Override
+				public File getImage(IImageItem image) throws Exception {
+					// TODO Auto-generated method stub
+					return null;
+				}
+			};
+		}
+		else
+		{
+			this.imageStoreReader = imageStoreReader;
+		}
 	}
 
 	@Override
@@ -138,85 +181,8 @@ public class JoliviaListener extends GuiceServletContextListener
 			{
 				bind(Integer.class).annotatedWith(Names.named(DPAPResource.DPAP_SERVER_PORT_NAME)).toInstance(hostingPort);
 				bind(IImageLibrary.class).to(DPAPResource.class).asEagerSingleton();
-				bind(IItemManager.class).annotatedWith(Names.named(DPAPResource.DPAP_RESOURCE)).toInstance(new IItemManager() {
-
-					@Override
-					public void waitForUpdate()
-					{
-						// TODO Auto-generated method stub
-
-					}
-
-					@Override
-					public long getSessionId(String remoteHost)
-					{
-						// TODO Auto-generated method stub
-						return 0;
-					}
-
-					@Override
-					public long getRevision(String remoteHost, long sessionId)
-					{
-						// TODO Auto-generated method stub
-						return 0;
-					}
-
-					@Override
-					public File getItemAsFile(long databaseId, long itemId)
-					{
-						// TODO Auto-generated method stub
-						return null;
-					}
-
-					@Override
-					public VersionChunk getDpapProtocolVersion()
-					{
-						// TODO Auto-generated method stub
-						return null;
-					}
-
-					@Override
-					public VersionChunk getDmapProtocolVersion()
-					{
-						// TODO Auto-generated method stub
-						return null;
-					}
-
-					@Override
-					public Collection<Database> getDatabases()
-					{
-						// TODO Auto-generated method stub
-						return null;
-					}
-
-					@Override
-					public Database getDatabase(long databaseId)
-					{
-						// TODO Auto-generated method stub
-						return null;
-					}
-
-					@Override
-					public VersionChunk getDaapProtocolVersion()
-					{
-						// TODO Auto-generated method stub
-						return null;
-					}
-
-					@Override
-					public String getDMAPKey()
-					{
-						// TODO Auto-generated method stub
-						return null;
-					}
-
-					@Override
-					public PasswordMethod getAuthenticationMethod()
-					{
-						// TODO Auto-generated method stub
-						return null;
-					}
-				});
+				bind(IItemManager.class).annotatedWith(Names.named(DPAPResource.DPAP_RESOURCE)).to(ImageItemManager.class);
+				bind(IImageStoreReader.class).toInstance(imageStoreReader);
 			}
 		}, new AbstractModule() {
 
@@ -224,14 +190,9 @@ public class JoliviaListener extends GuiceServletContextListener
 			protected void configure()
 			{
 				bind(Integer.class).annotatedWith(Names.named(DAAPResource.DAAP_PORT_NAME)).toInstance(hostingPort);
-				// bind(MusicLibraryManager.class);
-				// bind(IMusicLibrary.class).to(MusicLibraryResource.class).asEagerSingleton();
 				bind(IMusicLibrary.class).to(DAAPResource.class).asEagerSingleton();
 				bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(MusicItemManager.class);
-				bind(IMusicStoreReader.class).to(DeskMusicStoreReader.class).asEagerSingleton();
-				// Multibinder<IMusicStoreReader> multibinder = Multibinder.newSetBinder(binder(), IMusicStoreReader.class);
-				// multibinder.addBinding().to(DeskMusicStoreReader.class).asEagerSingleton();
-
+				bind(IMusicStoreReader.class).toInstance(musicStoreReader);
 			}
 		}, new AbstractModule() {
 

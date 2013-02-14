@@ -19,6 +19,7 @@ import org.dyndns.jkiddo.service.dmap.IItemManager;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
+import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class ImageItemManager implements IItemManager
@@ -30,6 +31,7 @@ public class ImageItemManager implements IItemManager
 	private final IImageStoreReader reader;
 	private final Map<Item, IImageItem> itemToIImageItem;
 
+	@Inject
 	public ImageItemManager(@Named(JoliviaListener.APPLICATION_NAME) String applicationName, IImageStoreReader reader) throws Exception
 	{
 		this.reader = reader;
