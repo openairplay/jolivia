@@ -35,6 +35,8 @@
 
 package org.dyndns.jkiddo.service.daap.client;
 
+import java.util.NoSuchElementException;
+
 import org.dyndns.jkiddo.dmap.Container;
 import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.chunks.Chunk;
@@ -146,13 +148,23 @@ public class Session
 
 		// Radio database
 		{
-			ListingItem database = serverDatabases.getListing().getSingleListingItem(new Predicate<ListingItem>() {
-				@Override
-				public boolean apply(ListingItem input)
-				{
-					return DatabaseShareType.RADIO == input.getSpecificChunk(DatabaseShareType.class).getValue();
-				}
-			});
+			final ListingItem database;
+			try
+			{
+				database = serverDatabases.getListing().getSingleListingItem(new Predicate<ListingItem>() {
+					@Override
+					public boolean apply(ListingItem input)
+					{
+						return DatabaseShareType.RADIO == input.getSpecificChunk(DatabaseShareType.class).getValue();
+					}
+				});
+			}
+			catch(NoSuchElementException nee)
+			{
+				logger.debug("No radio databases found", nee);
+				radioDatabase = null;
+				return;
+			}
 
 			String databaseName = database.getSpecificChunk(ItemName.class).getValue();
 			int itemId = database.getSpecificChunk(ItemId.class).getValue();
@@ -169,6 +181,7 @@ public class Session
 				radioDatabase.addPlaylist(null, playlist);
 
 			}
+
 		}
 	}
 

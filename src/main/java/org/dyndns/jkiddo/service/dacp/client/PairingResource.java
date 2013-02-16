@@ -96,7 +96,8 @@ public class PairingResource extends MDNSResource implements IPairingResource
 		new Random().nextBytes(code);
 		System.arraycopy(code, 0, PAIRING_RAW, 16, 8);
 
-		if(expectedPairingCode(actualCode, database.getPairCode()).equals(pairingcode))
+		String match = expectedPairingCode(actualCode, database.getPairCode());
+		if(match.equals(pairingcode))
 		{
 			database.updateCode(servicename, toHex(code));
 			return new ResponseBuilderImpl().entity(PAIRING_RAW).status(Status.OK).build();

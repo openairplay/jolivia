@@ -82,6 +82,10 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 				database.updateCode(event.getInfo().getName(), null);
 			}
 		}
+		else
+		{
+			logger.debug("No matching code could be found to service: " + event.getInfo().getName());
+		}
 	}
 
 	@Override

@@ -142,9 +142,9 @@ public class RequestHelper
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		connection.setAllowUserInteraction(false);
 		connection.setRequestProperty("Viewer-Only-Client", "1");
-		connection.setRequestProperty("Client-DAAP-Version", "3.11");
-		connection.setRequestProperty("Client-DPAP-Version", "1.1");
-		connection.setRequestProperty("Client-iTunes-Sharing-Version", "3.9");
+//		connection.setRequestProperty("Client-DAAP-Version", "3.11");
+//		connection.setRequestProperty("Client-DPAP-Version", "1.1");
+//		connection.setRequestProperty("Client-iTunes-Sharing-Version", "3.9");
 		connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
 
 		if(!keepalive)

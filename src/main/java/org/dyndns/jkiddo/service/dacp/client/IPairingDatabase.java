@@ -20,9 +20,4 @@ public interface IPairingDatabase
 	String getPairCode();
 
 	String getServiceGuid();
-
-	String getLastSession();
-
-	void setLastSession(String serviceName);
-
 }

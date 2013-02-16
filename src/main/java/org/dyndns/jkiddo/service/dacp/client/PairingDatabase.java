@@ -10,13 +10,14 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.service.dacp.client;
 
-import java.util.Random;
+import java.io.UnsupportedEncodingException;
 
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 
+import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -26,8 +27,11 @@ public class PairingDatabase implements IPairingDatabase
 {
 	public static final String DB_URL = "DB_URL";
 
+	private final byte[] serviceguid = "JoliviaRemoteControl".getBytes("UTF-8");
+	private final byte[] randomPairCode = "Jolivia!".getBytes("UTF-8");
+
 	@Inject
-	public PairingDatabase(@Named(DB_URL) String url) throws ClassNotFoundException
+	public PairingDatabase(@Named(DB_URL) String url) throws ClassNotFoundException, UnsupportedEncodingException
 	{
 		Class.forName("org.sqlite.JDBC");
 
@@ -35,17 +39,14 @@ public class PairingDatabase implements IPairingDatabase
 		dbHandler = dbi.open().attach(PairingDatabaseCommands.class);
 		dbHandler.createTable();
 
-		Random random = new Random();
-
-		// generate pair code
-		byte[] pair = new byte[8];
-		random.nextBytes(pair);
+		// generate random pair code
+		byte[] pair = randomPairCode;
+		Preconditions.checkState(randomPairCode.length == 8, "Random paircode did not match expected length");
 		dbHandler.updateEntry(KEY_PAIRING_CODE, toHex(pair));
 
-		// generate remote guid
+		// generate remote guid of size 20 bytes
 		// this is the thing that uniquely identifies this remote
-		byte[] serviceguid = new byte[20];
-		random.nextBytes(serviceguid);
+		Preconditions.checkState(serviceguid.length == 20, "Service GUID did not match expected length");
 		dbHandler.updateEntry(KEY_SERVICE_GUID, toHex(serviceguid));
 	}
 
@@ -57,7 +58,6 @@ public class PairingDatabase implements IPairingDatabase
 	private final static String FIELD_PAIR_GUID = "guid";
 	private final static String KEY_PAIRING_CODE = "pair";
 	private final static String KEY_SERVICE_GUID = "serviceguid";
-	private final static String KEY_LAST_SESSION = "lastsession";
 
 	private interface PairingDatabaseCommands
 	{
@@ -95,18 +95,6 @@ public class PairingDatabase implements IPairingDatabase
 	public String getServiceGuid()
 	{
 		return findCode(KEY_SERVICE_GUID);
-	}
-
-	@Override
-	public String getLastSession()
-	{
-		return findCode(KEY_LAST_SESSION);
-	}
-
-	@Override
-	public void setLastSession(String serviceName)
-	{
-		updateCode(KEY_LAST_SESSION, serviceName);
 	}
 
 	public static String toHex(byte[] code)

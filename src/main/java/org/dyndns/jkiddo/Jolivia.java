@@ -21,6 +21,7 @@ import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.raop.client.ISpeakerListener;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
+import org.dyndns.jkiddo.service.daap.client.Session;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
@@ -42,59 +43,75 @@ public class Jolivia
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
 
-		new Jolivia(new DeskMusicStoreReader());
+		new Jolivia(new IClientSessionListener() {
+
+			@Override
+			public void tearDownSession(String server, int port)
+			{
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void registerNewSession(Session session) throws Exception
+			{
+				session.getRemoteControl().play();
+				// TODO Auto-generated method stub
+
+			}
+		}, new DeskMusicStoreReader());
 	}
-	
+
 	public Jolivia(IClientSessionListener clientSessionListener) throws Exception
 	{
 		this(4000, 5000, 1337, "Jolivia", clientSessionListener, null, null, null);
 	}
-	
+
 	public Jolivia(IClientSessionListener clientSessionListener, IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
 	{
 		this(4000, 5000, 1337, "Jolivia", clientSessionListener, null, musicStoreReader, imageStoreReader);
 	}
-	
+
 	public Jolivia(IClientSessionListener clientSessionListener, IImageStoreReader imageStoreReader) throws Exception
 	{
 		this(4000, 5000, 1337, "Jolivia", clientSessionListener, null, null, imageStoreReader);
 	}
-	
+
 	public Jolivia(IClientSessionListener clientSessionListener, IMusicStoreReader musicStoreReader) throws Exception
 	{
 		this(4000, 5000, 1337, "Jolivia", clientSessionListener, null, musicStoreReader, null);
 	}
-	
+
 	public Jolivia(ISpeakerListener speakerListener) throws Exception
 	{
 		this(4000, 5000, 1337, "Jolivia", null, speakerListener, null, null);
 	}
-	
+
 	public Jolivia(ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader) throws Exception
 	{
 		this(4000, 5000, 1337, "Jolivia", null, speakerListener, musicStoreReader, null);
 	}
-	
+
 	public Jolivia(ISpeakerListener speakerListener, IImageStoreReader imageStoreReader) throws Exception
 	{
 		this(4000, 5000, 1337, "Jolivia", null, speakerListener, null, imageStoreReader);
 	}
-	
+
 	public Jolivia(ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
 	{
 		this(4000, 5000, 1337, "Jolivia", null, speakerListener, musicStoreReader, imageStoreReader);
 	}
-	
+
 	public Jolivia(IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
 	{
 		this(4000, 5000, 1337, "Jolivia", clientSessionListener, speakerListener, musicStoreReader, imageStoreReader);
 	}
-	
+
 	public Jolivia(IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader) throws Exception
 	{
 		this(4000, 5000, 1337, "Jolivia", clientSessionListener, speakerListener, musicStoreReader, null);
 	}
-	
+
 	public Jolivia(IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IImageStoreReader imageStoreReader) throws Exception
 	{
 		this(4000, 5000, 1337, "Jolivia", clientSessionListener, speakerListener, null, imageStoreReader);
@@ -109,7 +126,7 @@ public class Jolivia
 	{
 		this(4000, 5000, 1337, "Jolivia", null, null, null, imageStoreReader);
 	}
-	
+
 	public Jolivia(IMusicStoreReader musicStoreReader) throws Exception
 	{
 		this(4000, 5000, 1337, "Jolivia", null, null, musicStoreReader, null);
