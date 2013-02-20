@@ -25,6 +25,9 @@ import javax.ws.rs.core.UriInfo;
 public interface IRemoteControlResource
 {
 	public final static String DACP_TYPE = "_dacp._tcp.local.";
+	/**
+	 * Service running when the iTunes instance is already paired with some remotes. 
+	 */
 	public final static String TOUCH_ABLE_TYPE = "_touch-able._tcp.local.";
 
 	@GET

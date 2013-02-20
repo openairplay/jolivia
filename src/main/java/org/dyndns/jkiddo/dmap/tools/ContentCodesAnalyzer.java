@@ -144,7 +144,7 @@ public class ContentCodesAnalyzer
 		if(args.length == 0)
 		{
 			FileDialog dialog = new FileDialog(new Frame(), "Select file...", FileDialog.LOAD);
-			dialog.show();
+			dialog.setVisible(true);
 
 			String d = dialog.getDirectory();
 			String f = dialog.getFile();
