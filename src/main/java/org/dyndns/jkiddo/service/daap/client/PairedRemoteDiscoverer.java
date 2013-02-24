@@ -25,7 +25,6 @@ import org.dyndns.jkiddo.service.dacp.server.IRemoteControlResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -76,9 +75,9 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 				logger.debug("About to pair with " + event.getInfo().getServer());
 				// If code is != null, we previously have been paired with this library. It does not mean that we still are.
 				final String host;
-				if(!Strings.isNullOrEmpty(event.getInfo().getServer()))
-					host = event.getInfo().getServer();
-				else
+				// if(!Strings.isNullOrEmpty(event.getInfo().getServer()))
+				// host = event.getInfo().getServer();
+				// else
 					host = event.getInfo().getHostAddresses()[0];
 
 				this.clientSessionListener.registerNewSession(new Session(host, event.getInfo().getPort(), code));
