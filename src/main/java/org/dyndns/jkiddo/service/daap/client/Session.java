@@ -65,7 +65,7 @@ public class Session
 	private final String host;
 	private long revision = 1;
 	private final int port, sessionId;
-	private final Database database, radioDatabase;
+	protected final Database database, radioDatabase;
 
 	private final Library library;
 
@@ -185,7 +185,7 @@ public class Session
 		}
 	}
 
-	String getRequestBase()
+	protected String getRequestBase()
 	{
 		return String.format("http://%s:%d", host, port);
 	}

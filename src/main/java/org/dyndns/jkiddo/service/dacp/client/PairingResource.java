@@ -29,6 +29,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.slf4j.Logger;
@@ -77,16 +78,6 @@ public class PairingResource extends MDNSResource implements IPairingResource
 
 	private static final byte[] PAIRING_RAW = new byte[] { 0x63, 0x6d, 0x70, 0x61, 0x00, 0x00, 0x00, 0x3a, 0x63, 0x6d, 0x70, 0x67, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x63, 0x6d, 0x6e, 0x6d, 0x00, 0x00, 0x00, 0x16, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x69, 0x73, 0x74, 0x72, 0x61, 0x74, 0x6f, 0x72, (byte) 0xe2, (byte) 0x80, (byte) 0x99, 0x73, 0x20, 0x69, 0x50, 0x6f, 0x64, 0x63, 0x6d, 0x74, 0x79, 0x00, 0x00, 0x00, 0x04, 0x69, 0x50, 0x6f, 0x64 };
 
-	public static String toHex(byte[] code)
-	{
-		StringBuilder sb = new StringBuilder();
-		for(byte b : code)
-		{
-			sb.append(String.format("%02x", b & 0xff));
-		}
-		return sb.toString().toUpperCase();
-	}
-
 	@Override
 	@GET
 	@Path("pair")
@@ -99,7 +90,7 @@ public class PairingResource extends MDNSResource implements IPairingResource
 		String match = expectedPairingCode(actualCode, database.getPairCode());
 		if(match.equals(pairingcode))
 		{
-			database.updateCode(servicename, toHex(code));
+			database.updateCode(servicename, Jolivia.toHex(code));
 			return new ResponseBuilderImpl().entity(PAIRING_RAW).status(Status.OK).build();
 		}
 		// TODO Response is not verified to be correct in iTunes regi - it is however better than nothing.
@@ -132,6 +123,6 @@ public class PairingResource extends MDNSResource implements IPairingResource
 			os.write(0);
 		}
 
-		return toHex(md5.digest(os.toByteArray()));
+		return Jolivia.toHex(md5.digest(os.toByteArray()));
 	}
 }

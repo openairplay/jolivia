@@ -12,6 +12,7 @@ package org.dyndns.jkiddo.service.dacp.client;
 
 import java.io.UnsupportedEncodingException;
 
+import org.dyndns.jkiddo.Jolivia;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
@@ -27,8 +28,8 @@ public class PairingDatabase implements IPairingDatabase
 {
 	public static final String DB_URL = "DB_URL";
 
-	private final byte[] serviceguid = "JoliviaRemoteControl".getBytes("UTF-8");
-	private final byte[] randomPairCode = "Jolivia!".getBytes("UTF-8");
+	private final String serviceguid = Jolivia.toHex("JoliviaRemoteControl".getBytes("UTF-8"));
+	private final String randomPairCode = Jolivia.toHex("Jolivia!".getBytes("UTF-8"));
 
 	@Inject
 	public PairingDatabase(@Named(DB_URL) String url) throws ClassNotFoundException, UnsupportedEncodingException
@@ -39,15 +40,13 @@ public class PairingDatabase implements IPairingDatabase
 		dbHandler = dbi.open().attach(PairingDatabaseCommands.class);
 		dbHandler.createTable();
 
-		// generate random pair code
-		byte[] pair = randomPairCode;
-		Preconditions.checkState(randomPairCode.length == 8, "Random paircode did not match expected length");
-		dbHandler.updateEntry(KEY_PAIRING_CODE, toHex(pair));
+		// assert random pair code
+		Preconditions.checkState(randomPairCode.length() == 16, "Random paircode did not match expected length");
+		dbHandler.updateEntry(KEY_PAIRING_CODE, randomPairCode);
 
-		// generate remote guid of size 20 bytes
-		// this is the thing that uniquely identifies this remote
-		Preconditions.checkState(serviceguid.length == 20, "Service GUID did not match expected length");
-		dbHandler.updateEntry(KEY_SERVICE_GUID, toHex(serviceguid));
+		// assert the guid that uniquely identifies this remote
+		Preconditions.checkState(serviceguid.length() == 40, "Service GUID did not match expected length");
+		dbHandler.updateEntry(KEY_SERVICE_GUID, serviceguid);
 	}
 
 	private final DBI dbi;
@@ -95,15 +94,5 @@ public class PairingDatabase implements IPairingDatabase
 	public String getServiceGuid()
 	{
 		return findCode(KEY_SERVICE_GUID);
-	}
-
-	public static String toHex(byte[] code)
-	{
-		StringBuilder sb = new StringBuilder();
-		for(byte b : code)
-		{
-			sb.append(String.format("%02x", b & 0xff));
-		}
-		return sb.toString().toUpperCase();
 	}
 }

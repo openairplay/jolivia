@@ -55,8 +55,6 @@ public class Jolivia
 			public void registerNewSession(Session session) throws Exception
 			{
 				session.getRemoteControl().play();
-				// TODO Auto-generated method stub
-
 			}
 		}, new DeskMusicStoreReader());
 	}
@@ -148,5 +146,15 @@ public class Jolivia
 		server.start();
 		logger.info(name + " started");
 		server.join();
+	}
+	
+	public static String toHex(byte[] code)
+	{
+		StringBuilder sb = new StringBuilder();
+		for(byte b : code)
+		{
+			sb.append(String.format("%02x", b & 0xff));
+		}
+		return sb.toString().toUpperCase();
 	}
 }
