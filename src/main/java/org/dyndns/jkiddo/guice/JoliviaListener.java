@@ -26,7 +26,7 @@ import org.dyndns.jkiddo.raop.server.AirPlayResourceWrapper;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
 import org.dyndns.jkiddo.service.daap.client.PairedRemoteDiscoverer;
 import org.dyndns.jkiddo.service.daap.client.Session;
-import org.dyndns.jkiddo.service.daap.client.UnpairedRemoteDiscoverer;
+import org.dyndns.jkiddo.service.daap.client.UnpairedRemoteCrawler;
 import org.dyndns.jkiddo.service.daap.server.DAAPResource;
 import org.dyndns.jkiddo.service.daap.server.IMusicLibrary;
 import org.dyndns.jkiddo.service.daap.server.MusicItemManager;
@@ -203,11 +203,12 @@ public class JoliviaListener extends GuiceServletContextListener
 				bind(Integer.class).annotatedWith(Names.named(TouchRemoteResource.DACP_CLIENT_PAIRING_CODE)).toInstance(pairingCode);
 				bind(Integer.class).annotatedWith(Names.named(TouchRemoteResource.DACP_CLIENT_PORT_NAME)).toInstance(hostingPort);
 				bind(Integer.class).annotatedWith(Names.named(TouchAbleServerResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);
+				bind(Integer.class).annotatedWith(Names.named(UnpairedRemoteCrawler.SERVICE_PORT_NAME)).toInstance(hostingPort);
 
 				bind(String.class).annotatedWith(Names.named(PairingDatabase.DB_URL)).toInstance(new String("jdbc:sqlite:db"));
 				bind(IPairingDatabase.class).to(PairingDatabase.class).asEagerSingleton();
 				bind(PairedRemoteDiscoverer.class).asEagerSingleton();
-				bind(UnpairedRemoteDiscoverer.class).asEagerSingleton();
+				bind(UnpairedRemoteCrawler.class).asEagerSingleton();
 				bind(ITouchRemoteResource.class).to(TouchRemoteResource.class);
 				bind(ITouchAbleServerResource.class).to(TouchAbleServerResource.class);
 				bind(IClientSessionListener.class).toInstance(clientSessionListener);

@@ -21,6 +21,8 @@ import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.raop.client.ISpeakerListener;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
+import org.dyndns.jkiddo.service.daap.client.Library;
+import org.dyndns.jkiddo.service.daap.client.RemoteControl;
 import org.dyndns.jkiddo.service.daap.client.Session;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
@@ -50,7 +52,13 @@ public class Jolivia {
 
 			@Override
 			public void registerNewSession(Session session) throws Exception {
-				session.getRemoteControl().play();
+				RemoteControl remoteControl = session.getRemoteControl();
+				Library library = session.getLibrary();
+
+				// Now do stuff :)
+				remoteControl.play();
+				remoteControl.getNowPlaying();
+				library.getAllAlbums();
 			}
 		}, new DeskMusicStoreReader());
 	}
