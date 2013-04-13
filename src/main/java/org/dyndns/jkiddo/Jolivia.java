@@ -41,7 +41,6 @@ public class Jolivia {
 	public static void main(String[] args) throws Exception {
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
-
 		new Jolivia(new IClientSessionListener() {
 
 			@Override

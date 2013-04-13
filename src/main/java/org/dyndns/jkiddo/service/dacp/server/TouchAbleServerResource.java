@@ -31,6 +31,7 @@ import javax.ws.rs.core.UriInfo;
 import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.guice.JoliviaListener;
+import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
 
 import com.google.inject.Singleton;
@@ -41,12 +42,14 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 {
 	public static final String DACP_SERVER_PORT_NAME = "DACP_SERVER_PORT_NAME";
 	private final String name;
+	private final String serviceGuid;
 
 	@Inject
-	public TouchAbleServerResource(JmmDNS mDNS, @Named(DACP_SERVER_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName) throws IOException
+	public TouchAbleServerResource(JmmDNS mDNS, @Named(DACP_SERVER_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName, IPairingDatabase pairingDatabase) throws IOException
 	{
 		super(mDNS, port);
 		this.name = applicationName;
+		this.serviceGuid = pairingDatabase.getServiceGuid();
 		this.signUp();
 	}
 
@@ -207,24 +210,27 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	protected ServiceInfo getServiceInfoToRegister()
 	{
-		String hash = null;
+		String hexedHostname = null;
 		try {
-			hash = Jolivia.toHex(hostname.getBytes("UTF-8"));
+			hexedHostname = Jolivia.toHex(hostname.getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		final HashMap<String, String> records = new HashMap<String, String>();
-		records.put("CtlN", hash);
-		records.put("OSsi", "0x1F6");
 		records.put("Ver", "131073");
-		records.put("txtvers", "1");
+		records.put("CtlN", name);
+		records.put("OSsi", "0x4E8DAC");
+		records.put("iV", "196617");
+		records.put("DbId", hexedHostname);
 		records.put("DvTy", "iTunes");
-		records.put("DvSv", "2049");
-		records.put("DbId", hash);
+		records.put("txtvers", "1");
+		records.put("RmSV", "65536");
+		records.put("DvSv", "2818");
+		
 
-		return ServiceInfo.create(TOUCH_ABLE_SERVER, hash, port, 0, 0, records);
+		return ServiceInfo.create(TOUCH_ABLE_SERVER, serviceGuid, port, 0, 0, records);
 	}
 
 	@Override
@@ -257,5 +263,14 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	public Response update(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
 	{
 		throw new NotImplementedException();
+	}
+
+	@Override
+	@GET
+	@Path("ctrl-int")
+	public Response ctrlInt(@Context HttpServletRequest httpServletRequest,
+			@Context HttpServletResponse httpServletResponse) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

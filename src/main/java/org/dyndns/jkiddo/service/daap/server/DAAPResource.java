@@ -40,6 +40,7 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsQuery;
 import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsUpdate;
 import org.dyndns.jkiddo.dmap.chunks.dmap.TimeoutInterval;
 import org.dyndns.jkiddo.guice.JoliviaListener;
+import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.Util;
 
@@ -61,32 +62,39 @@ public class DAAPResource extends DMAPResource implements IMusicLibrary
 	private static final String ITSH_VERSION_KEY = "iTSh Version";
 	private static final String DAAP_VERSION_KEY = "Version";
 	private static final String PASSWORD_KEY = "Password";
+	private final String serviceGuid;
 
 	@Inject
-	public DAAPResource(JmmDNS mDNS, @Named(DAAP_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName, MusicItemManager itemManager) throws IOException
+	public DAAPResource(JmmDNS mDNS, @Named(DAAP_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName, MusicItemManager itemManager, IPairingDatabase pairingDatabase) throws IOException
 	{
 		super(mDNS, port, itemManager);
 		this.name = applicationName;
 		this.signUp();
+		this.serviceGuid = pairingDatabase.getServiceGuid();
 	}
 
 	@Override
 	protected ServiceInfo getServiceInfoToRegister()
 	{
-		final String hash;
+		final String hexedHostname;
 		try {
-			hash = Jolivia.toHex(hostname.getBytes("UTF-8"));
+			hexedHostname = Jolivia.toHex(hostname.getBytes("UTF-8"));
 		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 		HashMap<String, String> records = new HashMap<String, String>();
-		records.put(TXT_VERSION_KEY, TXT_VERSION);
-		records.put(DATABASE_ID_KEY, hash);
-		records.put(MACHINE_ID_KEY, hash);
-		records.put(MACHINE_NAME_KEY, hostname);
-		records.put(ITSH_VERSION_KEY, DmapUtil.MUSIC_SHARING_VERSION_201 + "");
-		records.put(DAAP_VERSION_KEY, DmapUtil.APRO_VERSION_3011 + "");
+		records.put(MACHINE_NAME_KEY, name);
+		records.put("OSsi", "0x4E8DAC");
 		records.put(PASSWORD_KEY, "0");
+		records.put("Media Kinds Shared", "0");
+		records.put(TXT_VERSION_KEY, TXT_VERSION);
+		records.put(MACHINE_ID_KEY, hexedHostname);		
+		records.put(DAAP_VERSION_KEY, DmapUtil.APRO_VERSION_3011 + "");
+		records.put(ITSH_VERSION_KEY, DmapUtil.MUSIC_SHARING_VERSION_201 + "");
+		records.put("MID", "0x" + serviceGuid);
+		records.put("dmc", "131081");
+		records.put(DATABASE_ID_KEY, hexedHostname);
+		
 		return ServiceInfo.create(DAAP_SERVICE_TYPE, name, port, 0, 0, records);
 	}
 

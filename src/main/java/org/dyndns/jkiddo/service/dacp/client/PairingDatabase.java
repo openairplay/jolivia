@@ -28,7 +28,7 @@ public class PairingDatabase implements IPairingDatabase
 {
 	public static final String DB_URL = "DB_URL";
 
-	private final String serviceguid = Jolivia.toHex("Jolivia".getBytes("UTF-8"));
+	private final String serviceguid = Jolivia.toHex(new StringBuilder("Jolivia!").reverse().toString().getBytes("UTF-8"));
 	private final String randomPairCode = Jolivia.toHex("Jolivia!".getBytes("UTF-8"));
 
 	public String getRandomPairCode() {
@@ -49,7 +49,7 @@ public class PairingDatabase implements IPairingDatabase
 		dbHandler.updateEntry(KEY_PAIRING_CODE, randomPairCode);
 
 		// assert the guid that uniquely identifies this remote
-		Preconditions.checkState(serviceguid.length() == 14, "Service GUID did not match expected length");
+		Preconditions.checkState(serviceguid.length() == 16, "Service GUID did not match expected length");
 		dbHandler.updateEntry(KEY_SERVICE_GUID, serviceguid);
 	}
 

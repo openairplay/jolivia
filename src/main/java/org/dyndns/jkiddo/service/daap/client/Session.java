@@ -106,6 +106,7 @@ public class Session
 		// start a session with the itunes server
 		this.host = host;
 		this.port = port;
+		ServerInfoResponse serverInfo = getServerInfo();
 
 		// http://192.168.254.128:3689/login?pairing-guid=0x0000000000000001
 		logger.debug(String.format("trying login for host=%s and guid=%s", host, pairingGuid));
@@ -113,6 +114,8 @@ public class Session
 
 		sessionId = loginResponse.getSessionId().getValue();
 
+		getControlInt();
+		
 		// Update revision at once. As the initial call, this does not block but simply updates the revision.
 		getUpdateBlocking();
 		library = new Library(this);
@@ -203,6 +206,12 @@ public class Session
 	public ServerInfoResponse getServerInfo() throws Exception
 	{
 		ServerInfoResponse serverInfoResponse = RequestHelper.requestParsed(String.format("%s/server-info", this.getRequestBase()));
+		return serverInfoResponse;
+	}
+	
+	public Object getControlInt() throws Exception
+	{
+		Object serverInfoResponse = RequestHelper.requestParsed(String.format("%s/ctrl-int", this.getRequestBase()));
 		return serverInfoResponse;
 	}
 

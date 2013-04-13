@@ -39,6 +39,10 @@ public interface ITouchAbleServerResource
 	public Response logout(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long session_id);
 
 	@GET
+	@Path("ctrl-int")
+	public Response ctrlInt(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse);
+	
+	@GET
 	@Path("ctrl-int/1/pause")
 	public String pause(@QueryParam("session-id") long session_id);
 

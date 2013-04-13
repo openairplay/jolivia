@@ -34,10 +34,10 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 {
 	public static final Logger logger = LoggerFactory.getLogger(PairedRemoteDiscoverer.class);
 
-	private final JmmDNS mDNS;
+	private JmmDNS mDNS;
 	private final Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
-	private final IPairingDatabase database;
-	private final IClientSessionListener clientSessionListener;
+	private IPairingDatabase database;
+	private IClientSessionListener clientSessionListener;
 
 	@Inject
 	public PairedRemoteDiscoverer(JmmDNS mDNS, IPairingDatabase database, IClientSessionListener clientSessionListener)

@@ -106,10 +106,11 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	public Response login(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException
 	{
 		if(isRemoteControlRequest(httpServletRequest))
-			return remoteControlResource.login(httpServletRequest, httpServletResponse, guid, value);
+			return musicLibraryResource.login(httpServletRequest, httpServletResponse);
+//			return remoteControlResource.login(httpServletRequest, httpServletResponse, guid, value);
 		return login(httpServletRequest, httpServletResponse);
 	}
-
+	
 	@Override
 	@Path("update")
 	@GET
@@ -374,5 +375,13 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	public String fpSetup(@QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.fpSetup(session_id);
+	}
+
+	@Override
+	@GET
+	@Path("ctrl-int")
+	public Response ctrlInt(@Context HttpServletRequest httpServletRequest,
+			@Context HttpServletResponse httpServletResponse) {
+		return remoteControlResource.ctrlInt(httpServletRequest, httpServletResponse);
 	}
 }
