@@ -3,6 +3,7 @@ package org.dyndns.jkiddo.service.daap.server;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -19,6 +20,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.dmap.DmapUtil;
 import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationMethod;
@@ -71,8 +73,12 @@ public class DAAPResource extends DMAPResource implements IMusicLibrary
 	@Override
 	protected ServiceInfo getServiceInfoToRegister()
 	{
-		String hash = Integer.toHexString(hostname.hashCode()).toUpperCase();
-		hash = (hash + hash).substring(0, 13);
+		final String hash;
+		try {
+			hash = Jolivia.toHex(hostname.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
 		HashMap<String, String> records = new HashMap<String, String>();
 		records.put(TXT_VERSION_KEY, TXT_VERSION);
 		records.put(DATABASE_ID_KEY, hash);

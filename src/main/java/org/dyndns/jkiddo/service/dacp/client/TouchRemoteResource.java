@@ -41,12 +41,12 @@ import com.google.inject.name.Named;
 import com.sun.jersey.core.spi.factory.ResponseBuilderImpl;
 
 @Singleton
-public class PairingResource extends MDNSResource implements IPairingResource
+public class TouchRemoteResource extends MDNSResource implements ITouchRemoteResource
 {
 	public static final String DACP_CLIENT_PORT_NAME = "DACP_CLIENT_PORT_NAME";
 	public static final String DACP_CLIENT_PAIRING_CODE = "DACP_CLIENT_PAIRING_CODE";
 
-	public final static Logger logger = LoggerFactory.getLogger(PairingResource.class);
+	public final static Logger logger = LoggerFactory.getLogger(TouchRemoteResource.class);
 
 	private final IPairingDatabase database;
 	private final Integer actualCode;
@@ -67,7 +67,7 @@ public class PairingResource extends MDNSResource implements IPairingResource
 	}
 
 	@Inject
-	public PairingResource(JmmDNS mDNS, @Named(DACP_CLIENT_PORT_NAME) Integer port, IPairingDatabase database, @Named(DACP_CLIENT_PAIRING_CODE) Integer code, @Named(JoliviaListener.APPLICATION_NAME) String applicationName) throws IOException
+	public TouchRemoteResource(JmmDNS mDNS, @Named(DACP_CLIENT_PORT_NAME) Integer port, IPairingDatabase database, @Named(DACP_CLIENT_PAIRING_CODE) Integer code, @Named(JoliviaListener.APPLICATION_NAME) String applicationName) throws IOException
 	{
 		super(mDNS, port);
 		this.actualCode = code;
@@ -76,7 +76,7 @@ public class PairingResource extends MDNSResource implements IPairingResource
 		this.signUp();
 	}
 
-	private static final byte[] PAIRING_RAW = new byte[] { 0x63, 0x6d, 0x70, 0x61, 0x00, 0x00, 0x00, 0x3a, 0x63, 0x6d, 0x70, 0x67, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x63, 0x6d, 0x6e, 0x6d, 0x00, 0x00, 0x00, 0x16, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x69, 0x73, 0x74, 0x72, 0x61, 0x74, 0x6f, 0x72, (byte) 0xe2, (byte) 0x80, (byte) 0x99, 0x73, 0x20, 0x69, 0x50, 0x6f, 0x64, 0x63, 0x6d, 0x74, 0x79, 0x00, 0x00, 0x00, 0x04, 0x69, 0x50, 0x6f, 0x64 };
+	public static final byte[] PAIRING_RAW = new byte[] { 0x63, 0x6d, 0x70, 0x61, 0x00, 0x00, 0x00, 0x3a, 0x63, 0x6d, 0x70, 0x67, 0x00, 0x00, 0x00, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x63, 0x6d, 0x6e, 0x6d, 0x00, 0x00, 0x00, 0x16, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x69, 0x73, 0x74, 0x72, 0x61, 0x74, 0x6f, 0x72, (byte) 0xe2, (byte) 0x80, (byte) 0x99, 0x73, 0x20, 0x69, 0x50, 0x6f, 0x64, 0x63, 0x6d, 0x74, 0x79, 0x00, 0x00, 0x00, 0x04, 0x69, 0x50, 0x6f, 0x64 };
 
 	@Override
 	@GET
@@ -108,15 +108,15 @@ public class PairingResource extends MDNSResource implements IPairingResource
 		values.put("txtvers", "1");
 		values.put("Pair", database.getPairCode());
 
-		return ServiceInfo.create(REMOTE_TYPE, database.getServiceGuid(), this.port, 0, 0, values);
+		return ServiceInfo.create(TOUCH_REMOTE_CLIENT, database.getServiceGuid(), this.port, 0, 0, values);
 	}
 
-	private static String expectedPairingCode(Integer actualCode, String databaseCode) throws IOException
+	public static String expectedPairingCode(Integer actualCode, String databaseCode) throws IOException
 	{
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		os.write(databaseCode.getBytes("UTF-8"));
 
-		byte codeAsBytes[] = actualCode.toString().getBytes("UTF-8");
+		byte codeAsBytes[] = String.format("%04d", actualCode).getBytes("UTF-8");
 		for(int c = 0; c < codeAsBytes.length; c++)
 		{
 			os.write(codeAsBytes[c]);

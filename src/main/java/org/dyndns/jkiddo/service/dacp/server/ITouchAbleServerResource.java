@@ -22,18 +22,18 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-public interface IRemoteControlResource
+public interface ITouchAbleServerResource
 {
 	public final static String DACP_TYPE = "_dacp._tcp.local.";
 	/**
 	 * Service running when the iTunes instance is already paired with some remotes. 
 	 */
-	public final static String TOUCH_ABLE_TYPE = "_touch-able._tcp.local.";
+	public final static String TOUCH_ABLE_SERVER = "_touch-able._tcp.local.";
 
 	@GET
 	@Path("login")
 	public Response login(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException;
-
+	
 	@GET
 	@Path("logout")
 	public Response logout(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long session_id);

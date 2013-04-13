@@ -42,7 +42,7 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.Status;
 import org.dyndns.jkiddo.dmap.chunks.dmap.UpdateResponse;
 import org.dyndns.jkiddo.dmap.chunks.dmap.UpdateType;
 
-public abstract class DMAPResource extends MDNSResource implements ILibraryResource
+public abstract class DMAPResource extends MDNSResource implements ILibraryResource 
 {
 	final protected IItemManager itemManager;
 	protected String name;

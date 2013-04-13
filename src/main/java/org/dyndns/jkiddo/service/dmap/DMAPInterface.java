@@ -25,8 +25,8 @@ import javax.ws.rs.core.UriInfo;
 
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.service.daap.server.IMusicLibrary;
-import org.dyndns.jkiddo.service.dacp.client.IPairingResource;
-import org.dyndns.jkiddo.service.dacp.server.IRemoteControlResource;
+import org.dyndns.jkiddo.service.dacp.client.ITouchRemoteResource;
+import org.dyndns.jkiddo.service.dacp.server.ITouchAbleServerResource;
 import org.dyndns.jkiddo.service.dpap.server.IImageLibrary;
 
 import com.google.common.base.Strings;
@@ -35,10 +35,10 @@ import com.google.inject.Singleton;
 
 @Path("/")
 @Singleton
-public class DMAPInterface implements IRemoteControlResource, IPairingResource, IMusicLibrary, IImageLibrary
+public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteResource, IMusicLibrary, IImageLibrary
 {
-	private final IRemoteControlResource remoteControlResource;
-	private final IPairingResource pairingResource;
+	private final ITouchAbleServerResource remoteControlResource;
+	private final ITouchRemoteResource pairingResource;
 	private final IMusicLibrary musicLibraryResource;
 	private final IImageLibrary imageLibraryResource;
 
@@ -71,7 +71,7 @@ public class DMAPInterface implements IRemoteControlResource, IPairingResource, 
 	}
 
 	@Inject
-	public DMAPInterface(IRemoteControlResource remoteControlResource, IPairingResource pairingResource, IMusicLibrary musicLibraryResource, IImageLibrary imageLibraryResource)
+	public DMAPInterface(ITouchAbleServerResource remoteControlResource, ITouchRemoteResource pairingResource, IMusicLibrary musicLibraryResource, IImageLibrary imageLibraryResource)
 	{
 		this.remoteControlResource = remoteControlResource;
 		this.pairingResource = pairingResource;

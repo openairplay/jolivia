@@ -20,9 +20,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
-public interface IPairingResource
+public interface ITouchRemoteResource
 {
-	public final static String REMOTE_TYPE = "_touch-remote._tcp.local.";
+	public final static String TOUCH_REMOTE_CLIENT = "_touch-remote._tcp.local.";
 
 	@GET
 	@Path("pair")

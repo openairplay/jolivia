@@ -26,15 +26,16 @@ import org.dyndns.jkiddo.raop.server.AirPlayResourceWrapper;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
 import org.dyndns.jkiddo.service.daap.client.PairedRemoteDiscoverer;
 import org.dyndns.jkiddo.service.daap.client.Session;
+import org.dyndns.jkiddo.service.daap.client.UnpairedRemoteDiscoverer;
 import org.dyndns.jkiddo.service.daap.server.DAAPResource;
 import org.dyndns.jkiddo.service.daap.server.IMusicLibrary;
 import org.dyndns.jkiddo.service.daap.server.MusicItemManager;
 import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
-import org.dyndns.jkiddo.service.dacp.client.IPairingResource;
+import org.dyndns.jkiddo.service.dacp.client.ITouchRemoteResource;
 import org.dyndns.jkiddo.service.dacp.client.PairingDatabase;
-import org.dyndns.jkiddo.service.dacp.client.PairingResource;
-import org.dyndns.jkiddo.service.dacp.server.IRemoteControlResource;
-import org.dyndns.jkiddo.service.dacp.server.RemoteControlResource;
+import org.dyndns.jkiddo.service.dacp.client.TouchRemoteResource;
+import org.dyndns.jkiddo.service.dacp.server.ITouchAbleServerResource;
+import org.dyndns.jkiddo.service.dacp.server.TouchAbleServerResource;
 import org.dyndns.jkiddo.service.dmap.DMAPInterface;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dpap.server.DPAPResource;
@@ -199,15 +200,16 @@ public class JoliviaListener extends GuiceServletContextListener
 			@Override
 			protected void configure()
 			{
-				bind(Integer.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PAIRING_CODE)).toInstance(pairingCode);
-				bind(Integer.class).annotatedWith(Names.named(PairingResource.DACP_CLIENT_PORT_NAME)).toInstance(hostingPort);
-				bind(Integer.class).annotatedWith(Names.named(RemoteControlResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);
+				bind(Integer.class).annotatedWith(Names.named(TouchRemoteResource.DACP_CLIENT_PAIRING_CODE)).toInstance(pairingCode);
+				bind(Integer.class).annotatedWith(Names.named(TouchRemoteResource.DACP_CLIENT_PORT_NAME)).toInstance(hostingPort);
+				bind(Integer.class).annotatedWith(Names.named(TouchAbleServerResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);
 
 				bind(String.class).annotatedWith(Names.named(PairingDatabase.DB_URL)).toInstance(new String("jdbc:sqlite:db"));
 				bind(IPairingDatabase.class).to(PairingDatabase.class).asEagerSingleton();
 				bind(PairedRemoteDiscoverer.class).asEagerSingleton();
-				bind(IPairingResource.class).to(PairingResource.class);
-				bind(IRemoteControlResource.class).to(RemoteControlResource.class);
+				bind(UnpairedRemoteDiscoverer.class).asEagerSingleton();
+				bind(ITouchRemoteResource.class).to(TouchRemoteResource.class);
+				bind(ITouchAbleServerResource.class).to(TouchAbleServerResource.class);
 				bind(IClientSessionListener.class).toInstance(clientSessionListener);
 			}
 		}, new AbstractModule() {

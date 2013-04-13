@@ -11,6 +11,7 @@
 package org.dyndns.jkiddo.service.dacp.server;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 import javax.inject.Inject;
@@ -27,6 +28,7 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
+import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
@@ -35,13 +37,13 @@ import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 
 @Singleton
-public class RemoteControlResource extends MDNSResource implements IRemoteControlResource
+public class TouchAbleServerResource extends MDNSResource implements ITouchAbleServerResource
 {
 	public static final String DACP_SERVER_PORT_NAME = "DACP_SERVER_PORT_NAME";
 	private final String name;
 
 	@Inject
-	public RemoteControlResource(JmmDNS mDNS, @Named(DACP_SERVER_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName) throws IOException
+	public TouchAbleServerResource(JmmDNS mDNS, @Named(DACP_SERVER_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName) throws IOException
 	{
 		super(mDNS, port);
 		this.name = applicationName;
@@ -205,19 +207,24 @@ public class RemoteControlResource extends MDNSResource implements IRemoteContro
 	@Override
 	protected ServiceInfo getServiceInfoToRegister()
 	{
-		String hash = Integer.toHexString(hostname.hashCode()).toUpperCase();
-		hash = (hash + hash).substring(0, 13);
+		String hash = null;
+		try {
+			hash = Jolivia.toHex(hostname.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		final HashMap<String, String> records = new HashMap<String, String>();
-		records.put("CtlN", name + " on " + hostname);
+		records.put("CtlN", hash);
 		records.put("OSsi", "0x1F6");
 		records.put("Ver", "131073");
 		records.put("txtvers", "1");
-		records.put("DvTy", "iTunes(JKiddo Inc)");
+		records.put("DvTy", "iTunes");
 		records.put("DvSv", "2049");
 		records.put("DbId", hash);
 
-		return ServiceInfo.create(TOUCH_ABLE_TYPE, hash, port, 0, 0, records);
+		return ServiceInfo.create(TOUCH_ABLE_SERVER, hash, port, 0, 0, records);
 	}
 
 	@Override

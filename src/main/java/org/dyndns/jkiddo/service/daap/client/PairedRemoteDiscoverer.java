@@ -21,7 +21,7 @@ import javax.jmdns.ServiceEvent;
 
 import org.dyndns.jkiddo.IDiscoverer;
 import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
-import org.dyndns.jkiddo.service.dacp.server.IRemoteControlResource;
+import org.dyndns.jkiddo.service.dacp.server.ITouchAbleServerResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,8 +44,8 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 		this.mDNS = mDNS;
 		this.database = database;
 		this.clientSessionListener = clientSessionListener;
-		this.mDNS.addServiceListener(IRemoteControlResource.TOUCH_ABLE_TYPE, this);
-		this.mDNS.addServiceListener(IRemoteControlResource.DACP_TYPE, this);
+		this.mDNS.addServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
+		this.mDNS.addServiceListener(ITouchAbleServerResource.DACP_TYPE, this);
 		this.mDNS.addNetworkTopologyListener(this);
 	}
 
@@ -100,8 +100,8 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 		JmDNS mdns = event.getDNS();
 		InetAddress address = event.getInetAddress();
 		logger.info("Registered PairedRemoteDiscoverer @ " + address.getHostAddress());
-		mdns.addServiceListener(IRemoteControlResource.TOUCH_ABLE_TYPE, this);
-		mdns.addServiceListener(IRemoteControlResource.DACP_TYPE, this);
+		mdns.addServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
+		mdns.addServiceListener(ITouchAbleServerResource.DACP_TYPE, this);
 		interfaces.put(mdns, address);
 	}
 
@@ -109,8 +109,8 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 	public void inetAddressRemoved(NetworkTopologyEvent event)
 	{
 		JmDNS mdns = event.getDNS();
-		mdns.removeServiceListener(IRemoteControlResource.TOUCH_ABLE_TYPE, this);
-		mdns.removeServiceListener(IRemoteControlResource.DACP_TYPE, this);
+		mdns.removeServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
+		mdns.removeServiceListener(ITouchAbleServerResource.DACP_TYPE, this);
 		mdns.unregisterAllServices();
 		interfaces.remove(mdns);
 	}
