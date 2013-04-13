@@ -49,7 +49,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	{
 		super(mDNS, port);
 		this.name = applicationName;
-		this.serviceGuid = pairingDatabase.getServiceGuid();
+		this.serviceGuid = JoliviaListener.toServiceGuid(applicationName);
 		this.signUp();
 	}
 

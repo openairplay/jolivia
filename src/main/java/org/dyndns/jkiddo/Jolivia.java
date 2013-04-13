@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo;
 
+import java.io.UnsupportedEncodingException;
 import java.util.EnumSet;
 
 import javax.servlet.DispatcherType;
@@ -171,6 +172,14 @@ public class Jolivia {
 		server.start();
 		logger.info(name + " started");
 		server.join();
+	}
+	
+	public static String toHex(String value) {
+		try {
+			return toHex(value.getBytes("UTF-8"));
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	public static String toHex(byte[] code) {

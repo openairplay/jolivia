@@ -108,7 +108,7 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 		values.put("txtvers", "1");
 		values.put("Pair", database.getPairCode());
 
-		return ServiceInfo.create(TOUCH_REMOTE_CLIENT, database.getServiceGuid(), this.port, 0, 0, values);
+		return ServiceInfo.create(TOUCH_REMOTE_CLIENT, Jolivia.toHex("JoliviaRemote"), this.port, 0, 0, values);
 	}
 
 	public static String expectedPairingCode(Integer actualCode, String databaseCode) throws IOException

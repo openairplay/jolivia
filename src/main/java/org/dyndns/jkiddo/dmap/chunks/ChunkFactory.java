@@ -215,6 +215,14 @@ public final class ChunkFactory
 		map.put(new Integer(0x636d696b), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownIK.class); // cmik
 		map.put(new Integer(0x636d7072), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownPR.class); // cmpr
 		map.put(new Integer(0x63617072), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownCAPR.class); // capr
+		map.put(new Integer(0x636d7370), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSP.class); // cmsp
+		map.put(new Integer(0x636d7376), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSV.class); // cmsv
+		map.put(new Integer(0x63617373), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSS.class); // cass
+		map.put(new Integer(0x63616f76), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownOV.class); // caov
+		map.put(new Integer(0x63655347), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSG.class); // ceSG
+		map.put(new Integer(0x636d726c), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownRL.class); // cmrl
+		map.put(new Integer(0x63655358), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownCESX.class); // ceSX
+		
 	}
 
 	public Class<? extends Chunk> getChunkClass(Integer contentCode)

@@ -40,7 +40,6 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsQuery;
 import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsUpdate;
 import org.dyndns.jkiddo.dmap.chunks.dmap.TimeoutInterval;
 import org.dyndns.jkiddo.guice.JoliviaListener;
-import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.Util;
 
@@ -65,12 +64,13 @@ public class DAAPResource extends DMAPResource implements IMusicLibrary
 	private final String serviceGuid;
 
 	@Inject
-	public DAAPResource(JmmDNS mDNS, @Named(DAAP_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName, MusicItemManager itemManager, IPairingDatabase pairingDatabase) throws IOException
+	public DAAPResource(JmmDNS mDNS, @Named(DAAP_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName, MusicItemManager itemManager) throws IOException
 	{
 		super(mDNS, port, itemManager);
 		this.name = applicationName;
+		this.serviceGuid = JoliviaListener.toServiceGuid(applicationName);
 		this.signUp();
-		this.serviceGuid = pairingDatabase.getServiceGuid();
+		
 	}
 
 	@Override

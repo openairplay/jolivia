@@ -15,7 +15,7 @@ import javax.jmdns.impl.JmDNSImpl;
 
 import org.dyndns.jkiddo.IDiscoverer;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownPA;
-import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
+import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.service.dacp.client.ITouchRemoteResource;
 import org.dyndns.jkiddo.service.dacp.client.TouchRemoteResource;
 import org.slf4j.Logger;
@@ -31,21 +31,23 @@ public class UnpairedRemoteCrawler implements IDiscoverer {
 	public static final String SERVICE_PORT_NAME = "SERVICE_PORT_NAME";
 
 	private final JmmDNS mDNS;
-	private final IPairingDatabase database;
 	private final Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
 
 	private Integer port;
 
+	private String serviceGuid;
+
 	@Inject
 	public UnpairedRemoteCrawler(JmmDNS mDNS,
 			IClientSessionListener clientSessionListener,
-			IPairingDatabase database, @Named(SERVICE_PORT_NAME) Integer port) {
+			@Named(SERVICE_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String name) {
 		this.mDNS = mDNS;
-		this.database = database;
+		this.port = port;
+		this.serviceGuid = JoliviaListener.toServiceGuid(name);
 		this.mDNS.addServiceListener(ITouchRemoteResource.TOUCH_REMOTE_CLIENT,
 				this);
 		this.mDNS.addNetworkTopologyListener(this);
-		this.port = port;
+		
 	}
 
 	@Override
@@ -78,7 +80,7 @@ public class UnpairedRemoteCrawler implements IDiscoverer {
 										i,
 										event.getInfo().getPropertyString(
 												"Pair")) + "&servicename="
-								+ database.getServiceGuid();
+								+ serviceGuid;
 						UnknownPA o = RequestHelper.requestParsed(path, false);
 						break;
 					} catch (ConnectException e) {

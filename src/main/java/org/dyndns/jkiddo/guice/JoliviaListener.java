@@ -11,10 +11,12 @@
 package org.dyndns.jkiddo.guice;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.util.Set;
 
 import javax.jmdns.JmmDNS;
 
+import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
 import org.dyndns.jkiddo.jetty.ProxyFilter;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
@@ -53,6 +55,7 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 public class JoliviaListener extends GuiceServletContextListener
 {
+	final private String DB_URL = "jdbc:sqlite:db";
 	final private Integer hostingPort;
 	final private Integer pairingCode;
 	final private Integer airplayPort;
@@ -63,14 +66,24 @@ public class JoliviaListener extends GuiceServletContextListener
 	final private IMusicStoreReader musicStoreReader;
 
 	public static final String APPLICATION_NAME = "APPLICATION_NAME";
+	
+	public static String toServiceGuid(String name)
+	{
+		try {
+			return Jolivia.toHex((name+"1111111111111111").getBytes("UTF-8")).substring(0, 16);
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-	public JoliviaListener(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IImageStoreReader imageStoreReader, IMusicStoreReader musicStoreReader)
+	public JoliviaListener(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IImageStoreReader imageStoreReader, IMusicStoreReader musicStoreReader) throws UnsupportedEncodingException
 	{
 		super();
 		this.hostingPort = port;
 		this.pairingCode = pairingCode;
 		this.airplayPort = airplayPort;
 		this.name = name;
+		
 		if(clientSessionListener == null)
 		{
 			this.clientSessionListener = new IClientSessionListener() {
@@ -205,7 +218,7 @@ public class JoliviaListener extends GuiceServletContextListener
 				bind(Integer.class).annotatedWith(Names.named(TouchAbleServerResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);
 				bind(Integer.class).annotatedWith(Names.named(UnpairedRemoteCrawler.SERVICE_PORT_NAME)).toInstance(hostingPort);
 
-				bind(String.class).annotatedWith(Names.named(PairingDatabase.DB_URL)).toInstance(new String("jdbc:sqlite:db"));
+				bind(String.class).annotatedWith(Names.named(PairingDatabase.DB_URL)).toInstance(DB_URL);
 				bind(IPairingDatabase.class).to(PairingDatabase.class).asEagerSingleton();
 				bind(PairedRemoteDiscoverer.class).asEagerSingleton();
 				bind(UnpairedRemoteCrawler.class).asEagerSingleton();

@@ -53,6 +53,7 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.LoginResponse;
 import org.dyndns.jkiddo.dmap.chunks.dmap.PersistentId;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ServerInfoResponse;
 import org.dyndns.jkiddo.dmap.chunks.dmap.UpdateResponse;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownCI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,7 +107,8 @@ public class Session
 		// start a session with the itunes server
 		this.host = host;
 		this.port = port;
-		ServerInfoResponse serverInfo = getServerInfo();
+		
+		getServerInfo();
 
 		// http://192.168.254.128:3689/login?pairing-guid=0x0000000000000001
 		logger.debug(String.format("trying login for host=%s and guid=%s", host, pairingGuid));
@@ -209,9 +211,9 @@ public class Session
 		return serverInfoResponse;
 	}
 	
-	public Object getControlInt() throws Exception
+	public UnknownCI getControlInt() throws Exception
 	{
-		Object serverInfoResponse = RequestHelper.requestParsed(String.format("%s/ctrl-int", this.getRequestBase()));
+		UnknownCI serverInfoResponse = RequestHelper.requestParsed(String.format("%s/ctrl-int", this.getRequestBase()));
 		return serverInfoResponse;
 	}
 

@@ -31,10 +31,6 @@ public class PairingDatabase implements IPairingDatabase
 	private final String serviceguid = Jolivia.toHex(new StringBuilder("Jolivia!").reverse().toString().getBytes("UTF-8"));
 	private final String randomPairCode = Jolivia.toHex("Jolivia!".getBytes("UTF-8"));
 
-	public String getRandomPairCode() {
-		return randomPairCode;
-	}
-
 	@Inject
 	public PairingDatabase(@Named(DB_URL) String url) throws ClassNotFoundException, UnsupportedEncodingException
 	{

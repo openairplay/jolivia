@@ -20,4 +20,5 @@ public interface IPairingDatabase
 	String getPairCode();
 
 	String getServiceGuid();
+
 }
