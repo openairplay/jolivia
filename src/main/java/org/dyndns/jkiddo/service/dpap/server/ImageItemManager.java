@@ -69,7 +69,7 @@ public class ImageItemManager implements IItemManager
 	}
 
 	@Override
-	public VersionChunk getDpapProtocolVersion()
+	public VersionChunk getProtocolVersion()
 	{
 		return dpapProtocolVersion;
 	}

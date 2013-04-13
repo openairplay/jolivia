@@ -15,7 +15,7 @@ public interface IItemManager
 
 	VersionChunk getDaapProtocolVersion();
 
-	VersionChunk getDpapProtocolVersion();
+	VersionChunk getProtocolVersion();
 
 	String getDMAPKey();
 

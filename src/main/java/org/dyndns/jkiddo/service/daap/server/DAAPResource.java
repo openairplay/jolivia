@@ -23,6 +23,7 @@ import javax.ws.rs.core.UriInfo;
 import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.dmap.DmapUtil;
+import org.dyndns.jkiddo.dmap.chunks.daap.SupportsGroups;
 import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationMethod;
 import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationSchemes;
@@ -37,8 +38,22 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsExtensions;
 import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsIndex;
 import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsPersistentIds;
 import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsQuery;
+import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsResolve;
 import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsUpdate;
 import org.dyndns.jkiddo.dmap.chunks.dmap.TimeoutInterval;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownFP;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownFR;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownMA;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownMQ;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSE;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSL;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSR;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSX;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownTr;
+import org.dyndns.jkiddo.dmap.chunks.unknown.Unknowned;
+import org.dyndns.jkiddo.dmap.chunks.unknown.Unknownml;
+import org.dyndns.jkiddo.dmap.chunks.unknown.Unknowntc;
+import org.dyndns.jkiddo.dmap.chunks.unknown.Unknownto;
 import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.Util;
@@ -48,7 +63,7 @@ import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class DAAPResource extends DMAPResource implements IMusicLibrary
+public class DAAPResource extends DMAPResource<MusicItemManager> implements IMusicLibrary
 {
 	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
 	public static final String DAAP_RESOURCE = "DAAP_IMPLEMENTATION";
@@ -90,7 +105,7 @@ public class DAAPResource extends DMAPResource implements IMusicLibrary
 		records.put(TXT_VERSION_KEY, TXT_VERSION);
 		records.put(MACHINE_ID_KEY, hexedHostname);		
 		records.put(DAAP_VERSION_KEY, DmapUtil.APRO_VERSION_3011 + "");
-		records.put(ITSH_VERSION_KEY, DmapUtil.MUSIC_SHARING_VERSION_201 + "");
+		records.put(ITSH_VERSION_KEY, DmapUtil.MUSIC_SHARING_VERSION_309 + "");
 		records.put("MID", "0x" + serviceGuid);
 		records.put("dmc", "131081");
 		records.put(DATABASE_ID_KEY, hexedHostname);
@@ -107,27 +122,27 @@ public class DAAPResource extends DMAPResource implements IMusicLibrary
 
 		serverInfoResponse.add(new Status(200));
 		serverInfoResponse.add(itemManager.getDmapProtocolVersion());
-		serverInfoResponse.add(itemManager.getDaapProtocolVersion());
-		serverInfoResponse.add(itemManager.getDpapProtocolVersion());
 		serverInfoResponse.add(new ItemName(name));
+		serverInfoResponse.add(itemManager.getDaapProtocolVersion());
+		serverInfoResponse.add(itemManager.getMusicSharingVersion());
+		serverInfoResponse.add(new SupportsExtensions(true));
+		serverInfoResponse.add(new SupportsGroups(3));
+		serverInfoResponse.add(new UnknownSE(0x80000));
+		serverInfoResponse.add(new UnknownMQ(true));
+		serverInfoResponse.add(new UnknownFR(0x64));
+		serverInfoResponse.add(new UnknownTr(true));
+		serverInfoResponse.add(new UnknownSL(true));
+		serverInfoResponse.add(new UnknownSR(true));
+		serverInfoResponse.add(new UnknownFP(2));
+		serverInfoResponse.add(new UnknownSX(111));
+		serverInfoResponse.add(itemManager.getProtocolVersion());
+		serverInfoResponse.add(new Unknowned(true));
+		Unknownml msml = new Unknownml();
+		msml.add(new UnknownMA(0xBF940AB92600L)); //Totally unknown
+		serverInfoResponse.add(msml);
+		serverInfoResponse.add(new LoginRequired(true));
 		serverInfoResponse.add(new TimeoutInterval(1800));
 		serverInfoResponse.add(new SupportsAutoLogout(true));
-
-		// serverInfoResponse.add(new
-		// MusicSharingVersion(DaapUtil.MUSIC_SHARING_VERSION_201));
-
-		// NOTE: the value of the following boolean chunks does not matter!
-		// They are either present (=true) or not (=false).
-
-		// client should perform /login request (create session)
-
-		serverInfoResponse.add(new LoginRequired(true));
-		serverInfoResponse.add(new SupportsExtensions(true));
-		serverInfoResponse.add(new SupportsIndex(true));
-		serverInfoResponse.add(new SupportsBrowse(true));
-		serverInfoResponse.add(new SupportsQuery(true));
-		serverInfoResponse.add(new SupportsPersistentIds(true));
-
 		PasswordMethod authenticationMethod = itemManager.getAuthenticationMethod();
 		if(!(authenticationMethod == PasswordMethod.NO_PASSWORD))
 		{
@@ -146,9 +161,18 @@ public class DAAPResource extends DMAPResource implements IMusicLibrary
 		{
 			serverInfoResponse.add(new AuthenticationMethod(AuthenticationMethod.PasswordMethod.NO_PASSWORD));
 		}
-
-		serverInfoResponse.add(new DatabaseCount(itemManager.getDatabases().size()));
 		serverInfoResponse.add(new SupportsUpdate(true));
+		serverInfoResponse.add(new SupportsPersistentIds(true));
+		serverInfoResponse.add(new SupportsExtensions(true));
+		serverInfoResponse.add(new SupportsBrowse(true));
+		serverInfoResponse.add(new SupportsQuery(true));
+		serverInfoResponse.add(new SupportsIndex(true));
+		serverInfoResponse.add(new SupportsResolve(true));
+		serverInfoResponse.add(new DatabaseCount(itemManager.getDatabases().size()));
+		serverInfoResponse.add(new Unknowntc(0x5169B375)); //Totally unknown
+		serverInfoResponse.add(new Unknownto(7200)); 
+		
+		
 
 		return Util.buildResponse(serverInfoResponse, itemManager.getDMAPKey(), name);
 	}

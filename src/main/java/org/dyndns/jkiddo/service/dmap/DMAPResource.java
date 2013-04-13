@@ -42,12 +42,12 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.Status;
 import org.dyndns.jkiddo.dmap.chunks.dmap.UpdateResponse;
 import org.dyndns.jkiddo.dmap.chunks.dmap.UpdateType;
 
-public abstract class DMAPResource extends MDNSResource implements ILibraryResource 
+public abstract class DMAPResource<T extends IItemManager> extends MDNSResource implements ILibraryResource 
 {
-	final protected IItemManager itemManager;
+	final protected T itemManager;
 	protected String name;
 
-	public DMAPResource(JmmDNS mDNS, Integer port, IItemManager itemManager) throws IOException
+	public DMAPResource(JmmDNS mDNS, Integer port, T itemManager) throws IOException
 	{
 		super(mDNS, port);
 		this.itemManager = itemManager;
@@ -69,7 +69,7 @@ public abstract class DMAPResource extends MDNSResource implements ILibraryResou
 	@GET
 	public Response update(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
 	{
-		if(revisionNumber == delta)
+		if(revisionNumber == delta || revisionNumber == itemManager.getRevision(httpServletRequest.getRemoteHost(), sessionId))
 		{
 			itemManager.waitForUpdate();
 		}

@@ -45,7 +45,7 @@ public class Library
 	private static final AtomicLong PERISTENT_ID = new AtomicLong(1);
 
 	/** The revision of this Library */
-	private int revision = 0;
+	private int revision = 3;
 
 	/** Name of this Library */
 	private String name;

@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Random;
 import java.util.StringTokenizer;
 import java.util.zip.GZIPOutputStream;
 
@@ -47,10 +46,6 @@ import org.dyndns.jkiddo.dmap.chunks.Chunk;
  */
 public final class DmapUtil
 {
-
-	/** */
-	private static final Random generator = new Random();
-
 	/**
 	 * NULL value (Zero) is a forbidden value (in some cases) in DAAP and means that a value is not initialized (basically <code>null</code> for primitive types).
 	 */
@@ -73,10 +68,8 @@ public final class DmapUtil
 	private final static SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z", Locale.US);
 
 	/** Music Sharing Version 2.0.1 */
-	public static final int MUSIC_SHARING_VERSION_201 = 0x00020001;
-
-	public static final int MUSIC_SHARING_VERSION_200 = 0x00020000;
-
+	public static final int MUSIC_SHARING_VERSION_309 = 0x00030009;
+	
 	/**
 	 * NEWEST BELOW
 	 */
@@ -96,16 +89,8 @@ public final class DmapUtil
 	/** MPRO Version 2.0.0 (iPhoto 9.4.2) */
 	public static final int MPRO_VERSION_200 = 0x00020000;
 
-	/** 0, 1, ... F */
-	private static final char[] HEX = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
-
 	/** Default DAAP realm */
 	static final String DAAP_REALM = "daap";
-
-	/**
-	 * List of sharable formats/extensions. The list is likely not complete! TODO: complete list
-	 */
-	private static final String[] SUPPORTED_FORMATS = { ".mp3", ".m4a", ".m4p", ".wav", ".aif", ".aiff", ".m1a" };
 
 	private DmapUtil()
 	{}

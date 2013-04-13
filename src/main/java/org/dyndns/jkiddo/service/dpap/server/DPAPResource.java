@@ -59,7 +59,7 @@ public class DPAPResource extends DMAPResource implements IImageLibrary
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 		serverInfoResponse.add(new Status(200));
 		serverInfoResponse.add(itemManager.getDmapProtocolVersion());
-		serverInfoResponse.add(itemManager.getDpapProtocolVersion());
+		serverInfoResponse.add(itemManager.getProtocolVersion());
 		serverInfoResponse.add(new ItemName(name));
 		serverInfoResponse.add(new LoginRequired(false));
 		serverInfoResponse.add(new TimeoutInterval(1800));

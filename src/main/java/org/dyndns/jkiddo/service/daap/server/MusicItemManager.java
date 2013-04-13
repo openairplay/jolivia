@@ -9,6 +9,7 @@ import org.dyndns.jkiddo.dmap.DmapUtil;
 import org.dyndns.jkiddo.dmap.Item;
 import org.dyndns.jkiddo.dmap.Library;
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
+import org.dyndns.jkiddo.dmap.chunks.com.apple.itunes.MusicSharingVersion;
 import org.dyndns.jkiddo.dmap.chunks.daap.DaapProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmap.chunks.dmap.DmapProtocolVersion;
@@ -26,9 +27,10 @@ import com.google.inject.name.Named;
 public class MusicItemManager implements IItemManager
 {
 
-	private static final VersionChunk dpapProtocolVersion = new ProtocolVersion(DmapUtil.PPRO_VERSION_200);
+	private static final VersionChunk protocolVersion = new ProtocolVersion(DmapUtil.PPRO_VERSION_200);
 	private static final VersionChunk daapProtocolVersion = new DaapProtocolVersion(DmapUtil.APRO_VERSION_3011);
 	private static final VersionChunk dmapProtocolVersion = new DmapProtocolVersion(DmapUtil.MPRO_VERSION_209);
+	private static final MusicSharingVersion musicSharingVersion = new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_309);
 
 	private final Library library;
 	private final IMusicStoreReader reader;
@@ -73,9 +75,9 @@ public class MusicItemManager implements IItemManager
 	}
 
 	@Override
-	public VersionChunk getDpapProtocolVersion()
+	public VersionChunk getProtocolVersion()
 	{
-		return dpapProtocolVersion;
+		return protocolVersion;
 	}
 
 	@Override
@@ -133,5 +135,8 @@ public class MusicItemManager implements IItemManager
 		{
 			throw new RuntimeException(e);
 		}
+	}
+	public MusicSharingVersion getMusicSharingVersion() {
+		return musicSharingVersion;
 	}
 }
