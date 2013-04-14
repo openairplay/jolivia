@@ -55,8 +55,8 @@ The session is your 'remote control' instance. On a session you can do the remot
 
 ## Current functionality ##
 
- * DAAP share as provided by iTunes including Zeroconf service discovery/publication. (*Have a look at classes implementing the interface org.dyndns.jkiddo.dmap.service.ILibraryResource*)
- * DACP pairing and remote control functions. (*Have a look at classes implementing the interface org.dyndns.jkiddo.dacp.client.IPairingResource and org.dyndns.jkiddo.daap.client.IAutomatedClientSessionCreator*)
+ * DAAP share as provided by iTunes including Zeroconf service discovery/publication.
+ * DACP pairing and remote control functions. Jolivia implements serverside and clientside, meaning that you can use Jolivia for remote control but you can also use eg. Apple Remote against it.
  * RAOP Streaming aka. Airport Express emulation.
 ## Planned functionality ##
 
