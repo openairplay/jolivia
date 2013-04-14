@@ -54,7 +54,6 @@ public class DmapConnector extends SocketConnector
 		private boolean _expect100Continue = false;
 		private boolean _head = false;
 		private boolean _host = false;
-		private boolean _delayedHandling = false;
 		/* ------------------------------------------------------------ */
 		@Override
 		protected void startRequest(Buffer method, Buffer uri, Buffer version) throws IOException
@@ -64,7 +63,6 @@ public class DmapConnector extends SocketConnector
 			_host = false;
 			_expect = false;
 			_expect100Continue = false;
-			_delayedHandling = false;
 			_charset = null;
 
 			if(_request.getTimeStamp() == 0)
@@ -248,8 +246,6 @@ public class DmapConnector extends SocketConnector
 			// Either handle now or wait for first content
 			if((((HttpParser) _parser).getContentLength() <= 0 && !((HttpParser) _parser).isChunking()) || _expect100Continue)
 				handleRequest();
-			else
-				_delayedHandling = true;
 		}
 	}
 }

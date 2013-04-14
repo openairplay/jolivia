@@ -28,7 +28,6 @@
 package org.dyndns.jkiddo.dmap.chunks.dmap;
 
 import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
-import org.dyndns.jkiddo.dmap.chunks.dmap.AuthenticationMethod.PasswordMethod;
 
 /**
  * @author Roger Kapsi

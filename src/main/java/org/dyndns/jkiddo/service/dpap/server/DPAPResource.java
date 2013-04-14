@@ -24,13 +24,12 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsIndex;
 import org.dyndns.jkiddo.dmap.chunks.dmap.TimeoutInterval;
 import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
-import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
 
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
-public class DPAPResource extends DMAPResource implements IImageLibrary
+public class DPAPResource extends DMAPResource<ImageItemManager> implements IImageLibrary
 {
 	public static final String DPAP_SERVER_PORT_NAME = "DPAP_SERVER_PORT_NAME";
 	public static final String DPAP_RESOURCE = "DPAP_IMPLEMENTATION";
@@ -44,7 +43,7 @@ public class DPAPResource extends DMAPResource implements IImageLibrary
 	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
 
 	@Inject
-	public DPAPResource(JmmDNS mDNS, @Named(DPAP_SERVER_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName, @Named(DPAP_RESOURCE) IItemManager itemManager) throws IOException
+	public DPAPResource(JmmDNS mDNS, @Named(DPAP_SERVER_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName, @Named(DPAP_RESOURCE) ImageItemManager itemManager) throws IOException
 	{
 		super(mDNS, port, itemManager);
 		this.name = applicationName;

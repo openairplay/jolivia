@@ -83,7 +83,7 @@ public class RequestHelper
 		logger.debug(url);
 		DmapInputStream inputStream = new DmapInputStream(new ByteArrayInputStream(request(url, keepalive)), specialCaseProtocolViolation);
 		Chunk chunk = inputStream.getChunk();
-		Closeables.closeQuietly(inputStream);
+		Closeables.close(inputStream,true);
 		return (T) chunk;
 	}
 	/**

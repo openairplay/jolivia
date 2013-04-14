@@ -192,7 +192,7 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 		byte[] buffer = new byte[end - pos];
 		raf.seek(pos);
 		raf.readFully(buffer, 0, buffer.length);
-		Closeables.closeQuietly(raf);
+		Closeables.close(raf,true);
 		return Util.buildAudioResponse(buffer, pos, file.length(), itemManager.getDMAPKey(), name);
 	}
 

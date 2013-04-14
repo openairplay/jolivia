@@ -218,7 +218,6 @@ public class Session
 	}
 
 	// Query the media server about the content codes it handles
-	// print to stderr as a csv file
 	public ContentCodesResponse getContentCodes() throws Exception
 	{
 		ContentCodesResponse contentcodes = RequestHelper.requestParsed(String.format("%s/content-codes?session-id=%s", this.getRequestBase(), this.sessionId));
