@@ -35,6 +35,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.dyndns.jkiddo.dmap.chunks.dmap.BaseContainer;
+import org.dyndns.jkiddo.dmap.chunks.dmap.EditCommandSupported;
+import org.dyndns.jkiddo.dmap.chunks.dmap.ParentContainerId;
+
 /**
  * A Database is a container for Playlists and it keeps track of all Songs in the Database whereat it is not responsible for the actual management of the Songs (it's only interested in the Song IDs).
  * 
@@ -160,6 +164,9 @@ public class Database
 		this.totalSongCount = 0;
 
 		this.masterPlaylist = playlist;
+		this.masterPlaylist.addChunk(new BaseContainer(1));
+		this.masterPlaylist.addChunk(new ParentContainerId(0));
+		this.masterPlaylist.addChunk(new EditCommandSupported(0));
 		addPlaylistP(null, masterPlaylist);
 	}
 

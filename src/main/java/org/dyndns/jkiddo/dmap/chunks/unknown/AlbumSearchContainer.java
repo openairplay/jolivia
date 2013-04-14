@@ -13,9 +13,9 @@ package org.dyndns.jkiddo.dmap.chunks.unknown;
 import org.dyndns.jkiddo.dmap.chunks.ContainerChunk;
 import org.dyndns.jkiddo.dmap.chunks.dmap.Listing;
 
-public class UnknownAL extends ContainerChunk
+public class AlbumSearchContainer extends ContainerChunk
 {
-	public UnknownAL()
+	public AlbumSearchContainer()
 	{
 		super("agal", "com.apple.itunes.unknown-al");
 	}

@@ -10,16 +10,16 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.unknown;
 
-import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
+import org.dyndns.jkiddo.dmap.chunks.BooleanChunk;
 
-public class UnknownSU extends UByteChunk
+public class UnknownSU extends BooleanChunk
 {
 	public UnknownSU()
 	{
-		this(0);
+		this(false);
 	}
 
-	public UnknownSU(int value)
+	public UnknownSU(boolean value)
 	{
 		super("casu", "com.apple.itunes.unknown-su", value);
 	}

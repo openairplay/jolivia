@@ -195,7 +195,7 @@ public class JoliviaListener extends GuiceServletContextListener
 			{
 				bind(Integer.class).annotatedWith(Names.named(DPAPResource.DPAP_SERVER_PORT_NAME)).toInstance(hostingPort);
 				bind(IImageLibrary.class).to(DPAPResource.class).asEagerSingleton();
-				bind(IItemManager.class).annotatedWith(Names.named(DPAPResource.DPAP_RESOURCE)).to(ImageItemManager.class);
+				bind(ImageItemManager.class).annotatedWith(Names.named(DPAPResource.DPAP_RESOURCE)).to(ImageItemManager.class);
 				bind(IImageStoreReader.class).toInstance(imageStoreReader);
 			}
 		}, new AbstractModule() {
@@ -205,7 +205,7 @@ public class JoliviaListener extends GuiceServletContextListener
 			{
 				bind(Integer.class).annotatedWith(Names.named(DAAPResource.DAAP_PORT_NAME)).toInstance(hostingPort);
 				bind(IMusicLibrary.class).to(DAAPResource.class).asEagerSingleton();
-				bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(MusicItemManager.class);
+				bind(MusicItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(MusicItemManager.class);
 				bind(IMusicStoreReader.class).toInstance(musicStoreReader);
 			}
 		}, new AbstractModule() {

@@ -44,6 +44,6 @@ public class BaseContainer extends UByteChunk
 
 	public BaseContainer(int playlist)
 	{
-		super("abpl", "dmap.basecontainer", playlist);
+		super("abpl", "daap.baseplaylist", playlist);
 	}
 }

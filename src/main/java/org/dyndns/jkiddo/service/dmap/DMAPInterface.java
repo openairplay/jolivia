@@ -46,6 +46,11 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	private static final String REMOTE_USER_AGENT = "Remote";
 	private static final String DAAP_HEADER_NAME = "Client-DAAP-Version";
 	private static final String DPAP_HEADER_NAME = "Client-DPAP-Version";
+	
+	private static boolean isRemoteDaapRequest(HttpServletRequest httpServletRequest)
+	{
+		return isDaapRequest(httpServletRequest) && isRemoteControlRequest(httpServletRequest);
+	}
 
 	private static boolean isDaapRequest(HttpServletRequest httpServletRequest)
 	{
@@ -267,7 +272,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int/1/playstatusupdate")
-	public String playstatusupdate(@QueryParam("revision-number") long revisionNumber, @QueryParam("session-id") long session_id)
+	public Response playstatusupdate(@QueryParam("revision-number") long revisionNumber, @QueryParam("session-id") long session_id) throws IOException
 	{
 		return remoteControlResource.playstatusupdate(revisionNumber, session_id);
 	}
@@ -275,7 +280,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int/1/getspeakers")
-	public String getspeakers(@QueryParam("session-id") long session_id)
+	public Response getspeakers(@QueryParam("session-id") long session_id) throws IOException
 	{
 		return remoteControlResource.getspeakers(session_id);
 	}
@@ -319,7 +324,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int/1/getproperty")
-	public String getproperty(@Context UriInfo uriInfo, @QueryParam("properties") String properties, @QueryParam("session-id") long session_id)
+	public Response getproperty(@Context UriInfo uriInfo, @QueryParam("properties") String properties, @QueryParam("session-id") long session_id) throws IOException
 	{
 		return remoteControlResource.getproperty(uriInfo, properties, session_id);
 	}
@@ -382,7 +387,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@GET
 	@Path("ctrl-int")
 	public Response ctrlInt(@Context HttpServletRequest httpServletRequest,
-			@Context HttpServletResponse httpServletResponse) {
+			@Context HttpServletResponse httpServletResponse) throws IOException {
 		return remoteControlResource.ctrlInt(httpServletRequest, httpServletResponse);
 	}
 }

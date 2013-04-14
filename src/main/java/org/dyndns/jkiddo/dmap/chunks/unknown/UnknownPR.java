@@ -1,14 +1,14 @@
 package org.dyndns.jkiddo.dmap.chunks.unknown;
 
-import org.dyndns.jkiddo.dmap.chunks.StringChunk;
+import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
 
-public class UnknownPR extends StringChunk{
+public class UnknownPR extends UIntChunk{
 
 	public UnknownPR()
 	{
-		this("");
+		this(0);
 	}
-	public UnknownPR(String value) {
+	public UnknownPR(int value) {
 		super("cmpr", "unknown-pr", value);
 	}
 }

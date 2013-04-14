@@ -30,9 +30,51 @@ import javax.ws.rs.core.UriInfo;
 
 import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
+import org.dyndns.jkiddo.dmap.chunks.dacp.FullscreenStatus;
+import org.dyndns.jkiddo.dmap.chunks.dacp.PlayStatus;
+import org.dyndns.jkiddo.dmap.chunks.dacp.RelativeVolume;
+import org.dyndns.jkiddo.dmap.chunks.dacp.RepeatStatus;
+import org.dyndns.jkiddo.dmap.chunks.dacp.ShuffleStatus;
+import org.dyndns.jkiddo.dmap.chunks.dacp.SpeakerActive;
+import org.dyndns.jkiddo.dmap.chunks.dacp.SpeakerList;
+import org.dyndns.jkiddo.dmap.chunks.dacp.StatusRevision;
+import org.dyndns.jkiddo.dmap.chunks.dacp.VisualizerStatus;
+import org.dyndns.jkiddo.dmap.chunks.dmap.Dictionary;
+import org.dyndns.jkiddo.dmap.chunks.dmap.ItemId;
+import org.dyndns.jkiddo.dmap.chunks.dmap.ItemName;
+import org.dyndns.jkiddo.dmap.chunks.dmap.Listing;
+import org.dyndns.jkiddo.dmap.chunks.dmap.ListingItem;
+import org.dyndns.jkiddo.dmap.chunks.dmap.ReturnedCount;
+import org.dyndns.jkiddo.dmap.chunks.dmap.SpecifiedTotalCount;
+import org.dyndns.jkiddo.dmap.chunks.dmap.Status;
+import org.dyndns.jkiddo.dmap.chunks.dmap.UpdateType;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownAR;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownAS;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownCAPR;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownCESX;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownCI;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownFE;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownFR;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownGT;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownIK;
+import org.dyndns.jkiddo.dmap.chunks.unknown.SpeakerMacAddress;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownOV;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownPR;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownQU;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownRL;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSG;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSP;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSS;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownST;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSU;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSV;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownVC;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownVD;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownVE;
 import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
+import org.dyndns.jkiddo.service.dmap.Util;
 
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
@@ -136,19 +178,47 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("ctrl-int/1/getproperty")
-	public String getproperty(@Context UriInfo uriInfo, @QueryParam("properties") String properties, @QueryParam("session-id") long session_id)
+	public Response getproperty(@Context UriInfo uriInfo, @QueryParam("properties") String properties, @QueryParam("session-id") long session_id) throws IOException
 	{
 		MultivaluedMap<String, String> map = uriInfo.getQueryParameters();
 		map.get("properties");
-		throw new NotImplementedException();
+		
+		UnknownGT response = new UnknownGT();
+		response.add(new Status(200));
+		response.add(new RelativeVolume(100));//
+		return Util.buildResponse(response, "DAAP-Server", name);
 	}
 
 	@Override
 	@GET
 	@Path("ctrl-int/1/playstatusupdate")
-	public String playstatusupdate(@QueryParam("revision-number") long revisionNumber, @QueryParam("session-id") final long session_id)
+	public Response playstatusupdate(@QueryParam("revision-number") long revisionNumber, @QueryParam("session-id") final long session_id) throws IOException
 	{
-		throw new NotImplementedException();
+		if(revisionNumber == 0x24)
+		{
+			try {
+				Thread.sleep(10000000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		UnknownST response = new UnknownST();
+		response.add(new Status(200));
+		response.add(new StatusRevision(0x24));//
+		response.add(new PlayStatus(2));//
+		response.add(new ShuffleStatus(0));
+		response.add(new RepeatStatus(0));
+		response.add(new FullscreenStatus(0));
+		response.add(new VisualizerStatus(0));
+		response.add(new UnknownVC(true));
+		response.add(new UnknownAS(2));//
+		response.add(new UnknownAR(6));//
+		response.add(new UnknownFE(0));
+		response.add(new UnknownVE(0));
+		response.add(new UnknownSU(false));
+		response.add(new UnknownQU(0));
+		return Util.buildResponse(response, "DAAP-Server", name);
 	}
 
 	@Override
@@ -162,9 +232,19 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("ctrl-int/1/getspeakers")
-	public String getspeakers(@QueryParam("session-id") final long session_id)
+	public Response getspeakers(@QueryParam("session-id") final long session_id) throws IOException
 	{
-		throw new NotImplementedException();
+		SpeakerList response = new SpeakerList();
+		response.add(new Status(200));
+		Dictionary dictionary = new Dictionary();
+		dictionary.add(new ItemName("My Compounter"));
+		dictionary.add(new RelativeVolume(100));
+		dictionary.add(new UnknownVD(1));
+		dictionary.add(new SpeakerMacAddress(0));
+		dictionary.add(new SpeakerActive(true));
+		
+		response.add(dictionary);
+		return Util.buildResponse(response, "DAAP-Server", name);
 	}
 
 	@Override
@@ -269,8 +349,30 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@GET
 	@Path("ctrl-int")
 	public Response ctrlInt(@Context HttpServletRequest httpServletRequest,
-			@Context HttpServletResponse httpServletResponse) {
-		// TODO Auto-generated method stub
-		return null;
+			@Context HttpServletResponse httpServletResponse) throws IOException {
+
+		UnknownCI caci = new UnknownCI();
+		caci.add(new Status(200));
+		caci.add(new UpdateType(0));
+		caci.add(new SpecifiedTotalCount(4));//
+		caci.add(new ReturnedCount(1));//
+		Listing listing = new Listing();
+		ListingItem item = new ListingItem();
+		item.add(new ItemId(1));//
+		item.add(new UnknownIK(true));
+		item.add(new UnknownPR(0x20001));//
+		item.add(new UnknownCAPR(0x20003));//
+		item.add(new UnknownSP(true));
+		item.add(new UnknownFR(100));
+		item.add(new UnknownSV(true));
+		item.add(new UnknownSS(true));
+		item.add(new UnknownOV(true));
+		item.add(new UnknownSU(true));
+		item.add(new UnknownSG(true));
+		item.add(new UnknownRL(true));
+		item.add(new UnknownCESX(1));
+		listing.add(item);
+		caci.add(listing);
+		return Util.buildResponse(caci, "DAAP-Server", name);
 	}
 }

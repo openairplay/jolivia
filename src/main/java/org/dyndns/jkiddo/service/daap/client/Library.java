@@ -40,7 +40,8 @@ import org.dyndns.jkiddo.dmap.chunks.daap.SongUserRating;
 import org.dyndns.jkiddo.dmap.chunks.dmap.DatabaseItems;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ListingItem;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ItemsContainer;
-import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownAL;
+import org.dyndns.jkiddo.dmap.chunks.unknown.ArtistSearchContainer;
+import org.dyndns.jkiddo.dmap.chunks.unknown.AlbumSearchContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,7 +85,7 @@ public class Library
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/browse/artists?session-id=%s&include-sort-headers=1", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId()), false, true);
 	}
 
-	public UnknownAL getAlbums(String artist) throws Exception
+	public AlbumSearchContainer getAlbums(String artist) throws Exception
 	{
 		final String encodedArtist = RequestHelper.escapeUrlString(artist);
 		// make albums request for this artist
@@ -93,12 +94,18 @@ public class Library
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/groups?session-id=%s&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist&type=music&group-type=albums&sort=artist&include-sort-headers=1&query='daap.songartist:%s'", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId(), encodedArtist), false);
 	}
 
-	public UnknownAL getAllAlbums() throws Exception
+	public AlbumSearchContainer getAllAlbums() throws Exception
 	{
 		// make partial album list request
 		// http://192.168.254.128:3689/databases/36/groups?session-id=1034286700&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist&type=music&group-type=albums&sort=artist&include-sort-headers=1&index=0-50
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/groups?session-id=%s&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist&type=music&group-type=albums&sort=album&include-sort-headers=1", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId()), false);
 	}
+	
+	public ArtistSearchContainer getArtists() throws Exception
+	{
+		return RequestHelper.requestParsed(String.format("%s/databases/%d/groups?meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist,daap.groupalbumcount,daap.songartistid&type=music&group-type=artists&sort=album&include-sort-headers=1&query=('daap.songartist!:'+('com.apple.itunes.extended-media-kind:1','com.apple.itunes.extended-media-kind:32'))&session-id=%s", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId()), false);	
+	}
+	
 
 	public ItemsContainer getAllTracks() throws Exception
 	{

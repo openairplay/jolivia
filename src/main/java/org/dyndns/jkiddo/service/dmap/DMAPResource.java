@@ -41,6 +41,9 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.SpecifiedTotalCount;
 import org.dyndns.jkiddo.dmap.chunks.dmap.Status;
 import org.dyndns.jkiddo.dmap.chunks.dmap.UpdateResponse;
 import org.dyndns.jkiddo.dmap.chunks.dmap.UpdateType;
+import org.dyndns.jkiddo.dmap.chunks.unknown.AlbumSearchContainer;
+import org.dyndns.jkiddo.dmap.chunks.unknown.ArtistSearchContainer;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownHL;
 
 public abstract class DMAPResource<T extends IItemManager> extends MDNSResource implements ILibraryResource 
 {
@@ -133,7 +136,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		DatabaseContainerns databaseContainers = new DatabaseContainerns();
 
 		databaseContainers.add(new Status(200));
-		databaseContainers.add(new UpdateType(0));// Maybe used
+		databaseContainers.add(new UpdateType(0));
 
 		// databasePlaylists.add(new SpecifiedTotalCount(playlists.size()));
 		databaseContainers.add(new SpecifiedTotalCount(containers.size()));
@@ -159,7 +162,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 					logger.info("Unknown chunk type: " + key);
 				}
 			}
-
+			listingItem.add(new ItemCount(1));
 			listing.add(listingItem);
 		}
 
@@ -194,7 +197,6 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		ItemsContainer itemsContainer = new ItemsContainer();
 
 		itemsContainer.add(new Status(200));
-		// playlistSongs.add(new UpdateType(request.isUpdateType() ? 1 : 0));
 		itemsContainer.add(new UpdateType(0));
 		itemsContainer.add(new SpecifiedTotalCount(container.getItems().size()));
 		itemsContainer.add(new ReturnedCount(container.getItems().size()));
@@ -204,7 +206,10 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		for(Item song : container.getItems())
 		{
 			ListingItem listingItem = new ListingItem();
-
+			
+			//Added as itemkind is only request in query param which is not yet understood
+			listingItem.add(song.getChunk("dmap.itemkind"));
+			
 			for(String key : parameters)
 			{
 				Chunk chunk = song.getChunk(key);
@@ -338,6 +343,35 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@GET
 	public Response groups(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
 	{
-		throw new NotImplementedException();
+		
+		if("artists".equalsIgnoreCase(group_type))
+		{
+			ArtistSearchContainer response = new ArtistSearchContainer();
+			response.add(new Status(200));
+			response.add(new UpdateType(0));
+			response.add(new SpecifiedTotalCount(0));//
+			response.add(new ReturnedCount(0));//
+
+			Listing listing = new Listing();
+			listing.add(new UnknownHL());//
+			response.add(listing);
+
+			return Util.buildResponse(response, itemManager.getDMAPKey(), name);			
+		}
+		else if("albums".equalsIgnoreCase(group_type))
+		{
+			AlbumSearchContainer response = new AlbumSearchContainer();
+			response.add(new Status(200));
+			response.add(new UpdateType(0));
+			response.add(new SpecifiedTotalCount(0));//
+			response.add(new ReturnedCount(0));//
+
+			Listing listing = new Listing();
+			response.add(listing);
+
+			return Util.buildResponse(response, itemManager.getDMAPKey(), name);			
+		}
+		else
+			throw new NotImplementedException();
 	}
 }

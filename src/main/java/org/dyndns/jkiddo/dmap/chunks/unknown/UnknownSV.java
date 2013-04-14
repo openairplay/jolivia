@@ -1,13 +1,13 @@
 package org.dyndns.jkiddo.dmap.chunks.unknown;
 
-import org.dyndns.jkiddo.dmap.chunks.StringChunk;
+import org.dyndns.jkiddo.dmap.chunks.BooleanChunk;
 
-public class UnknownSV extends StringChunk{
+public class UnknownSV extends BooleanChunk{
 
 	public UnknownSV() {
-		this("");
+		this(false);
 	}
-	public UnknownSV(String value) {
+	public UnknownSV(boolean value) {
 		super("cmsv", "unknown.sv", value);
 	}
 

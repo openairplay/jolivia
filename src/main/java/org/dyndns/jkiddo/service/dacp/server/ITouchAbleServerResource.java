@@ -40,7 +40,7 @@ public interface ITouchAbleServerResource
 
 	@GET
 	@Path("ctrl-int")
-	public Response ctrlInt(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse);
+	public Response ctrlInt(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException;
 	
 	@GET
 	@Path("ctrl-int/1/pause")
@@ -72,11 +72,11 @@ public interface ITouchAbleServerResource
 
 	@GET
 	@Path("ctrl-int/1/getproperty")
-	public String getproperty(@Context UriInfo uriInfo, @QueryParam("properties") String properties, @QueryParam("session-id") long session_id);
+	public Response getproperty(@Context UriInfo uriInfo, @QueryParam("properties") String properties, @QueryParam("session-id") long session_id) throws IOException;
 
 	@GET
 	@Path("ctrl-int/1/playstatusupdate")
-	public String playstatusupdate(@QueryParam("revision-number") long revisionNumber, @QueryParam("session-id") long session_id);
+	public Response playstatusupdate(@QueryParam("revision-number") long revisionNumber, @QueryParam("session-id") long session_id) throws IOException;
 
 	@GET
 	@Path("ctrl-int/1/cue")
@@ -84,7 +84,7 @@ public interface ITouchAbleServerResource
 
 	@GET
 	@Path("ctrl-int/1/getspeakers")
-	public String getspeakers(@QueryParam("session-id") long session_id);
+	public Response getspeakers(@QueryParam("session-id") long session_id) throws IOException;
 
 	@GET
 	@Path("ctrl-int/1/setspeakers")

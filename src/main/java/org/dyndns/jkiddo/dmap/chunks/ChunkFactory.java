@@ -155,7 +155,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x6D73746D), org.dyndns.jkiddo.dmap.chunks.dmap.TimeoutInterval.class); // mstm
 		map.put(new Integer(0x636D6774), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownGT.class); // cmgt
 		map.put(new Integer(0x6165494D), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownIM.class); // aeIM
-		map.put(new Integer(0x6D736D61), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownMA.class); // msma
+		map.put(new Integer(0x6D736D61), org.dyndns.jkiddo.dmap.chunks.unknown.SpeakerMacAddress.class); // msma
 		map.put(new Integer(0x6165524D), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownRM.class); // aeRM
 		map.put(new Integer(0x63617664), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownVD.class); // cavd
 		map.put(new Integer(0x6D757064), org.dyndns.jkiddo.dmap.chunks.dmap.UpdateResponse.class); // mupd
@@ -190,7 +190,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x6d736863), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownHC.class); // mshc
 		map.put(new Integer(0x6d736869), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownHI.class); // mshi
 		map.put(new Integer(0x6d73686e), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownHN.class); // mshn
-		map.put(new Integer(0x6167616c), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownAL.class); // agal
+		map.put(new Integer(0x6167616c), org.dyndns.jkiddo.dmap.chunks.unknown.AlbumSearchContainer.class); // agal
 		map.put(new Integer(0x61736161), org.dyndns.jkiddo.dmap.chunks.dacp.AlbumArtist.class); // asaa
 		map.put(new Integer(0x61746564), org.dyndns.jkiddo.dmap.chunks.daap.SupportsExtraData.class); // ated
 		map.put(new Integer(0x61736772), org.dyndns.jkiddo.dmap.chunks.daap.SupportsGroups.class); // asgr
@@ -222,6 +222,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x63655347), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSG.class); // ceSG
 		map.put(new Integer(0x636d726c), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownRL.class); // cmrl
 		map.put(new Integer(0x63655358), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownCESX.class); // ceSX
+		map.put(new Integer(0x61676172), org.dyndns.jkiddo.dmap.chunks.unknown.ArtistSearchContainer.class); // agar
 		
 	}
 

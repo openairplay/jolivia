@@ -44,7 +44,7 @@ import org.dyndns.jkiddo.dmap.chunks.dacp.SpeakerList;
 import org.dyndns.jkiddo.dmap.chunks.dmap.Dictionary;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ItemName;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownGT;
-import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownMA;
+import org.dyndns.jkiddo.dmap.chunks.unknown.SpeakerMacAddress;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownST;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownVD;
 import org.slf4j.Logger;
@@ -119,7 +119,7 @@ public class RemoteControl
 		{
 			Speaker speaker = new Speaker();
 			String name = dictonary.getSpecificChunk(ItemName.class).getValue();
-			long speakerId = dictonary.getSpecificChunk(UnknownMA.class).getValue();
+			long speakerId = dictonary.getSpecificChunk(SpeakerMacAddress.class).getValue();
 			int relativeVolume = dictonary.getSpecificChunk(RelativeVolume.class).getValue();
 
 			SpeakerActive isActive = dictonary.getSpecificChunk(SpeakerActive.class);

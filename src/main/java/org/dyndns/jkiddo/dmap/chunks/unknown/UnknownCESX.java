@@ -1,13 +1,13 @@
 package org.dyndns.jkiddo.dmap.chunks.unknown;
 
-import org.dyndns.jkiddo.dmap.chunks.StringChunk;
+import org.dyndns.jkiddo.dmap.chunks.ULongChunk;
 
-public class UnknownCESX extends StringChunk {
+public class UnknownCESX extends ULongChunk {
 	public UnknownCESX() {
-		this("");
+		this(0);
 	}
 
-	public UnknownCESX(String value) {
+	public UnknownCESX(long value) {
 		super("ceSX", "unknown.sx", value);
 	}
 

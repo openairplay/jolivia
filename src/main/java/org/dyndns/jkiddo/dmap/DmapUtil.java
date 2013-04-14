@@ -68,8 +68,7 @@ public final class DmapUtil
 	private final static SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z", Locale.US);
 
 	/** Music Sharing Version 2.0.1 */
-	public static final int MUSIC_SHARING_VERSION_309 = 0x00030009;
-	
+	public static final int MUSIC_SHARING_VERSION_309 = 0x00020000;
 	/**
 	 * NEWEST BELOW
 	 */

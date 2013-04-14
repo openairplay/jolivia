@@ -12,14 +12,14 @@ package org.dyndns.jkiddo.dmap.chunks.unknown;
 
 import org.dyndns.jkiddo.dmap.chunks.ULongChunk;
 
-public class UnknownMA extends ULongChunk
+public class SpeakerMacAddress extends ULongChunk
 {
-	public UnknownMA()
+	public SpeakerMacAddress()
 	{
 		this(0);
 	}
 
-	public UnknownMA(long value)
+	public SpeakerMacAddress(long value)
 	{
 		super("msma", "com.apple.itunes.unknown-ma", value);
 	}

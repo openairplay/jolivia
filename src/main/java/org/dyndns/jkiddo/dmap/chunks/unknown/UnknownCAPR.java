@@ -1,12 +1,12 @@
 package org.dyndns.jkiddo.dmap.chunks.unknown;
 
-import org.dyndns.jkiddo.dmap.chunks.StringChunk;
+import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
 
-public class UnknownCAPR extends StringChunk{
+public class UnknownCAPR extends UIntChunk{
 	public UnknownCAPR() {
-		this("");
+		this(0);
 	}
-	public UnknownCAPR(String value) {
+	public UnknownCAPR(int value) {
 		super("capr", "unknown-capr", value);
 	}
 }

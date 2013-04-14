@@ -10,16 +10,16 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.unknown;
 
-import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
+import org.dyndns.jkiddo.dmap.chunks.BooleanChunk;
 
-public class UnknownVC extends UByteChunk
+public class UnknownVC extends BooleanChunk
 {
 	public UnknownVC()
 	{
-		this(0);
+		this(false);
 	}
 
-	public UnknownVC(int value)
+	public UnknownVC(boolean value)
 	{
 		super("cavc", "com.apple.itunes.unknown-vc", value);
 	}

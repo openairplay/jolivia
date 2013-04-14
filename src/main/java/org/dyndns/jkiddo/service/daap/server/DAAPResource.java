@@ -41,19 +41,6 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsQuery;
 import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsResolve;
 import org.dyndns.jkiddo.dmap.chunks.dmap.SupportsUpdate;
 import org.dyndns.jkiddo.dmap.chunks.dmap.TimeoutInterval;
-import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownFP;
-import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownFR;
-import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownMA;
-import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownMQ;
-import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSE;
-import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSL;
-import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSR;
-import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSX;
-import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownTr;
-import org.dyndns.jkiddo.dmap.chunks.unknown.Unknowned;
-import org.dyndns.jkiddo.dmap.chunks.unknown.Unknownml;
-import org.dyndns.jkiddo.dmap.chunks.unknown.Unknowntc;
-import org.dyndns.jkiddo.dmap.chunks.unknown.Unknownto;
 import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.Util;
@@ -79,7 +66,7 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 	private final String serviceGuid;
 
 	@Inject
-	public DAAPResource(JmmDNS mDNS, @Named(DAAP_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName, MusicItemManager itemManager) throws IOException
+	public DAAPResource(JmmDNS mDNS, @Named(DAAP_PORT_NAME) Integer port, @Named(JoliviaListener.APPLICATION_NAME) String applicationName, @Named(DAAPResource.DAAP_RESOURCE) MusicItemManager itemManager) throws IOException
 	{
 		super(mDNS, port, itemManager);
 		this.name = applicationName;
@@ -124,22 +111,22 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 		serverInfoResponse.add(itemManager.getDmapProtocolVersion());
 		serverInfoResponse.add(new ItemName(name));
 		serverInfoResponse.add(itemManager.getDaapProtocolVersion());
-		serverInfoResponse.add(itemManager.getMusicSharingVersion());
+//		serverInfoResponse.add(itemManager.getMusicSharingVersion()); If inserted, DAAP dies
 		serverInfoResponse.add(new SupportsExtensions(true));
 		serverInfoResponse.add(new SupportsGroups(3));
-		serverInfoResponse.add(new UnknownSE(0x80000));
-		serverInfoResponse.add(new UnknownMQ(true));
-		serverInfoResponse.add(new UnknownFR(0x64));
-		serverInfoResponse.add(new UnknownTr(true));
-		serverInfoResponse.add(new UnknownSL(true));
-		serverInfoResponse.add(new UnknownSR(true));
-		serverInfoResponse.add(new UnknownFP(2));
-		serverInfoResponse.add(new UnknownSX(111));
+//		serverInfoResponse.add(new UnknownSE(0x80000));
+//		serverInfoResponse.add(new UnknownMQ(true));
+//		serverInfoResponse.add(new UnknownFR(0x64));
+//		serverInfoResponse.add(new UnknownTr(true));
+//		serverInfoResponse.add(new UnknownSL(true));
+//		serverInfoResponse.add(new UnknownSR(true));
+//		serverInfoResponse.add(new UnknownFP(2));//iTunes 11.0.2.26 says 2. If inserted, DAAP dies
+//		serverInfoResponse.add(new UnknownSX(111));
 		serverInfoResponse.add(itemManager.getProtocolVersion());
-		serverInfoResponse.add(new Unknowned(true));
-		Unknownml msml = new Unknownml();
-		msml.add(new UnknownMA(0xBF940AB92600L)); //Totally unknown
-		serverInfoResponse.add(msml);
+//		serverInfoResponse.add(new Unknowned(true));
+//		Unknownml msml = new Unknownml();
+//		msml.add(new UnknownMA(0xBF940AB92600L)); //iTunes 11.0.2.26 - Totally unknown
+//		serverInfoResponse.add(msml);
 		serverInfoResponse.add(new LoginRequired(true));
 		serverInfoResponse.add(new TimeoutInterval(1800));
 		serverInfoResponse.add(new SupportsAutoLogout(true));
@@ -169,8 +156,8 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 		serverInfoResponse.add(new SupportsIndex(true));
 		serverInfoResponse.add(new SupportsResolve(true));
 		serverInfoResponse.add(new DatabaseCount(itemManager.getDatabases().size()));
-		serverInfoResponse.add(new Unknowntc(0x5169B375)); //Totally unknown
-		serverInfoResponse.add(new Unknownto(7200)); 
+//		serverInfoResponse.add(new Unknowntc(0x5169B375)); //iTunes 11.0.2.26 - Totally unknown
+//		serverInfoResponse.add(new Unknownto(7200)); 
 		
 		
 
