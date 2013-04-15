@@ -160,7 +160,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x63617664), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownVD.class); // cavd
 		map.put(new Integer(0x6D757064), org.dyndns.jkiddo.dmap.chunks.dmap.UpdateResponse.class); // mupd
 		map.put(new Integer(0x6D757479), org.dyndns.jkiddo.dmap.chunks.dmap.UpdateType.class); // muty
-		map.put(new Integer(0x636D7374), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownST.class); // cmst
+		map.put(new Integer(0x636D7374), org.dyndns.jkiddo.dmap.chunks.unknown.PlayingStatus.class); // cmst
 		map.put(new Integer(0x636D7372), org.dyndns.jkiddo.dmap.chunks.dacp.StatusRevision.class); // cmsr
 		map.put(new Integer(0x63617073), org.dyndns.jkiddo.dmap.chunks.dacp.PlayStatus.class); // caps
 		map.put(new Integer(0x63617368), org.dyndns.jkiddo.dmap.chunks.dacp.ShuffleStatus.class); // cash
@@ -219,10 +219,11 @@ public final class ChunkFactory
 		map.put(new Integer(0x636d7376), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSV.class); // cmsv
 		map.put(new Integer(0x63617373), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSS.class); // cass
 		map.put(new Integer(0x63616f76), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownOV.class); // caov
-		map.put(new Integer(0x63655347), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSG.class); // ceSG
+		map.put(new Integer(0x63655347), org.dyndns.jkiddo.dmap.chunks.unknown.SavedGenius.class); // ceSG
 		map.put(new Integer(0x636d726c), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownRL.class); // cmrl
 		map.put(new Integer(0x63655358), org.dyndns.jkiddo.dmap.chunks.unknown.UnknownCESX.class); // ceSX
 		map.put(new Integer(0x61676172), org.dyndns.jkiddo.dmap.chunks.unknown.ArtistSearchContainer.class); // agar
+		map.put(new Integer(0x6d647374), org.dyndns.jkiddo.dmap.chunks.unknown.DownloadStatus.class); // mdst
 		
 	}
 

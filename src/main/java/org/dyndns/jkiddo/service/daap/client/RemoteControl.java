@@ -45,7 +45,7 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.Dictionary;
 import org.dyndns.jkiddo.dmap.chunks.dmap.ItemName;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownGT;
 import org.dyndns.jkiddo.dmap.chunks.unknown.SpeakerMacAddress;
-import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownST;
+import org.dyndns.jkiddo.dmap.chunks.unknown.PlayingStatus;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownVD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,7 +74,7 @@ public class RemoteControl
 	 * @return
 	 * @throws Exception
 	 */
-	public UnknownST getPlayStatusUpdateBlocking() throws Exception
+	public PlayingStatus getPlayStatusUpdateBlocking() throws Exception
 	{
 		// try fetching next revision update using socket keepalive
 		// approach
@@ -84,7 +84,7 @@ public class RemoteControl
 		return RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), session.getRevision(), session.getSessionId()), true);
 	}
 
-	public UnknownST getPlayStatusUpdate() throws Exception
+	public PlayingStatus getPlayStatusUpdate() throws Exception
 	{
 		// using revision-number=1 will make sure we return
 		// instantly
@@ -249,7 +249,7 @@ public class RemoteControl
 		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?speaker-id=%s&dmcp.volume=%d" + "&session-id=%s", session.getRequestBase(), speakerId, relativeVolume, session.getSessionId()));
 	}
 
-	public UnknownST getNowPlaying(String albumid) throws Exception
+	public PlayingStatus getNowPlaying(String albumid) throws Exception
 	{
 		// Try Wilco (Alex W)'s nowplaying extension /ctrl-int/1/items
 		try
@@ -263,7 +263,7 @@ public class RemoteControl
 		}
 	}
 
-	public UnknownST getNowPlaying() throws Exception
+	public PlayingStatus getNowPlaying() throws Exception
 	{
 		// reads the current playing song as a one-item playlist
 		// Refactor response into one that looks like a normal items request
@@ -451,5 +451,10 @@ public class RemoteControl
 		// GET
 		// /ctrl-int/1/playspec?database-spec='dmap.itemid:0x6073'&container-spec='dmap.itemid:0x607B'&item-spec='dmap.itemid:0x7cbe'&session-id=345827905
 		RequestHelper.dispatch(String.format("%s/ctrl-int/1/playspec?" + "database-spec='dmap.itemid:0x%x'" + "&container-spec='dmap.itemid:0x%x'" + "&item-spec='dmap.itemid:0x%x'" + "&session-id=%s", session.getRequestBase(), databaseId, containerId, itemId, session.getSessionId()));
+	}
+
+	public void playQueueEdit(final long itemID, final long playlistId) throws Exception
+	{
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/playqueue-edit?command=add&query='dmap.itemid:" + itemID + "'&queuefilter=playlist:"+playlistId+"&sort=name&mode=1&session-id=%s", session.getRequestBase(), session.getSessionId()));
 	}
 }

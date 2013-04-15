@@ -46,7 +46,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	private static final String REMOTE_USER_AGENT = "Remote";
 	private static final String DAAP_HEADER_NAME = "Client-DAAP-Version";
 	private static final String DPAP_HEADER_NAME = "Client-DPAP-Version";
-	
+
 	private static boolean isRemoteDaapRequest(HttpServletRequest httpServletRequest)
 	{
 		return isDaapRequest(httpServletRequest) && isRemoteControlRequest(httpServletRequest);
@@ -112,17 +112,17 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	{
 		if(isRemoteControlRequest(httpServletRequest))
 			return musicLibraryResource.login(httpServletRequest, httpServletResponse);
-//			return remoteControlResource.login(httpServletRequest, httpServletResponse, guid, value);
+		// return remoteControlResource.login(httpServletRequest, httpServletResponse, guid, value);
 		return login(httpServletRequest, httpServletResponse);
 	}
-	
+
 	@Override
 	@Path("update")
 	@GET
 	public Response update(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
 	{
 		if(isRemoteControlRequest(httpServletRequest))
-//			return remoteControlResource.update(httpServletRequest, httpServletResponse, info, sessionId, revisionNumber, delta, daapNoDisconnect);
+			// return remoteControlResource.update(httpServletRequest, httpServletResponse, info, sessionId, revisionNumber, delta, daapNoDisconnect);
 			return musicLibraryResource.update(httpServletRequest, httpServletResponse, info, sessionId, revisionNumber, delta, daapNoDisconnect);
 		if(isDaapRequest(httpServletRequest))
 			return musicLibraryResource.update(httpServletRequest, httpServletResponse, info, sessionId, revisionNumber, delta, daapNoDisconnect);
@@ -386,8 +386,16 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int")
-	public Response ctrlInt(@Context HttpServletRequest httpServletRequest,
-			@Context HttpServletResponse httpServletResponse) throws IOException {
+	public Response ctrlInt(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
+	{
 		return remoteControlResource.ctrlInt(httpServletRequest, httpServletResponse);
+	}
+
+	@Override
+	@GET
+	@Path("ctrl-int/1/playqueue-edit")
+	public Response playQueueEdit(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("commmand") String command, @QueryParam("query") String query, @QueryParam("queuefilter") String index, @QueryParam("sort") String sort, @QueryParam("session-id") long session_id) throws Exception
+	{
+		return remoteControlResource.playQueueEdit(httpServletRequest, httpServletResponse, command, query, index, sort, session_id);
 	}
 }

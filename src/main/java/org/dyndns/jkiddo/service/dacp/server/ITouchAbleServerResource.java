@@ -26,14 +26,14 @@ public interface ITouchAbleServerResource
 {
 	public final static String DACP_TYPE = "_dacp._tcp.local.";
 	/**
-	 * Service running when the iTunes instance is already paired with some remotes. 
+	 * Service running when the iTunes instance is already paired with some remotes.
 	 */
 	public final static String TOUCH_ABLE_SERVER = "_touch-able._tcp.local.";
 
 	@GET
 	@Path("login")
 	public Response login(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException;
-	
+
 	@GET
 	@Path("logout")
 	public Response logout(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long session_id);
@@ -41,7 +41,7 @@ public interface ITouchAbleServerResource
 	@GET
 	@Path("ctrl-int")
 	public Response ctrlInt(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException;
-	
+
 	@GET
 	@Path("ctrl-int/1/pause")
 	public String pause(@QueryParam("session-id") long session_id);
@@ -117,4 +117,8 @@ public interface ITouchAbleServerResource
 	@Path("update")
 	@GET
 	public Response update(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException;
+
+	@Path("/ctrl-int/1/playqueue-edit")
+	@GET
+	public Response playQueueEdit(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("commmand") String command, @QueryParam("query") String query, @QueryParam("queuefilter") String index, @QueryParam("sort") String sort, @QueryParam("session-id") long session_id) throws Exception;
 }

@@ -210,6 +210,13 @@ public class Item
 
 		// VLC requires the sample rate
 		addChunk(SAMPLE_RATE);
+		
+		//Added as part of debug
+//		addChunk(new SongDisabled(true));
+//		addChunk(new AlbumArtist());
+//		addChunk(new EMediaKind(1));
+//		addChunk(new DownloadStatus(true));
+		
 	}
 
 	/**

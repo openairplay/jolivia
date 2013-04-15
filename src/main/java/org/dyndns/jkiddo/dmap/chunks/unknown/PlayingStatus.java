@@ -28,9 +28,9 @@ import org.dyndns.jkiddo.dmap.chunks.dacp.TrackGenre;
 import org.dyndns.jkiddo.dmap.chunks.dacp.TrackName;
 import org.dyndns.jkiddo.dmap.chunks.dacp.VisualizerStatus;
 
-public class UnknownST extends ContainerChunk
+public class PlayingStatus extends ContainerChunk
 {
-	public UnknownST()
+	public PlayingStatus()
 	{
 		super("cmst", "com.apple.itunes.unknown-st");
 	}

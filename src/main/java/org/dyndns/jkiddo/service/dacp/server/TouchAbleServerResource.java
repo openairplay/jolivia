@@ -62,10 +62,10 @@ import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownOV;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownPR;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownQU;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownRL;
-import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSG;
+import org.dyndns.jkiddo.dmap.chunks.unknown.SavedGenius;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSP;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSS;
-import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownST;
+import org.dyndns.jkiddo.dmap.chunks.unknown.PlayingStatus;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSU;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownSV;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownVC;
@@ -182,7 +182,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	{
 		MultivaluedMap<String, String> map = uriInfo.getQueryParameters();
 		map.get("properties");
-		
+
 		UnknownGT response = new UnknownGT();
 		response.add(new Status(200));
 		response.add(new RelativeVolume(100));//
@@ -196,14 +196,17 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	{
 		if(revisionNumber == 0x24)
 		{
-			try {
+			try
+			{
 				Thread.sleep(10000000);
-			} catch (InterruptedException e) {
+			}
+			catch(InterruptedException e)
+			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		UnknownST response = new UnknownST();
+		PlayingStatus response = new PlayingStatus();
 		response.add(new Status(200));
 		response.add(new StatusRevision(0x24));//
 		response.add(new PlayStatus(2));//
@@ -242,7 +245,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 		dictionary.add(new UnknownVD(1));
 		dictionary.add(new SpeakerMacAddress(0));
 		dictionary.add(new SpeakerActive(true));
-		
+
 		response.add(dictionary);
 		return Util.buildResponse(response, "DAAP-Server", name);
 	}
@@ -291,9 +294,12 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	protected ServiceInfo getServiceInfoToRegister()
 	{
 		String hexedHostname = null;
-		try {
+		try
+		{
 			hexedHostname = Jolivia.toHex(hostname.getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
+		}
+		catch(UnsupportedEncodingException e)
+		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -308,7 +314,6 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 		records.put("txtvers", "1");
 		records.put("RmSV", "65536");
 		records.put("DvSv", "2818");
-		
 
 		return ServiceInfo.create(TOUCH_ABLE_SERVER, serviceGuid, port, 0, 0, records);
 	}
@@ -348,8 +353,8 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("ctrl-int")
-	public Response ctrlInt(@Context HttpServletRequest httpServletRequest,
-			@Context HttpServletResponse httpServletResponse) throws IOException {
+	public Response ctrlInt(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
+	{
 
 		UnknownCI caci = new UnknownCI();
 		caci.add(new Status(200));
@@ -368,11 +373,20 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 		item.add(new UnknownSS(true));
 		item.add(new UnknownOV(true));
 		item.add(new UnknownSU(true));
-		item.add(new UnknownSG(true));
+		item.add(new SavedGenius(true));
 		item.add(new UnknownRL(true));
 		item.add(new UnknownCESX(1));
 		listing.add(item);
 		caci.add(listing);
 		return Util.buildResponse(caci, "DAAP-Server", name);
+	}
+
+	// /ctrl-int/1/playqueue-edit?command=add&query='dmap.itemid:1024'&queuefilter=playlist:1&sort=name&mode=1&session-id=42
+	@Override
+	@GET
+	@Path("/ctrl-int/1/playqueue-edit")
+	public Response playQueueEdit(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("commmand") String command, @QueryParam("query") String query, @QueryParam("queuefilter") String index, @QueryParam("sort") String sort, @QueryParam("session-id") long session_id) throws Exception
+	{
+		return Util.buildEmptyResponse("DAAP-Server", name);
 	}
 }

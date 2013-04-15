@@ -58,9 +58,12 @@ public class Jolivia {
 				// Now do stuff :)
 				remoteControl.play();
 				remoteControl.getNowPlaying();
+				remoteControl.getPlayStatusUpdate();
+				remoteControl.playQueueEdit(187, 106);
 				
 				library.getAllAlbums();
 				library.getArtists();
+				library.unknownQuery();
 			}
 		}, new DeskMusicStoreReader());
 	}

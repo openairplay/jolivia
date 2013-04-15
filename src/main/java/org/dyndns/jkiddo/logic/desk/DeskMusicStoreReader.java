@@ -117,7 +117,13 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		IMusicItem song = new MusicItem();
 		song.setArtist(tag.getFirst(FieldKey.ARTIST));
 		song.setAlbum(tag.getFirst(FieldKey.ALBUM));
-		song.setName(tag.getFirst(FieldKey.TITLE));
+		String title = tag.getFirst(FieldKey.TITLE);
+		song.setName(title);
+		if(Strings.isNullOrEmpty(title))
+		{
+			logger.debug("Title in file " + file.getName() + " tags was null - using filename instead");
+			song.setName(AudioFile.getBaseFilename(file));	
+		}
 		song.setComposer(tag.getFirst(FieldKey.COMPOSER));
 		song.setGenre(tag.getFirst(FieldKey.GENRE));
 		if(!Strings.isNullOrEmpty(tag.getFirst(FieldKey.TRACK)))
@@ -152,6 +158,11 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	{
 		private String artist;
 		private String album;
+		private String name;
+
+		public String getName() {
+			return name;
+		}
 
 		@Override
 		public String getArtist()
@@ -182,8 +193,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		@Override
 		public void setName(String name)
 		{
-			// TODO Auto-generated method stub
-
+			this.name = name;
 		}
 
 		@Override

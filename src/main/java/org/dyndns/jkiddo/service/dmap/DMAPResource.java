@@ -43,7 +43,10 @@ import org.dyndns.jkiddo.dmap.chunks.dmap.UpdateResponse;
 import org.dyndns.jkiddo.dmap.chunks.dmap.UpdateType;
 import org.dyndns.jkiddo.dmap.chunks.unknown.AlbumSearchContainer;
 import org.dyndns.jkiddo.dmap.chunks.unknown.ArtistSearchContainer;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownHC;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownHI;
 import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownHL;
+import org.dyndns.jkiddo.dmap.chunks.unknown.UnknownHN;
 
 public abstract class DMAPResource<T extends IItemManager> extends MDNSResource implements ILibraryResource 
 {
@@ -239,7 +242,13 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		// }
 		// playlistSongs.add(deletedListing);
 		// }
-
+		UnknownHL unknownHl = new UnknownHL();
+		ListingItem item = new ListingItem();
+		item.add(new UnknownHC(0x54));// 
+		item.add(new UnknownHI(0));
+		item.add(new UnknownHN(listing.size()));
+		unknownHl.add(item);
+		itemsContainer.add(unknownHl);
 		return Util.buildResponse(itemsContainer, itemManager.getDMAPKey(), name);
 	}
 

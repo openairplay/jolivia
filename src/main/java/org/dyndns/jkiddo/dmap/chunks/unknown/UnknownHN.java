@@ -10,16 +10,16 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.unknown;
 
-import org.dyndns.jkiddo.dmap.chunks.RawChunk;
+import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
 
-public class UnknownHN extends RawChunk
+public class UnknownHN extends UIntChunk
 {
 	public UnknownHN()
 	{
-		this(new byte[] {});
+		this(0);
 	}
 
-	public UnknownHN(byte[] value)
+	public UnknownHN(int value)
 	{
 		super("mshn", "com.apple.itunes.unknown-hn", value);
 	}

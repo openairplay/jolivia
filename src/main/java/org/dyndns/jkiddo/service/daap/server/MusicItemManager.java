@@ -18,15 +18,19 @@ import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader.IMusicItem;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
+import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
 public class MusicItemManager implements IItemManager
 {
-
+	private static final Logger logger = LoggerFactory.getLogger(MusicItemManager.class);
+	
 	private static final VersionChunk protocolVersion = new ProtocolVersion(DmapUtil.PPRO_VERSION_200);
 	private static final VersionChunk daapProtocolVersion = new DaapProtocolVersion(DmapUtil.APRO_VERSION_3011);
 	private static final VersionChunk dmapProtocolVersion = new DmapProtocolVersion(DmapUtil.MPRO_VERSION_209);
@@ -47,6 +51,11 @@ public class MusicItemManager implements IItemManager
 				Item item = new Item();
 				item.setAlbum(null, iMusicItem.getAlbum());
 				item.setArtist(null, iMusicItem.getArtist());
+				if(Strings.isNullOrEmpty(iMusicItem.getName()))
+				{
+					logger.warn("Name of " + iMusicItem + " was null. Song/Item may not be displayed");
+				}
+				item.setName(null, iMusicItem.getName());
 				return item;
 			}
 		});
