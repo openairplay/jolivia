@@ -24,39 +24,31 @@ I'll just give you a brief introduction to how the DACP protocol works (you can 
 
 The session is your 'remote control' instance. On a session you can do the remote control stuff or eg. traverse the library. See the following code example:
 
-			//A single instance of Jolivia pr. process should be sufficient for almost all scenarioes
-			new Jolivia(new IClientSessionListener() {
+		new Jolivia(new IClientSessionListener() {
 
 			@Override
-			public void tearDownSession(String server, int port)
-			{
+			public void tearDownSession(String server, int port) {
 				// TODO Auto-generated method stub
-				// It is detected through Bonjour tha
+
 			}
 
 			@Override
-			public void registerNewSession(Session session) throws Exception
-			{
-				Library library = session.getLibrary();
-                
-                //Do stuff on the library
-				library.getAllTracks().getListing().getListingItems();
-
+			public void registerNewSession(Session session) throws Exception {
 				RemoteControl remoteControl = session.getRemoteControl();
+				Library library = session.getLibrary();
 
-                //Pauses any playing item in iTunes
-				remoteControl.pause();
-
-				//Start play again
+				// Now do stuff :)
 				remoteControl.play();
-
+				remoteControl.getNowPlaying();
+				library.getAllAlbums();
 			}
 		});
+	}
 
 ## Current functionality ##
 
- * DAAP share as provided by iTunes including Zeroconf service discovery/publication. (*Have a look at classes implementing the interface org.dyndns.jkiddo.dmap.service.ILibraryResource*)
- * DACP pairing and remote control functions. (*Have a look at classes implementing the interface org.dyndns.jkiddo.dacp.client.IPairingResource and org.dyndns.jkiddo.daap.client.IAutomatedClientSessionCreator*)
+ * DAAP share as provided by iTunes including Zeroconf service discovery/publication.
+ * DACP pairing and remote control functions. Jolivia implements serverside and clientside, meaning that you can use Jolivia for remote control but you can also use eg. Apple Remote against it.
  * RAOP Streaming aka. Airport Express emulation.
 ## Planned functionality ##
 
