@@ -7,9 +7,12 @@ import javax.jmdns.JmmDNS;
 import javax.jmdns.ServiceInfo;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -29,6 +32,8 @@ import org.dyndns.jkiddo.service.dmap.Util;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
 
+@Consumes(MediaType.WILDCARD)
+//@Produces(MediaType.WILDCARD)
 public class DPAPResource extends DMAPResource<ImageItemManager> implements IImageLibrary
 {
 	public static final String DPAP_SERVER_PORT_NAME = "DPAP_SERVER_PORT_NAME";

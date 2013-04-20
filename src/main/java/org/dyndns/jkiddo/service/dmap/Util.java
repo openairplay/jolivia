@@ -22,6 +22,7 @@ import com.sun.jersey.core.spi.factory.ResponseBuilderImpl;
 
 public class Util
 {
+	public static final String APPLICATION_X_DMAP_TAGGED = "application/x-dmap-tagged";
 	private static final int PARTIAL_CONTENT = 206;
 
 	public static Response buildResponse(Chunk chunk, String dmapKey, String dmapServiceName) throws IOException
@@ -31,7 +32,7 @@ public class Util
 
 	public static Response buildAudioResponse(byte[] buffer, long position, long size, String dmapKey, String dmapServiceName)
 	{
-		ResponseBuilder response = new ResponseBuilderImpl().header("Date", DmapUtil.now()).header(dmapKey, dmapServiceName).header("Content-Type", "application/x-dmap-tagged").header("Connection", "close");
+		ResponseBuilder response = new ResponseBuilderImpl().header("Date", DmapUtil.now()).header(dmapKey, dmapServiceName).header("Content-Type", APPLICATION_X_DMAP_TAGGED).header("Connection", "close");
 
 		if(position == 0)
 		{
@@ -51,7 +52,7 @@ public class Util
 
 	public static ResponseBuilder buildResponse(String dmapKey, String dmapServiceName)
 	{
-		return new ResponseBuilderImpl().header("Date", DmapUtil.now()).header(dmapKey, dmapServiceName).header("Content-Type", "application/x-dmap-tagged").header("Connection", "Keep-Alive").status(Response.Status.OK);
+		return new ResponseBuilderImpl().header("Date", DmapUtil.now()).header(dmapKey, dmapServiceName).header("Content-Type", APPLICATION_X_DMAP_TAGGED).header("Connection", "Keep-Alive").status(Response.Status.OK);
 	}
 
 	public static Response buildEmptyResponse(String dmapKey, String dmapServiceName)

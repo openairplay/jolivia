@@ -40,6 +40,7 @@ import org.dyndns.jkiddo.service.dacp.server.ITouchAbleServerResource;
 import org.dyndns.jkiddo.service.dacp.server.TouchAbleServerResource;
 import org.dyndns.jkiddo.service.dmap.DMAPInterface;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
+import org.dyndns.jkiddo.service.dmap.CustomByteArrayProvider;
 import org.dyndns.jkiddo.service.dpap.server.DPAPResource;
 import org.dyndns.jkiddo.service.dpap.server.IImageLibrary;
 import org.dyndns.jkiddo.service.dpap.server.ImageItemManager;
@@ -249,6 +250,7 @@ public class JoliviaListener extends GuiceServletContextListener
 			@Override
 			protected void configureServlets()
 			{
+				bind(CustomByteArrayProvider.class);
 				filter("*").through(ProxyFilter.class);
 				serve("/*").with(GuiceContainer.class);
 			}

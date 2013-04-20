@@ -7,6 +7,8 @@ public class Noop
 	@Test
 	public void dummy() throws Exception
 	{
+		try
+		{
 		TestSession session = new TestSession("localhost", 3689, "70963BE9D698E147");
 		// session.getRemoteControl().pause();
 		// session.getRemoteControl().play();
@@ -21,5 +23,10 @@ public class Noop
 //		/databases/1/containers?session-id=42&revision-number=1&delta=0&meta=dmap.itemid,dmap.itemname,dmap.persistentid,dmap.parentcontainerid,com.apple.itunes.is-podcast-playlist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,dmap.haschildcontainers,com.apple.itunes.saved-genius
 		Object oo = session.fire(String.format("/databases/%d/containers/%d/items?session-id=%smeta=dmap.itemid,dmap.parentcontainerid", session.getTheDatabase().getItemId(), session.getTheDatabase().getMasterContainer().getItemId(), session.getSessionId()));
 		System.out.println(oo);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
