@@ -10,11 +10,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import org.dyndns.jkiddo.dmap.DmapUtil;
 import org.dyndns.jkiddo.dmap.chunks.dmap.DatabaseCount;
@@ -58,7 +56,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	@Override
 	@Path("server-info")
 	@GET
-	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info) throws IOException
+	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
 	{
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 		serverInfoResponse.add(new Status(200));

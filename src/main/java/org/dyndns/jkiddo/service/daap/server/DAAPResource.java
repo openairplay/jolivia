@@ -16,12 +16,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.NotImplementedException;
@@ -52,7 +50,6 @@ import com.google.common.base.Strings;
 import com.google.common.io.Closeables;
 import com.google.inject.Inject;
 import com.google.inject.name.Named;
-
 @Consumes(MediaType.WILDCARD)
 //@Produces(MediaType.WILDCARD)
 public class DAAPResource extends DMAPResource<MusicItemManager> implements IMusicLibrary
@@ -77,7 +74,6 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 		this.name = applicationName;
 		this.serviceGuid = JoliviaListener.toServiceGuid(applicationName);
 		this.signUp();
-		
 	}
 
 	@Override
@@ -108,7 +104,7 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 	@Override
 	@Path("server-info")
 	@GET
-	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info) throws IOException
+	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
 	{
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 

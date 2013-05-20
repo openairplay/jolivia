@@ -87,12 +87,12 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@Path("server-info")
 	@GET
-	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info) throws IOException
+	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
 	{
 		if(isDaapRequest(httpServletRequest))
-			return musicLibraryResource.serverInfo(httpServletRequest, httpServletResponse, info);
+			return musicLibraryResource.serverInfo(httpServletRequest, httpServletResponse);
 		if(isDpapRequest(httpServletRequest))
-			return imageLibraryResource.serverInfo(httpServletRequest, httpServletResponse, info);
+			return imageLibraryResource.serverInfo(httpServletRequest, httpServletResponse);
 		throw new NotImplementedException();
 	}
 
@@ -119,15 +119,15 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@Path("update")
 	@GET
-	public Response update(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @Context UriInfo info, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
+	public Response update(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
 	{
 		if(isRemoteControlRequest(httpServletRequest))
 			// return remoteControlResource.update(httpServletRequest, httpServletResponse, info, sessionId, revisionNumber, delta, daapNoDisconnect);
-			return musicLibraryResource.update(httpServletRequest, httpServletResponse, info, sessionId, revisionNumber, delta, daapNoDisconnect);
+			return musicLibraryResource.update(httpServletRequest, httpServletResponse, sessionId, revisionNumber, delta, daapNoDisconnect);
 		if(isDaapRequest(httpServletRequest))
-			return musicLibraryResource.update(httpServletRequest, httpServletResponse, info, sessionId, revisionNumber, delta, daapNoDisconnect);
+			return musicLibraryResource.update(httpServletRequest, httpServletResponse, sessionId, revisionNumber, delta, daapNoDisconnect);
 		if(isDpapRequest(httpServletRequest))
-			return imageLibraryResource.update(httpServletRequest, httpServletResponse, info, sessionId, revisionNumber, delta, daapNoDisconnect);
+			return imageLibraryResource.update(httpServletRequest, httpServletResponse, sessionId, revisionNumber, delta, daapNoDisconnect);
 		throw new NotImplementedException();
 	}
 
