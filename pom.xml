@@ -13,26 +13,11 @@
 	<artifactId>jolivia</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<dependencies>
-		<dependency>
-			<groupId>org.jdbi</groupId>
-			<artifactId>jdbi</artifactId>
-			<version>2.48</version>
-		</dependency>
-		<dependency>
-			<groupId>org.xerial</groupId>
-			<artifactId>sqlite-jdbc</artifactId>
-			<version>3.7.2</version>
-		</dependency>
+		
 		<dependency>
 			<groupId>javax.jmdns</groupId>
 			<artifactId>jmdns</artifactId>
 			<version>3.4.1</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -43,6 +28,12 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>jul-to-slf4j</artifactId>
 			<version>1.7.5</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -112,19 +103,19 @@
 			<version>2.0.3</version>
 		</dependency>
 		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty</artifactId>
-			<version>3.6.3.Final</version>
-		</dependency>
-		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcprov-ext-jdk16</artifactId>
-			<version>1.46</version>
-		</dependency>
-		<dependency>
 			<groupId>net.iharder</groupId>
 			<artifactId>base64</artifactId>
 			<version>2.3.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jdbi</groupId>
+			<artifactId>jdbi</artifactId>
+			<version>2.48</version>
+		</dependency>
+		<dependency>
+			<groupId>org.xerial</groupId>
+			<artifactId>sqlite-jdbc</artifactId>
+			<version>3.7.2</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -153,4 +144,13 @@
 			</plugin>
 		</plugins>
 	</build>
+	<packaging>pom</packaging>
+	<modules>
+		<module>jolivia.protocol</module>
+		<module>jolivia.raop</module>
+		<module>jolivia.daap</module>
+		<module>jolivia.dpap</module>
+		<module>jolivia.dacp</module>
+		<module>jolivia.dmap</module>
+	</modules>
 </project>

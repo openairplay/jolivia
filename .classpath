@@ -6,19 +6,9 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry excluding="**" kind="src" output="target/test-classes" path="src/test/resources">
-		<attributes>
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
@@ -32,5 +22,11 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/jolivia.protocol"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jolivia.raop"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jolivia.daap"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jolivia.dacp"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jolivia.dpap"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jolivia.dmap"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

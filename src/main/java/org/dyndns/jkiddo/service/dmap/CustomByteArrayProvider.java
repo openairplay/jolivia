@@ -22,7 +22,7 @@ import com.sun.jersey.core.provider.AbstractMessageReaderWriterProvider;
 @Consumes({ "application/octet-stream", "*/*", Util.APPLICATION_X_DMAP_TAGGED })
 public class CustomByteArrayProvider extends AbstractMessageReaderWriterProvider<byte[]>
 {
-	public boolean supports(Class type)
+	public boolean supports(Class<?> type)
 	{
 		return type == byte[].class;
 	}

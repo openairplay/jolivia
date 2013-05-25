@@ -11,10 +11,11 @@
 package org.dyndns.jkiddo;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.util.EnumSet;
 import java.util.Set;
 
 import javax.jmdns.JmmDNS;
+import javax.servlet.DispatcherType;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 
+import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.jetty.extension.DmapConnector;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
@@ -36,15 +38,14 @@ import org.dyndns.jkiddo.service.daap.server.DAAPResource;
 import org.dyndns.jkiddo.service.daap.server.MusicItemManager;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.DefaultServlet;
 import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import com.google.common.base.Preconditions;
-import com.sun.jersey.api.core.DefaultResourceConfig;
-import com.sun.jersey.spi.container.servlet.ServletContainer;
+import com.google.inject.servlet.GuiceFilter;
 
 public class Jolivia
 {
@@ -166,18 +167,19 @@ public class Jolivia
 		server.setConnectors(new Connector[] { dmapConnector });
 
 		// Guice
-		// ServletContextHandler sch = new ServletContextHandler(server, "/");
-		// sch.addEventListener(new JoliviaListener(port, airplayPort,
-		// pairingCode, name, clientSessionListener, speakerListener,
-		// imageStoreReader, musicStoreReader));
-		// sch.addFilter(GuiceFilter.class, "/*",
-		// EnumSet.of(DispatcherType.REQUEST));
-		// sch.addServlet(DefaultServlet.class, "/");
+		 ServletContextHandler sch = new ServletContextHandler(server, "/");
+		 sch.addEventListener(new JoliviaListener(port, airplayPort,
+		 pairingCode, name, clientSessionListener, speakerListener,
+		 imageStoreReader, musicStoreReader));
+		 sch.addFilter(GuiceFilter.class, "/*",
+		 EnumSet.of(DispatcherType.REQUEST));
+		 sch.addServlet(DefaultServlet.class, "/");
 
 		// No Guice No. 1
-		ServletContextHandler sch = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
-		sch.addServlet(new ServletHolder(new ServletContainer(new DefaultResourceConfig(DAAPServlet.class))), "/*");
+		//ServletContextHandler sch = new ServletContextHandler(server, "/", ServletContextHandler.SESSIONS);
+		//sch.addServlet(new ServletHolder(new ServletContainer(new DefaultResourceConfig(DAAPServlet.class))), "/*");
 
+		// No Guice No. 2
 		// ServletContextHandler sch = new ServletContextHandler(ServletContextHandler.SESSIONS);
 		// sch.setContextPath("/");
 		// server.setHandler(sch);
@@ -186,37 +188,6 @@ public class Jolivia
 		server.start();
 		logger.info(name + " started");
 		server.join();
-	}
-	public static String toHex(String value)
-	{
-		try
-		{
-			return toHex(value.getBytes("UTF-8"));
-		}
-		catch(UnsupportedEncodingException e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
-
-	public static String toHex(byte[] code)
-	{
-		StringBuilder sb = new StringBuilder();
-		for(byte b : code)
-		{
-			sb.append(String.format("%02x", b & 0xff));
-		}
-		return sb.toString().toUpperCase();
-	}
-
-	public static String fromHex(String hex)
-	{
-		StringBuilder str = new StringBuilder();
-		for(int i = 0; i < hex.length(); i += 2)
-		{
-			str.append((char) Integer.parseInt(hex.substring(i, i + 2), 16));
-		}
-		return str.toString();
 	}
 
 	// http://download.eclipse.org/jetty/stable-8/apidocs/
