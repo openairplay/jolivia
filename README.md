@@ -153,6 +153,6 @@ This project has found great inspiration in many projects and the people behind 
  - [rkapsi/daap](https://github.com/rkapsi/daap)
  - [qtunes](https://launchpad.net/qtunes)
 
-This project is licensed under the license presented in the license.txt file.
+This project is licensed under the license presented in the license.txt file. Anyone who uses Jolivia in any kind of software - being commercial or not must notify the author and submit a comment on this project site stating its usage and purpose.
 
 Copyright 2013 [Jens Kristian Villadsen](http://www.genuswillehadus.net). 
