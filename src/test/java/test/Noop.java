@@ -3,6 +3,18 @@ package test;
 import java.util.Collection;
 
 import org.dyndns.jkiddo.Jolivia;
+import org.dyndns.jkiddo.dmap.Container;
+import org.dyndns.jkiddo.dmap.Database;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongTime;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongTrackNumber;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongUserRating;
+import org.dyndns.jkiddo.dmap.chunks.media.ItemId;
+import org.dyndns.jkiddo.dmap.chunks.media.ItemKind;
+import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
+import org.dyndns.jkiddo.dmap.chunks.media.ListingItem;
+import org.dyndns.jkiddo.dmap.chunks.media.UpdateResponse;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
 import org.dyndns.jkiddo.service.daap.client.RemoteControl;
 import org.dyndns.jkiddo.service.daap.client.Session;
@@ -14,24 +26,78 @@ public class Noop {
 	public void usage() throws Exception {
 
 		// As soon as you have entered the pairing code '1337' in iTunes the
-		// registerNewSession will be invoked and the pairning will be stored in
+		// registerNewSession will be invoked and the pairing will be stored in
 		// a local db file and in iTunes as well. Clear the pairing in iTunes by
-		// clearing all remotes. Clear the pairing in Jolivia by deleting the db
+		// clearing all remotes in iTunes as usual. Clear the pairing in Jolivia
+		// by deleting the db
 		// file. Once paired every time you start iTunes this method will be
 		// called. Every time the iTunes instance is
 		// closed the tearDownSession will be invoked.
 		new Jolivia(new IClientSessionListener() {
 
+			private Session session;
+
 			@Override
 			public void tearDownSession(String server, int port) {
 				// Maybe do some clean up?
+				try {
+					session.logout();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
+			@SuppressWarnings("unused")
 			@Override
 			public void registerNewSession(Session session) throws Exception {
 
+				// Showcase on some actions you can do on a session ...
+				// ////////////////////////////////////////
+				this.session = session;
+
+				// getUpdateBlocking blocks until an event happens in iTunes -
+				// eg. pressing play, pause, etc. ...
+				UpdateResponse response = this.session.getUpdateBlocking();
+
+				Database itunesDatabase = this.session.getDatabase();
+
+				// Get all playlists. For now the playlists only contains the
+				// master playlist. This is to be expanded
+				Collection<Container> playlists = itunesDatabase
+						.getContainers();
+
+				// Traverse the library for eg. all tracks
+				for (SongArtist artist : this.session.getLibrary()
+						.getAllArtists().getBrowseArtistListing()
+						.getSongArtists()) {
+					System.out.println(artist.getValue());
+				}
+
+				// Extract information from a generic listing
+				for (ListingItem item : this.session.getLibrary()
+						.getAllTracks().getListing().getListingItems()) {
+					System.out.println(item.getSpecificChunk(SongAlbum.class)
+							.getValue());
+					System.out.println(item.getSpecificChunk(SongArtist.class)
+							.getValue());
+					System.out.println(item.getSpecificChunk(SongTime.class)
+							.getValue());
+					System.out.println(item.getSpecificChunk(
+							SongTrackNumber.class).getValue());
+					System.out.println(item.getSpecificChunk(
+							SongUserRating.class).getValue());
+					System.out.println(item.getSpecificChunk(ItemName.class)
+							.getValue());
+					System.out.println(item.getSpecificChunk(ItemKind.class)
+							.getValue());
+					System.out.println(item.getSpecificChunk(ItemId.class)
+							.getValue());
+				}
+
 				// Showcase on some actions you can do on speakers ...
-				RemoteControl remoteControl = session.getRemoteControl();
+				// ////////////////////////////////////////
+				RemoteControl remoteControl = this.session.getRemoteControl();
 				// Set min volume
 				remoteControl.setVolume(0);
 				// Set max volume

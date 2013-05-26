@@ -24,23 +24,104 @@ I'll just give you a brief introduction to how the DACP protocol works (you can 
 
 The session is your 'remote control' instance. On a session you can do the remote control stuff or eg. traverse the library. See the following code example:
 
+		// As soon as you have entered the pairing code (defaults to '1337') in iTunes the
+		// registerNewSession will be invoked and the pairing will be stored in
+		// a local db file and in iTunes as well. Clear the pairing in iTunes by
+		// clearing all remotes in iTunes as usual. Clear the pairing in Jolivia
+		// by deleting the db
+		// file. Once paired every time you start iTunes this method will be
+		// called. Every time the iTunes instance is
+		// closed the tearDownSession will be invoked.
 		new Jolivia(new IClientSessionListener() {
+
+			private Session session;
 
 			@Override
 			public void tearDownSession(String server, int port) {
-				// TODO Auto-generated method stub
-
+				// Maybe do some clean up?
+				try {
+					session.logout();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 
+			@SuppressWarnings("unused")
 			@Override
 			public void registerNewSession(Session session) throws Exception {
-				RemoteControl remoteControl = session.getRemoteControl();
-				Library library = session.getLibrary();
 
-				// Now do stuff :)
-				remoteControl.play();
-				remoteControl.getNowPlaying();
-				library.getAllAlbums();
+				// Showcase on some actions you can do on a session ...
+				// ////////////////////////////////////////
+				this.session = session;
+
+				// getUpdateBlocking blocks until an event happens in iTunes -
+				// eg. pressing play, pause, etc. ...
+				UpdateResponse response = this.session.getUpdateBlocking();
+
+				Database itunesDatabase = this.session.getDatabase();
+
+				// Get all playlists. For now the playlists only contains the
+				// master playlist. This is to be expanded
+				Collection<Container> playlists = itunesDatabase
+						.getContainers();
+
+				// Traverse the library for eg. all tracks
+				for (SongArtist artist : this.session.getLibrary()
+						.getAllArtists().getBrowseArtistListing()
+						.getSongArtists()) {
+					System.out.println(artist.getValue());
+				}
+
+				// Extract information from a generic listing
+				for (ListingItem item : this.session.getLibrary()
+						.getAllTracks().getListing().getListingItems()) {
+					System.out.println(item.getSpecificChunk(SongAlbum.class)
+							.getValue());
+					System.out.println(item.getSpecificChunk(SongArtist.class)
+							.getValue());
+					System.out.println(item.getSpecificChunk(SongTime.class)
+							.getValue());
+					System.out.println(item.getSpecificChunk(
+							SongTrackNumber.class).getValue());
+					System.out.println(item.getSpecificChunk(
+							SongUserRating.class).getValue());
+					System.out.println(item.getSpecificChunk(ItemName.class)
+							.getValue());
+					System.out.println(item.getSpecificChunk(ItemKind.class)
+							.getValue());
+					System.out.println(item.getSpecificChunk(ItemId.class)
+							.getValue());
+				}
+
+				// Showcase on some actions you can do on speakers ...
+				// ////////////////////////////////////////
+				RemoteControl remoteControl = this.session.getRemoteControl();
+				// Set min volume
+				remoteControl.setVolume(0);
+				// Set max volume
+				remoteControl.setVolume(100);
+				// Get the master volume
+				remoteControl.getMasterVolume();
+
+				// Get all speakers visible to iTunes instance
+				Collection<Speaker> speakers = remoteControl.getSpeakers();
+
+				// Mark all speakers active meaning they are prepared for being
+				// used for the iTunes instance
+				for (Speaker s : speakers) {
+					s.setActive(true);
+				}
+				// Assign all the active speakers to the iTunes instance. This
+				// means that all the speakers will now be used for output
+				remoteControl.setSpeakers(speakers);
+
+				// Change the volume individually on each speaker
+				speakers = remoteControl.getSpeakers();
+				for (Speaker s : speakers) {
+					remoteControl.setSpeakerVolume(s.getId(), 60, 50, 40, 30,
+							100);
+				}
 			}
 		});
 	}
@@ -52,7 +133,7 @@ The session is your 'remote control' instance. On a session you can do the remot
  * RAOP Streaming aka. Airport Express emulation.
 ## Planned functionality ##
 
- * RAOP could be implemented as in [RPlay](https://github.com/bencall/RPlay), [AirReceiver](https://github.com/fgp/AirReceiver), [AP4J-Player](https://github.com/carsonmcdonald/AP4J-Player), [qtunes](https://launchpad.net/qtunes) or [JAirPort](https://github.com/froks/JAirPort).
+ * RAOP client - could be implemented as in [RPlay](https://github.com/bencall/RPlay), [AirReceiver](https://github.com/fgp/AirReceiver), [AP4J-Player](https://github.com/carsonmcdonald/AP4J-Player), [qtunes](https://launchpad.net/qtunes) or [JAirPort](https://github.com/froks/JAirPort).
  * DPAP implementation (ongoing ... ).
 
 ## Far future functionality ##

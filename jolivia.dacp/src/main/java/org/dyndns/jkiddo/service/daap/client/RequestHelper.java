@@ -55,6 +55,9 @@ import com.google.common.io.Closeables;
 
 public class RequestHelper
 {
+	private static final int CONNECT_TIMEOUT = 10000;
+	private static final int READ_TIMEOUT = 0; //Infinite
+	
 	public final static Logger logger = LoggerFactory.getLogger(RequestHelper.class);
 
 	public static byte[] requestBitmap(String remote) throws Exception
@@ -112,15 +115,10 @@ public class RequestHelper
 //		connection.setRequestProperty("Client-DPAP-Version", "1.1");
 //		connection.setRequestProperty("Client-iTunes-Sharing-Version", "3.9");
 		connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
-
+		connection.setReadTimeout(READ_TIMEOUT);
 		if(!keepalive)
 		{
-			connection.setConnectTimeout(10000);
-			connection.setReadTimeout(10000);
-		}
-		else
-		{
-			connection.setReadTimeout(10000);
+			connection.setConnectTimeout(CONNECT_TIMEOUT);
 		}
 		connection.connect();
 

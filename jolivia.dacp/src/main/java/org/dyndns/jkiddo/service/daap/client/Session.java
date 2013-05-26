@@ -39,7 +39,6 @@ import java.util.NoSuchElementException;
 
 import org.dyndns.jkiddo.dmap.Container;
 import org.dyndns.jkiddo.dmap.Database;
-import org.dyndns.jkiddo.dmap.chunks.Chunk;
 import org.dyndns.jkiddo.dmap.chunks.audio.BaseContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseContainerns;
 import org.dyndns.jkiddo.dmap.chunks.audio.ServerDatabases;
@@ -72,32 +71,32 @@ public class Session
 
 	private final RemoteControl remoteControl;
 
-	public final long getRevision()
+	public long getRevision()
 	{
 		return revision;
 	}
 
-	public final int getSessionId()
+	public int getSessionId()
 	{
 		return sessionId;
 	}
 
-	final Database getDatabase()
+	public Database getDatabase()
 	{
 		return database;
 	}
 
-	final Database getRadioDatabase()
+	public Database getRadioDatabase()
 	{
 		return radioDatabase;
 	}
 
-	public final Library getLibrary()
+	public Library getLibrary()
 	{
 		return library;
 	}
 
-	public final RemoteControl getRemoteControl()
+	public RemoteControl getRemoteControl()
 	{
 		return remoteControl;
 	}
@@ -220,12 +219,7 @@ public class Session
 	// Query the media server about the content codes it handles
 	public ContentCodesResponse getContentCodes() throws Exception
 	{
-		ContentCodesResponse contentcodes = RequestHelper.requestParsed(String.format("%s/content-codes?session-id=%s", this.getRequestBase(), this.sessionId));
-		for(Chunk contentCode : contentcodes)
-		{
-			logger.info(contentCode.getContentCodeString());
-		}
-		return contentcodes;
+		return RequestHelper.requestParsed(String.format("%s/content-codes?session-id=%s", this.getRequestBase(), this.sessionId));
 	}
 
 	/**
