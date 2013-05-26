@@ -14,8 +14,11 @@ public class Noop {
 	public void usage() throws Exception {
 
 		// As soon as you have entered the pairing code '1337' in iTunes the
-		// registerNewSession will be invoked. Once paired every time you start
-		// iTunes this method will be called. Every time the iTunes instance is
+		// registerNewSession will be invoked and the pairning will be stored in
+		// a local db file and in iTunes as well. Clear the pairing in iTunes by
+		// clearing all remotes. Clear the pairing in Jolivia by deleting the db
+		// file. Once paired every time you start iTunes this method will be
+		// called. Every time the iTunes instance is
 		// closed the tearDownSession will be invoked.
 		new Jolivia(new IClientSessionListener() {
 
