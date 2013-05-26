@@ -88,7 +88,7 @@ public class AirPlayResourceWrapper extends MDNSResource
 		map.put("cn", "0,1");
 		map.put("vn", "3");
 
-		return ServiceInfo.create(RAOP_SERVICE_TYPE, hardwareAddressString + "@" + name + "@" + hostname, this.port, 0, 0, map);
+		return ServiceInfo.create(RAOP_SERVICE_TYPE, hardwareAddressString + "@" + name, this.port, 0, 0, map);
 	}
 
 	@Override

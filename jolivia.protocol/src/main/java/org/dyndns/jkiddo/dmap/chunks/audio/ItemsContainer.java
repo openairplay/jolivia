@@ -42,7 +42,7 @@ public class ItemsContainer extends ContainerChunk
 
 	public ItemsContainer()
 	{
-		super("apso", "dMap.playlistitems");
+		super("apso", "dmap.playlistitems");
 	}
 
 	public Listing getListing()

@@ -36,6 +36,7 @@
 package org.dyndns.jkiddo.service.daap.client;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 import org.dyndns.jkiddo.dmap.chunks.control.PlayingStatus;
@@ -110,7 +111,7 @@ public class RemoteControl
 	 * @return list of available speakers
 	 * @throws Exception
 	 */
-	public List<Speaker> getSpeakers() throws Exception
+	public Collection<Speaker> getSpeakers() throws Exception
 	{
 		List<Speaker> speakers = Lists.newArrayList();
 
@@ -146,7 +147,7 @@ public class RemoteControl
 	 *            all speakers to read the active flag from
 	 * @throws Exception
 	 */
-	public void setSpeakers(List<Speaker> speakers) throws Exception
+	public void setSpeakers(Collection<Speaker> speakers) throws Exception
 	{
 		String idsString = "";
 		boolean first = true;
@@ -297,6 +298,10 @@ public class RemoteControl
 
 	public void setVolume(long volume) throws Exception
 	{
+		if(volume > 100 || volume < 0)
+		{
+			logger.debug("Volume should be in the range 0 to 100");
+		}
 		// http://192.168.254.128:3689/ctrl-int/1/setproperty?dmcp.volume=100.000000&session-id=130883770
 		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dmcp.volume=%s&session-id=%s", session.getRequestBase(), volume, session.getSessionId()));
 	}

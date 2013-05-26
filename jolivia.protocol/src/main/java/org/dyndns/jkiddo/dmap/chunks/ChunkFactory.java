@@ -226,7 +226,8 @@ public final class ChunkFactory
 		map.put(new Integer(0x6d647374), org.dyndns.jkiddo.dmap.chunks.media.DownloadStatus.class); // mdst
 		map.put(new Integer(0x61676163), org.dyndns.jkiddo.dmap.chunks.audio.UnknownAC.class); // agac
 		map.put(new Integer(0x61737269), org.dyndns.jkiddo.dmap.chunks.audio.UnknownRI.class); // asri
-		
+		map.put(new Integer(0x63616976), org.dyndns.jkiddo.dmap.chunks.control.UnknownIV.class); // caiv
+		map.put(new Integer(0x63616970), org.dyndns.jkiddo.dmap.chunks.control.UnknownIP.class); // caip
 	}
 
 	public Class<? extends Chunk> getChunkClass(Integer contentCode)

@@ -16,7 +16,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 import javax.jmdns.JmmDNS;
 import javax.jmdns.ServiceInfo;
@@ -86,7 +85,6 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 	public Response pair(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairingcode") String pairingcode, @QueryParam("servicename") String servicename) throws IOException
 	{
 		byte[] code = new byte[]{0, 0, 0, 0, 0, 0, 0, 1};
-		new Random().nextBytes(code);
 
 		String match = expectedPairingCode(actualCode, database.getPairCode());
 		if(match.equals(pairingcode))

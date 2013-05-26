@@ -240,7 +240,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 		Dictionary dictionary = new Dictionary();
 		dictionary.add(new ItemName("My Compounter"));
 		dictionary.add(new RelativeVolume(100));
-		dictionary.add(new UnknownVD(1));
+		dictionary.add(new UnknownVD(true));
 		dictionary.add(new SpeakerMacAddress(0));
 		dictionary.add(new SpeakerActive(true));
 

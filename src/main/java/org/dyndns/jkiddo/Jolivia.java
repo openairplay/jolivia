@@ -11,6 +11,7 @@
 package org.dyndns.jkiddo;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -34,6 +35,7 @@ import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
 import org.dyndns.jkiddo.service.daap.client.Library;
 import org.dyndns.jkiddo.service.daap.client.RemoteControl;
 import org.dyndns.jkiddo.service.daap.client.Session;
+import org.dyndns.jkiddo.service.daap.client.Speaker;
 import org.dyndns.jkiddo.service.daap.server.DAAPResource;
 import org.dyndns.jkiddo.service.daap.server.MusicItemManager;
 import org.eclipse.jetty.server.Connector;
@@ -53,8 +55,6 @@ public class Jolivia
 
 	public static void main(String[] args) throws Exception
 	{
-		SLF4JBridgeHandler.removeHandlersForRootLogger();
-		SLF4JBridgeHandler.install();
 		new Jolivia(new IClientSessionListener() {
 
 			@Override
@@ -67,18 +67,31 @@ public class Jolivia
 			@Override
 			public void registerNewSession(Session session) throws Exception
 			{
-				RemoteControl remoteControl = session.getRemoteControl();
 				Library library = session.getLibrary();
-
-				// Now do stuff :)
-				remoteControl.play();
+				library.getAllTracks();
+				
+				RemoteControl remoteControl = session.getRemoteControl();
+				remoteControl.setVolume(0);
+				remoteControl.setVolume(100);
+				remoteControl.getMasterVolume();
 				remoteControl.getNowPlaying();
 				remoteControl.getPlayStatusUpdate();
-				remoteControl.playQueueEdit(187, 106);
-
-				library.getAllAlbums();
-				library.getArtists();
-				library.unknownQuery();
+				
+				Collection<Speaker> speakers = remoteControl.getSpeakers();
+				for(Speaker s : speakers)
+				{
+					s.setActive(true);
+				}
+				remoteControl.setSpeakers(speakers);
+				speakers = remoteControl.getSpeakers();
+				for(Speaker s : speakers)
+				{
+					remoteControl.setSpeakerVolume(s.getId(), 60, 50, 40, 30, 100);	
+				}
+//				
+				// remoteControl.play();
+//				PlayingStatus rr = remoteControl.getNowPlaying();
+//				PlayingStatus rdr = remoteControl.getPlayStatusUpdate();
 			}
 		}, new DeskMusicStoreReader());
 	}
@@ -155,6 +168,9 @@ public class Jolivia
 
 	public Jolivia(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
 	{
+		SLF4JBridgeHandler.removeHandlersForRootLogger();
+		SLF4JBridgeHandler.install();
+		
 		Preconditions.checkArgument(!(pairingCode > 9999), "Pairingcode must be expressed within 4 ciphers");
 		logger.info("Starting " + name + " on port " + port);
 		Server server = new Server(port);

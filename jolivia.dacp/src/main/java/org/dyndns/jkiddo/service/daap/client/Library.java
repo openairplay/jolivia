@@ -154,7 +154,7 @@ public class Library
 		return listingItem.getSpecificChunk(SongUserRating.class);
 	}
 	
-	public Object unknownQuery() throws Exception
+	public ItemsContainer getUnknownQuery() throws Exception
 	{
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%s/items?meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbumartist,daap.songalbum,com.apple.itunes.cloud-id,dmap.containeritemid,com.apple.itunes.has-video,com.apple.itunes.itms-songid,com.apple.itunes.extended-media-kind,dmap.downloadstatus,daap.songdisabled&type=music&sort=name&include-sort-headers=1&query=('com.apple.itunes.extended-media-kind:1','com.apple.itunes.extended-media-kind:32')&session-id=%s", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId()), false);
 	}
