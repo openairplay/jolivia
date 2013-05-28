@@ -152,5 +152,6 @@
 		<module>jolivia.dpap</module>
 		<module>jolivia.dacp</module>
 		<module>jolivia.dmap</module>
+		<module>jolivia.airplay</module>
 	</modules>
 </project>

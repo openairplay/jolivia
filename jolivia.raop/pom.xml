@@ -6,7 +6,7 @@
 		<artifactId>jolivia</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>jolivia.raop</artifactId>
+	<artifactId>jolivia.airplay</artifactId>
 	<dependencies>
 		<dependency>
 			<groupId>io.netty</groupId>

@@ -82,6 +82,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 		records.put(IPSH_VERSION_KEY, DmapUtil.PPRO_VERSION_200 + "");
 		records.put(MACHINE_ID_KEY, hash);
 		records.put(PASSWORD_KEY, "0");
+		
 		return ServiceInfo.create(DPAP_SERVICE_TYPE, name, port, 0, 0, records);
 	}
 

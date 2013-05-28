@@ -314,8 +314,9 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	 * <li> {@code <attribute>=aesiv}
 	 * </ul>
 	 */
-	private static Pattern s_pattern_sdp_a = Pattern.compile("^([a-z]+):(.*)$");
-
+//	private static Pattern s_pattern_sdp_a = Pattern.compile("^([a-z]+):(.*)$");
+	//Added min-latency and max-latency tollerence
+	private static Pattern s_pattern_sdp_a = Pattern.compile("^([a-z]+.?[a-z]+):(.*)$");
 	/**
 	 * SDP {@code a} attribute {@code rtpmap}. Format is <br>
 	 * {@code <format> <encoding>} for RAOP/AirTunes instead of {@code <format> <encoding>/<clock rate>}.
@@ -418,6 +419,10 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 					{
 						/* Sets the AES initialization vector */
 						aesIv = new IvParameterSpec(Base64.decodeUnpadded(value));
+					}
+					else
+					{
+						s_logger.log(Level.INFO, "Key " + key + " was unmapped");
 					}
 					break;
 
