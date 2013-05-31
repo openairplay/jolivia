@@ -70,24 +70,26 @@ public class RAOPResourceWrapper extends MDNSResource
 	{
 		Map<String, String> map = Maps.newHashMap();
 		
-		map.put("am", "AirPort4,107");
+		map.put("am", "Jolivia");
 //		map.put("am", "AirPort4,107");
 		map.put("ch", "2");
 		map.put("cn", "0,1");
 		map.put("da", "true");
 		map.put("ek", "1");
 		map.put("et", "0,1");
-		map.put("fv", "76300.7");
+//		map.put("fv", "76300.7");
 		map.put("pw", "false");
-		map.put("sf", "0x1");
+//		map.put("sf", "0x1");
 		map.put("sr", "44100");
 		map.put("ss", "16");
-		map.put("sv", "false");
+//		map.put("sv", "false");
 		map.put("tp", "UDP");
 //		map.put("tp", "TCP,UDP");
 		map.put("txtvers", "1");
-		map.put("vn", "65537");
+//		map.put("vn", "65537");
 
+		// ...
+		
 //		map.put("txtvers", "1");
 //		map.put("tp", "UDP");
 //		map.put("ch", "2");

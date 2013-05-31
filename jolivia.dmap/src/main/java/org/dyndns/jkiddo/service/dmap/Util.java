@@ -129,6 +129,12 @@ public class Util
 		}
 		return s.toString();
 	}
+	
+	public static String toMacString(final byte[] bytes)
+	{
+		String hex = toHexString(bytes);
+		return hex.substring(0,2) +  ":" + hex.substring(2,4) + ":" + hex.substring(4,6) + ":" + hex.substring(6,8) + ":" + hex.substring(8,10) + ":" + hex.substring(10,12);
+	}
 
 	/**
 	 * Returns a suitable hardware address.

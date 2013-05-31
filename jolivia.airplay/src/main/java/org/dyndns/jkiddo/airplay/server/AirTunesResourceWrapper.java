@@ -17,7 +17,6 @@ import com.google.inject.name.Named;
 
 public class AirTunesResourceWrapper extends MDNSResource
 {
-//	public final static String AIRPORT = "_airport._tcp.local.";
 	public final static String AIRPLAY = "_airplay._tcp.local.";
 	
 	private static final Logger logger = LoggerFactory.getLogger(AirTunesResourceWrapper.class);
@@ -38,11 +37,11 @@ public class AirTunesResourceWrapper extends MDNSResource
 	protected ServiceInfo getServiceInfoToRegister()
 	{
 		Map<String, String> map = Maps.newHashMap();
-		map.put("deviceid", Util.toHexString(Util.getHardwareAddress()));
+		map.put("deviceid", Util.toMacString(Util.getHardwareAddress()));
 		map.put("features", "0x100029ff");
 		map.put("model", "AppleTV3,1");
-		map.put("rhd", "1.9.0");
 		map.put("srcvers", "150.33");
+		map.put("rhd", "1.9.0");
 		map.put("vv", "1");
 
 		return ServiceInfo.create(AIRPLAY, name, this.port, 0, 0, map);
