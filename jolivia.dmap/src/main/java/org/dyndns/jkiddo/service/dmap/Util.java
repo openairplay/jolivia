@@ -12,12 +12,18 @@ package org.dyndns.jkiddo.service.dmap;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Arrays;
+import java.util.Collections;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.dyndns.jkiddo.dmap.DmapUtil;
 import org.dyndns.jkiddo.dmap.chunks.Chunk;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.sun.jersey.core.spi.factory.ResponseBuilderImpl;
 
@@ -25,6 +31,7 @@ public class Util
 {
 	public static final String APPLICATION_NAME = "APPLICATION_NAME";
 	public static final String APPLICATION_X_DMAP_TAGGED = "application/x-dmap-tagged";
+	private static final Logger logger = LoggerFactory.getLogger(Util.class);
 	
 	private static final int PARTIAL_CONTENT = 206;
 
@@ -104,4 +111,109 @@ public class Util
 		}
 		return str.toString();
 	}
+	
+	/**
+	 * Converts an array of bytes to a hexadecimal string
+	 * 
+	 * @param bytes
+	 *            array of bytes
+	 * @return hexadecimal representation
+	 */
+	public static String toHexString(final byte[] bytes)
+	{
+		final StringBuilder s = new StringBuilder();
+		for(final byte b : bytes)
+		{
+			final String h = Integer.toHexString(0x100 | b);
+			s.append(h.substring(h.length() - 2, h.length()).toUpperCase());
+		}
+		return s.toString();
+	}
+	
+	public static String toMacString(final byte[] bytes)
+	{
+		String hex = toHexString(bytes);
+		return hex.substring(0,2) +  ":" + hex.substring(2,4) + ":" + hex.substring(4,6) + ":" + hex.substring(6,8) + ":" + hex.substring(8,10) + ":" + hex.substring(10,12);
+	}
+
+	/**
+	 * Returns a suitable hardware address.
+	 * 
+	 * @return a MAC address
+	 */
+	public static byte[] getHardwareAddress()
+	{
+		try
+		{
+			/* Search network interfaces for an interface with a valid, non-blocked hardware address */
+			for(final NetworkInterface iface : Collections.list(NetworkInterface.getNetworkInterfaces()))
+			{
+				if(iface.isLoopback())
+					continue;
+				if(iface.isPointToPoint())
+					continue;
+				if(!iface.isUp())
+					continue;
+				try
+				{
+					final byte[] ifaceMacAddress = iface.getHardwareAddress();
+					if((ifaceMacAddress != null) && (ifaceMacAddress.length == 6) && !isBlockedHardwareAddress(ifaceMacAddress))
+					{
+						logger.info("Hardware address is " + toHexString(ifaceMacAddress) + " (" + iface.getDisplayName() + ")");
+						return Arrays.copyOfRange(ifaceMacAddress, 0, 6);
+					}
+				}
+				catch(final Throwable e)
+				{
+					/* Ignore */
+				}
+			}
+		}
+		catch(final Throwable e)
+		{
+			/* Ignore */
+		}
+
+		/* Fallback to the IP address padded to 6 bytes */
+		try
+		{
+			final byte[] hostAddress = Arrays.copyOfRange(InetAddress.getLocalHost().getAddress(), 0, 6);
+			logger.info("Hardware address is " + toHexString(hostAddress) + " (IP address)");
+			return hostAddress;
+		}
+		catch(final Throwable e)
+		{
+			/* Ignore */
+		}
+
+		/* Fallback to a constant */
+		logger.info("Hardware address is 00DEADBEEF00 (last resort)");
+		return new byte[] { (byte) 0x00, (byte) 0xDE, (byte) 0xAD, (byte) 0xBE, (byte) 0xEF, (byte) 0x00 };
+	}
+
+	/**
+	 * Decides whether or nor a given MAC address is the address of some virtual interface, like e.g. VMware's host-only interface (server-side).
+	 * 
+	 * @param addr
+	 *            a MAC address
+	 * @return true if the MAC address is unsuitable as the device's hardware address
+	 */
+	public static boolean isBlockedHardwareAddress(final byte[] addr)
+	{
+		if((addr[0] & 0x02) != 0)
+			/* Locally administered */
+			return true;
+		else if((addr[0] == 0x00) && (addr[1] == 0x50) && (addr[2] == 0x56))
+			/* VMware */
+			return true;
+		else if((addr[0] == 0x00) && (addr[1] == 0x1C) && (addr[2] == 0x42))
+			/* Parallels */
+			return true;
+		else if((addr[0] == 0x00) && (addr[1] == 0x25) && (addr[2] == (byte) 0xAE))
+			/* Microsoft */
+			return true;
+		else
+			return false;
+	}
+
 }

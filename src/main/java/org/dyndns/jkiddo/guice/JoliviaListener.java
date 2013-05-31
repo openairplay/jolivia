@@ -19,10 +19,9 @@ import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
 import org.dyndns.jkiddo.jetty.ProxyFilter;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
-import org.dyndns.jkiddo.raop.client.ISpeakerListener;
+import org.dyndns.jkiddo.raop.ISpeakerListener;
 import org.dyndns.jkiddo.raop.client.RemoteSpeakerDiscoverer;
-import org.dyndns.jkiddo.raop.client.model.Device;
-import org.dyndns.jkiddo.raop.server.AirPlayResourceWrapper;
+import org.dyndns.jkiddo.raop.server.RAOPResourceWrapper;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
 import org.dyndns.jkiddo.service.daap.client.PairedRemoteDiscoverer;
 import org.dyndns.jkiddo.service.daap.client.Session;
@@ -60,7 +59,7 @@ public class JoliviaListener extends GuiceServletContextListener
 	final private Integer airplayPort;
 	final private String name;
 	final private IClientSessionListener clientSessionListener;
-	final private ISpeakerListener speakerListener;
+//	final private ISpeakerListener speakerListener;
 	final private IImageStoreReader imageStoreReader;
 	final private IMusicStoreReader musicStoreReader;
 
@@ -96,29 +95,29 @@ public class JoliviaListener extends GuiceServletContextListener
 		{
 			this.clientSessionListener = clientSessionListener;
 		}
-		if(speakerListener == null)
-		{
-			this.speakerListener = new ISpeakerListener() {
-
-				@Override
-				public void removeAvailableSpeaker(String server, int port)
-				{
-					// TODO Auto-generated method stub
-
-				}
-
-				@Override
-				public void registerAvailableSpeaker(Device device)
-				{
-					// TODO Auto-generated method stub
-
-				}
-			};
-		}
-		else
-		{
-			this.speakerListener = speakerListener;
-		}
+//		if(speakerListener == null)
+//		{
+//			this.speakerListener = new ISpeakerListener() {
+//
+//				@Override
+//				public void removeAvailableSpeaker(String server, int port)
+//				{
+//					// TODO Auto-generated method stub
+//
+//				}
+//
+//				@Override
+//				public void registerAvailableSpeaker(Device device)
+//				{
+//					// TODO Auto-generated method stub
+//
+//				}
+//			};
+//		}
+//		else
+//		{
+//			this.speakerListener = speakerListener;
+//		}
 		if(musicStoreReader == null)
 		{
 			this.musicStoreReader = new IMusicStoreReader() {
@@ -220,16 +219,16 @@ public class JoliviaListener extends GuiceServletContextListener
 			@Override
 			protected void configure()
 			{
-				bind(RemoteSpeakerDiscoverer.class).asEagerSingleton();
-				bind(ISpeakerListener.class).toInstance(speakerListener);
+//				bind(RemoteSpeakerDiscoverer.class).asEagerSingleton();
+//				bind(ISpeakerListener.class).toInstance(speakerListener);
 			}
 		}, new AbstractModule() {
 
 			@Override
 			protected void configure()
 			{
-				bind(Integer.class).annotatedWith(Names.named(AirPlayResourceWrapper.RAOP_PORT_NAME)).toInstance(airplayPort);
-				bind(AirPlayResourceWrapper.class).asEagerSingleton();
+				bind(Integer.class).annotatedWith(Names.named(RAOPResourceWrapper.RAOP_PORT_NAME)).toInstance(airplayPort);
+				bind(RAOPResourceWrapper.class).asEagerSingleton();
 			}
 		}
 

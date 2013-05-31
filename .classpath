@@ -23,7 +23,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/jolivia.protocol"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jolivia.raop"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jolivia.airplay"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jolivia.daap"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jolivia.dacp"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jolivia.dpap"/>

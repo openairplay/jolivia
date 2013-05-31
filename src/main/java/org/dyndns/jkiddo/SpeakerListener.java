@@ -1,6 +1,6 @@
 package org.dyndns.jkiddo;
 
-import org.dyndns.jkiddo.raop.client.ISpeakerListener;
+import org.dyndns.jkiddo.raop.ISpeakerListener;
 import org.dyndns.jkiddo.raop.client.model.Device;
 import org.dyndns.jkiddo.raop.client.model.DeviceConnection;
 

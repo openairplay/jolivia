@@ -20,6 +20,7 @@ import javax.jmdns.NetworkTopologyEvent;
 import javax.jmdns.ServiceEvent;
 
 import org.dyndns.jkiddo.IDiscoverer;
+import org.dyndns.jkiddo.raop.ISpeakerListener;
 import org.dyndns.jkiddo.raop.client.model.Device;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,7 @@ public class RemoteSpeakerDiscoverer implements IDiscoverer
 	{
 		this.mDNS = mDNS;
 		this.speakerListener = speakerListener;
-		this.mDNS.addServiceListener(ISpeakerListener.AIRPORT, this);
+		this.mDNS.addServiceListener(ISpeakerListener.RAOP_TYPE, this);
 		this.mDNS.addNetworkTopologyListener(this);
 	}
 
@@ -72,7 +73,7 @@ public class RemoteSpeakerDiscoverer implements IDiscoverer
 		JmDNS mdns = event.getDNS();
 		InetAddress address = event.getInetAddress();
 		logger.info("Registered RemoteSpeakerDiscoverer @ " + address.getHostAddress());
-		mdns.addServiceListener(ISpeakerListener.AIRPORT, this);
+		mdns.addServiceListener(ISpeakerListener.RAOP_TYPE, this);
 		interfaces.put(mdns, address);
 	}
 
@@ -80,7 +81,7 @@ public class RemoteSpeakerDiscoverer implements IDiscoverer
 	public void inetAddressRemoved(NetworkTopologyEvent event)
 	{
 		JmDNS mdns = event.getDNS();
-		mdns.removeServiceListener(ISpeakerListener.AIRPORT, this);
+		mdns.removeServiceListener(ISpeakerListener.RAOP_TYPE, this);
 		mdns.unregisterAllServices();
 		interfaces.remove(mdns);
 	}
