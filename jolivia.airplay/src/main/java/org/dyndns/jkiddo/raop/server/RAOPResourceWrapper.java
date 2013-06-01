@@ -63,45 +63,49 @@ public class RAOPResourceWrapper extends MDNSResource
 		airTunesRtspBootstrap.setOption("child.keepAlive", true);
 		allChannels.add(airTunesRtspBootstrap.bind(new InetSocketAddress(Inet4Address.getByName("0.0.0.0"), this.port)));
 	}
-	
+
 	// http://nto.github.io/AirPlay.html
+	// http://cocoadev.com/wiki/AirTunesRendezvous
 	@Override
 	protected ServiceInfo getServiceInfoToRegister()
 	{
 		Map<String, String> map = Maps.newHashMap();
-		
+
 		map.put("am", "Jolivia");
-//		map.put("am", "AirPort4,107");
+		// map.put("am", "AirPort4,107");
 		map.put("ch", "2");
 		map.put("cn", "0,1");
 		map.put("da", "true");
 		map.put("ek", "1");
 		map.put("et", "0,1");
-//		map.put("fv", "76300.7");
+		map.put("md", "0,1,2");
+		// map.put("fv", "76300.7");
 		map.put("pw", "false");
-//		map.put("sf", "0x1");
+		map.put("sm", "false");
+		// map.put("sf", "0x1");
 		map.put("sr", "44100");
 		map.put("ss", "16");
-//		map.put("sv", "false");
+		// map.put("sv", "false");
 		map.put("tp", "UDP");
-//		map.put("tp", "TCP,UDP");
+		// map.put("tp", "TCP,UDP");
 		map.put("txtvers", "1");
-//		map.put("vn", "65537");
+		map.put("vn", "65537");
+		map.put("vs", "105.1");
 
 		// ...
-		
-//		map.put("txtvers", "1");
-//		map.put("tp", "UDP");
-//		map.put("ch", "2");
-//		map.put("ss", "16");
-//		map.put("sr", "44100");
-//		map.put("pw", "false");
-//		map.put("sm", "false");
-//		map.put("sv", "false");
-//		map.put("ek", "1");
-//		map.put("et", "0,1");
-//		map.put("cn", "0,1");
-//		map.put("vn", "3");
+
+		// map.put("txtvers", "1");
+		// map.put("tp", "UDP");
+		// map.put("ch", "2");
+		// map.put("ss", "16");
+		// map.put("sr", "44100");
+		// map.put("pw", "false");
+		// map.put("sm", "false");
+		// map.put("sv", "false");
+		// map.put("ek", "1");
+		// map.put("et", "0,1");
+		// map.put("cn", "0,1");
+		// map.put("vn", "3");
 
 		return ServiceInfo.create(ISpeakerListener.RAOP_TYPE, hardwareAddressString + "@" + name, this.port, 0, 0, map);
 	}

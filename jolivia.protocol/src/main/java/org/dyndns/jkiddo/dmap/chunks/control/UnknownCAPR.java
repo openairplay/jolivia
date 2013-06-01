@@ -1,6 +1,5 @@
 package org.dyndns.jkiddo.dmap.chunks.control;
 
-import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
 
 public class UnknownCAPR extends VersionChunk {

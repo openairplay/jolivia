@@ -17,6 +17,8 @@
 
 package org.dyndns.jkiddo.raop.server.AirReceiver;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.net.*;
 import java.nio.charset.*;
 import java.util.*;
@@ -28,6 +30,8 @@ import java.util.regex.*;
 import javax.crypto.*;
 import javax.crypto.spec.*;
 
+import org.dyndns.jkiddo.dmap.DmapInputStream;
+import org.dyndns.jkiddo.dmap.chunks.Chunk;
 import org.jboss.netty.bootstrap.ConnectionlessBootstrap;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.*;
@@ -186,13 +190,13 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	private Channel m_audioChannel;
 	private Channel m_controlChannel;
 	private Channel m_timingChannel;
-	private final  ExecutionHandler channelExecutionHandler;
+	private final ExecutionHandler channelExecutionHandler;
 
 	/**
 	 * Creates an instance, using the ExecutorService for the RTP channel's datagram socket factory
 	 * 
 	 * @param rtpExecutorService
-	 * @param channelExecutionHandler 
+	 * @param channelExecutionHandler
 	 */
 	public RaopAudioHandler(final ExecutorService rtpExecutorService, ExecutionHandler channelExecutionHandler)
 	{
@@ -314,8 +318,8 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	 * <li> {@code <attribute>=aesiv}
 	 * </ul>
 	 */
-//	private static Pattern s_pattern_sdp_a = Pattern.compile("^([a-z]+):(.*)$");
-	//Added min-latency and max-latency tollerence
+	// private static Pattern s_pattern_sdp_a = Pattern.compile("^([a-z]+):(.*)$");
+	// Added min-latency and max-latency tollerence
 	private static Pattern s_pattern_sdp_a = Pattern.compile("^([a-z]+.?[a-z]+):(.*)$");
 	/**
 	 * SDP {@code a} attribute {@code rtpmap}. Format is <br>
@@ -623,37 +627,56 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	public synchronized void setParameterReceived(final ChannelHandlerContext ctx, final HttpRequest req) throws ProtocolException
 	{
 		/* Body in ASCII encoding with unix newlines */
-		final String body = req.getContent().toString(Charset.forName("ASCII")).replace("\r", "");
-
-		/* Handle parameters */
-		for(final String line : body.split("\n"))
+		if(req.getHeader("Content-Type") != null && req.getHeader("Content-Type").equalsIgnoreCase("application/x-dmap-tagged"))
 		{
 			try
 			{
-				/* Split parameter into name and value */
-				final Matcher m_parameter = s_pattern_parameter.matcher(line);
-				if(!m_parameter.matches())
-					throw new ProtocolException("Cannot parse line " + line);
-
-				final String name = m_parameter.group(1);
-				final String value = m_parameter.group(2);
-
-				if("volume".equals(name))
-				{
-					/* Set output gain */
-					if(m_audioOutputQueue != null)
-						m_audioOutputQueue.setGain(Float.parseFloat(value));
-
-				}
+				System.out.println(new String(req.getContent().array()));
+				DmapInputStream stream = new DmapInputStream(new ByteArrayInputStream(req.getContent().array()));
+				Chunk chunk = stream.getChunk();
+				stream.close();
+				System.out.println(chunk);
 			}
-			catch(final Throwable e)
+			catch(IOException e)
 			{
-				throw new ProtocolException("Unable to parse line " + line);
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
+		else
+		{
+			final String body = req.getContent().toString(Charset.forName("ASCII")).replace("\r", "");
 
+			/* Handle parameters */
+			for(final String line : body.split("\n"))
+			{
+				try
+				{
+					/* Split parameter into name and value */
+					final Matcher m_parameter = s_pattern_parameter.matcher(line);
+					if(!m_parameter.matches())
+						throw new ProtocolException("Cannot parse line " + line);
+
+					final String name = m_parameter.group(1);
+					final String value = m_parameter.group(2);
+
+					if("volume".equals(name))
+					{
+						/* Set output gain */
+						if(m_audioOutputQueue != null)
+							m_audioOutputQueue.setGain(Float.parseFloat(value));
+
+					}
+				}
+				catch(final Throwable e)
+				{
+					throw new ProtocolException("Unable to parse line " + line);
+				}
+			}
+		}
 		final HttpResponse response = new DefaultHttpResponse(RtspVersions.RTSP_1_0, RtspResponseStatuses.OK);
 		ctx.getChannel().write(response);
+
 	}
 
 	/**
