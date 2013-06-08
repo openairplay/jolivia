@@ -255,6 +255,23 @@ public final class ChunkFactory
 		map.put(new Integer(0x61654456), org.dyndns.jkiddo.dmap.chunks.audio.UnknownDV.class); // aeDV
 		map.put(new Integer(0x61654450), org.dyndns.jkiddo.dmap.chunks.audio.UnknownDP.class); // aeDP
 		
+		map.put(new Integer(0x61736173), org.dyndns.jkiddo.dmap.chunks.audio.UnknownAs.class); // asas
+		map.put(new Integer(0x61736c72), org.dyndns.jkiddo.dmap.chunks.audio.UnknownLr.class); // aslr
+		map.put(new Integer(0x61737273), org.dyndns.jkiddo.dmap.chunks.audio.UnknownRs.class); // asrs
+		map.put(new Integer(0x61736573), org.dyndns.jkiddo.dmap.chunks.audio.UnknownASES.class); // ases
+		map.put(new Integer(0x61736b64), org.dyndns.jkiddo.dmap.chunks.audio.UnknownKd.class); // askd
+		map.put(new Integer(0x61736163), org.dyndns.jkiddo.dmap.chunks.audio.UnknownASAC.class); // asac
+		map.put(new Integer(0x61736b70), org.dyndns.jkiddo.dmap.chunks.audio.UnknownKp.class); // askp
+		map.put(new Integer(0x6173706c), org.dyndns.jkiddo.dmap.chunks.audio.UnknownPl.class); // aspl
+		map.put(new Integer(0x61654353), org.dyndns.jkiddo.dmap.chunks.audio.UnknownCs.class); // aeCS
+		map.put(new Integer(0x61737063), org.dyndns.jkiddo.dmap.chunks.audio.UnknownPc.class); // aspc
+		map.put(new Integer(0x61654d58), org.dyndns.jkiddo.dmap.chunks.audio.UnknownMX.class); // aeMX
+		map.put(new Integer(0x61655844), org.dyndns.jkiddo.dmap.chunks.audio.UnknownXD.class); // aeXD
+		map.put(new Integer(0x61654b32), org.dyndns.jkiddo.dmap.chunks.audio.UnknownK2.class); // aeK2
+		map.put(new Integer(0x61654b31), org.dyndns.jkiddo.dmap.chunks.audio.UnknownK1.class); // aeK1
+		map.put(new Integer(0x61654e44), org.dyndns.jkiddo.dmap.chunks.audio.UnknownND.class); // aeND
+		map.put(new Integer(0x61654452), org.dyndns.jkiddo.dmap.chunks.audio.UnknownDR.class); // aeDR
+		
 	}
 
 	public Class<? extends Chunk> getChunkClass(Integer contentCode)
