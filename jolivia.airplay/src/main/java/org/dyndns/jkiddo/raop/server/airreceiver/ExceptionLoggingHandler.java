@@ -15,38 +15,24 @@
  * along with AirReceiver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dyndns.jkiddo.raop.server.airreceiver1;
+package org.dyndns.jkiddo.raop.server.airreceiver;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jboss.netty.buffer.*;
 import org.jboss.netty.channel.*;
-import org.jboss.netty.handler.codec.oneone.OneToOneDecoder;
 
 /**
- * Decodes incoming packets, emitting instances of {@link RaopRtpPacket}
+ * Logs exceptions thrown by other channel handlers
  */
-public class RaopRtpDecodeHandler extends OneToOneDecoder
+public class ExceptionLoggingHandler extends SimpleChannelHandler
 {
-	private static final Logger s_logger = Logger.getLogger(RaopRtpDecodeHandler.class.getName());
+	private static Logger s_logger = Logger.getLogger(ExceptionLoggingHandler.class.getName());
 
 	@Override
-	protected Object decode(final ChannelHandlerContext ctx, final Channel channel, final Object msg) throws Exception
+	public void exceptionCaught(final ChannelHandlerContext ctx, final ExceptionEvent evt) throws Exception
 	{
-		if(msg instanceof ChannelBuffer)
-		{
-			final ChannelBuffer buffer = (ChannelBuffer) msg;
-
-			try
-			{
-				return RaopRtpPacket.decode(buffer);
-			}
-			catch(final InvalidPacketException e1)
-			{
-				s_logger.warning(e1.getMessage());
-				return buffer;
-			}
-		}
-		return msg;
+		super.exceptionCaught(ctx, evt);
+		s_logger.log(Level.WARNING, "Handler raised exception", evt.getCause());
 	}
 }

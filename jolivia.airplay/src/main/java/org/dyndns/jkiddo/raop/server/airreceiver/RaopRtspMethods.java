@@ -15,7 +15,7 @@
  * along with AirReceiver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dyndns.jkiddo.raop.server.airreceiver1;
+package org.dyndns.jkiddo.raop.server.airreceiver;
 
 import org.jboss.netty.handler.codec.http.*;
 import org.jboss.netty.handler.codec.rtsp.*;

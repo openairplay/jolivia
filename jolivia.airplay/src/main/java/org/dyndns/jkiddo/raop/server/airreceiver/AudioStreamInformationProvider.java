@@ -15,21 +15,33 @@
  * along with AirReceiver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dyndns.jkiddo.raop.server.airreceiver1;
+package org.dyndns.jkiddo.raop.server.airreceiver;
 
-import org.jboss.netty.channel.*;
-import org.jboss.netty.handler.codec.oneone.OneToOneEncoder;
+import javax.sound.sampled.AudioFormat;
 
 /**
- * Converts outgoing RTP packets into a sequence of bytes
+ * Provides information about an audio stream
  */
-public class RtpEncodeHandler extends OneToOneEncoder
+public interface AudioStreamInformationProvider
 {
-	@Override
-	protected Object encode(final ChannelHandlerContext ctx, final Channel channel, final Object msg) throws Exception
-	{
-		if(msg instanceof RtpPacket)
-			return ((RtpPacket) msg).getBuffer();
-		return msg;
-	}
+	/**
+	 * The JavaSoune audio format of the streamed audio
+	 * 
+	 * @return the AudioFormat
+	 */
+	public AudioFormat getAudioFormat();
+
+	/**
+	 * Average frames per second
+	 * 
+	 * @return frames per second
+	 */
+	public int getFramesPerPacket();
+
+	/**
+	 * Average packets per second
+	 * 
+	 * @return packets per second
+	 */
+	public double getPacketsPerSecond();
 }

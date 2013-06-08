@@ -11,7 +11,7 @@ import javax.jmdns.JmmDNS;
 import javax.jmdns.ServiceInfo;
 
 import org.dyndns.jkiddo.raop.ISpeakerListener;
-import org.dyndns.jkiddo.raop.server.airreceiver1.RaopRtspPipelineFactory;
+import org.dyndns.jkiddo.raop.server.airreceiver.RaopRtspPipelineFactory;
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.dyndns.jkiddo.service.dmap.Util;
 import org.jboss.netty.bootstrap.ServerBootstrap;
