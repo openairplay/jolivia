@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.jetty;
 
+import javax.inject.Singleton;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
@@ -18,7 +19,6 @@ import javax.ws.rs.ext.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Singleton;
 import com.sun.jersey.core.spi.factory.ResponseBuilderImpl;
 
 @Provider

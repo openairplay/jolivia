@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.DmapUtil;
 import org.dyndns.jkiddo.dmap.Item;
@@ -19,8 +22,6 @@ import org.dyndns.jkiddo.service.dmap.Util;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Maps;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class ImageItemManager implements IItemManager
 {

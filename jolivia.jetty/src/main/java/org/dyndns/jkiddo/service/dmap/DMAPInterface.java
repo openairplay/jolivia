@@ -12,6 +12,8 @@ package org.dyndns.jkiddo.service.dmap;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -30,8 +32,6 @@ import org.dyndns.jkiddo.service.dacp.server.ITouchAbleServerResource;
 import org.dyndns.jkiddo.service.dpap.server.IImageLibrary;
 
 import com.google.common.base.Strings;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Path("/")
 @Singleton

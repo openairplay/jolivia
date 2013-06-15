@@ -14,6 +14,8 @@ import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.jmdns.JmDNS;
 import javax.jmdns.JmmDNS;
 import javax.jmdns.NetworkTopologyEvent;
@@ -26,8 +28,6 @@ import org.dyndns.jkiddo.service.dacp.server.ITouchAbleServerResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
 public class PairedRemoteDiscoverer implements IDiscoverer

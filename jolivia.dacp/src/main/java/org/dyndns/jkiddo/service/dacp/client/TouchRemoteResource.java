@@ -17,6 +17,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.jmdns.JmmDNS;
 import javax.jmdns.ServiceInfo;
 import javax.servlet.http.HttpServletRequest;
@@ -38,9 +41,6 @@ import org.dyndns.jkiddo.service.dmap.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import com.sun.jersey.core.spi.factory.ResponseBuilderImpl;
 
 @Singleton

@@ -12,6 +12,10 @@ package org.dyndns.jkiddo.service.dacp.client;
 
 import java.io.UnsupportedEncodingException;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
 import org.dyndns.jkiddo.service.dmap.Util;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.sqlobject.Bind;
@@ -19,9 +23,6 @@ import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 
 import com.google.common.base.Preconditions;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 @Singleton
 public class PairingDatabase implements IPairingDatabase

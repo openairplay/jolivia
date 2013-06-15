@@ -659,22 +659,8 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	public synchronized void setParameterReceived(final ChannelHandlerContext ctx, final HttpRequest req) throws ProtocolException
 	{
 		/* Body in ASCII encoding with unix newlines */
-		if(req.getHeader("Content-Type") != null && req.getHeader("Content-Type").equalsIgnoreCase("application/x-dmap-tagged"))
-		{
-			try
-			{
-				DmapInputStream stream = new DmapInputStream(new ByteArrayInputStream(req.getContent().array()));
-				ListingItem listingItem = (ListingItem) stream.getChunk();
-				s_logger.info("Playing " + listingItem.getSpecificChunk(ItemName.class).getValue() + " - " + listingItem.getSpecificChunk(SongArtist.class).getValue());
-				listingItem.getSpecificChunk(ItemName.class);
-				stream.close();
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
-		}
-		else if(req.getHeader("Content-Type") != null && req.getHeader("Content-Type").equalsIgnoreCase("image/jpeg"))
+		
+		if(req.getHeader("Content-Type") != null && req.getHeader("Content-Type").equalsIgnoreCase("image/jpeg"))
 		{
 			try
 			{
@@ -686,6 +672,21 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 				// frame.getContentPane().add(label, BorderLayout.CENTER);
 				// frame.pack();
 				// frame.setVisible(true);
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else if(req.getHeader("Content-Type") != null && req.getHeader("Content-Type").equalsIgnoreCase("application/x-dmap-tagged"))
+		{
+			try
+			{
+				DmapInputStream stream = new DmapInputStream(new ByteArrayInputStream(req.getContent().array()));
+				ListingItem listingItem = (ListingItem) stream.getChunk();
+				s_logger.info("Playing " + listingItem.getSpecificChunk(ItemName.class).getValue() + " - " + listingItem.getSpecificChunk(SongArtist.class).getValue());
+				listingItem.getSpecificChunk(ItemName.class);
+				stream.close();
 			}
 			catch(IOException e)
 			{

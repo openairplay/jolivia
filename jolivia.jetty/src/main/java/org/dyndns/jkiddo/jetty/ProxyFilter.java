@@ -12,6 +12,7 @@ package org.dyndns.jkiddo.jetty;
 
 import java.io.IOException;
 
+import javax.inject.Singleton;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -22,8 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.inject.Singleton;
 
 @Singleton
 public class ProxyFilter implements Filter

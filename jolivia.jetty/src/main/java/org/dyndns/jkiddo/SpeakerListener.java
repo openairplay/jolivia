@@ -1,10 +1,10 @@
 package org.dyndns.jkiddo;
 
+import javax.inject.Singleton;
+
 import org.dyndns.jkiddo.raop.ISpeakerListener;
 import org.dyndns.jkiddo.raop.client.model.Device;
 import org.dyndns.jkiddo.raop.client.model.DeviceConnection;
-
-import com.google.inject.Singleton;
 
 @Singleton
 public class SpeakerListener implements ISpeakerListener

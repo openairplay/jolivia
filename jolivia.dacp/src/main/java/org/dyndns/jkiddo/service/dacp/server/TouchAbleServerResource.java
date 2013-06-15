@@ -15,6 +15,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.jmdns.JmmDNS;
 import javax.jmdns.ServiceInfo;
 import javax.servlet.http.HttpServletRequest;
@@ -73,9 +75,6 @@ import org.dyndns.jkiddo.dmap.chunks.media.UpdateType;
 import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.dyndns.jkiddo.service.dmap.Util;
-
-import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 
 @Singleton
 public class TouchAbleServerResource extends MDNSResource implements ITouchAbleServerResource

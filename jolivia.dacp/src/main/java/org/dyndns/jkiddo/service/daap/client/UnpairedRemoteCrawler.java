@@ -7,6 +7,8 @@ import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.jmdns.JmDNS;
 import javax.jmdns.JmmDNS;
 import javax.jmdns.NetworkTopologyEvent;
@@ -20,9 +22,6 @@ import org.dyndns.jkiddo.service.dacp.client.TouchRemoteResource;
 import org.dyndns.jkiddo.service.dmap.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class UnpairedRemoteCrawler implements IDiscoverer {
 	public static final Logger logger = LoggerFactory

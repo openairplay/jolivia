@@ -7,6 +7,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.jmdns.JmmDNS;
 import javax.jmdns.ServiceInfo;
 import javax.servlet.http.HttpServletRequest;
@@ -46,8 +48,6 @@ import org.dyndns.jkiddo.service.dmap.Util;
 
 import com.google.common.base.Strings;
 import com.google.common.io.Closeables;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 @Consumes(MediaType.WILDCARD)
 //@Produces(MediaType.WILDCARD)
 public class DAAPResource extends DMAPResource<MusicItemManager> implements IMusicLibrary

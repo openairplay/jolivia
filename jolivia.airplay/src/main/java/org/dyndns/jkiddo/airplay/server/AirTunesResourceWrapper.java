@@ -3,6 +3,8 @@ package org.dyndns.jkiddo.airplay.server;
 import java.io.IOException;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.jmdns.JmmDNS;
 import javax.jmdns.ServiceInfo;
 
@@ -12,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 public class AirTunesResourceWrapper extends MDNSResource
 {

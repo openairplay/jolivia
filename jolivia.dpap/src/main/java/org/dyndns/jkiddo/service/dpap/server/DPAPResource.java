@@ -3,6 +3,8 @@ package org.dyndns.jkiddo.service.dpap.server;
 import java.io.IOException;
 import java.util.HashMap;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.jmdns.JmmDNS;
 import javax.jmdns.ServiceInfo;
 import javax.servlet.http.HttpServletRequest;
@@ -25,9 +27,6 @@ import org.dyndns.jkiddo.dmap.chunks.media.SupportsIndex;
 import org.dyndns.jkiddo.dmap.chunks.media.TimeoutInterval;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.Util;
-
-import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 @Consumes(MediaType.WILDCARD)
 //@Produces(MediaType.WILDCARD)
