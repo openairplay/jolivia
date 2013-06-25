@@ -32,11 +32,11 @@ public interface ITouchAbleServerResource
 
 	@GET
 	@Path("login")
-	public Response login(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException;
+	public Response login(@QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException;
 
 	@GET
 	@Path("logout")
-	public Response logout(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long session_id);
+	public Response logout(@QueryParam("session-id") long session_id);
 
 	@GET
 	@Path("ctrl-int")
@@ -116,7 +116,7 @@ public interface ITouchAbleServerResource
 
 	@Path("update")
 	@GET
-	public Response update(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException;
+	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException;
 
 	@Path("/ctrl-int/1/playqueue-edit")
 	@GET

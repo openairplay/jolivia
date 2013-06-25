@@ -102,7 +102,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("logout")
-	public Response logout(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") final long session_id)
+	public Response logout(@QueryParam("session-id") final long session_id)
 	{
 		throw new NotImplementedException();
 	}
@@ -334,7 +334,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("login")
-	public Response login(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException
+	public Response login(@QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException
 	{
 		throw new NotImplementedException();
 	}
@@ -342,7 +342,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@Path("update")
 	@GET
-	public Response update(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
+	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
 	{
 		throw new NotImplementedException();
 	}

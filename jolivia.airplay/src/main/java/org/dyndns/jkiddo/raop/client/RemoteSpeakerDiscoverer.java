@@ -14,6 +14,8 @@ import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.jmdns.JmDNS;
 import javax.jmdns.JmmDNS;
 import javax.jmdns.NetworkTopologyEvent;
@@ -24,9 +26,6 @@ import org.dyndns.jkiddo.raop.ISpeakerListener;
 import org.dyndns.jkiddo.raop.client.model.Device;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 
 @Singleton
 public class RemoteSpeakerDiscoverer implements IDiscoverer
@@ -64,7 +63,7 @@ public class RemoteSpeakerDiscoverer implements IDiscoverer
 	public void serviceResolved(ServiceEvent event)
 	{
 		logger.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
-		speakerListener.registerAvailableSpeaker(new Device(event.getName(), event.getInfo().getInetAddress(), event.getInfo().getPort()));
+		speakerListener.registerAvailableSpeaker(DeviceConnectionService.getConnection(new Device(event.getName(), event.getInfo().getInetAddress(), event.getInfo().getPort())));
 	}
 
 	@Override

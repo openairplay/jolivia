@@ -50,25 +50,31 @@ public class Jolivia
 {
 	static Logger logger = LoggerFactory.getLogger(Jolivia.class);
 
-	public static void main(String[] args) throws Exception
+	public static void main(String[] args)
 	{
+		try
+		{
+			new Jolivia(new DeskMusicStoreReader(), new IImageStoreReader() {
 
-		new Jolivia(new DeskMusicStoreReader(), new IImageStoreReader() {
+				@Override
+				public Set<IImageItem> readImages() throws Exception
+				{
+					// TODO Auto-generated method stub
+					return Sets.newHashSet();
+				}
 
-			@Override
-			public Set<IImageItem> readImages() throws Exception
-			{
-				// TODO Auto-generated method stub
-				return Sets.newHashSet();
-			}
-
-			@Override
-			public File getImage(IImageItem image) throws Exception
-			{
-				// TODO Auto-generated method stub
-				return null;
-			}
-		});
+				@Override
+				public File getImage(IImageItem image) throws Exception
+				{
+					// TODO Auto-generated method stub
+					return null;
+				}
+			});
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
 	public Jolivia(IClientSessionListener clientSessionListener) throws Exception
@@ -140,7 +146,7 @@ public class Jolivia
 	{
 		this(4000, 5000, 1337, "Jolivia", null, null, musicStoreReader, null);
 	}
-	
+
 	public Jolivia(IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
 	{
 		this(4000, 5000, 1337, "Jolivia", null, null, musicStoreReader, imageStoreReader);
@@ -224,17 +230,17 @@ public class Jolivia
 			try
 			{
 				if(httpServletRequest.getPathInfo().startsWith("/server-info"))
-					response = daap.serverInfo(httpServletRequest, httpServletResponse);
+					response = daap.serverInfo();
 				else if(httpServletRequest.getPathInfo().startsWith("/login"))
-					response = daap.login(httpServletRequest, httpServletResponse);
+					response = daap.login("",0);
 				else if(httpServletRequest.getPathInfo().startsWith("/update"))
-					response = daap.update(httpServletRequest, httpServletResponse, getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest), getParameterAsInteger("daap-no-disconnect", httpServletRequest));
+					response = daap.update(getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest), getParameterAsInteger("daap-no-disconnect", httpServletRequest));
 				else if(httpServletRequest.getPathInfo().startsWith("/databases") && httpServletRequest.getPathInfo().endsWith("items") && httpServletRequest.getPathInfo().contains("containers"))
-					response = daap.containerItems(httpServletRequest, httpServletResponse, 1, 0, getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest), getParameterAsString("meta", httpServletRequest), getParameterAsString("type", httpServletRequest), getParameterAsString("group-type", httpServletRequest), getParameterAsString("sort", httpServletRequest), getParameterAsString("include-sort-headers", httpServletRequest), getParameterAsString("query", httpServletRequest), getParameterAsString("index", httpServletRequest));
+					response = daap.containerItems(1, 0, getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest), getParameterAsString("meta", httpServletRequest), getParameterAsString("type", httpServletRequest), getParameterAsString("group-type", httpServletRequest), getParameterAsString("sort", httpServletRequest), getParameterAsString("include-sort-headers", httpServletRequest), getParameterAsString("query", httpServletRequest), getParameterAsString("index", httpServletRequest));
 				else if(httpServletRequest.getPathInfo().startsWith("/databases") && httpServletRequest.getPathInfo().endsWith("items"))
-					response = daap.items(httpServletRequest, httpServletResponse, 0, getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest), getParameterAsString("type", httpServletRequest), getParameterAsString("meta", httpServletRequest), getParameterAsString("query", httpServletRequest));
+					response = daap.items(0, getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest), getParameterAsString("type", httpServletRequest), getParameterAsString("meta", httpServletRequest), getParameterAsString("query", httpServletRequest));
 				else if(httpServletRequest.getPathInfo().startsWith("/databases") && httpServletRequest.getPathInfo().endsWith("containers"))
-					response = daap.containers(httpServletRequest, httpServletResponse, 0, getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest), getParameterAsString("meta", httpServletRequest));
+					response = daap.containers(0, getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest), getParameterAsString("meta", httpServletRequest));
 				else if(httpServletRequest.getPathInfo().startsWith("/databases") && httpServletRequest.getPathInfo().endsWith("mp3"))
 				{
 					// response = daap.item(httpServletRequest,
@@ -242,7 +248,7 @@ public class Jolivia
 					// rangeHeader);
 				}
 				else if(httpServletRequest.getPathInfo().startsWith("/databases"))
-					response = daap.databases(httpServletRequest, httpServletResponse, getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest));
+					response = daap.databases(getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest));
 				else
 					System.out.println("Unmapped ...");
 

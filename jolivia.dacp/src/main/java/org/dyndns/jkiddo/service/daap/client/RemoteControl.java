@@ -62,7 +62,6 @@ public class RemoteControl
 	public static final Logger logger = LoggerFactory.getLogger(RemoteControl.class);
 
 	private final Session session;
-	private int screenHeight = 640;
 
 	RemoteControl(Session session) throws Exception
 	{
@@ -93,10 +92,10 @@ public class RemoteControl
 		return RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), 1, session.getSessionId()));
 	}
 
-	public byte[] fetchCover() throws Exception
+	public byte[] fetchCover(int imageWidth, int imageHeight) throws Exception
 	{
 		// http://192.168.254.128:3689/ctrl-int/1/nowplayingartwork?mw=320&mh=320&session-id=1940361390
-		return RequestHelper.requestBitmap(String.format("%s/ctrl-int/1/nowplayingartwork?mw=" + screenHeight + "&mh=" + screenHeight + "&session-id=%s", session.getRequestBase(), session.getSessionId()));
+		return RequestHelper.requestBitmap(String.format("%s/ctrl-int/1/nowplayingartwork?mw=" + imageWidth + "&mh=" + imageHeight + "&session-id=%s", session.getRequestBase(), session.getSessionId()));
 	}
 
 	public long getMasterVolume() throws Exception
@@ -460,6 +459,6 @@ public class RemoteControl
 
 	public void playQueueEdit(final long itemID, final long playlistId) throws Exception
 	{
-		RequestHelper.dispatch(String.format("%s/ctrl-int/1/playqueue-edit?command=add&query='dmap.itemid:" + itemID + "'&queuefilter=playlist:"+playlistId+"&sort=name&mode=1&session-id=%s", session.getRequestBase(), session.getSessionId()));
+		RequestHelper.dispatch(String.format("%s/ctrl-int/1/playqueue-edit?command=add&query='dmap.itemid:" + itemID + "'&queuefilter=playlist:" + playlistId + "&sort=name&mode=1&session-id=%s", session.getRequestBase(), session.getSessionId()));
 	}
 }

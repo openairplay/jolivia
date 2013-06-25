@@ -14,6 +14,8 @@ import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
 
 public class PlayStatus extends UByteChunk
 {
+	public static int PLAYING = 4;
+	public static int PAUSED = 3;
 	public PlayStatus()
 	{
 		this(0);
@@ -21,6 +23,7 @@ public class PlayStatus extends UByteChunk
 
 	public PlayStatus(int value)
 	{
+		// # play status: 4=playing, 3=paused
 		super("caps", "com.apple.itunes.unknown-ps", value);
 	}
 

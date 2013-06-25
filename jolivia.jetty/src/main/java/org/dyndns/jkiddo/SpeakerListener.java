@@ -3,7 +3,6 @@ package org.dyndns.jkiddo;
 import javax.inject.Singleton;
 
 import org.dyndns.jkiddo.raop.ISpeakerListener;
-import org.dyndns.jkiddo.raop.client.model.Device;
 import org.dyndns.jkiddo.raop.client.model.DeviceConnection;
 
 @Singleton
@@ -17,9 +16,9 @@ public class SpeakerListener implements ISpeakerListener
 	}
 
 	@Override
-	public void registerAvailableSpeaker(Device device)
+	public void registerAvailableSpeaker(DeviceConnection device)
 	{
-		DeviceConnection dc = new DeviceConnection(device);
+		DeviceConnection dc = device;
 //		DeviceResponse dr = dc.sendCommand(new StopCommand());
 //		System.out.println(dr);
 	}

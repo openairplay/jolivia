@@ -21,6 +21,7 @@ public class ProgressRemain extends UIntChunk
 
 	public ProgressRemain(int value)
 	{
+		// # remaining track time in ms
 		super("cant", "com.apple.itunes.unknown-nt", value);
 	}
 

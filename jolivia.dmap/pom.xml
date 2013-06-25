@@ -9,6 +9,17 @@
 	<artifactId>jolivia.dmap</artifactId>
 	<dependencies>
 		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-core</artifactId>
+			<version>1.17.1</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.0.1</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.dyndns.jkiddo</groupId>
 			<artifactId>jolivia.protocol</artifactId>
 			<version>0.0.1-SNAPSHOT</version>

@@ -146,6 +146,11 @@ public class Container
 		init();
 	}
 
+	public PersistentId getPersistentId()
+	{
+		return persistentId;
+	}
+
 	private void init()
 	{
 		addChunk(itemId);

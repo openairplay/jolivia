@@ -11,15 +11,12 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.jmdns.JmmDNS;
 import javax.jmdns.ServiceInfo;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -27,6 +24,7 @@ import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.dmap.DmapUtil;
 import org.dyndns.jkiddo.dmap.chunks.audio.SupportsGroups;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod;
+import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationSchemes;
 import org.dyndns.jkiddo.dmap.chunks.media.DatabaseCount;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
@@ -42,7 +40,6 @@ import org.dyndns.jkiddo.dmap.chunks.media.SupportsQuery;
 import org.dyndns.jkiddo.dmap.chunks.media.SupportsResolve;
 import org.dyndns.jkiddo.dmap.chunks.media.SupportsUpdate;
 import org.dyndns.jkiddo.dmap.chunks.media.TimeoutInterval;
-import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.Util;
 
@@ -102,7 +99,7 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 	@Override
 	@Path("server-info")
 	@GET
-	public Response serverInfo(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
+	public Response serverInfo() throws IOException
 	{
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 
@@ -166,7 +163,7 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 	@Override
 	@Path("/databases/{databaseId}/items/{itemId}.{format}")
 	@GET
-	public Response item(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
+	public Response item(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
 	{
 		File file = itemManager.getItemAsFile(databaseId, itemId);
 
@@ -205,7 +202,7 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 	@Override
 	@Path("/databases/{databaseId}/items/{itemId}/extra_data/artwork")
 	@GET
-	public Response artwork(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception
+	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception
 	{
 		throw new NotImplementedException();
 	}

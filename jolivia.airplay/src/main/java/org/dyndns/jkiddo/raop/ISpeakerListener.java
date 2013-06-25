@@ -1,6 +1,6 @@
 package org.dyndns.jkiddo.raop;
 
-import org.dyndns.jkiddo.raop.client.model.Device;
+import org.dyndns.jkiddo.raop.client.model.DeviceConnection;
 
 public interface ISpeakerListener
 {
@@ -8,6 +8,6 @@ public interface ISpeakerListener
 
 	void removeAvailableSpeaker(String server, int port);
 
-	void registerAvailableSpeaker(Device device);
+	void registerAvailableSpeaker(DeviceConnection device);
 
 }

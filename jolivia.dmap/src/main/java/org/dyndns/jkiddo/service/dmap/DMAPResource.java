@@ -5,15 +5,12 @@ import java.util.Collection;
 import java.util.Set;
 
 import javax.jmdns.JmmDNS;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -66,33 +63,35 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("login")
 	@GET
-	public Response login(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
+	public Response login(@QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException
 	{
+		String s = Thread.currentThread().getId()+"";
 		LoginResponse loginResponse = new LoginResponse();
 		loginResponse.add(new Status(200));
-		loginResponse.add(new SessionId(itemManager.getSessionId(httpServletRequest.getRemoteHost())));
+		loginResponse.add(new SessionId(itemManager.getSessionId(s)));
 		return Util.buildResponse(loginResponse, itemManager.getDMAPKey(), name);
 	}
 
 	@Override
 	@Path("update")
 	@GET
-	public Response update(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
+	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
 	{
-		if(revisionNumber == delta || revisionNumber == itemManager.getRevision(httpServletRequest.getRemoteHost(), sessionId))
+		String s = Thread.currentThread().getId()+"";
+		if(revisionNumber == delta || revisionNumber == itemManager.getRevision(s, sessionId))
 		{
 			itemManager.waitForUpdate();
 		}
 		UpdateResponse updateResponse = new UpdateResponse();
 		updateResponse.add(new Status(200));
-		updateResponse.add(new ServerRevision(itemManager.getRevision(httpServletRequest.getRemoteHost(), sessionId)));
+		updateResponse.add(new ServerRevision(itemManager.getRevision(s, sessionId)));
 		return Util.buildResponse(updateResponse, itemManager.getDMAPKey(), name);
 	}
 
 	@Override
 	@Path("databases")
 	@GET
-	public Response databases(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
+	public Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
 	{
 		ServerDatabases serverDatabases = new ServerDatabases();
 		serverDatabases.add(new Status(200));
@@ -135,7 +134,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("databases/{databaseId}/containers")
 	@GET
-	public Response containers(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
+	public Response containers(@PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
 	{
 		Collection<Container> containers = itemManager.getDatabase(databaseId).getContainers();
 		Iterable<String> parameters = DmapUtil.parseMeta(meta);
@@ -193,7 +192,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("databases/{databaseId}/containers/{containerId}/items")
 	@GET
-	public Response containerItems(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("containerId") long containerId, @PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
+	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
 	{
 		// dpap:
 		// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/containers/5292/items?session-id=1101478641&meta=dpap.aspectratio,dmap.itemid,dmap.itemname,dpap.imagefilename,dpap.imagefilesize,dpap.creationdate,dpap.imagepixelwidth,dpap.imagepixelheight,dpap.imageformat,dpap.imagerating,dpap.imagecomments,dpap.imagelargefilesize&type=photo
@@ -259,7 +258,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("databases/{databaseId}/items")
 	@GET
-	public Response items(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query) throws Exception
+	public Response items(@PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query) throws Exception
 	{
 		// dpap: limited by query
 		// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:2810','dmap.itemid:2811','dmap.itemid:2812','dmap.itemid:2813','dmap.itemid:2814','dmap.itemid:2815','dmap.itemid:2816','dmap.itemid:2817','dmap.itemid:2818','dmap.itemid:2819','dmap.itemid:2820','dmap.itemid:2821','dmap.itemid:2822','dmap.itemid:2823','dmap.itemid:2824','dmap.itemid:2825','dmap.itemid:2826','dmap.itemid:2827','dmap.itemid:2851','dmap.itemid:2852')
@@ -338,7 +337,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("content-codes")
 	@GET
-	public Response contentCodes(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
+	public Response contentCodes() throws IOException
 	{
 		return Util.buildResponse(new ContentCodesResponseImpl(), itemManager.getDMAPKey(), name);
 	}
@@ -346,7 +345,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("logout")
 	@GET
-	public Response logout(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("session-id") long sessionId)
+	public Response logout(@QueryParam("session-id") long sessionId)
 	{
 		return Util.buildEmptyResponse(itemManager.getDMAPKey(), name);
 	}
@@ -354,7 +353,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("databases/{databaseId}/groups")
 	@GET
-	public Response groups(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
+	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
 	{
 		
 		if("artists".equalsIgnoreCase(group_type))
