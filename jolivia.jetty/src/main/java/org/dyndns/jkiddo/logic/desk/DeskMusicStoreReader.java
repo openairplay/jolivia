@@ -231,5 +231,12 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 
 		}
 
+		@Override
+		public long getSize()
+		{
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
 	}
 }

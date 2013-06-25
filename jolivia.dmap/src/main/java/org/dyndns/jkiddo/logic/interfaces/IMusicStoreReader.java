@@ -27,6 +27,8 @@ public interface IMusicStoreReader
 		String getAlbum();
 		
 		String getName();
+		
+		long getSize();
 
 		void setArtist(String artist);
 
