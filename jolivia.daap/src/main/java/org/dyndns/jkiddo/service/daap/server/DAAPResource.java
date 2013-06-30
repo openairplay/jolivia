@@ -163,7 +163,7 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 	@Override
 	@Path("/databases/{databaseId}/items/{itemId}.{format}")
 	@GET
-	public Response item(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
+	public Response item(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws IOException
 	{
 		File file = itemManager.getItemAsFile(databaseId, itemId);
 
@@ -202,7 +202,7 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 	@Override
 	@Path("/databases/{databaseId}/items/{itemId}/extra_data/artwork")
 	@GET
-	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception
+	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws IOException
 	{
 		throw new NotImplementedException();
 	}

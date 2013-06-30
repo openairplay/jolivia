@@ -49,7 +49,7 @@ import org.dyndns.jkiddo.dmap.chunks.media.UpdateType;
 
 @Consumes(MediaType.WILDCARD)
 @Produces(MediaType.WILDCARD)
-public abstract class DMAPResource<T extends IItemManager> extends MDNSResource implements ILibraryResource 
+public abstract class DMAPResource<T extends IItemManager> extends MDNSResource implements ILibraryResource
 {
 	final protected T itemManager;
 	protected String name;
@@ -65,7 +65,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@GET
 	public Response login(@QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException
 	{
-		String s = Thread.currentThread().getId()+"";
+		String s = Thread.currentThread().getId() + "";
 		LoginResponse loginResponse = new LoginResponse();
 		loginResponse.add(new Status(200));
 		loginResponse.add(new SessionId(itemManager.getSessionId(s)));
@@ -77,7 +77,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@GET
 	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
 	{
-		String s = Thread.currentThread().getId()+"";
+		String s = Thread.currentThread().getId() + "";
 		if(revisionNumber == delta || revisionNumber == itemManager.getRevision(s, sessionId))
 		{
 			itemManager.waitForUpdate();
@@ -212,10 +212,10 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		for(Item song : container.getItems())
 		{
 			ListingItem listingItem = new ListingItem();
-			
-			//Added as itemkind is only request in query param which is not yet understood
+
+			// Added as itemkind is only request in query param which is not yet understood
 			listingItem.add(song.getChunk("dmap.itemkind"));
-			
+
 			for(String key : parameters)
 			{
 				Chunk chunk = song.getChunk(key);
@@ -247,7 +247,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		// }
 		UnknownHL unknownHl = new UnknownHL();
 		ListingItem item = new ListingItem();
-		item.add(new UnknownHC(0x54));// 
+		item.add(new UnknownHC(0x54));//
 		item.add(new UnknownHI(0));
 		item.add(new UnknownHN(listing.size()));
 		unknownHl.add(item);
@@ -258,7 +258,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("databases/{databaseId}/items")
 	@GET
-	public Response items(@PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query) throws Exception
+	public Response items(@PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query) throws IOException
 	{
 		// dpap: limited by query
 		// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:2810','dmap.itemid:2811','dmap.itemid:2812','dmap.itemid:2813','dmap.itemid:2814','dmap.itemid:2815','dmap.itemid:2816','dmap.itemid:2817','dmap.itemid:2818','dmap.itemid:2819','dmap.itemid:2820','dmap.itemid:2821','dmap.itemid:2822','dmap.itemid:2823','dmap.itemid:2824','dmap.itemid:2825','dmap.itemid:2826','dmap.itemid:2827','dmap.itemid:2851','dmap.itemid:2852')
@@ -353,9 +353,9 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("databases/{databaseId}/groups")
 	@GET
-	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
+	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws IOException
 	{
-		
+
 		if("artists".equalsIgnoreCase(group_type))
 		{
 			ArtistSearchContainer response = new ArtistSearchContainer();
@@ -368,7 +368,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 			listing.add(new UnknownHL());//
 			response.add(listing);
 
-			return Util.buildResponse(response, itemManager.getDMAPKey(), name);			
+			return Util.buildResponse(response, itemManager.getDMAPKey(), name);
 		}
 		else if("albums".equalsIgnoreCase(group_type))
 		{
@@ -381,7 +381,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 			Listing listing = new Listing();
 			response.add(listing);
 
-			return Util.buildResponse(response, itemManager.getDMAPKey(), name);			
+			return Util.buildResponse(response, itemManager.getDMAPKey(), name);
 		}
 		else
 			throw new NotImplementedException();

@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.service.daap.server;
 
+import java.io.IOException;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.Path;
@@ -22,13 +24,13 @@ import org.dyndns.jkiddo.service.dmap.ILibraryResource;
 public interface IMusicLibrary extends ILibraryResource
 {
 	public static final String DAAP_SERVICE_TYPE = "_daap._tcp.local.";
-	
+
 	@Path("databases/{databaseId}/items/{itemId}.{format}")
 	@GET
-	public Response item(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception;
+	public Response item(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws IOException;
 
 	@Path("/databases/{databaseId}/items/{itemId}/extra_data/artwork")
 	@GET
-	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception;
+	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws IOException;
 
 }

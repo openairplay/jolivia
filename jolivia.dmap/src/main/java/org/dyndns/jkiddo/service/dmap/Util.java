@@ -42,7 +42,7 @@ public class Util
 
 	public static Response buildAudioResponse(byte[] buffer, long position, long size, String dmapKey, String dmapServiceName)
 	{
-		ResponseBuilder response = new ResponseBuilderImpl().header("Date", DmapUtil.now()).header(dmapKey, dmapServiceName).header("Content-Type", APPLICATION_X_DMAP_TAGGED).header("Connection", "close");
+		ResponseBuilder response = new ResponseBuilderImpl().header("Accept-Ranges", "bytes").header("Date", DmapUtil.now()).header(dmapKey, dmapServiceName).header("Content-Type", APPLICATION_X_DMAP_TAGGED).header("Connection", "close");
 
 		if(position == 0)
 		{
@@ -55,7 +55,6 @@ public class Util
 			response.header("Content-Length", Long.toString(size - position));
 			response.header("Content-Range", "bytes " + position + "-" + (size - 1) + "/" + size);
 		}
-		response.header("Accept-Ranges", "bytes");
 		response.entity(buffer);
 		return response.build();
 	}

@@ -17,7 +17,6 @@
 
 package org.dyndns.jkiddo.raop.server.airreceiver;
 
-import java.awt.BorderLayout;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -36,9 +35,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import org.dyndns.jkiddo.dmap.DmapInputStream;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;

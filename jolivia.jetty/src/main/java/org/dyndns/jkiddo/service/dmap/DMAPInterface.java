@@ -161,7 +161,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@Path("databases/{databaseId}/items")
 	@GET
-	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query) throws Exception
+	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query) throws IOException
 	{
 		if(isDaapRequest(httpServletRequest))
 			return musicLibraryResource.items(databaseId, sessionId, revisionNumber, delta, type, meta, query);
@@ -209,7 +209,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@Path("databases/{databaseId}/items/{itemId}.{format}")
 	@GET
-	public Response item(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws Exception
+	public Response item(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws IOException
 	{
 		return musicLibraryResource.item(databaseId, itemId, format, rangeHeader);
 	}
@@ -319,7 +319,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@Path("databases/{databaseId}/groups")
 	@GET
-	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws Exception
+	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws IOException
 	{
 		if(isDaapRequest(httpServletRequest))
 			return musicLibraryResource.groups(databaseId, sessionId, meta, type, group_type, sort, include_sort_headers);
@@ -379,7 +379,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@Path("databases/{databaseId}/items/{itemId}/extra_data/artwork")
 	@GET
-	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws Exception
+	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws IOException
 	{
 		return musicLibraryResource.artwork(databaseId, itemId, sessionId, revisionNumber, mw, mh);
 	}

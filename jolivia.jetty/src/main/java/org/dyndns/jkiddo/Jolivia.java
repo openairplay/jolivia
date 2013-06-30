@@ -11,19 +11,10 @@
 package org.dyndns.jkiddo;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
 
-import javax.jmdns.JmmDNS;
 import javax.servlet.DispatcherType;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
 
 import org.dyndns.jkiddo.guice.JoliviaListener;
 import org.dyndns.jkiddo.jetty.extension.DmapConnector;
@@ -32,8 +23,6 @@ import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.raop.ISpeakerListener;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
-import org.dyndns.jkiddo.service.daap.server.DAAPResource;
-import org.dyndns.jkiddo.service.daap.server.MusicItemManager;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -175,124 +164,8 @@ public class Jolivia
 		sch.addFilter(GuiceFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 		sch.addServlet(DefaultServlet.class, "/");
 
-		// No Guice No. 1
-		// ServletContextHandler sch = new ServletContextHandler(server, "/",
-		// ServletContextHandler.SESSIONS);
-		// sch.addServlet(new ServletHolder(new ServletContainer(new
-		// DefaultResourceConfig(DAAPServlet.class))), "/*");
-
-		// No Guice No. 2
-		// ServletContextHandler sch = new
-		// ServletContextHandler(ServletContextHandler.SESSIONS);
-		// sch.setContextPath("/");
-		// server.setHandler(sch);
-		// sch.addServlet(new ServletHolder(new JoliviaServlet()), "/*");
-
 		server.start();
 		logger.info(name + " started");
 		server.join();
-	}
-
-	// http://download.eclipse.org/jetty/stable-8/apidocs/
-	// http://download.eclipse.org/jetty/stable-8/xref/
-
-	class JoliviaServlet extends HttpServlet
-	{
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = -3494608154563076505L;
-		private DAAPResource daap;
-
-		public JoliviaServlet()
-		{
-			try
-			{
-				daap = new DAAPResource(JmmDNS.Factory.getInstance(), 4000, "Jolivia", new MusicItemManager("Jolivia", new DeskMusicStoreReader()));
-			}
-			catch(IOException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch(Exception e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		@Override
-		protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException
-		{
-			System.out.println(httpServletRequest.getPathInfo());
-			Response response = null;
-			try
-			{
-				if(httpServletRequest.getPathInfo().startsWith("/server-info"))
-					response = daap.serverInfo();
-				else if(httpServletRequest.getPathInfo().startsWith("/login"))
-					response = daap.login("",0);
-				else if(httpServletRequest.getPathInfo().startsWith("/update"))
-					response = daap.update(getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest), getParameterAsInteger("daap-no-disconnect", httpServletRequest));
-				else if(httpServletRequest.getPathInfo().startsWith("/databases") && httpServletRequest.getPathInfo().endsWith("items") && httpServletRequest.getPathInfo().contains("containers"))
-					response = daap.containerItems(1, 0, getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest), getParameterAsString("meta", httpServletRequest), getParameterAsString("type", httpServletRequest), getParameterAsString("group-type", httpServletRequest), getParameterAsString("sort", httpServletRequest), getParameterAsString("include-sort-headers", httpServletRequest), getParameterAsString("query", httpServletRequest), getParameterAsString("index", httpServletRequest));
-				else if(httpServletRequest.getPathInfo().startsWith("/databases") && httpServletRequest.getPathInfo().endsWith("items"))
-					response = daap.items(0, getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest), getParameterAsString("type", httpServletRequest), getParameterAsString("meta", httpServletRequest), getParameterAsString("query", httpServletRequest));
-				else if(httpServletRequest.getPathInfo().startsWith("/databases") && httpServletRequest.getPathInfo().endsWith("containers"))
-					response = daap.containers(0, getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest), getParameterAsString("meta", httpServletRequest));
-				else if(httpServletRequest.getPathInfo().startsWith("/databases") && httpServletRequest.getPathInfo().endsWith("mp3"))
-				{
-					// response = daap.item(httpServletRequest,
-					// httpServletResponse, databaseId, itemId, format,
-					// rangeHeader);
-				}
-				else if(httpServletRequest.getPathInfo().startsWith("/databases"))
-					response = daap.databases(getParameterAsInteger("session-id", httpServletRequest), getParameterAsInteger("revision-number", httpServletRequest), getParameterAsInteger("delta", httpServletRequest));
-				else
-					System.out.println("Unmapped ...");
-
-				if(response != null)
-				{
-					byte[] e = (byte[]) response.getEntity();
-					MultivaluedMap<String, Object> meta = response.getMetadata();
-					Set<String> keys = meta.keySet();
-					for(String key : keys)
-					{
-						httpServletResponse.setHeader(key, (String) meta.getFirst(key));
-					}
-					httpServletResponse.setContentLength(e.length);
-					httpServletResponse.setStatus(response.getStatus());
-					ServletOutputStream outputStream = httpServletResponse.getOutputStream();
-					outputStream.write(e);
-					outputStream.flush();
-				}
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-
-		private int getParameterAsInteger(String string, HttpServletRequest httpServletRequest)
-		{
-			String value = getParameterAsString(string, httpServletRequest);
-			if(value != null)
-			{
-				return Integer.parseInt(value);
-			}
-			return -1;
-		}
-
-		private String getParameterAsString(String string, HttpServletRequest httpServletRequest)
-		{
-			String[] v = httpServletRequest.getParameterValues(string);
-			if(v == null)
-			{
-				return null;
-			}
-			String value = v[0];
-			return value;
-		}
 	}
 }
