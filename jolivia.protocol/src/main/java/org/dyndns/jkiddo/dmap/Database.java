@@ -62,11 +62,13 @@ public class Database
 	/**
 	 * The total number of Playlists in this Database
 	 */
+	@SuppressWarnings("unused")
 	private int totalPlaylistCount = 0;
 
 	/**
 	 * The total number of Songs in this Database
 	 */
+	@SuppressWarnings("unused")
 	private int totalSongCount = 0;
 
 	/** A List of Playlists */
@@ -517,7 +519,7 @@ public class Database
 		{
 			if(!(playlist instanceof Folder))
 			{
-				Item song = playlist.getSong(itemId);
+				Item song = playlist.getItem(itemId);
 				if(song != null)
 				{
 					return song;

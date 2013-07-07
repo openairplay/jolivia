@@ -11,6 +11,7 @@
 package org.dyndns.jkiddo.jetty;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.inject.Singleton;
 import javax.servlet.Filter;
@@ -45,6 +46,13 @@ public class ProxyFilter implements Filter
 			queryString = "";
 		else
 			queryString = "?" + queryString;
+
+		Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
+		while(headerNames.hasMoreElements())
+		{
+			String headerName = (String) headerNames.nextElement();
+			logger.info((headerName + ": " + httpServletRequest.getHeader(headerName)));
+		}
 
 		logger.info(httpServletRequest.getRequestURI() + queryString);
 		chain.doFilter(request, response);

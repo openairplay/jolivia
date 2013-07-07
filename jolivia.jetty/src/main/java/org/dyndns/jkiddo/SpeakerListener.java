@@ -18,9 +18,9 @@ public class SpeakerListener implements ISpeakerListener
 	@Override
 	public void registerAvailableSpeaker(DeviceConnection device)
 	{
-		DeviceConnection dc = device;
-//		DeviceResponse dr = dc.sendCommand(new StopCommand());
-//		System.out.println(dr);
+		// DeviceConnection dc = device;
+		// DeviceResponse dr = dc.sendCommand(new StopCommand());
+		// System.out.println(dr);
 	}
 
 }

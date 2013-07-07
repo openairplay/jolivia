@@ -10,16 +10,12 @@ import javax.jmdns.ServiceInfo;
 
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.dyndns.jkiddo.service.dmap.Util;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Maps;
 
 public class AirTunesResourceWrapper extends MDNSResource
 {
 	public final static String AIRPLAY = "_airplay._tcp.local.";
-
-	private static final Logger logger = LoggerFactory.getLogger(AirTunesResourceWrapper.class);
 
 	public static final String AIRPLAY_PORT_NAME = "AIRPLAY_PORT_NAME";
 

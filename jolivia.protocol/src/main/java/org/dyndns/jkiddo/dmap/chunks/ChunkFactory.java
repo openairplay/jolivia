@@ -254,7 +254,6 @@ public final class ChunkFactory
 		map.put(new Integer(0x61655345), org.dyndns.jkiddo.dmap.chunks.audio.UnknownAESE.class); // aeSE
 		map.put(new Integer(0x61654456), org.dyndns.jkiddo.dmap.chunks.audio.UnknownDV.class); // aeDV
 		map.put(new Integer(0x61654450), org.dyndns.jkiddo.dmap.chunks.audio.UnknownDP.class); // aeDP
-		
 		map.put(new Integer(0x61736173), org.dyndns.jkiddo.dmap.chunks.audio.UnknownAs.class); // asas
 		map.put(new Integer(0x61736c72), org.dyndns.jkiddo.dmap.chunks.audio.UnknownLr.class); // aslr
 		map.put(new Integer(0x61737273), org.dyndns.jkiddo.dmap.chunks.audio.UnknownRs.class); // asrs

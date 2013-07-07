@@ -1,8 +1,6 @@
 package org.dyndns.jkiddo.service.daap.server;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -44,9 +42,9 @@ import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.Util;
 
 import com.google.common.base.Strings;
-import com.google.common.io.Closeables;
+
 @Consumes(MediaType.WILDCARD)
-//@Produces(MediaType.WILDCARD)
+// @Produces(MediaType.WILDCARD)
 public class DAAPResource extends DMAPResource<MusicItemManager> implements IMusicLibrary
 {
 	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
@@ -75,9 +73,12 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 	protected ServiceInfo getServiceInfoToRegister()
 	{
 		final String hexedHostname;
-		try {
+		try
+		{
 			hexedHostname = Util.toHex(hostname.getBytes("UTF-8"));
-		} catch (UnsupportedEncodingException e) {
+		}
+		catch(UnsupportedEncodingException e)
+		{
 			throw new RuntimeException(e);
 		}
 		HashMap<String, String> records = new HashMap<String, String>();
@@ -86,13 +87,13 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 		records.put(PASSWORD_KEY, "0");
 		records.put("Media Kinds Shared", "0");
 		records.put(TXT_VERSION_KEY, TXT_VERSION);
-		records.put(MACHINE_ID_KEY, hexedHostname);		
+		records.put(MACHINE_ID_KEY, hexedHostname);
 		records.put(DAAP_VERSION_KEY, DmapUtil.APRO_VERSION_3011 + "");
 		records.put(ITSH_VERSION_KEY, DmapUtil.MUSIC_SHARING_VERSION_309 + "");
 		records.put("MID", "0x" + serviceGuid);
 		records.put("dmc", "131081");
 		records.put(DATABASE_ID_KEY, hexedHostname);
-		
+
 		return ServiceInfo.create(DAAP_SERVICE_TYPE, name, port, 0, 0, records);
 	}
 
@@ -107,22 +108,22 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 		serverInfoResponse.add(itemManager.getDmapProtocolVersion());
 		serverInfoResponse.add(new ItemName(name));
 		serverInfoResponse.add(itemManager.getDaapProtocolVersion());
-//		serverInfoResponse.add(itemManager.getMusicSharingVersion()); If inserted, DAAP dies
+		// serverInfoResponse.add(itemManager.getMusicSharingVersion()); If inserted, DAAP dies
 		serverInfoResponse.add(new SupportsExtensions(true));
 		serverInfoResponse.add(new SupportsGroups(3));
-//		serverInfoResponse.add(new UnknownSE(0x80000));
-//		serverInfoResponse.add(new UnknownMQ(true));
-//		serverInfoResponse.add(new UnknownFR(0x64));
-//		serverInfoResponse.add(new UnknownTr(true));
-//		serverInfoResponse.add(new UnknownSL(true));
-//		serverInfoResponse.add(new UnknownSR(true));
-//		serverInfoResponse.add(new UnknownFP(2));//iTunes 11.0.2.26 says 2. If inserted, DAAP dies
-//		serverInfoResponse.add(new UnknownSX(111));
+		// serverInfoResponse.add(new UnknownSE(0x80000));
+		// serverInfoResponse.add(new UnknownMQ(true));
+		// serverInfoResponse.add(new UnknownFR(0x64));
+		// serverInfoResponse.add(new UnknownTr(true));
+		// serverInfoResponse.add(new UnknownSL(true));
+		// serverInfoResponse.add(new UnknownSR(true));
+		// serverInfoResponse.add(new UnknownFP(2));//iTunes 11.0.2.26 says 2. If inserted, DAAP dies
+		// serverInfoResponse.add(new UnknownSX(111));
 		serverInfoResponse.add(itemManager.getProtocolVersion());
-//		serverInfoResponse.add(new Unknowned(true));
-//		Unknownml msml = new Unknownml();
-//		msml.add(new UnknownMA(0xBF940AB92600L)); //iTunes 11.0.2.26 - Totally unknown
-//		serverInfoResponse.add(msml);
+		// serverInfoResponse.add(new Unknowned(true));
+		// Unknownml msml = new Unknownml();
+		// msml.add(new UnknownMA(0xBF940AB92600L)); //iTunes 11.0.2.26 - Totally unknown
+		// serverInfoResponse.add(msml);
 		serverInfoResponse.add(new LoginRequired(true));
 		serverInfoResponse.add(new TimeoutInterval(1800));
 		serverInfoResponse.add(new SupportsAutoLogout(true));
@@ -152,10 +153,8 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 		serverInfoResponse.add(new SupportsIndex(true));
 		serverInfoResponse.add(new SupportsResolve(true));
 		serverInfoResponse.add(new DatabaseCount(itemManager.getDatabases().size()));
-//		serverInfoResponse.add(new Unknowntc(0x5169B375)); //iTunes 11.0.2.26 - Totally unknown
-//		serverInfoResponse.add(new Unknownto(7200)); 
-		
-		
+		// serverInfoResponse.add(new Unknowntc(0x5169B375)); //iTunes 11.0.2.26 - Totally unknown
+		// serverInfoResponse.add(new Unknownto(7200));
 
 		return Util.buildResponse(serverInfoResponse, itemManager.getDMAPKey(), name);
 	}
@@ -165,18 +164,29 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 	@GET
 	public Response item(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws IOException
 	{
-		File file = itemManager.getItemAsFile(databaseId, itemId);
+		byte[] array = itemManager.getItemAsByteArray(databaseId, itemId);
 
-		long[] range = getRange(rangeHeader, 0, file.length());
+		// long[] range = getRange(rangeHeader, 0, file.length());
+		// int pos = (int) range[0];
+		// int end = (int) range[1];
+		// RandomAccessFile raf = new RandomAccessFile(file, "r");
+		//
+		// byte[] buffer = new byte[end - pos];
+		// raf.seek(pos);
+		// raf.readFully(buffer, 0, buffer.length);
+		// Closeables.close(raf,true);
+		// return Util.buildAudioResponse(buffer, pos, file..length(), itemManager.getDMAPKey(), name);
+
+		long[] range = getRange(rangeHeader, 0, array.length);
 		int pos = (int) range[0];
 		int end = (int) range[1];
-		RandomAccessFile raf = new RandomAccessFile(file, "r");
-
 		byte[] buffer = new byte[end - pos];
-		raf.seek(pos);
-		raf.readFully(buffer, 0, buffer.length);
-		Closeables.close(raf,true);
-		return Util.buildAudioResponse(buffer, pos, file.length(), itemManager.getDMAPKey(), name);
+		System.arraycopy(array, pos, buffer, 0, buffer.length);
+		// raf.seek(pos);
+		// raf.readFully(buffer, 0, buffer.length);
+		// Closeables.close(raf,true);
+		return Util.buildAudioResponse(buffer, pos, buffer.length, itemManager.getDMAPKey(), name);
+
 	}
 
 	static private long[] getRange(String rangeHeader, long position, long end)

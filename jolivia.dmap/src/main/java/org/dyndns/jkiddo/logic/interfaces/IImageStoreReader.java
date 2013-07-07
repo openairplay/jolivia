@@ -10,14 +10,14 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.logic.interfaces;
 
-import java.io.File;
+import java.net.URI;
 import java.util.Set;
 
 public interface IImageStoreReader
 {
 	public Set<IImageItem> readImages() throws Exception;
 
-	public File getImage(IImageItem image) throws Exception;
+	public URI getImage(IImageItem image) throws Exception;
 
 	interface IImageItem
 	{

@@ -17,6 +17,7 @@ import java.net.NetworkInterface;
 import java.util.Arrays;
 import java.util.Collections;
 
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
@@ -42,17 +43,17 @@ public class Util
 
 	public static Response buildAudioResponse(byte[] buffer, long position, long size, String dmapKey, String dmapServiceName)
 	{
-		ResponseBuilder response = new ResponseBuilderImpl().header("Accept-Ranges", "bytes").header("Date", DmapUtil.now()).header(dmapKey, dmapServiceName).header("Content-Type", APPLICATION_X_DMAP_TAGGED).header("Connection", "close");
+		ResponseBuilder response = new ResponseBuilderImpl().header("Accept-Ranges", "bytes").header(HttpHeaders.DATE, DmapUtil.now()).header(dmapKey, dmapServiceName).header(HttpHeaders.CONTENT_TYPE, APPLICATION_X_DMAP_TAGGED).header("Connection", "close");
 
 		if(position == 0)
 		{
 			response.status(Response.Status.OK);
-			response.header("Content-Length", Long.toString(size));
+			response.header(HttpHeaders.CONTENT_LENGTH, Long.toString(size));
 		}
 		else
 		{
 			response.status(PARTIAL_CONTENT);
-			response.header("Content-Length", Long.toString(size - position));
+			response.header(HttpHeaders.CONTENT_LENGTH, Long.toString(size - position));
 			response.header("Content-Range", "bytes " + position + "-" + (size - 1) + "/" + size);
 		}
 		response.entity(buffer);
@@ -61,7 +62,7 @@ public class Util
 
 	public static ResponseBuilder buildResponse(String dmapKey, String dmapServiceName)
 	{
-		return new ResponseBuilderImpl().header("Date", DmapUtil.now()).header(dmapKey, dmapServiceName).header("Content-Type", APPLICATION_X_DMAP_TAGGED).header("Connection", "Keep-Alive").status(Response.Status.OK);
+		return new ResponseBuilderImpl().header(HttpHeaders.DATE, DmapUtil.now()).header(dmapKey, dmapServiceName).header(HttpHeaders.CONTENT_TYPE, APPLICATION_X_DMAP_TAGGED).header("Connection", "Keep-Alive").status(Response.Status.OK);
 	}
 
 	public static Response buildEmptyResponse(String dmapKey, String dmapServiceName)

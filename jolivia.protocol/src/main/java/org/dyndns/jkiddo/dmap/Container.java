@@ -441,7 +441,7 @@ public class Container
 	 * @param songId
 	 * @return
 	 */
-	public Item getSong(long songId)
+	public Item getItem(long songId)
 	{
 		for(Item song : songs)
 		{

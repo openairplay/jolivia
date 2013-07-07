@@ -10,23 +10,22 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.logic.interfaces;
 
-import java.io.File;
+import java.net.URI;
 import java.util.Set;
 
 public interface IMusicStoreReader
 {
 	public Set<IMusicItem> readTunes() throws Exception;
 
-	public File getTune(IMusicItem tune) throws Exception;
+	public URI getTune(IMusicItem tune) throws Exception;
 
 	interface IMusicItem
 	{
-
 		String getArtist();
 
 		String getAlbum();
 		
-		String getName();
+		String getTitle();
 		
 		long getSize();
 
@@ -34,7 +33,7 @@ public interface IMusicStoreReader
 
 		void setAlbum(String album);
 
-		void setName(String name);
+		void setTitle(String title);
 
 		void setComposer(String composer);
 
@@ -45,6 +44,5 @@ public interface IMusicStoreReader
 		void setYear(int Year);
 
 		void setSize(long size);
-
 	}
 }

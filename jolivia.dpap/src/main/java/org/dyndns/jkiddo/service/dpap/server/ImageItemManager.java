@@ -1,6 +1,5 @@
 package org.dyndns.jkiddo.service.dpap.server;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 
@@ -12,11 +11,12 @@ import org.dyndns.jkiddo.dmap.DmapUtil;
 import org.dyndns.jkiddo.dmap.Item;
 import org.dyndns.jkiddo.dmap.Library;
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
-import org.dyndns.jkiddo.dmap.chunks.media.DmapProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod.PasswordMethod;
+import org.dyndns.jkiddo.dmap.chunks.media.DmapProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.picture.ProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader.IImageItem;
+import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
 
@@ -27,7 +27,7 @@ public class ImageItemManager implements IItemManager
 {
 	private static final VersionChunk dpapProtocolVersion = new ProtocolVersion(DmapUtil.PPRO_VERSION_101);
 	private static final VersionChunk dmapProtocolVersion = new DmapProtocolVersion(DmapUtil.MPRO_VERSION_200);
-	
+
 	private final Library library;
 	private final IImageStoreReader reader;
 	private final Map<Item, IImageItem> itemToIImageItem;
@@ -119,17 +119,16 @@ public class ImageItemManager implements IItemManager
 	}
 
 	@Override
-	public File getItemAsFile(long databaseId, long itemId)
+	public byte[] getItemAsByteArray(long databaseId, long itemId)
 	{
-		Item image = library.getDatabase(databaseId).getMasterContainer().getSong(itemId);
+		Item image = library.getDatabase(databaseId).getMasterContainer().getItem(itemId);
 		try
 		{
-			return reader.getImage(itemToIImageItem.get(image));
+			return DMAPResource.uriTobuffer(reader.getImage(itemToIImageItem.get(image)));
 		}
 		catch(Exception e)
 		{
 			throw new RuntimeException(e);
 		}
 	}
-
 }

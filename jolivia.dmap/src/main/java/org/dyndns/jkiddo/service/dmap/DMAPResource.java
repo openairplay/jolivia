@@ -1,6 +1,9 @@
 package org.dyndns.jkiddo.service.dmap;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
 import java.util.Collection;
 import java.util.Set;
 
@@ -385,5 +388,43 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		}
 		else
 			throw new NotImplementedException();
+	}
+
+	public static byte[] uriTobuffer(URI uri) throws IOException
+	{
+		ByteArrayOutputStream bais = new ByteArrayOutputStream();
+		InputStream is = null;
+		try
+		{
+			is = uri.toURL().openStream();
+			byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
+			int n;
+
+			while((n = is.read(byteChunk)) > 0)
+			{
+				bais.write(byteChunk, 0, n);
+			}
+			return bais.toByteArray();
+
+		}
+		catch(IOException e)
+		{
+			throw e;
+		}
+		finally
+		{
+			if(is != null)
+			{
+				is.close();
+			}
+		}
+	}
+
+	@Override
+	@Path("databases/{databaseId}/groups/{groupdId}/extra_data/artwork")
+	@GET
+	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("groupId") long groupId, @QueryParam("session-id") long sessionId, @QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("group-type") String group_type) throws IOException
+	{
+		throw new NotImplementedException();
 	}
 }

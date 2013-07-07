@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.guice;
 
-import java.io.File;
+import java.net.URI;
 import java.util.Set;
 
 import javax.jmdns.JmmDNS;
@@ -50,7 +50,7 @@ import com.google.inject.servlet.GuiceServletContextListener;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
-public class JoliviaListener extends GuiceServletContextListener
+public class JoliviaServer extends GuiceServletContextListener
 {
 	final private String DB_NAME = "db";
 	final private Integer hostingPort;
@@ -62,7 +62,7 @@ public class JoliviaListener extends GuiceServletContextListener
 	final private IImageStoreReader imageStoreReader;
 	final private IMusicStoreReader musicStoreReader;
 
-	public JoliviaListener(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IImageStoreReader imageStoreReader, IMusicStoreReader musicStoreReader)
+	public JoliviaServer(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IImageStoreReader imageStoreReader, IMusicStoreReader musicStoreReader)
 	{
 		super();
 		
@@ -128,7 +128,7 @@ public class JoliviaListener extends GuiceServletContextListener
 				}
 				
 				@Override
-				public File getTune(IMusicItem tune) throws Exception {
+				public URI getTune(IMusicItem tune) throws Exception {
 					// TODO Auto-generated method stub
 					return null;
 				}
@@ -149,7 +149,7 @@ public class JoliviaListener extends GuiceServletContextListener
 				}
 				
 				@Override
-				public File getImage(IImageItem image) throws Exception {
+				public URI getImage(IImageItem image) throws Exception {
 					// TODO Auto-generated method stub
 					return null;
 				}

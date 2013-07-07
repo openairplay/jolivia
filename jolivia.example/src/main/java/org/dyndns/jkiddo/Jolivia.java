@@ -10,13 +10,13 @@
  ******************************************************************************/
 package org.dyndns.jkiddo;
 
-import java.io.File;
+import java.net.URI;
 import java.util.EnumSet;
 import java.util.Set;
 
 import javax.servlet.DispatcherType;
 
-import org.dyndns.jkiddo.guice.JoliviaListener;
+import org.dyndns.jkiddo.guice.JoliviaServer;
 import org.dyndns.jkiddo.jetty.extension.DmapConnector;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
@@ -53,7 +53,7 @@ public class Jolivia
 				}
 
 				@Override
-				public File getImage(IImageItem image) throws Exception
+				public URI getImage(IImageItem image) throws Exception
 				{
 					// TODO Auto-generated method stub
 					return null;
@@ -160,7 +160,7 @@ public class Jolivia
 
 		// Guice
 		ServletContextHandler sch = new ServletContextHandler(server, "/");
-		sch.addEventListener(new JoliviaListener(port, airplayPort, pairingCode, name, clientSessionListener, speakerListener, imageStoreReader, musicStoreReader));
+		sch.addEventListener(new JoliviaServer(port, airplayPort, pairingCode, name, clientSessionListener, speakerListener, imageStoreReader, musicStoreReader));
 		sch.addFilter(GuiceFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 		sch.addServlet(DefaultServlet.class, "/");
 

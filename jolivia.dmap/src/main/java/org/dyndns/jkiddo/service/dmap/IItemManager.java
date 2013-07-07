@@ -1,6 +1,5 @@
 package org.dyndns.jkiddo.service.dmap;
 
-import java.io.File;
 import java.util.Collection;
 
 import org.dyndns.jkiddo.dmap.Database;
@@ -29,6 +28,6 @@ public interface IItemManager
 
 	Database getDatabase(long databaseId);
 
-	File getItemAsFile(long databaseId, long itemId);
+	byte[] getItemAsByteArray(long databaseId, long itemId);
 
 }

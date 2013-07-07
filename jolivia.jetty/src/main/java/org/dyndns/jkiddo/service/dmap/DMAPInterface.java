@@ -23,6 +23,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -55,15 +56,10 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	private final IMusicLibrary musicLibraryResource;
 	private final IImageLibrary imageLibraryResource;
 
-	private static final String REMOTE_HEADER_NAME = "Viewer-Only-Client";
-	private static final String REMOTE_USER_AGENT = "Remote";
+	private static final String CONTROLLER_HEADER_NAME = "Viewer-Only-Client";
+	private static final String CONTROLLER_USER_AGENT = "Remote";
 	private static final String DAAP_HEADER_NAME = "Client-DAAP-Version";
 	private static final String DPAP_HEADER_NAME = "Client-DPAP-Version";
-
-	private static boolean isRemoteDaapRequest(HttpServletRequest httpServletRequest)
-	{
-		return isDaapRequest(httpServletRequest) && isRemoteControlRequest(httpServletRequest);
-	}
 
 	private static boolean isDaapRequest(HttpServletRequest httpServletRequest)
 	{
@@ -81,9 +77,9 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 
 	private static boolean isRemoteControlRequest(HttpServletRequest httpServletRequest)
 	{
-		if(Strings.isNullOrEmpty(httpServletRequest.getHeader(REMOTE_HEADER_NAME)))
+		if(Strings.isNullOrEmpty(httpServletRequest.getHeader(CONTROLLER_HEADER_NAME)))
 			return false;
-		if(!httpServletRequest.getHeader("User-Agent").startsWith(REMOTE_USER_AGENT))
+		if(!httpServletRequest.getHeader(HttpHeaders.USER_AGENT).startsWith(CONTROLLER_USER_AGENT))
 			return false;
 		return true;
 	}
@@ -109,26 +105,27 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 		throw new NotImplementedException();
 	}
 
-//	@Override
-//	public Response login() throws IOException
-//	{
-//		if(isDaapRequest(httpServletRequest))
-//			return musicLibraryResource.login();
-//		if(isDpapRequest(httpServletRequest))
-//			return imageLibraryResource.login();
-//		throw new NotImplementedException();
-//	}
+	// @Override
+	// public Response login() throws IOException
+	// {
+	// if(isDaapRequest(httpServletRequest))
+	// return musicLibraryResource.login();
+	// if(isDpapRequest(httpServletRequest))
+	// return imageLibraryResource.login();
+	// throw new NotImplementedException();
+	// }
 	@Override
 	@Path("login")
 	@GET
 	public Response login(@QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException
 	{
-		String sss = httpServletRequest.getRequestedSessionId();
-//		if(isRemoteControlRequest(httpServletRequest))
+		if(isRemoteControlRequest(httpServletRequest))
+			return remoteControlResource.login(guid, value);
+		if(isDaapRequest(httpServletRequest))
 			return musicLibraryResource.login(guid, value);
-		// return remoteControlResource.login(guid, value);
-//		return login();
-//		throw new NotImplementedException();
+		if(isDpapRequest(httpServletRequest))
+			return imageLibraryResource.login(guid, value);
+		throw new NotImplementedException();
 	}
 
 	@Override
@@ -412,5 +409,17 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	public Response playQueueEdit(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("commmand") String command, @QueryParam("query") String query, @QueryParam("queuefilter") String index, @QueryParam("sort") String sort, @QueryParam("session-id") long session_id) throws Exception
 	{
 		return remoteControlResource.playQueueEdit(httpServletRequest, httpServletResponse, command, query, index, sort, session_id);
+	}
+
+	@Override
+	@Path("databases/{databaseId}/groups/{groupdId}/extra_data/artwork")
+	@GET
+	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("groupId") long groupId, @QueryParam("session-id") long sessionId, @QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("group-type") String group_type) throws IOException
+	{
+		if(isDaapRequest(httpServletRequest))
+			return musicLibraryResource.artwork(databaseId, groupId, sessionId, mw, mh, group_type);
+		if(isDpapRequest(httpServletRequest))
+			return imageLibraryResource.artwork(databaseId, groupId, sessionId, mw, mh, group_type);
+		throw new NotImplementedException();
 	}
 }

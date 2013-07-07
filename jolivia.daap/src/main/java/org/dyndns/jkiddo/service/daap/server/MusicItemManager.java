@@ -1,6 +1,5 @@
 package org.dyndns.jkiddo.service.daap.server;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 
@@ -14,11 +13,12 @@ import org.dyndns.jkiddo.dmap.Library;
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmap.chunks.audio.DaapProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.audio.MusicSharingVersion;
-import org.dyndns.jkiddo.dmap.chunks.media.DmapProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod.PasswordMethod;
+import org.dyndns.jkiddo.dmap.chunks.media.DmapProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.picture.ProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader.IMusicItem;
+import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ import com.google.common.collect.Maps;
 public class MusicItemManager implements IItemManager
 {
 	private static final Logger logger = LoggerFactory.getLogger(MusicItemManager.class);
-	
+
 	private static final VersionChunk protocolVersion = new ProtocolVersion(DmapUtil.PPRO_VERSION_200);
 	private static final VersionChunk daapProtocolVersion = new DaapProtocolVersion(DmapUtil.APRO_VERSION_3011);
 	private static final VersionChunk dmapProtocolVersion = new DmapProtocolVersion(DmapUtil.MPRO_VERSION_209);
@@ -52,11 +52,11 @@ public class MusicItemManager implements IItemManager
 				Item item = new Item();
 				item.setAlbum(null, iMusicItem.getAlbum());
 				item.setArtist(null, iMusicItem.getArtist());
-				if(Strings.isNullOrEmpty(iMusicItem.getName()))
+				if(Strings.isNullOrEmpty(iMusicItem.getTitle()))
 				{
 					logger.warn("Name of " + iMusicItem + " was null. Song/Item may not be displayed");
 				}
-				item.setName(null, iMusicItem.getName());
+				item.setName(null, iMusicItem.getTitle());
 				return item;
 			}
 		});
@@ -134,19 +134,20 @@ public class MusicItemManager implements IItemManager
 	}
 
 	@Override
-	public File getItemAsFile(long databaseId, long itemId)
+	public byte[] getItemAsByteArray(long databaseId, long itemId)
 	{
-		Item song = library.getDatabase(databaseId).getMasterContainer().getSong(itemId);
+		Item song = library.getDatabase(databaseId).getMasterContainer().getItem(itemId);
 		try
 		{
-			return reader.getTune(itemToIMusicItem.get(song));
+			return DMAPResource.uriTobuffer(reader.getTune(itemToIMusicItem.get(song)));
 		}
 		catch(Exception e)
 		{
 			throw new RuntimeException(e);
 		}
 	}
-	public MusicSharingVersion getMusicSharingVersion() {
+	public MusicSharingVersion getMusicSharingVersion()
+	{
 		return musicSharingVersion;
 	}
 }

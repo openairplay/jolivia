@@ -11,27 +11,28 @@
 package org.dyndns.jkiddo.logic.desk;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.tika.exception.TikaException;
+import org.apache.tika.metadata.Metadata;
+import org.apache.tika.metadata.XMPDM;
+import org.apache.tika.parser.AutoDetectParser;
+import org.apache.tika.parser.ParseContext;
+import org.apache.tika.parser.Parser;
+import org.apache.tika.sax.BodyContentHandler;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
-import org.jaudiotagger.audio.AudioFile;
-import org.jaudiotagger.audio.AudioFileIO;
-import org.jaudiotagger.audio.exceptions.CannotReadException;
-import org.jaudiotagger.audio.exceptions.InvalidAudioFrameException;
-import org.jaudiotagger.audio.exceptions.ReadOnlyFileException;
-import org.jaudiotagger.tag.FieldKey;
-import org.jaudiotagger.tag.Tag;
-import org.jaudiotagger.tag.TagException;
-import org.jaudiotagger.tag.TagField;
-import org.jaudiotagger.tag.id3.ID3v24Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xml.sax.SAXException;
 
 import com.google.common.base.Strings;
 
@@ -40,9 +41,11 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	private static final Logger logger = LoggerFactory.getLogger(DeskMusicStoreReader.class);
 	private Map<IMusicItem, File> mapOfSongToFile;
 	private String path;
+	private Parser parser;
 
 	public DeskMusicStoreReader(String path)
 	{
+		parser = new AutoDetectParser();
 		this.mapOfSongToFile = new HashMap<IMusicItem, File>();
 		this.path = path;
 	}
@@ -77,7 +80,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 				traverseRootPathRecursively(contents[i]);
 			}
 		}
-		else if(isMp3(f))
+		else if(isMusic(f))
 		{
 			addFileToDatabase(f);
 		}
@@ -96,72 +99,70 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 	}
 
-	private IMusicItem populateSong(File file) throws CannotReadException, IOException, TagException, ReadOnlyFileException, InvalidAudioFrameException
+	@SuppressWarnings("deprecation")
+	private IMusicItem populateSong(File file) throws IOException, SAXException, TikaException
 	{
-		AudioFile f = AudioFileIO.read(file);
-		Tag tag = f.getTag();
-		if(tag == null)
-		{
-			tag = new ID3v24Tag();
-		}
-
-		for(FieldKey k : FieldKey.values())
-		{
-			List<TagField> list = tag.getFields(k);
-			for(TagField tf : list)
-			{
-				System.out.println(k + " " + new String(tf.getRawContent()));
-			}
-		}
+		BodyContentHandler handler = new BodyContentHandler();
+		Metadata metadata = new Metadata();
+		InputStream content = new FileInputStream(file);
+		parser.parse(content, handler, metadata, new ParseContext());
 
 		IMusicItem song = new MusicItem();
-		song.setArtist(tag.getFirst(FieldKey.ARTIST));
-		song.setAlbum(tag.getFirst(FieldKey.ALBUM));
-		String title = tag.getFirst(FieldKey.TITLE);
-		song.setName(title);
-		if(Strings.isNullOrEmpty(title))
+		song.setTitle(metadata.get(Metadata.TITLE));
+		if(Strings.isNullOrEmpty(song.getTitle()))
 		{
-			logger.debug("Title in file " + file.getName() + " tags was null - using filename instead");
-			song.setName(AudioFile.getBaseFilename(file));	
+			song.setTitle(file.getName());
 		}
-		song.setComposer(tag.getFirst(FieldKey.COMPOSER));
-		song.setGenre(tag.getFirst(FieldKey.GENRE));
-		if(!Strings.isNullOrEmpty(tag.getFirst(FieldKey.TRACK)))
-			song.setTrackNumber(Integer.parseInt(tag.getFirst(FieldKey.TRACK)));
-		if(!Strings.isNullOrEmpty(tag.getFirst(FieldKey.YEAR)))
-			song.setYear(Integer.parseInt(tag.getFirst(FieldKey.YEAR)));
-		// f.setTag(tag);
-		// AudioFileIO.write(f);
+		song.setGenre(metadata.get(XMPDM.GENRE));
+		try
+		{
+			song.setTrackNumber(metadata.getInt(XMPDM.TRACK_NUMBER));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		song.setArtist(metadata.get(XMPDM.ARTIST));
+		song.setComposer(metadata.get(XMPDM.COMPOSER));
 		song.setSize(file.length());
-		// song.setTime(t, 217778);
+		try
+		{
+			Calendar c = Calendar.getInstance();
+			c.setTime(metadata.getDate(XMPDM.SHOT_DATE));
+			song.setYear(c.get(Calendar.YEAR));
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
 		return song;
 	}
-
-	private static boolean isMp3(File f)
+	private static boolean isMusic(File f)
 	{
-		if(!f.getPath().endsWith(".mp3"))
-			return false;
-		return true;
+		if(f.getPath().endsWith(".mp3") || f.getPath().endsWith(".wav"))
+			return true;
+		return false;
 	}
 
 	@Override
-	public File getTune(IMusicItem tune) throws Exception
+	public URI getTune(IMusicItem tune) throws Exception
 	{
 		if(tune != null)
 		{
 			logger.debug("Serving " + tune.getArtist() + " " + tune.getAlbum());
 		}
-		return mapOfSongToFile.get(tune);
+		return mapOfSongToFile.get(tune).toURI();
 	}
 
 	class MusicItem implements IMusicItem
 	{
 		private String artist;
 		private String album;
-		private String name;
+		private String title;
 
-		public String getName() {
-			return name;
+		public String getTitle()
+		{
+			return title;
 		}
 
 		@Override
@@ -191,9 +192,9 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 
 		@Override
-		public void setName(String name)
+		public void setTitle(String title)
 		{
-			this.name = name;
+			this.title = title;
 		}
 
 		@Override
