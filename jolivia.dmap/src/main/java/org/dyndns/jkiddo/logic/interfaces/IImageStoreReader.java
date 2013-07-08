@@ -21,6 +21,12 @@ public interface IImageStoreReader
 
 	interface IImageItem
 	{
+		String getImageFilename();
 
+		int getSize();
+
+		String getFormat();
+
+		int getRating();
 	}
 }

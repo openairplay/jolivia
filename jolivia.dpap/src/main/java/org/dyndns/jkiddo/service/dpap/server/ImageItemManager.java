@@ -13,6 +13,15 @@ import org.dyndns.jkiddo.dmap.Library;
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmap.chunks.media.DmapProtocolVersion;
+import org.dyndns.jkiddo.dmap.chunks.media.ItemKind;
+import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
+import org.dyndns.jkiddo.dmap.chunks.picture.AspectRatio;
+import org.dyndns.jkiddo.dmap.chunks.picture.CreationDate;
+import org.dyndns.jkiddo.dmap.chunks.picture.ImageFileSize;
+import org.dyndns.jkiddo.dmap.chunks.picture.ImageFilename;
+import org.dyndns.jkiddo.dmap.chunks.picture.ImageFormat;
+import org.dyndns.jkiddo.dmap.chunks.picture.ImageLargeFileSize;
+import org.dyndns.jkiddo.dmap.chunks.picture.ImageRating;
 import org.dyndns.jkiddo.dmap.chunks.picture.ProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader.IImageItem;
@@ -38,9 +47,19 @@ public class ImageItemManager implements IItemManager
 		this.reader = reader;
 		this.itemToIImageItem = Maps.uniqueIndex(reader.readImages(), new Function<IImageItem, Item>() {
 			@Override
-			public Item apply(IImageItem iMusicItem)
+			public Item apply(IImageItem iImageItem)
 			{
 				Item item = new Item();
+				ItemName name = new ItemName(iImageItem.getImageFilename());
+				ImageFilename fileName = new ImageFilename(iImageItem.getImageFilename());
+				ImageFileSize fileSize = new ImageFileSize(iImageItem.getSize());
+				ImageFormat format = new ImageFormat(iImageItem.getFormat());
+				ImageRating rating = new ImageRating(iImageItem.getRating());
+				ImageLargeFileSize largeFileSize = new ImageLargeFileSize(iImageItem.getSize());
+				// The following should NOT be default
+				ItemKind kind = new ItemKind();
+				AspectRatio aspectRatio = new AspectRatio();
+				CreationDate creationDate = new CreationDate();
 				return item;
 			}
 		});

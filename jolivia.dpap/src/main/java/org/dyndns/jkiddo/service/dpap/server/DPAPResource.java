@@ -38,7 +38,6 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	private static final String MACHINE_ID_KEY = "Machine ID";
 	private static final String IPSH_VERSION_KEY = "iPSh Version";
 	private static final String PASSWORD_KEY = "Password";
-	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
 
 	@Inject
 	public DPAPResource(JmmDNS mDNS, @Named(DPAP_SERVER_PORT_NAME) Integer port, @Named(Util.APPLICATION_NAME) String applicationName, @Named(DPAP_RESOURCE) ImageItemManager itemManager) throws IOException
