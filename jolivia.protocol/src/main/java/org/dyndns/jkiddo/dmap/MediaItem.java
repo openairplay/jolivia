@@ -106,7 +106,7 @@ import org.dyndns.jkiddo.dmap.chunks.media.PersistentId;
  * 
  * @author Roger Kapsi
  */
-public class Item
+public class MediaItem
 {
 
 	/** songId is an 32bit unsigned value! */
@@ -118,7 +118,7 @@ public class Item
 
 	private final Map<String, Chunk> chunks = new HashMap<String, Chunk>();
 
-	private final ItemKind itemKind = new ItemKind(ItemKind.AUDIO);
+	private final ItemKind itemKind;
 	private final ItemId itemId = new ItemId(SONG_ID.getAndIncrement());
 	private final ItemName itemName = new ItemName();
 	private final ContainerItemId containerItemId = new ContainerItemId();
@@ -181,21 +181,30 @@ public class Item
 	/**
 	 * Creates a new Song
 	 */
-	public Item()
+	public MediaItem(ItemKind itemKind)
 	{
+		this.itemKind = itemKind;
 		persistentId.setValue(itemId.getValue());
 		containerItemId.setValue(itemId.getValue());
 		init();
 	}
+	
+	/*public Item()
+	{
+		this.itemKind = new ItemKind(ItemKind.AUDIO);
+		persistentId.setValue(itemId.getValue());
+		containerItemId.setValue(itemId.getValue());
+		init();
+	}*/
 
 	/**
 	 * Creates a new Song with the provided name
 	 */
-	public Item(String name)
+	/*public MediaItem(String name)
 	{
 		this();
 		itemName.setValue(name);
-	}
+	}*/
 
 	private void init()
 	{
@@ -1035,12 +1044,12 @@ public class Item
 	@Override
 	public boolean equals(Object o)
 	{
-		if(!(o instanceof Item))
+		if(!(o instanceof MediaItem))
 		{
 			return false;
 		}
 
-		return ((Item) o).getItemId() == getItemId();
+		return ((MediaItem) o).getItemId() == getItemId();
 	}
 
 	protected void setBooleanValue(Transaction txn, String fieldName, boolean value)
@@ -1282,7 +1291,7 @@ public class Item
 		try
 		{
 
-			Field field = Item.class.getDeclaredField(fieldName);
+			Field field = MediaItem.class.getDeclaredField(fieldName);
 			field.setAccessible(true);
 
 			Chunk chunk = (Chunk) field.get(this);

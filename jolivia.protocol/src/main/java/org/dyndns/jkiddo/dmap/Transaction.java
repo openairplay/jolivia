@@ -217,7 +217,7 @@ public class Transaction
 			return true;
 		}
 
-		for(Item song : playlist.getItems())
+		for(MediaItem song : playlist.getItems())
 		{
 			if(modified(song))
 			{
@@ -233,7 +233,7 @@ public class Transaction
 	/**
 	 * Returns true if Song was modified
 	 */
-	public synchronized boolean modified(Item song)
+	public synchronized boolean modified(MediaItem song)
 	{
 		return txnMap.containsKey(song);
 	}

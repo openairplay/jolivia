@@ -8,7 +8,7 @@ import javax.inject.Named;
 
 import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.DmapUtil;
-import org.dyndns.jkiddo.dmap.Item;
+import org.dyndns.jkiddo.dmap.MediaItem;
 import org.dyndns.jkiddo.dmap.Library;
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod.PasswordMethod;
@@ -39,17 +39,19 @@ public class ImageItemManager implements IItemManager
 
 	private final Library library;
 	private final IImageStoreReader reader;
-	private final Map<Item, IImageItem> itemToIImageItem;
+	private final Map<MediaItem, IImageItem> itemToIImageItem;
 
 	@Inject
 	public ImageItemManager(@Named(Util.APPLICATION_NAME) String applicationName, IImageStoreReader reader) throws Exception
 	{
 		this.reader = reader;
-		this.itemToIImageItem = Maps.uniqueIndex(reader.readImages(), new Function<IImageItem, Item>() {
+		this.itemToIImageItem = Maps.uniqueIndex(reader.readImages(), new Function<IImageItem, MediaItem>() {
 			@Override
-			public Item apply(IImageItem iImageItem)
+			public MediaItem apply(IImageItem iImageItem)
 			{
-				Item item = new Item();
+				// dpap:
+				// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/containers/5292/items?session-id=1101478641&meta=dpap.aspectratio,dmap.itemid,dmap.itemname,dpap.imagefilename,dpap.imagefilesize,dpap.creationdate,dpap.imagepixelwidth,dpap.imagepixelheight,dpap.imageformat,dpap.imagerating,dpap.imagecomments,dpap.imagelargefilesize&type=photo
+				MediaItem item = new MediaItem(new ItemKind(ItemKind.IMAGE));
 				ItemName name = new ItemName(iImageItem.getImageFilename());
 				ImageFilename fileName = new ImageFilename(iImageItem.getImageFilename());
 				ImageFileSize fileSize = new ImageFileSize(iImageItem.getSize());
@@ -57,8 +59,7 @@ public class ImageItemManager implements IItemManager
 				ImageRating rating = new ImageRating(iImageItem.getRating());
 				ImageLargeFileSize largeFileSize = new ImageLargeFileSize(iImageItem.getSize());
 				// The following should NOT be default
-				ItemKind kind = new ItemKind();
-				AspectRatio aspectRatio = new AspectRatio();
+				AspectRatio aspectRatio = new AspectRatio("1.5");
 				CreationDate creationDate = new CreationDate();
 				return item;
 			}
@@ -140,7 +141,7 @@ public class ImageItemManager implements IItemManager
 	@Override
 	public byte[] getItemAsByteArray(long databaseId, long itemId)
 	{
-		Item image = library.getDatabase(databaseId).getMasterContainer().getItem(itemId);
+		MediaItem image = library.getDatabase(databaseId).getMasterContainer().getItem(itemId);
 		try
 		{
 			return DMAPResource.uriTobuffer(reader.getImage(itemToIImageItem.get(image)));

@@ -78,7 +78,7 @@ public class Database
 	private Set<Container> deletedPlaylists = null;
 
 	/** Set of deleted Songs */
-	private Set<Item> deletedSongs = null;
+	private Set<MediaItem> deletedSongs = null;
 
 	/** master playlist */
 	private Container masterPlaylist = null;
@@ -95,7 +95,7 @@ public class Database
 			database.deletedPlaylists = null;
 		}
 
-		Set<Item> songs = database.getItems();
+		Set<MediaItem> songs = database.getItems();
 
 		for(Container playlist : database.playlists)
 		{
@@ -112,12 +112,12 @@ public class Database
 					}
 				}
 
-				Set<Item> deletedSongs = playlist.getDeletedSongs();
+				Set<MediaItem> deletedSongs = playlist.getDeletedSongs();
 				if(deletedSongs != null && !deletedSongs.isEmpty())
 				{
 					if(this.deletedSongs == null)
 					{
-						this.deletedSongs = new HashSet<Item>(deletedSongs);
+						this.deletedSongs = new HashSet<MediaItem>(deletedSongs);
 					}
 					else
 					{
@@ -392,16 +392,16 @@ public class Database
 	/**
 	 * Returns all Songs in this Database
 	 */
-	public Set<Item> getItems()
+	public Set<MediaItem> getItems()
 	{
-		Set<Item> songs = null;
+		Set<MediaItem> songs = null;
 		for(Container playlist : playlists)
 		{
 			if(!(playlist instanceof Folder))
 			{
 				if(songs == null)
 				{
-					songs = new HashSet<Item>(playlist.getItems());
+					songs = new HashSet<MediaItem>(playlist.getItems());
 				}
 				else
 				{
@@ -427,7 +427,7 @@ public class Database
 	/**
 	 * Returns true if song is in this Database
 	 */
-	public boolean containsSong(Item song)
+	public boolean containsSong(MediaItem song)
 	{
 		for(Container playlist : playlists)
 		{
@@ -445,7 +445,7 @@ public class Database
 	 * @param txn
 	 * @param song
 	 */
-	public void addSong(Transaction txn, Item song)
+	public void addSong(Transaction txn, MediaItem song)
 	{
 		for(Container playlist : playlists)
 		{
@@ -456,7 +456,7 @@ public class Database
 		}
 	}
 
-	public void setSongs(Transaction txn, Collection<Item> songs)
+	public void setSongs(Transaction txn, Collection<MediaItem> songs)
 	{
 		for(Container playlist : playlists)
 		{
@@ -473,7 +473,7 @@ public class Database
 	 * @param txn
 	 * @param song
 	 */
-	public void removeSong(Transaction txn, Item song)
+	public void removeSong(Transaction txn, MediaItem song)
 	{
 		for(Container playlist : playlists)
 		{
@@ -484,7 +484,7 @@ public class Database
 		}
 	}
 
-	public Set<Container> getSongPlaylists(Item song)
+	public Set<Container> getSongPlaylists(MediaItem song)
 	{
 		Set<Container> ret = null;
 		for(Container playlist : playlists)
@@ -513,13 +513,13 @@ public class Database
 	 * @param songId
 	 * @return
 	 */
-	public Item getSong(long itemId)
+	public MediaItem getSong(long itemId)
 	{
 		for(Container playlist : playlists)
 		{
 			if(!(playlist instanceof Folder))
 			{
-				Item song = playlist.getItem(itemId);
+				MediaItem song = playlist.getItem(itemId);
 				if(song != null)
 				{
 					return song;
@@ -535,7 +535,7 @@ public class Database
 	 * @param playlistId
 	 * @return
 	 */
-	public Container getPlaylist(long playlistId)
+	public Container getContainer(long playlistId)
 	{
 		for(Container playlist : playlists)
 		{

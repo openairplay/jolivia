@@ -21,7 +21,7 @@ import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.dmap.Container;
 import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.DmapUtil;
-import org.dyndns.jkiddo.dmap.Item;
+import org.dyndns.jkiddo.dmap.MediaItem;
 import org.dyndns.jkiddo.dmap.chunks.Chunk;
 import org.dyndns.jkiddo.dmap.chunks.ContentCodesResponseImpl;
 import org.dyndns.jkiddo.dmap.chunks.audio.AlbumSearchContainer;
@@ -197,9 +197,10 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@GET
 	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
 	{
+		//switch on type - for DPAP type is 'photo'
 		// dpap:
 		// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/containers/5292/items?session-id=1101478641&meta=dpap.aspectratio,dmap.itemid,dmap.itemname,dpap.imagefilename,dpap.imagefilesize,dpap.creationdate,dpap.imagepixelwidth,dpap.imagepixelheight,dpap.imageformat,dpap.imagerating,dpap.imagecomments,dpap.imagelargefilesize&type=photo
-		Container container = itemManager.getDatabase(databaseId).getPlaylist(containerId);
+		Container container = itemManager.getDatabase(databaseId).getContainer(containerId);
 		// throw new NotImplementedException();
 		// /databases/0/containers/1/items?session-id=1570434761&revision-number=2&delta=0&type=music&meta=dmap.itemkind,dmap.itemid,dmap.containeritemid
 		Iterable<String> parameters = DmapUtil.parseMeta(meta);
@@ -212,16 +213,16 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 
 		Listing listing = new Listing();
 
-		for(Item song : container.getItems())
+		for(MediaItem item : container.getItems())
 		{
 			ListingItem listingItem = new ListingItem();
 
 			// Added as itemkind is only request in query param which is not yet understood
-			listingItem.add(song.getChunk("dmap.itemkind"));
+			listingItem.add(item.getChunk("dmap.itemkind"));
 
 			for(String key : parameters)
 			{
-				Chunk chunk = song.getChunk(key);
+				Chunk chunk = item.getChunk(key);
 
 				if(chunk != null)
 				{
@@ -273,7 +274,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		// return database.getItemId() == databaseId;
 		// }
 		// }).getItems();
-		Set<Item> items = itemManager.getDatabase(databaseId).getItems();
+		Set<MediaItem> items = itemManager.getDatabase(databaseId).getItems();
 
 		Iterable<String> parameters = DmapUtil.parseMeta(meta);
 
@@ -286,7 +287,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		databaseSongs.add(new ReturnedCount(items.size()));
 
 		Listing listing = new Listing();
-		for(Item item : items)
+		for(MediaItem item : items)
 		{
 			ListingItem listingItem = new ListingItem();
 

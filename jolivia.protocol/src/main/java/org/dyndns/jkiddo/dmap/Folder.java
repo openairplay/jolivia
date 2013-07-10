@@ -73,19 +73,19 @@ public class Folder extends Container
 	}
 
 	@Override
-	public void addSong(Transaction txn, Item song)
+	public void addSong(Transaction txn, MediaItem song)
 	{
 		throw new UnsupportedOperationException("Songs cannot be added to Folders");
 	}
 
 	@Override
-	public void removeSong(Transaction txn, Item song)
+	public void removeSong(Transaction txn, MediaItem song)
 	{
 		throw new UnsupportedOperationException("Songs cannot be removed from Folders");
 	}
 
 	@Override
-	public boolean containsSong(Item song)
+	public boolean containsSong(MediaItem song)
 	{
 		return false;
 	}
@@ -97,7 +97,7 @@ public class Folder extends Container
 	}
 
 	@Override
-	public List<Item> getItems()
+	public List<MediaItem> getItems()
 	{
 		return Collections.emptyList();
 	}

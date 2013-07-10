@@ -36,9 +36,9 @@ import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
  */
 public class ItemKind extends UByteChunk
 {
-
-	/** Default Kind (always 2) */
 	public static final int AUDIO = 2;
+	
+	public static final int IMAGE = 3;
 
 	public ItemKind()
 	{

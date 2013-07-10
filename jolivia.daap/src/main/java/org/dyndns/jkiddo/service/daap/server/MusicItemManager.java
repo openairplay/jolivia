@@ -8,13 +8,14 @@ import javax.inject.Named;
 
 import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.DmapUtil;
-import org.dyndns.jkiddo.dmap.Item;
+import org.dyndns.jkiddo.dmap.MediaItem;
 import org.dyndns.jkiddo.dmap.Library;
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmap.chunks.audio.DaapProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.audio.MusicSharingVersion;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmap.chunks.media.DmapProtocolVersion;
+import org.dyndns.jkiddo.dmap.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmap.chunks.picture.ProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader.IMusicItem;
@@ -39,17 +40,17 @@ public class MusicItemManager implements IItemManager
 
 	private final Library library;
 	private final IMusicStoreReader reader;
-	private final Map<Item, IMusicItem> itemToIMusicItem;
+	private final Map<MediaItem, IMusicItem> itemToIMusicItem;
 
 	@Inject
 	public MusicItemManager(@Named(Util.APPLICATION_NAME) String applicationName, IMusicStoreReader reader) throws Exception
 	{
 		this.reader = reader;
-		this.itemToIMusicItem = Maps.uniqueIndex(reader.readTunes(), new Function<IMusicItem, Item>() {
+		this.itemToIMusicItem = Maps.uniqueIndex(reader.readTunes(), new Function<IMusicItem, MediaItem>() {
 			@Override
-			public Item apply(IMusicItem iMusicItem)
+			public MediaItem apply(IMusicItem iMusicItem)
 			{
-				Item item = new Item();
+				MediaItem item = new MediaItem(new ItemKind(ItemKind.AUDIO));
 				item.setAlbum(null, iMusicItem.getAlbum());
 				item.setArtist(null, iMusicItem.getArtist());
 				if(Strings.isNullOrEmpty(iMusicItem.getTitle()))
@@ -136,7 +137,7 @@ public class MusicItemManager implements IItemManager
 	@Override
 	public byte[] getItemAsByteArray(long databaseId, long itemId)
 	{
-		Item song = library.getDatabase(databaseId).getMasterContainer().getItem(itemId);
+		MediaItem song = library.getDatabase(databaseId).getMasterContainer().getItem(itemId);
 		try
 		{
 			return DMAPResource.uriTobuffer(reader.getTune(itemToIMusicItem.get(song)));

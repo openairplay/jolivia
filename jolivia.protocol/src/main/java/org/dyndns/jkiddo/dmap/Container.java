@@ -89,10 +89,10 @@ public class Container
 	private final Map<String, Chunk> chunks = new HashMap<String, Chunk>();
 
 	/** Set of Songs */
-	private final List<Item> songs = new ArrayList<Item>();
+	private final List<MediaItem> songs = new ArrayList<MediaItem>();
 
 	/** Set of deleted Songs */
-	private Set<Item> deletedSongs = null;
+	private Set<MediaItem> deletedSongs = null;
 
 	public Container(Container playlist, Transaction txn)
 	{
@@ -107,7 +107,7 @@ public class Container
 			playlist.deletedSongs = null;
 		}
 
-		for(Item song : playlist.songs)
+		for(MediaItem song : playlist.songs)
 		{
 			if(txn.modified(song))
 			{
@@ -323,7 +323,7 @@ public class Container
 	/**
 	 * Retuns an unmodifiable set of all songs
 	 */
-	public List<Item> getItems()
+	public List<MediaItem> getItems()
 	{
 		return Collections.unmodifiableList(songs);
 	}
@@ -331,7 +331,7 @@ public class Container
 	/**
 	 * Returns a set of deleted Songs or null if no Songs were removed from this Playlist
 	 */
-	public Set<Item> getDeletedSongs()
+	public Set<MediaItem> getDeletedSongs()
 	{
 		return deletedSongs;
 	}
@@ -342,7 +342,7 @@ public class Container
 	 * @param song
 	 * @throws DaapTransactionException
 	 */
-	public void addSong(Transaction txn, final Item song)
+	public void addSong(Transaction txn, final MediaItem song)
 	{
 		if(txn != null)
 		{
@@ -361,7 +361,7 @@ public class Container
 		}
 	}
 
-	private void addSongP(Transaction txn, Item song)
+	private void addSongP(Transaction txn, MediaItem song)
 	{
 		if(!containsSong(song) && songs.add(song))
 		{
@@ -373,7 +373,7 @@ public class Container
 		}
 	}
 
-	public void setSongs(Transaction txn, final Collection<Item> songs)
+	public void setSongs(Transaction txn, final Collection<MediaItem> songs)
 	{
 		if(txn != null)
 		{
@@ -392,7 +392,7 @@ public class Container
 		}
 	}
 
-	private void setSongsP(Transaction txn, Collection<Item> songsCollection)
+	private void setSongsP(Transaction txn, Collection<MediaItem> songsCollection)
 	{
 		this.songs.addAll(songsCollection);
 		itemCount.setValue(songsCollection.size());
@@ -404,7 +404,7 @@ public class Container
 	 * @param song
 	 * @throws DaapTransactionException
 	 */
-	public void removeSong(Transaction txn, final Item song)
+	public void removeSong(Transaction txn, final MediaItem song)
 	{
 		if(txn != null)
 		{
@@ -422,14 +422,14 @@ public class Container
 		}
 	}
 
-	private void removeSongP(Transaction txn, Item song)
+	private void removeSongP(Transaction txn, MediaItem song)
 	{
 		if(songs.remove(song))
 		{
 			itemCount.setValue(songs.size());
 			if(deletedSongs == null)
 			{
-				deletedSongs = new HashSet<Item>();
+				deletedSongs = new HashSet<MediaItem>();
 			}
 			deletedSongs.add(song);
 		}
@@ -441,9 +441,9 @@ public class Container
 	 * @param songId
 	 * @return
 	 */
-	public Item getItem(long songId)
+	public MediaItem getItem(long songId)
 	{
-		for(Item song : songs)
+		for(MediaItem song : songs)
 		{
 			if(song.getItemId() == songId)
 			{
@@ -456,7 +456,7 @@ public class Container
 	/**
 	 * Returns <code>true</code> if the provided <code>song</code> is in this Playlist.
 	 */
-	public boolean containsSong(Item song)
+	public boolean containsSong(MediaItem song)
 	{
 		return songs.contains(song);
 	}
