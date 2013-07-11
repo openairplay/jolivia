@@ -12,7 +12,7 @@ import org.dyndns.jkiddo.dmap.MediaItem;
 import org.dyndns.jkiddo.dmap.Library;
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmap.chunks.audio.DaapProtocolVersion;
-import org.dyndns.jkiddo.dmap.chunks.audio.MusicSharingVersion;
+import org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmap.chunks.media.DmapProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemKind;

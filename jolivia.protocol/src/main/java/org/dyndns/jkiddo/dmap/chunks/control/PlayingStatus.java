@@ -13,6 +13,7 @@ package org.dyndns.jkiddo.dmap.chunks.control;
 import org.dyndns.jkiddo.dmap.chunks.Chunk;
 import org.dyndns.jkiddo.dmap.chunks.ContainerChunk;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbumId;
+import org.dyndns.jkiddo.dmap.chunks.control.extension.GeniusSelectable;
 
 public class PlayingStatus extends ContainerChunk
 {
