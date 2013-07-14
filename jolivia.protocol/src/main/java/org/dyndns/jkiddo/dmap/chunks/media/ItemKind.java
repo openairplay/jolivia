@@ -30,8 +30,6 @@ package org.dyndns.jkiddo.dmap.chunks.media;
 import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
 
 /**
- * The kind of an item. Seems to be always '2'.
- * 
  * @author Roger Kapsi
  */
 public class ItemKind extends UByteChunk

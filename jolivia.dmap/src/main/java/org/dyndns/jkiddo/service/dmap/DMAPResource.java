@@ -1,11 +1,7 @@
 package org.dyndns.jkiddo.service.dmap;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URI;
 import java.util.Collection;
-import java.util.Set;
 
 import javax.jmdns.JmmDNS;
 import javax.ws.rs.Consumes;
@@ -17,17 +13,13 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.dmap.Container;
 import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.DmapUtil;
 import org.dyndns.jkiddo.dmap.MediaItem;
 import org.dyndns.jkiddo.dmap.chunks.Chunk;
 import org.dyndns.jkiddo.dmap.chunks.ContentCodesResponseImpl;
-import org.dyndns.jkiddo.dmap.chunks.audio.AlbumSearchContainer;
-import org.dyndns.jkiddo.dmap.chunks.audio.ArtistSearchContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseContainerns;
-import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
 import org.dyndns.jkiddo.dmap.chunks.audio.ItemsContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.ServerDatabases;
 import org.dyndns.jkiddo.dmap.chunks.media.ContainerCount;
@@ -197,7 +189,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@GET
 	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
 	{
-		//switch on type - for DPAP type is 'photo'
+		// switch on type - for DPAP type is 'photo'
 		// dpap:
 		// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/containers/5292/items?session-id=1101478641&meta=dpap.aspectratio,dmap.itemid,dmap.itemname,dpap.imagefilename,dpap.imagefilesize,dpap.creationdate,dpap.imagepixelwidth,dpap.imagepixelheight,dpap.imageformat,dpap.imagerating,dpap.imagecomments,dpap.imagelargefilesize&type=photo
 		Container container = itemManager.getDatabase(databaseId).getContainer(containerId);
@@ -260,85 +252,6 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	}
 
 	@Override
-	@Path("databases/{databaseId}/items")
-	@GET
-	public Response items(@PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query) throws IOException
-	{
-		// dpap: limited by query
-		// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:2810','dmap.itemid:2811','dmap.itemid:2812','dmap.itemid:2813','dmap.itemid:2814','dmap.itemid:2815','dmap.itemid:2816','dmap.itemid:2817','dmap.itemid:2818','dmap.itemid:2819','dmap.itemid:2820','dmap.itemid:2821','dmap.itemid:2822','dmap.itemid:2823','dmap.itemid:2824','dmap.itemid:2825','dmap.itemid:2826','dmap.itemid:2827','dmap.itemid:2851','dmap.itemid:2852')
-
-		// .getDatabases(), new Predicate<Database>() {
-		// @Override
-		// public boolean apply(Database database)
-		// {
-		// return database.getItemId() == databaseId;
-		// }
-		// }).getItems();
-		Set<MediaItem> items = itemManager.getDatabase(databaseId).getItems();
-
-		Iterable<String> parameters = DmapUtil.parseMeta(meta);
-
-		DatabaseItems databaseSongs = new DatabaseItems();
-
-		databaseSongs.add(new Status(200));
-		databaseSongs.add(new UpdateType(0));
-		databaseSongs.add(new SpecifiedTotalCount(items.size()));
-
-		databaseSongs.add(new ReturnedCount(items.size()));
-
-		Listing listing = new Listing();
-		for(MediaItem item : items)
-		{
-			ListingItem listingItem = new ListingItem();
-
-			if("all".equals(meta))
-			{
-				listingItem.add(item.getChunk("dmap.itemkind"));
-				for(Chunk chunk : item.getChunks())
-				{
-					if(chunk.getName().equals("dmap.itemkind"))
-						continue;
-					listingItem.add(chunk);
-				}
-			}
-			else
-			{
-				for(String key : parameters)
-				{
-					Chunk chunk = item.getChunk(key);
-
-					if(chunk != null)
-					{
-						listingItem.add(chunk);
-					}
-					else
-					{
-						logger.info("Unknown chunk type: " + key);
-					}
-				}
-			}
-
-			listing.add(listingItem);
-		}
-
-		databaseSongs.add(listing);
-
-		// if(request.isUpdateType() && deletedSongs != null)
-		// {
-		// DeletedIdListing deletedListing = new DeletedIdListing();
-		//
-		// for(Song song : deletedSongs)
-		// {
-		// deletedListing.add(song.getChunk("dmap.itemid"));
-		// }
-		//
-		// databaseSongs.add(deletedListing);
-		// }
-
-		return Util.buildResponse(databaseSongs, itemManager.getDMAPKey(), name);
-	}
-
-	@Override
 	@Path("content-codes")
 	@GET
 	public Response contentCodes() throws IOException
@@ -352,80 +265,5 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	public Response logout(@QueryParam("session-id") long sessionId)
 	{
 		return Util.buildEmptyResponse(itemManager.getDMAPKey(), name);
-	}
-
-	@Override
-	@Path("databases/{databaseId}/groups")
-	@GET
-	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws IOException
-	{
-
-		if("artists".equalsIgnoreCase(group_type))
-		{
-			ArtistSearchContainer response = new ArtistSearchContainer();
-			response.add(new Status(200));
-			response.add(new UpdateType(0));
-			response.add(new SpecifiedTotalCount(0));//
-			response.add(new ReturnedCount(0));//
-
-			Listing listing = new Listing();
-			listing.add(new UnknownHL());//
-			response.add(listing);
-
-			return Util.buildResponse(response, itemManager.getDMAPKey(), name);
-		}
-		else if("albums".equalsIgnoreCase(group_type))
-		{
-			AlbumSearchContainer response = new AlbumSearchContainer();
-			response.add(new Status(200));
-			response.add(new UpdateType(0));
-			response.add(new SpecifiedTotalCount(0));//
-			response.add(new ReturnedCount(0));//
-
-			Listing listing = new Listing();
-			response.add(listing);
-
-			return Util.buildResponse(response, itemManager.getDMAPKey(), name);
-		}
-		else
-			throw new NotImplementedException();
-	}
-
-	public static byte[] uriTobuffer(URI uri) throws IOException
-	{
-		ByteArrayOutputStream bais = new ByteArrayOutputStream();
-		InputStream is = null;
-		try
-		{
-			is = uri.toURL().openStream();
-			byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
-			int n;
-
-			while((n = is.read(byteChunk)) > 0)
-			{
-				bais.write(byteChunk, 0, n);
-			}
-			return bais.toByteArray();
-
-		}
-		catch(IOException e)
-		{
-			throw e;
-		}
-		finally
-		{
-			if(is != null)
-			{
-				is.close();
-			}
-		}
-	}
-
-	@Override
-	@Path("databases/{databaseId}/groups/{groupdId}/extra_data/artwork")
-	@GET
-	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("groupId") long groupId, @QueryParam("session-id") long sessionId, @QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("group-type") String group_type) throws IOException
-	{
-		throw new NotImplementedException();
 	}
 }

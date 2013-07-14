@@ -28,9 +28,13 @@ package org.dyndns.jkiddo.dmap;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -172,7 +176,7 @@ public final class DmapUtil
 		return buffer.toByteArray();
 	}
 
-	public static final Iterable<String> parseMeta(String meta)
+	public static final Collection<String> parseMeta(String meta)
 	{
 		// Iterable<String> params = Splitter.on(',').split(meta);
 
@@ -195,10 +199,10 @@ public final class DmapUtil
 				list.add(token);
 			}
 		}
-		return list;
+		return Collections.unmodifiableCollection(list);
 	}
 	/**
-	 * Converts major, minor to a DAAP version. Version 2 is for example 0x00020000
+	 * Converts major, minor to a DMAP version. Version 2 is for example 0x00020000
 	 * 
 	 * @param major
 	 *            the major version (x)
@@ -210,7 +214,7 @@ public final class DmapUtil
 	}
 
 	/**
-	 * Converts major, minor to a DAAP version. Version 2.1 is for example 0x00020100
+	 * Converts major, minor to a DMAP version. Version 2.1 is for example 0x00020100
 	 * 
 	 * @param major
 	 *            the major version (x)
@@ -224,7 +228,7 @@ public final class DmapUtil
 	}
 
 	/**
-	 * Converts major, minor and patch to a DAAP version. Version 2.1.3 is for example 0x00020103
+	 * Converts major, minor and patch to a DMAP version. Version 2.1.3 is for example 0x00020103
 	 * 
 	 * @param major
 	 *            the major version (x)
@@ -609,4 +613,35 @@ public final class DmapUtil
 	// }
 	// return false;
 	// }
+	
+	public static byte[] uriTobuffer(URI uri) throws IOException
+	{
+		ByteArrayOutputStream bais = new ByteArrayOutputStream();
+		InputStream is = null;
+		try
+		{
+			is = uri.toURL().openStream();
+			byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
+			int n;
+
+			while((n = is.read(byteChunk)) > 0)
+			{
+				bais.write(byteChunk, 0, n);
+			}
+			return bais.toByteArray();
+
+		}
+		catch(IOException e)
+		{
+			throw e;
+		}
+		finally
+		{
+			if(is != null)
+			{
+				is.close();
+			}
+		}
+	}
+
 }

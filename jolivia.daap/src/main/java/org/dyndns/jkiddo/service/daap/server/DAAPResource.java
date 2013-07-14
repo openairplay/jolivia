@@ -1,7 +1,11 @@
 package org.dyndns.jkiddo.service.daap.server;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -20,14 +24,23 @@ import javax.ws.rs.core.Response;
 
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.dmap.DmapUtil;
+import org.dyndns.jkiddo.dmap.MediaItem;
+import org.dyndns.jkiddo.dmap.chunks.Chunk;
+import org.dyndns.jkiddo.dmap.chunks.audio.AlbumSearchContainer;
+import org.dyndns.jkiddo.dmap.chunks.audio.ArtistSearchContainer;
+import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
 import org.dyndns.jkiddo.dmap.chunks.audio.SupportsGroups;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationSchemes;
 import org.dyndns.jkiddo.dmap.chunks.media.DatabaseCount;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
+import org.dyndns.jkiddo.dmap.chunks.media.Listing;
+import org.dyndns.jkiddo.dmap.chunks.media.ListingItem;
 import org.dyndns.jkiddo.dmap.chunks.media.LoginRequired;
+import org.dyndns.jkiddo.dmap.chunks.media.ReturnedCount;
 import org.dyndns.jkiddo.dmap.chunks.media.ServerInfoResponse;
+import org.dyndns.jkiddo.dmap.chunks.media.SpecifiedTotalCount;
 import org.dyndns.jkiddo.dmap.chunks.media.Status;
 import org.dyndns.jkiddo.dmap.chunks.media.SupportsAutoLogout;
 import org.dyndns.jkiddo.dmap.chunks.media.SupportsBrowse;
@@ -38,6 +51,8 @@ import org.dyndns.jkiddo.dmap.chunks.media.SupportsQuery;
 import org.dyndns.jkiddo.dmap.chunks.media.SupportsResolve;
 import org.dyndns.jkiddo.dmap.chunks.media.SupportsUpdate;
 import org.dyndns.jkiddo.dmap.chunks.media.TimeoutInterval;
+import org.dyndns.jkiddo.dmap.chunks.media.UnknownHL;
+import org.dyndns.jkiddo.dmap.chunks.media.UpdateType;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.Util;
 
@@ -105,9 +120,9 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 
 		serverInfoResponse.add(new Status(200));
-		serverInfoResponse.add(itemManager.getDmapProtocolVersion());
+		serverInfoResponse.add(itemManager.getMediaProtocolVersion());
 		serverInfoResponse.add(new ItemName(name));
-		serverInfoResponse.add(itemManager.getDaapProtocolVersion());
+		serverInfoResponse.add(itemManager.getAudioProtocolVersion());
 		// serverInfoResponse.add(itemManager.getMusicSharingVersion()); If inserted, DAAP dies
 		serverInfoResponse.add(new SupportsExtensions(true));
 		serverInfoResponse.add(new SupportsGroups(3));
@@ -119,7 +134,7 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 		// serverInfoResponse.add(new UnknownSR(true));
 		// serverInfoResponse.add(new UnknownFP(2));//iTunes 11.0.2.26 says 2. If inserted, DAAP dies
 		// serverInfoResponse.add(new UnknownSX(111));
-		serverInfoResponse.add(itemManager.getProtocolVersion());
+		serverInfoResponse.add(itemManager.getPictureProtocolVersion());
 		// serverInfoResponse.add(new Unknowned(true));
 		// Unknownml msml = new Unknownml();
 		// msml.add(new UnknownMA(0xBF940AB92600L)); //iTunes 11.0.2.26 - Totally unknown
@@ -210,11 +225,128 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 	}
 
 	@Override
-	@Path("/databases/{databaseId}/items/{itemId}/extra_data/artwork")
+	@Path("databases/{databaseId}/items")
 	@GET
-	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws IOException
+	public Response items(@PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query) throws IOException
+	{
+		// dpap: limited by query
+		// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:2810','dmap.itemid:2811','dmap.itemid:2812','dmap.itemid:2813','dmap.itemid:2814','dmap.itemid:2815','dmap.itemid:2816','dmap.itemid:2817','dmap.itemid:2818','dmap.itemid:2819','dmap.itemid:2820','dmap.itemid:2821','dmap.itemid:2822','dmap.itemid:2823','dmap.itemid:2824','dmap.itemid:2825','dmap.itemid:2826','dmap.itemid:2827','dmap.itemid:2851','dmap.itemid:2852')
+
+		// GET dpap://192.168.1.2:8770/databases/1/items?session-id=1101478641&meta=dpap.hires,dmap.itemid,dpap.filedata&query=('dmap.itemid:2742') HTTP/1.1
+
+		// .getDatabases(), new Predicate<Database>() {
+		// @Override
+		// public boolean apply(Database database)
+		// {
+		// return database.getItemId() == databaseId;
+		// }
+		// }).getItems();
+		Collection<MediaItem> items = itemManager.getDatabase(databaseId).getItems();
+
+		Iterable<String> parameters = DmapUtil.parseMeta(meta);
+
+		DatabaseItems databaseSongs = new DatabaseItems();
+
+		databaseSongs.add(new Status(200));
+		databaseSongs.add(new UpdateType(0));
+		databaseSongs.add(new SpecifiedTotalCount(items.size()));
+
+		databaseSongs.add(new ReturnedCount(items.size()));
+
+		Listing listing = new Listing();
+		for(MediaItem item : items)
+		{
+			ListingItem listingItem = new ListingItem();
+
+			if("all".equals(meta))
+			{
+				listingItem.add(item.getChunk("dmap.itemkind"));
+				for(Chunk chunk : item.getChunks())
+				{
+					if(chunk.getName().equals("dmap.itemkind"))
+						continue;
+					listingItem.add(chunk);
+				}
+			}
+			else
+			{
+				for(String key : parameters)
+				{
+					Chunk chunk = item.getChunk(key);
+
+					if(chunk != null)
+					{
+						listingItem.add(chunk);
+					}
+					else
+					{
+						logger.info("Unknown chunk type: " + key);
+					}
+				}
+			}
+
+			listing.add(listingItem);
+		}
+
+		databaseSongs.add(listing);
+
+		// if(request.isUpdateType() && deletedSongs != null)
+		// {
+		// DeletedIdListing deletedListing = new DeletedIdListing();
+		//
+		// for(Song song : deletedSongs)
+		// {
+		// deletedListing.add(song.getChunk("dmap.itemid"));
+		// }
+		//
+		// databaseSongs.add(deletedListing);
+		// }
+
+		return Util.buildResponse(databaseSongs, itemManager.getDMAPKey(), name);
+	}
+
+	@Override
+	@Path("databases/{databaseId}/groups/{groupdId}/extra_data/artwork")
+	@GET
+	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("groupId") long groupId, @QueryParam("session-id") long sessionId, @QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("group-type") String group_type) throws IOException
 	{
 		throw new NotImplementedException();
 	}
+	
+	@Override
+	@Path("databases/{databaseId}/groups")
+	@GET
+	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws IOException
+	{
 
+		if("artists".equalsIgnoreCase(group_type))
+		{
+			ArtistSearchContainer response = new ArtistSearchContainer();
+			response.add(new Status(200));
+			response.add(new UpdateType(0));
+			response.add(new SpecifiedTotalCount(0));//
+			response.add(new ReturnedCount(0));//
+
+			Listing listing = new Listing();
+			listing.add(new UnknownHL());//
+			response.add(listing);
+
+			return Util.buildResponse(response, itemManager.getDMAPKey(), name);
+		}
+		else if("albums".equalsIgnoreCase(group_type))
+		{
+			AlbumSearchContainer response = new AlbumSearchContainer();
+			response.add(new Status(200));
+			response.add(new UpdateType(0));
+			response.add(new SpecifiedTotalCount(0));//
+			response.add(new ReturnedCount(0));//
+
+			Listing listing = new Listing();
+			response.add(listing);
+
+			return Util.buildResponse(response, itemManager.getDMAPKey(), name);
+		}
+		else
+			throw new NotImplementedException();
+	}
 }

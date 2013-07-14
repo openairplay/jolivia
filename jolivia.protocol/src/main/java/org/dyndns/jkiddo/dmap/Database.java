@@ -95,7 +95,7 @@ public class Database
 			database.deletedPlaylists = null;
 		}
 
-		Set<MediaItem> songs = database.getItems();
+		Collection<MediaItem> songs = database.getItems();
 
 		for(Container playlist : database.playlists)
 		{
@@ -392,7 +392,7 @@ public class Database
 	/**
 	 * Returns all Songs in this Database
 	 */
-	public Set<MediaItem> getItems()
+	public Collection<MediaItem> getItems()
 	{
 		Set<MediaItem> songs = null;
 		for(Container playlist : playlists)

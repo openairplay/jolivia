@@ -320,8 +320,6 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	{
 		if(isDaapRequest(httpServletRequest))
 			return musicLibraryResource.groups(databaseId, sessionId, meta, type, group_type, sort, include_sort_headers);
-		if(isDpapRequest(httpServletRequest))
-			return imageLibraryResource.groups(databaseId, sessionId, meta, type, group_type, sort, include_sort_headers);
 		throw new NotImplementedException();
 	}
 
@@ -374,13 +372,6 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	}
 
 	@Override
-	@Path("databases/{databaseId}/items/{itemId}/extra_data/artwork")
-	@GET
-	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("mw") String mw, @QueryParam("mh") String mh) throws IOException
-	{
-		return musicLibraryResource.artwork(databaseId, itemId, sessionId, revisionNumber, mw, mh);
-	}
-	@Override
 	@GET
 	@Path("ctrl-int/1/playqueue-contents")
 	public String playQueueContents(@QueryParam("span") int span, @QueryParam("session-id") long session_id)
@@ -418,8 +409,6 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	{
 		if(isDaapRequest(httpServletRequest))
 			return musicLibraryResource.artwork(databaseId, groupId, sessionId, mw, mh, group_type);
-		if(isDpapRequest(httpServletRequest))
-			return imageLibraryResource.artwork(databaseId, groupId, sessionId, mw, mh, group_type);
 		throw new NotImplementedException();
 	}
 }

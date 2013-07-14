@@ -8,29 +8,20 @@
  * Contributors:
  *     Jens Kristian Villadsen - Lead developer, owner and creator
  ******************************************************************************/
-package org.dyndns.jkiddo.dmap.chunks.picture;
+package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
+import org.dyndns.jkiddo.dmap.chunks.StringChunk;
 
-/**
- * DPAP.ProtocolVersion Represents the protocol version of the current implemented DPAP 'standard'.
- * 
- * @author Charles Ikeson
- */
-public class ProtocolVersion extends VersionChunk
+
+public class AlbumArtist extends StringChunk
 {
-	public ProtocolVersion()
+	public AlbumArtist()
 	{
-		this(0);
+		this("");
 	}
 
-	public ProtocolVersion(int version)
+	public AlbumArtist(String value)
 	{
-		super("ppro", "dpap.protocolversion", version);
-	}
-
-	public ProtocolVersion(int major, int minor, int patch)
-	{
-		super("ppro", "dpap.protocolversion", major, minor, patch);
+		super("asaa", "com.apple.itunes.unknown-aa", value);
 	}
 }

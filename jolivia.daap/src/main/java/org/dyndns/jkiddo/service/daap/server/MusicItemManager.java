@@ -8,18 +8,17 @@ import javax.inject.Named;
 
 import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.DmapUtil;
-import org.dyndns.jkiddo.dmap.MediaItem;
 import org.dyndns.jkiddo.dmap.Library;
+import org.dyndns.jkiddo.dmap.MediaItem;
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
-import org.dyndns.jkiddo.dmap.chunks.audio.DaapProtocolVersion;
+import org.dyndns.jkiddo.dmap.chunks.audio.AudioProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod.PasswordMethod;
-import org.dyndns.jkiddo.dmap.chunks.media.DmapProtocolVersion;
+import org.dyndns.jkiddo.dmap.chunks.media.MediaProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemKind;
-import org.dyndns.jkiddo.dmap.chunks.picture.ProtocolVersion;
+import org.dyndns.jkiddo.dmap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader.IMusicItem;
-import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
 import org.slf4j.Logger;
@@ -33,9 +32,9 @@ public class MusicItemManager implements IItemManager
 {
 	private static final Logger logger = LoggerFactory.getLogger(MusicItemManager.class);
 
-	private static final VersionChunk protocolVersion = new ProtocolVersion(DmapUtil.PPRO_VERSION_200);
-	private static final VersionChunk daapProtocolVersion = new DaapProtocolVersion(DmapUtil.APRO_VERSION_3011);
-	private static final VersionChunk dmapProtocolVersion = new DmapProtocolVersion(DmapUtil.MPRO_VERSION_209);
+	private static final VersionChunk pictureProtocolVersion = new PictureProtocolVersion(DmapUtil.PPRO_VERSION_200);
+	private static final VersionChunk audioProtocolVersion = new AudioProtocolVersion(DmapUtil.APRO_VERSION_3011);
+	private static final VersionChunk mediaProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_209);
 	private static final MusicSharingVersion musicSharingVersion = new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_309);
 
 	private final Library library;
@@ -74,21 +73,26 @@ public class MusicItemManager implements IItemManager
 	}
 
 	@Override
-	public VersionChunk getDmapProtocolVersion()
+	public VersionChunk getMediaProtocolVersion()
 	{
-		return dmapProtocolVersion;
+		return mediaProtocolVersion;
 	}
 
 	@Override
-	public VersionChunk getDaapProtocolVersion()
+	public VersionChunk getAudioProtocolVersion()
 	{
-		return daapProtocolVersion;
+		return audioProtocolVersion;
 	}
 
 	@Override
-	public VersionChunk getProtocolVersion()
+	public VersionChunk getPictureProtocolVersion()
 	{
-		return protocolVersion;
+		return pictureProtocolVersion;
+	}
+	
+	public MusicSharingVersion getMusicSharingVersion()
+	{
+		return musicSharingVersion;
 	}
 
 	@Override
@@ -140,15 +144,11 @@ public class MusicItemManager implements IItemManager
 		MediaItem song = library.getDatabase(databaseId).getMasterContainer().getItem(itemId);
 		try
 		{
-			return DMAPResource.uriTobuffer(reader.getTune(itemToIMusicItem.get(song)));
+			return DmapUtil.uriTobuffer(reader.getTune(itemToIMusicItem.get(song)));
 		}
 		catch(Exception e)
 		{
 			throw new RuntimeException(e);
 		}
-	}
-	public MusicSharingVersion getMusicSharingVersion()
-	{
-		return musicSharingVersion;
 	}
 }

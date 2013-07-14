@@ -25,30 +25,30 @@
  * limitations under the License.
  */
 
-package org.dyndns.jkiddo.dmap.chunks.audio;
+package org.dyndns.jkiddo.dmap.chunks.media;
 
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
 
 /**
- * The protocol version of DAAP. See Library for more information!
+ * The protocol version of DMAP. DMAPs are basically these classes. See Library for more information.
  * 
  * @author Roger Kapsi
  */
-public class DaapProtocolVersion extends VersionChunk
+public class MediaProtocolVersion extends VersionChunk
 {
 
-	public DaapProtocolVersion()
+	public MediaProtocolVersion()
 	{
 		this(0);
 	}
 
-	public DaapProtocolVersion(int version)
+	public MediaProtocolVersion(int version)
 	{
-		super("apro", "daap.protocolversion", version);
+		super("mpro", "dmap.protocolversion", version);
 	}
 
-	public DaapProtocolVersion(int major, int minor, int patch)
+	public MediaProtocolVersion(int major, int minor, int patch)
 	{
-		super("apro", "daap.protocolversion", major, minor, patch);
+		super("mpro", "dmap.protocolversion", major, minor, patch);
 	}
 }

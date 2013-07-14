@@ -11,6 +11,7 @@
 package org.dyndns.jkiddo.logic.interfaces;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.Set;
 
 public interface IImageStoreReader
@@ -28,5 +29,7 @@ public interface IImageStoreReader
 		String getFormat();
 
 		int getRating();
+
+		Date getCreationDate();
 	}
 }

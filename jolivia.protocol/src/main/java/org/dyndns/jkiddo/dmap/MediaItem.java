@@ -983,7 +983,7 @@ public class MediaItem
 	/**
 *
 */
-	private void addChunk(Chunk chunk)
+	public void addChunk(Chunk chunk)
 	{
 		if(chunk != null)
 		{

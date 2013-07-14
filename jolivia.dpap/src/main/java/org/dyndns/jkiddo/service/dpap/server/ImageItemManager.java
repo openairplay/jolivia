@@ -8,24 +8,25 @@ import javax.inject.Named;
 
 import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.DmapUtil;
-import org.dyndns.jkiddo.dmap.MediaItem;
 import org.dyndns.jkiddo.dmap.Library;
+import org.dyndns.jkiddo.dmap.MediaItem;
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod.PasswordMethod;
-import org.dyndns.jkiddo.dmap.chunks.media.DmapProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
+import org.dyndns.jkiddo.dmap.chunks.media.MediaProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.picture.AspectRatio;
 import org.dyndns.jkiddo.dmap.chunks.picture.CreationDate;
 import org.dyndns.jkiddo.dmap.chunks.picture.ImageFileSize;
 import org.dyndns.jkiddo.dmap.chunks.picture.ImageFilename;
 import org.dyndns.jkiddo.dmap.chunks.picture.ImageFormat;
 import org.dyndns.jkiddo.dmap.chunks.picture.ImageLargeFileSize;
+import org.dyndns.jkiddo.dmap.chunks.picture.ImagePixelHeight;
+import org.dyndns.jkiddo.dmap.chunks.picture.ImagePixelWidth;
 import org.dyndns.jkiddo.dmap.chunks.picture.ImageRating;
-import org.dyndns.jkiddo.dmap.chunks.picture.ProtocolVersion;
+import org.dyndns.jkiddo.dmap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader.IImageItem;
-import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
 
@@ -34,8 +35,8 @@ import com.google.common.collect.Maps;
 
 public class ImageItemManager implements IItemManager
 {
-	private static final VersionChunk dpapProtocolVersion = new ProtocolVersion(DmapUtil.PPRO_VERSION_101);
-	private static final VersionChunk dmapProtocolVersion = new DmapProtocolVersion(DmapUtil.MPRO_VERSION_200);
+	private static final VersionChunk dpapProtocolVersion = new PictureProtocolVersion(DmapUtil.PPRO_VERSION_101);
+	private static final VersionChunk dmapProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_200);
 
 	private final Library library;
 	private final IImageStoreReader reader;
@@ -52,15 +53,17 @@ public class ImageItemManager implements IItemManager
 				// dpap:
 				// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/containers/5292/items?session-id=1101478641&meta=dpap.aspectratio,dmap.itemid,dmap.itemname,dpap.imagefilename,dpap.imagefilesize,dpap.creationdate,dpap.imagepixelwidth,dpap.imagepixelheight,dpap.imageformat,dpap.imagerating,dpap.imagecomments,dpap.imagelargefilesize&type=photo
 				MediaItem item = new MediaItem(new ItemKind(ItemKind.IMAGE));
-				ItemName name = new ItemName(iImageItem.getImageFilename());
-				ImageFilename fileName = new ImageFilename(iImageItem.getImageFilename());
-				ImageFileSize fileSize = new ImageFileSize(iImageItem.getSize());
-				ImageFormat format = new ImageFormat(iImageItem.getFormat());
-				ImageRating rating = new ImageRating(iImageItem.getRating());
-				ImageLargeFileSize largeFileSize = new ImageLargeFileSize(iImageItem.getSize());
-				// The following should NOT be default
-				AspectRatio aspectRatio = new AspectRatio("1.5");
-				CreationDate creationDate = new CreationDate();
+				item.addChunk(new AspectRatio("1.5"));
+				item.addChunk(new CreationDate(iImageItem.getCreationDate().getTime()));
+				item.addChunk(new ImageFilename(iImageItem.getImageFilename()));
+				item.addChunk(new ItemName(iImageItem.getImageFilename()));
+				item.addChunk(new ImageFileSize(iImageItem.getSize()));
+				item.addChunk(new ImagePixelWidth());
+				item.addChunk(new ImagePixelHeight());
+				item.addChunk(new ImageFormat(iImageItem.getFormat()));
+				item.addChunk(new ImageRating(iImageItem.getRating()));
+				item.addChunk(new ImageLargeFileSize(iImageItem.getSize()));
+
 				return item;
 			}
 		});
@@ -78,19 +81,19 @@ public class ImageItemManager implements IItemManager
 	}
 
 	@Override
-	public VersionChunk getDmapProtocolVersion()
+	public VersionChunk getMediaProtocolVersion()
 	{
 		return dmapProtocolVersion;
 	}
 
 	@Override
-	public VersionChunk getDaapProtocolVersion()
+	public VersionChunk getAudioProtocolVersion()
 	{
 		return null;
 	}
 
 	@Override
-	public VersionChunk getProtocolVersion()
+	public VersionChunk getPictureProtocolVersion()
 	{
 		return dpapProtocolVersion;
 	}
@@ -144,7 +147,7 @@ public class ImageItemManager implements IItemManager
 		MediaItem image = library.getDatabase(databaseId).getMasterContainer().getItem(itemId);
 		try
 		{
-			return DMAPResource.uriTobuffer(reader.getImage(itemToIImageItem.get(image)));
+			return DmapUtil.uriTobuffer(reader.getImage(itemToIImageItem.get(image)));
 		}
 		catch(Exception e)
 		{

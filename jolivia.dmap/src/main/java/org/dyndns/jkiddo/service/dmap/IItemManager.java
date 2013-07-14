@@ -10,11 +10,11 @@ public interface IItemManager
 {
 	AuthenticationMethod.PasswordMethod getAuthenticationMethod();
 
-	VersionChunk getDmapProtocolVersion();
+	VersionChunk getMediaProtocolVersion();
 
-	VersionChunk getDaapProtocolVersion();
+	VersionChunk getAudioProtocolVersion();
 
-	VersionChunk getProtocolVersion();
+	VersionChunk getPictureProtocolVersion();
 
 	String getDMAPKey();
 
