@@ -10,14 +10,13 @@
  ******************************************************************************/
 package org.dyndns.jkiddo;
 
-import java.net.URI;
 import java.util.EnumSet;
-import java.util.Set;
 
 import javax.servlet.DispatcherType;
 
 import org.dyndns.jkiddo.guice.JoliviaServer;
 import org.dyndns.jkiddo.jetty.extension.DmapConnector;
+import org.dyndns.jkiddo.logic.desk.DeskImageStoreReader;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
@@ -32,7 +31,6 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import com.google.common.base.Preconditions;
-import com.google.common.collect.Sets;
 import com.google.inject.servlet.GuiceFilter;
 
 public class Jolivia
@@ -43,22 +41,7 @@ public class Jolivia
 	{
 		try
 		{
-			new Jolivia(new DeskMusicStoreReader(), new IImageStoreReader() {
-
-				@Override
-				public Set<IImageItem> readImages() throws Exception
-				{
-					// TODO Auto-generated method stub
-					return Sets.newHashSet();
-				}
-
-				@Override
-				public URI getImage(IImageItem image) throws Exception
-				{
-					// TODO Auto-generated method stub
-					return null;
-				}
-			});
+			new Jolivia(new DeskMusicStoreReader(), new DeskImageStoreReader());
 		}
 		catch(Exception e)
 		{

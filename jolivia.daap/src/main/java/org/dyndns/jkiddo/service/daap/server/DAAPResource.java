@@ -1,10 +1,7 @@
 package org.dyndns.jkiddo.service.daap.server;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.StringTokenizer;

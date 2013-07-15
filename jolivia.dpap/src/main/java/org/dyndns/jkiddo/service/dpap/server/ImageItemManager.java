@@ -17,6 +17,7 @@ import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmap.chunks.media.MediaProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.picture.AspectRatio;
 import org.dyndns.jkiddo.dmap.chunks.picture.CreationDate;
+import org.dyndns.jkiddo.dmap.chunks.picture.FileData;
 import org.dyndns.jkiddo.dmap.chunks.picture.ImageFileSize;
 import org.dyndns.jkiddo.dmap.chunks.picture.ImageFilename;
 import org.dyndns.jkiddo.dmap.chunks.picture.ImageFormat;
@@ -43,7 +44,7 @@ public class ImageItemManager implements IItemManager
 	private final Map<MediaItem, IImageItem> itemToIImageItem;
 
 	@Inject
-	public ImageItemManager(@Named(Util.APPLICATION_NAME) String applicationName, IImageStoreReader reader) throws Exception
+	public ImageItemManager(@Named(Util.APPLICATION_NAME) String applicationName, final IImageStoreReader reader) throws Exception
 	{
 		this.reader = reader;
 		this.itemToIImageItem = Maps.uniqueIndex(reader.readImages(), new Function<IImageItem, MediaItem>() {
@@ -63,6 +64,15 @@ public class ImageItemManager implements IItemManager
 				item.addChunk(new ImageFormat(iImageItem.getFormat()));
 				item.addChunk(new ImageRating(iImageItem.getRating()));
 				item.addChunk(new ImageLargeFileSize(iImageItem.getSize()));
+				try
+				{
+					item.addChunk(new FileData(reader.getImage(iImageItem), true));
+				}
+				catch(Exception e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				return item;
 			}

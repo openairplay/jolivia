@@ -27,7 +27,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import org.dyndns.jkiddo.NotImplementedException;
+import org.dyndns.jkiddo.UnknownClientTypeException;
 import org.dyndns.jkiddo.service.daap.server.IMusicLibrary;
 import org.dyndns.jkiddo.service.dacp.client.ITouchRemoteResource;
 import org.dyndns.jkiddo.service.dacp.server.ITouchAbleServerResource;
@@ -102,7 +102,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 			return musicLibraryResource.serverInfo();
 		if(isDpapRequest(httpServletRequest))
 			return imageLibraryResource.serverInfo();
-		throw new NotImplementedException();
+		throw new UnknownClientTypeException();
 	}
 
 	// @Override
@@ -112,7 +112,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	// return musicLibraryResource.login();
 	// if(isDpapRequest(httpServletRequest))
 	// return imageLibraryResource.login();
-	// throw new NotImplementedException();
+	// throw new UnknownClientTypeException();
 	// }
 	@Override
 	@Path("login")
@@ -125,7 +125,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 			return musicLibraryResource.login(guid, value);
 		if(isDpapRequest(httpServletRequest))
 			return imageLibraryResource.login(guid, value);
-		throw new NotImplementedException();
+		throw new UnknownClientTypeException();
 	}
 
 	@Override
@@ -140,7 +140,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 			return musicLibraryResource.update(sessionId, revisionNumber, delta, daapNoDisconnect);
 		if(isDpapRequest(httpServletRequest))
 			return imageLibraryResource.update(sessionId, revisionNumber, delta, daapNoDisconnect);
-		throw new NotImplementedException();
+		throw new UnknownClientTypeException();
 	}
 
 	@Override
@@ -152,7 +152,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 			return musicLibraryResource.databases(sessionId, revisionNumber, delta);
 		if(isDpapRequest(httpServletRequest))
 			return imageLibraryResource.databases(sessionId, revisionNumber, delta);
-		throw new NotImplementedException();
+		throw new UnknownClientTypeException();
 	}
 
 	@Override
@@ -164,7 +164,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 			return musicLibraryResource.items(databaseId, sessionId, revisionNumber, delta, type, meta, query);
 		if(isDpapRequest(httpServletRequest))
 			return imageLibraryResource.items(databaseId, sessionId, revisionNumber, delta, type, meta, query);
-		throw new NotImplementedException();
+		throw new UnknownClientTypeException();
 	}
 
 	@Override
@@ -176,7 +176,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 			return musicLibraryResource.containers(databaseId, sessionId, revisionNumber, delta, meta);
 		if(isDpapRequest(httpServletRequest))
 			return imageLibraryResource.containers(databaseId, sessionId, revisionNumber, delta, meta);
-		throw new NotImplementedException();
+		throw new UnknownClientTypeException();
 	}
 
 	@Override
@@ -188,7 +188,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 			return musicLibraryResource.containerItems(containerId, databaseId, sessionId, revisionNumber, delta, meta, type, group_type, sort, include_sort_headers, query, index);
 		if(isDpapRequest(httpServletRequest))
 			return imageLibraryResource.containerItems(containerId, databaseId, sessionId, revisionNumber, delta, meta, type, group_type, sort, include_sort_headers, query, index);
-		throw new NotImplementedException();
+		throw new UnknownClientTypeException();
 	}
 
 	@Override
@@ -200,7 +200,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 			return musicLibraryResource.contentCodes();
 		if(isDpapRequest(httpServletRequest))
 			return imageLibraryResource.contentCodes();
-		throw new NotImplementedException();
+		throw new UnknownClientTypeException();
 	}
 
 	@Override
@@ -230,7 +230,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 			return musicLibraryResource.logout(sessionId);
 		if(isDpapRequest(httpServletRequest))
 			return imageLibraryResource.logout(sessionId);
-		throw new NotImplementedException();
+		throw new UnknownClientTypeException();
 	}
 
 	@Override
@@ -320,7 +320,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	{
 		if(isDaapRequest(httpServletRequest))
 			return musicLibraryResource.groups(databaseId, sessionId, meta, type, group_type, sort, include_sort_headers);
-		throw new NotImplementedException();
+		throw new UnknownClientTypeException();
 	}
 
 	@Override
@@ -409,6 +409,6 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	{
 		if(isDaapRequest(httpServletRequest))
 			return musicLibraryResource.artwork(databaseId, groupId, sessionId, mw, mh, group_type);
-		throw new NotImplementedException();
+		throw new UnknownClientTypeException();
 	}
 }

@@ -65,12 +65,12 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			logger.info(e.getMessage(),e);
 		}
 		return Collections.unmodifiableSet(mapOfSongToFile.keySet());
 	}
 
-	protected void traverseRootPathRecursively(File f) throws FileNotFoundException, IOException, InterruptedException
+	protected void traverseRootPathRecursively(File f) throws FileNotFoundException, IOException, InterruptedException, SAXException, TikaException
 	{
 		if(f.isDirectory())
 		{
@@ -82,20 +82,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 		else if(isMusic(f))
 		{
-			addFileToDatabase(f);
-		}
-	}
-
-	private void addFileToDatabase(File f)
-	{
-
-		try
-		{
 			mapOfSongToFile.put(populateSong(f), f);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
 		}
 	}
 
@@ -120,7 +107,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			logger.debug(e.getMessage(),e);
 		}
 		song.setArtist(metadata.get(XMPDM.ARTIST));
 		song.setComposer(metadata.get(XMPDM.COMPOSER));
@@ -133,7 +120,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
+			logger.debug(e.getMessage(),e);
 		}
 		return song;
 	}

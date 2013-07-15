@@ -14,10 +14,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
 
 import javax.imageio.ImageIO;
@@ -70,9 +67,11 @@ public class FileData extends RawChunk
 		super("pfdt", "dpap.filedata", new byte[] {});
 		try
 		{
+			byte[] array = DmapUtil.uriTobuffer(f);
+
 			if(asThumb)
 			{
-				byte[] array = DmapUtil.uriTobuffer(f);
+
 				BufferedImage image = ImageIO.read(new ByteArrayInputStream(array));
 				int max = Math.max(image.getWidth(), image.getHeight());
 				float scale = 240.0f / max;
@@ -87,6 +86,10 @@ public class FileData extends RawChunk
 				g.dispose();
 
 				setValue(downscaledBytes.toByteArray());
+			}
+			else
+			{
+				setValue(array);
 			}
 		}
 		catch(IOException e)

@@ -34,6 +34,7 @@ import org.dyndns.jkiddo.dmap.chunks.media.SupportsAutoLogout;
 import org.dyndns.jkiddo.dmap.chunks.media.SupportsIndex;
 import org.dyndns.jkiddo.dmap.chunks.media.TimeoutInterval;
 import org.dyndns.jkiddo.dmap.chunks.media.UpdateType;
+import org.dyndns.jkiddo.dmap.chunks.picture.FileData;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.Util;
 
@@ -113,7 +114,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 
 		Collection<MediaItem> items = getMediaItems(databaseId, query);
 		Collection<String> metaParameters = DmapUtil.parseMeta(meta);
-		metaParameters.contains("dpap.thumb");
+		boolean isThumbRequest = metaParameters.contains("dpap.thumb");
 
 		DatabaseItems databaseItems = new DatabaseItems();
 
@@ -127,32 +128,25 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 		{
 			ListingItem listingItem = new ListingItem();
 
-			if("all".equals(meta))
-			{
-				listingItem.add(item.getChunk("dmap.itemkind"));
-				for(Chunk chunk : item.getChunks())
-				{
-					if(chunk.getName().equals("dmap.itemkind"))
-					{
-						continue;
-					}
-					listingItem.add(chunk);
-				}
-			}
-			else
-			{
-				for(String key : metaParameters)
-				{
-					Chunk chunk = item.getChunk(key);
+			listingItem.add(item.getChunk("dmap.itemkind"));
 
-					if(chunk != null)
+			for(String key : metaParameters)
+			{
+				Chunk chunk = item.getChunk(key);
+
+				if(chunk != null)
+				{
+					if("dpap.filedata".equals(chunk.getName()) && !isThumbRequest)
 					{
-						listingItem.add(chunk);
+						byte[] rawData = itemManager.getItemAsByteArray(databaseId, ((ItemId) item.getChunk("dmap.itemid")).getUnsignedValue());
+						listingItem.add(new FileData(rawData));
 					}
 					else
-					{
-						logger.info("Unknown chunk type: " + key);
-					}
+						listingItem.add(chunk);
+				}
+				else
+				{
+					logger.info("Unknown chunk type: " + key);
 				}
 			}
 
@@ -175,14 +169,13 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 
 		return Util.buildResponse(databaseItems, itemManager.getDMAPKey(), name);
 	}
-
-	private Collection<MediaItem> getMediaItems(final long databaseId, String query)
+	private Collection<MediaItem> getMediaItems(final long databaseId, final String query)
 	{
-		final Collection<Integer> itemIds = Collections2.transform(Sets.newHashSet(Splitter.on(",").split(query.replaceAll("(", "").replaceAll(")", ""))), new Function<String, Integer>() {
+		final Collection<Integer> itemIds = Collections2.transform(Sets.newHashSet(Splitter.on(",").split(query.replace("(", "").replace(")", ""))), new Function<String, Integer>() {
 			public Integer apply(String s)
 			{
-				if(s.startsWith("dmap.itemid:"))
-					return Integer.parseInt(s.split(":")[1]);
+				if(s.startsWith("'dmap.itemid:"))
+					return Integer.parseInt(s.replace("'", "").split(":")[1]);
 				return null;
 			}
 		});
