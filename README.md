@@ -131,10 +131,11 @@ The session is your 'remote control' instance. On a session you can do the remot
  * DAAP share as provided by iTunes including Zeroconf service discovery/publication.
  * DACP pairing and remote control functions. Jolivia implements serverside and clientside, meaning that you can use Jolivia for remote control but you can also use eg. Apple Remote against it.
  * RAOP Streaming aka. Airport Express emulation.
+ * DPAP share.
+
 ## Planned functionality ##
 
  * RAOP client - could be implemented as in [RPlay](https://github.com/bencall/RPlay), [AirReceiver](https://github.com/fgp/AirReceiver), [AP4J-Player](https://github.com/carsonmcdonald/AP4J-Player), [qtunes](https://launchpad.net/qtunes) or [JAirPort](https://github.com/froks/JAirPort).
- * DPAP implementation (ongoing ... ).
 
 ## Far future functionality ##
  * DLNA/DMAP Gateway translation.
