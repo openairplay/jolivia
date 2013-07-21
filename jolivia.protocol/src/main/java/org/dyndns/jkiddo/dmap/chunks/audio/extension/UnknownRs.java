@@ -11,6 +11,6 @@ public class UnknownRs extends BooleanChunk
 
 	public UnknownRs(boolean b)
 	{
-		super("aeSE", "daap.unknown-SE", b);
+		super("asrs", "daap.songuserratingstatus", b);
 	}
 }

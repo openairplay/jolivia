@@ -11,6 +11,6 @@ public class UnknownCs extends BooleanChunk
 
 	public UnknownCs(boolean b)
 	{
-		super("aeCS", "daap.unknown-CS", b);
+		super("aeCS", "com.apple.itunes.artworkchecksum", b);
 	}
 }

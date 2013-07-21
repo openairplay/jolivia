@@ -42,7 +42,7 @@ public class ItemsContainer extends ContainerChunk
 
 	public ItemsContainer()
 	{
-		super("apso", "dmap.playlistitems");
+		super("apso", "daap.playlistsongs");
 	}
 
 	public Listing getListing()

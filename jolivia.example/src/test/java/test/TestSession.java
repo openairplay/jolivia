@@ -22,5 +22,9 @@ public class TestSession extends Session
 	{
 		return (T) RequestHelper.requestParsed(String.format("%s" + request, getRequestBase()));
 	}
-
+	@SuppressWarnings("unchecked")
+	public <T> T fire2() throws Exception
+	{
+		return (T) RequestHelper.requestParsed(String.format("%s/databases/%d/groups?meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist,daap.groupalbumcount,daap.songartistid&type=music&group-type=artists&sort=album&include-sort-headers=1&query=('daap.songartist!:'+('com.apple.itunes.extended-media-kind:1','com.apple.itunes.extended-media-kind:32','com.apple.itunes.xid'))&session-id=%s", getRequestBase(), getDatabase().getItemId(), getSessionId()), false);
+	}
 }

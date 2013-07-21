@@ -129,7 +129,7 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 		// serverInfoResponse.add(new UnknownTr(true));
 		// serverInfoResponse.add(new UnknownSL(true));
 		// serverInfoResponse.add(new UnknownSR(true));
-		// serverInfoResponse.add(new UnknownFP(2));//iTunes 11.0.2.26 says 2. If inserted, DAAP dies
+		// serverInfoResponse.add(new SupportsFairPlay(SupportsFairPlay.UNKNOWN_VALUE));//iTunes 11.0.2.26 says 2. If inserted, DAAP dies
 		// serverInfoResponse.add(new UnknownSX(111));
 		serverInfoResponse.add(itemManager.getPictureProtocolVersion());
 		// serverInfoResponse.add(new Unknowned(true));
@@ -178,25 +178,11 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 	{
 		byte[] array = itemManager.getItemAsByteArray(databaseId, itemId);
 
-		// long[] range = getRange(rangeHeader, 0, file.length());
-		// int pos = (int) range[0];
-		// int end = (int) range[1];
-		// RandomAccessFile raf = new RandomAccessFile(file, "r");
-		//
-		// byte[] buffer = new byte[end - pos];
-		// raf.seek(pos);
-		// raf.readFully(buffer, 0, buffer.length);
-		// Closeables.close(raf,true);
-		// return Util.buildAudioResponse(buffer, pos, file..length(), itemManager.getDMAPKey(), name);
-
 		long[] range = getRange(rangeHeader, 0, array.length);
 		int pos = (int) range[0];
 		int end = (int) range[1];
 		byte[] buffer = new byte[end - pos];
 		System.arraycopy(array, pos, buffer, 0, buffer.length);
-		// raf.seek(pos);
-		// raf.readFully(buffer, 0, buffer.length);
-		// Closeables.close(raf,true);
 		return Util.buildAudioResponse(buffer, pos, buffer.length, itemManager.getDMAPKey(), name);
 
 	}
@@ -309,7 +295,7 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 	{
 		throw new NotImplementedException();
 	}
-	
+
 	@Override
 	@Path("databases/{databaseId}/groups")
 	@GET

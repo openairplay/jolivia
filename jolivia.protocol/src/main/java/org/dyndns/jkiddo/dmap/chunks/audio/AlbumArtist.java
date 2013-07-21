@@ -22,6 +22,6 @@ public class AlbumArtist extends StringChunk
 
 	public AlbumArtist(String value)
 	{
-		super("asaa", "com.apple.itunes.unknown-aa", value);
+		super("asaa", "daap.songalbumartist", value);
 	}
 }

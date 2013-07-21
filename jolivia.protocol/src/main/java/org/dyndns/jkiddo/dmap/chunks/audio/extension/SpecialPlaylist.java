@@ -14,6 +14,18 @@ import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
 
 public class SpecialPlaylist extends UByteChunk
 {
+	// 1 podcast library
+	// 2 iTunesDJ library
+	// 4 Movies library
+	// 5 TVShows library
+	// 6 Music Library
+	// 7 Books Library
+	// 8 Purchased library
+	// 9 PurchasedOnDeviceLibrary
+	// 12 Genius library
+	// 13 iTunesU library
+	// 15 GeniusMixes library
+	// 16 GenisMix library
 	public SpecialPlaylist()
 	{
 		this(0);

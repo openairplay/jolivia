@@ -40,7 +40,7 @@ public class DatabaseContainerns extends ContainerChunk
 
 	public DatabaseContainerns()
 	{
-		super("aply", "dmap.databaseplaylists");
+		super("aply", "daap.databaseplaylists");
 	}
 
 	public Listing getListing()

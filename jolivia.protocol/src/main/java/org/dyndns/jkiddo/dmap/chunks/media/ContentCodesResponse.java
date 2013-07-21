@@ -49,4 +49,9 @@ public class ContentCodesResponse extends ContainerChunk
 	{
 		return collection;
 	}
+	
+	public Iterable<Dictionary> getDictionaries()
+	{
+		return getMultipleChunks(Dictionary.class);
+	}
 }

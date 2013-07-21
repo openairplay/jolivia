@@ -42,7 +42,7 @@ public class DatabaseItems extends ContainerChunk
 
 	public DatabaseItems()
 	{
-		super("adbs", "dmap.databaseitems");
+		super("adbs", "daap.databasesongs");
 	}
 
 	public Listing getListing()

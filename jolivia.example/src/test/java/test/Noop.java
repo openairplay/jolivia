@@ -1,15 +1,23 @@
 package test;
 
+import java.nio.ByteBuffer;
 import java.util.Collection;
+import java.util.Iterator;
 
 import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.dmap.Container;
 import org.dyndns.jkiddo.dmap.Database;
+import org.dyndns.jkiddo.dmap.chunks.Chunk;
+import org.dyndns.jkiddo.dmap.chunks.ChunkFactory;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongTime;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongTrackNumber;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongUserRating;
+import org.dyndns.jkiddo.dmap.chunks.media.ContentCodesName;
+import org.dyndns.jkiddo.dmap.chunks.media.ContentCodesNumber;
+import org.dyndns.jkiddo.dmap.chunks.media.ContentCodesType;
+import org.dyndns.jkiddo.dmap.chunks.media.Dictionary;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
@@ -25,12 +33,6 @@ import org.junit.Test;
 
 public class Noop
 {
-	@Test
-	public void dummy2()
-	{
-
-	}
-	
 	// @Test
 	public void usage() throws Exception
 	{
@@ -141,13 +143,15 @@ public class Noop
 		});
 	}
 
-	// @Test
+	@Test
 	public void dummy() throws Exception
 	{
 		try
 		{
-			TestSession session = new TestSession("localhost", 3689, "70963BE9D698E147");
-			Object oo = session.fire(String.format("/databases/%d/containers/%d/items?session-id=%smeta=dmap.itemid,dmap.parentcontainerid", session.getTheDatabase().getItemId(), session.getTheDatabase().getMasterContainer().getItemId(), session.getSessionId()));
+			TestSession session = new TestSession("localhost", 3689, "0000000000000001");
+			// String meta = "dmap.itemid,dmap.parentcontainerid";
+			String meta = "dmap.itemid,com.apple.itunes.req-fplay,com.apple.itunes.itms-genreid,com.apple.itunes.gapless-dur";
+			Object oo = session.fire2();
 			System.out.println(oo);
 		}
 		catch(Exception e)
@@ -156,11 +160,62 @@ public class Noop
 		}
 	}
 
-	// @Test
+	@Test
 	public void serverInfoResponse() throws Exception
 	{
 		String requestBase = String.format("http://%s:%d", "localhost", 4000);
 		ServerInfoResponse serverInfoResponse = RequestHelper.requestParsed(String.format("%s/server-info", requestBase));
 		System.out.println(serverInfoResponse);
+	}
+
+	@Test
+	public void verifyModel() throws Exception
+	{
+		TestSession session = new TestSession("localhost", 3689, "0000000000000001");
+		Iterator<Dictionary> contentCodes = session.getContentCodes().getDictionaries().iterator();
+
+		ChunkFactory chunkFactory = new ChunkFactory();
+		System.out.println("Listing codes ...");
+
+		while(contentCodes.hasNext())
+		{
+			Dictionary c = contentCodes.next();
+			String shortName = c.getSpecificChunk(ContentCodesNumber.class).getValueContentCode();
+			Integer type = +c.getSpecificChunk(ContentCodesType.class).getValue();
+			String longName = c.getSpecificChunk(ContentCodesName.class).getValue();
+
+			try
+			{
+				Chunk chunk = chunkFactory.newChunk(stringReadAsInt(shortName));
+				System.out.println(shortName + " : " + type + " : " + longName + " : " + chunk.getClass().getSimpleName());
+				if(chunk.getType() != type)
+				{
+					System.out.println("	Type mismatch! Type was " + chunk.getType() + ". Expected " + type);
+				}
+				if(!longName.equals(chunk.getName()))
+				{
+					System.out.println("		Longname mismatch! Longname was " + chunk.getName() + ". Expected " + longName);
+				}
+				if(!shortName.equals(chunk.getContentCodeString()))
+				{
+					System.out.println("			Shortname mismatch! Shortname was " + chunk.getContentCodeString() + ". Expected " + shortName);
+				}
+			}
+			catch(Exception e)
+			{
+				System.out.println(shortName + " : " + type + " : " + longName + " : ");
+				System.out.println("					Chunck could not be identified, having " + stringReadAsInt(shortName));
+			}
+		}
+	}
+	private static int stringReadAsInt(String s)
+	{
+		ByteBuffer buffer = ByteBuffer.allocate(s.length());
+		for(int i = 0; i < s.length(); i++)
+		{
+			buffer.put((byte) s.charAt(i));
+		}
+		buffer.position(0);
+		return buffer.getInt();
 	}
 }
