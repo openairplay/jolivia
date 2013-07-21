@@ -1,6 +1,5 @@
 package org.dyndns.jkiddo.dmap.chunks.unknown;
 
-import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
 import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
 
 public class ReqFplay extends UIntChunk

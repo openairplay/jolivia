@@ -273,8 +273,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x61655345), org.dyndns.jkiddo.dmap.chunks.audio.extension.StorePersistentId.class); // aeSE
 		map.put(new Integer(0x61654456), org.dyndns.jkiddo.dmap.chunks.audio.extension.DRMVersions.class); // aeDV
 		map.put(new Integer(0x61654450), org.dyndns.jkiddo.dmap.chunks.audio.extension.DRMPlatformId.class); // aeDP
-		map.put(new Integer(0x61737273), org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownRs.class); // asrs
-		map.put(new Integer(0x61654353), org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownCs.class); // aeCS
+		map.put(new Integer(0x61737273), org.dyndns.jkiddo.dmap.chunks.audio.extension.SongUserRatingStatus.class); // asrs
 		map.put(new Integer(0x61654d58), org.dyndns.jkiddo.dmap.chunks.audio.extension.MovieInfoXml.class); // aeMX
 		map.put(new Integer(0x61655844), org.dyndns.jkiddo.dmap.chunks.audio.extension.Xid.class); // aeXD
 		map.put(new Integer(0x61654b32), org.dyndns.jkiddo.dmap.chunks.audio.extension.DRMKey2Id.class); // aeK2

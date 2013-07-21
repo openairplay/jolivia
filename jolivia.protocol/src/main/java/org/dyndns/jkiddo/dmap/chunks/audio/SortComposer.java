@@ -1,6 +1,5 @@
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.BooleanChunk;
 import org.dyndns.jkiddo.dmap.chunks.StringChunk;
 
 public class SortComposer extends StringChunk

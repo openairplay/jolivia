@@ -2,14 +2,14 @@ package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
 import org.dyndns.jkiddo.dmap.chunks.BooleanChunk;
 
-public class UnknownRs extends BooleanChunk
+public class SongUserRatingStatus extends BooleanChunk
 {
-	public UnknownRs()
+	public SongUserRatingStatus()
 	{
 		this(false);
 	}
 
-	public UnknownRs(boolean b)
+	public SongUserRatingStatus(boolean b)
 	{
 		super("asrs", "daap.songuserratingstatus", b);
 	}

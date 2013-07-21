@@ -1,6 +1,5 @@
 package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
-import org.dyndns.jkiddo.dmap.chunks.BooleanChunk;
 import org.dyndns.jkiddo.dmap.chunks.StringChunk;
 
 public class ContentRating extends StringChunk

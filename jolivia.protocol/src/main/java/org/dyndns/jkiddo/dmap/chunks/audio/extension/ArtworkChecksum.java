@@ -22,6 +22,6 @@ public class ArtworkChecksum extends UIntChunk
 
 	public ArtworkChecksum(int value)
 	{
-		super("aeCs", "com.apple.itunes.artworkchecksum", value);
+		super("aeCS", "com.apple.itunes.artworkchecksum", value);
 	}
 }

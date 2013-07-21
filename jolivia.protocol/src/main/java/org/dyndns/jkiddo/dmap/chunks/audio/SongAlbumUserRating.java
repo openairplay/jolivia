@@ -12,6 +12,6 @@ public class SongAlbumUserRating extends BooleanChunk
 
 	public SongAlbumUserRating(boolean b)
 	{
-		super("asrs", "daap.songalbumuserrating", b);
+		super("aslr", "daap.songalbumuserrating", b);
 	}
 }
