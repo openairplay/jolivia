@@ -9,7 +9,7 @@ public class UTCTime extends DateChunk
 		this(0);
 	}
 
-	public UTCTime(int i)
+	public UTCTime(long i)
 	{
 		super("mstc", "dmap.utctime", i);
 	}

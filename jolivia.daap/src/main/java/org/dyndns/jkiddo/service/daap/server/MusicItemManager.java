@@ -12,8 +12,13 @@ import org.dyndns.jkiddo.dmap.Library;
 import org.dyndns.jkiddo.dmap.MediaItem;
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmap.chunks.audio.AudioProtocolVersion;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongFormat;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongSampleRate;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod.PasswordMethod;
+import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmap.chunks.media.MediaProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmap.chunks.picture.PictureProtocolVersion;
@@ -50,13 +55,15 @@ public class MusicItemManager implements IItemManager
 			public MediaItem apply(IMusicItem iMusicItem)
 			{
 				MediaItem item = new MediaItem(new ItemKind(ItemKind.AUDIO));
-				item.setAlbum(null, iMusicItem.getAlbum());
-				item.setArtist(null, iMusicItem.getArtist());
+				item.addChunk(new SongAlbum(iMusicItem.getAlbum()));
+				item.addChunk(new SongArtist(iMusicItem.getArtist()));
 				if(Strings.isNullOrEmpty(iMusicItem.getTitle()))
 				{
 					logger.warn("Name of " + iMusicItem + " was null. Song/Item may not be displayed");
 				}
-				item.setName(null, iMusicItem.getTitle());
+				item.addChunk(new ItemName(iMusicItem.getTitle()));
+				item.addChunk(new SongFormat(SongFormat.MP3));
+				item.addChunk(new SongSampleRate(SongSampleRate.KHZ_44100));
 				return item;
 			}
 		});
@@ -89,7 +96,7 @@ public class MusicItemManager implements IItemManager
 	{
 		return pictureProtocolVersion;
 	}
-	
+
 	public MusicSharingVersion getMusicSharingVersion()
 	{
 		return musicSharingVersion;

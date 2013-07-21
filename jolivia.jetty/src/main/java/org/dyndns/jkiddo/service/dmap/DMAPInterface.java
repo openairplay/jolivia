@@ -14,7 +14,6 @@ import java.io.IOException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -40,16 +39,13 @@ import com.google.common.base.Strings;
 public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteResource, IMusicLibrary, IImageLibrary
 {
 	@Context
-	private UriInfo uriInfo;
-
-	@Context
-	private ServletContext context;
-
-	@Context
 	private HttpServletRequest httpServletRequest;
 
-	@Context
-	private HttpServletResponse httpServletResponse;
+	// @Context
+	// private HttpServletResponse httpServletResponse;
+
+	// @Context
+	// private UriInfo uriInfo;
 
 	private final ITouchAbleServerResource remoteControlResource;
 	private final ITouchRemoteResource pairingResource;
@@ -98,6 +94,8 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@GET
 	public Response serverInfo() throws IOException
 	{
+		// if(isRemoteControlRequest(httpServletRequest))
+		// return remoteControlResource.serverInfo();
 		if(isDaapRequest(httpServletRequest))
 			return musicLibraryResource.serverInfo();
 		if(isDpapRequest(httpServletRequest))
@@ -105,15 +103,6 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 		throw new UnknownClientTypeException();
 	}
 
-	// @Override
-	// public Response login() throws IOException
-	// {
-	// if(isDaapRequest(httpServletRequest))
-	// return musicLibraryResource.login();
-	// if(isDpapRequest(httpServletRequest))
-	// return imageLibraryResource.login();
-	// throw new UnknownClientTypeException();
-	// }
 	@Override
 	@Path("login")
 	@GET

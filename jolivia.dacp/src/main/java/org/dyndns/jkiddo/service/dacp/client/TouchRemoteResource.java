@@ -91,7 +91,6 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 		{
 			database.updateCode(servicename, Util.toHex(code));
 			
-			//Section should be equivalent to PAIRING_RAW
 			PairingContainer pc = new PairingContainer();
 			pc.add(new PairingGuid(code));
 			pc.add(new DeviceName("Jolivia’s iPhone"));
@@ -99,6 +98,7 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 			
 			return new ResponseBuilderImpl().entity(DmapUtil.serialize(pc, false)).status(Status.OK).build();
 		}
+		
 		// TODO Response is not verified to be correct in iTunes regi - it is however better than nothing.
 		return new ResponseBuilderImpl().status(Status.UNAUTHORIZED).build();
 	}

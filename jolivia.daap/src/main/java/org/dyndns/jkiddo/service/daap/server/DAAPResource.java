@@ -2,6 +2,7 @@ package org.dyndns.jkiddo.service.daap.server;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.StringTokenizer;
@@ -26,7 +27,9 @@ import org.dyndns.jkiddo.dmap.chunks.Chunk;
 import org.dyndns.jkiddo.dmap.chunks.audio.AlbumSearchContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.ArtistSearchContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
+import org.dyndns.jkiddo.dmap.chunks.audio.SupportsExtraData;
 import org.dyndns.jkiddo.dmap.chunks.audio.SupportsGroups;
+import org.dyndns.jkiddo.dmap.chunks.control.extension.WelcomeMessage;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationSchemes;
@@ -48,8 +51,11 @@ import org.dyndns.jkiddo.dmap.chunks.media.SupportsQuery;
 import org.dyndns.jkiddo.dmap.chunks.media.SupportsResolve;
 import org.dyndns.jkiddo.dmap.chunks.media.SupportsUpdate;
 import org.dyndns.jkiddo.dmap.chunks.media.TimeoutInterval;
+import org.dyndns.jkiddo.dmap.chunks.media.UTCTime;
+import org.dyndns.jkiddo.dmap.chunks.media.UTCTimeOffset;
 import org.dyndns.jkiddo.dmap.chunks.media.UnknownHL;
 import org.dyndns.jkiddo.dmap.chunks.media.UpdateType;
+import org.dyndns.jkiddo.dmap.chunks.unknown.Voting;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.Util;
 
@@ -121,6 +127,11 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 		serverInfoResponse.add(new ItemName(name));
 		serverInfoResponse.add(itemManager.getAudioProtocolVersion());
 		// serverInfoResponse.add(itemManager.getMusicSharingVersion()); If inserted, DAAP dies
+		
+		serverInfoResponse.add(new SupportsExtraData(3));
+		serverInfoResponse.add(new WelcomeMessage("jgjgjhgjgjhgjgyutrutuolmæ"));
+		serverInfoResponse.add(new Voting(true));
+		
 		serverInfoResponse.add(new SupportsExtensions(true));
 		serverInfoResponse.add(new SupportsGroups(3));
 		// serverInfoResponse.add(new UnknownSE(0x80000));
@@ -165,8 +176,8 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 		serverInfoResponse.add(new SupportsIndex(true));
 		serverInfoResponse.add(new SupportsResolve(true));
 		serverInfoResponse.add(new DatabaseCount(itemManager.getDatabases().size()));
-		// serverInfoResponse.add(new Unknowntc(0x5169B375)); //iTunes 11.0.2.26 - Totally unknown
-		// serverInfoResponse.add(new Unknownto(7200));
+		serverInfoResponse.add(new UTCTime(Calendar.getInstance().getTimeInMillis()));
+		serverInfoResponse.add(new UTCTimeOffset(7200));
 
 		return Util.buildResponse(serverInfoResponse, itemManager.getDMAPKey(), name);
 	}
