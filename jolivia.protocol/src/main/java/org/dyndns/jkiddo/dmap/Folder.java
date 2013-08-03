@@ -91,12 +91,6 @@ public class Folder extends Container
 	}
 
 	@Override
-	public int getSongCount()
-	{
-		return 0;
-	}
-
-	@Override
 	public List<MediaItem> getItems()
 	{
 		return Collections.emptyList();

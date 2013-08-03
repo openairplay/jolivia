@@ -48,7 +48,7 @@ public class Database
 {
 
 	/** databaseId is an 32bit unsigned value! */
-	private static final AtomicLong DATABASE_ID = new AtomicLong();
+	private static final AtomicLong DATABASE_ID = new AtomicLong(1);
 
 	/** unique id */
 	private final long itemId;

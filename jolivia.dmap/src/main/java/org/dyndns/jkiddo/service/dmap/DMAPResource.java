@@ -146,24 +146,38 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		Listing listing = new Listing();
 
 		// iTunes got a bug - if playlists is a empty set, it keeps quering
-		for(Container playlist : containers)
+		for(Container container : containers)
 		{
 			ListingItem listingItem = new ListingItem();
 
-			for(String key : parameters)
+			// iPhoto
+			if(!parameters.iterator().hasNext())
 			{
-				Chunk chunk = playlist.getChunk(key);
-
-				if(chunk != null)
-				{
-					listingItem.add(chunk);
-				}
-				else
-				{
-					logger.info("Unknown chunk type: " + key);
-				}
+				listingItem.add(container.getChunk("dmap.itemkind"));
+				listingItem.add(container.getChunk("dmap.itemid"));
+				listingItem.add(container.getChunk("dmap.itemname"));
+				listingItem.add(container.getChunk("daap.baseplaylist"));
+				listingItem.add(container.getChunk("dmap.itemcount"));
 			}
-			listingItem.add(new ItemCount(1));
+
+			// iTunes
+			else
+			{
+				for(String key : parameters)
+				{
+					Chunk chunk = container.getChunk(key);
+
+					if(chunk != null)
+					{
+						listingItem.add(chunk);
+					}
+					else
+					{
+						logger.info("Unknown chunk type: " + key);
+					}
+				}
+				listingItem.add(new ItemCount(1));
+			}
 			listing.add(listingItem);
 		}
 

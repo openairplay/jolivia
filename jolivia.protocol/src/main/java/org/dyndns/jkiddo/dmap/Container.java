@@ -51,6 +51,7 @@ import org.dyndns.jkiddo.dmap.chunks.audio.extension.PodcastPlaylist;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.SmartPlaylist;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemCount;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemId;
+import org.dyndns.jkiddo.dmap.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmap.chunks.media.PersistentId;
 
@@ -89,7 +90,7 @@ public class Container
 	private final Map<String, Chunk> chunks = new HashMap<String, Chunk>();
 
 	/** Set of Songs */
-	private final List<MediaItem> songs = new ArrayList<MediaItem>();
+	private final List<MediaItem> mediaItems = new ArrayList<MediaItem>();
 
 	/** Set of deleted Songs */
 	private Set<MediaItem> deletedSongs = null;
@@ -107,7 +108,7 @@ public class Container
 			playlist.deletedSongs = null;
 		}
 
-		for(MediaItem song : playlist.songs)
+		for(MediaItem song : playlist.mediaItems)
 		{
 			if(txn.modified(song))
 			{
@@ -115,7 +116,7 @@ public class Container
 				{
 					// cloning is not necessary
 					// songs.add(new Song(song));
-					songs.add(song);
+					mediaItems.add(song);
 				}
 			}
 		}
@@ -157,6 +158,8 @@ public class Container
 		addChunk(itemName);
 		addChunk(persistentId);
 		addChunk(itemCount);
+		//Used by iPhoto - iTunes does not seem to mind
+		addChunk(new ItemKind(ItemKind.CONTAINER));
 	}
 
 	/**
@@ -312,20 +315,13 @@ public class Container
 		return getUByteValue(shuffleMode);
 	}
 
-	/**
-	 * Returns the number of Songs in this Playlist
-	 */
-	public int getSongCount()
-	{
-		return songs.size();
-	}
 
 	/**
 	 * Retuns an unmodifiable set of all songs
 	 */
 	public List<MediaItem> getItems()
 	{
-		return Collections.unmodifiableList(songs);
+		return Collections.unmodifiableList(mediaItems);
 	}
 
 	/**
@@ -363,9 +359,9 @@ public class Container
 
 	private void addSongP(Transaction txn, MediaItem song)
 	{
-		if(!containsSong(song) && songs.add(song))
+		if(!containsSong(song) && mediaItems.add(song))
 		{
-			itemCount.setValue(songs.size());
+			itemCount.setValue(mediaItems.size());
 			if(deletedSongs != null && deletedSongs.remove(song) && deletedSongs.isEmpty())
 			{
 				deletedSongs = null;
@@ -394,7 +390,7 @@ public class Container
 
 	private void setSongsP(Transaction txn, Collection<MediaItem> songsCollection)
 	{
-		this.songs.addAll(songsCollection);
+		this.mediaItems.addAll(songsCollection);
 		itemCount.setValue(songsCollection.size());
 	}
 
@@ -424,9 +420,9 @@ public class Container
 
 	private void removeSongP(Transaction txn, MediaItem song)
 	{
-		if(songs.remove(song))
+		if(mediaItems.remove(song))
 		{
-			itemCount.setValue(songs.size());
+			itemCount.setValue(mediaItems.size());
 			if(deletedSongs == null)
 			{
 				deletedSongs = new HashSet<MediaItem>();
@@ -443,7 +439,7 @@ public class Container
 	 */
 	public MediaItem getItem(long songId)
 	{
-		for(MediaItem song : songs)
+		for(MediaItem song : mediaItems)
 		{
 			if(song.getItemId() == songId)
 			{
@@ -458,7 +454,7 @@ public class Container
 	 */
 	public boolean containsSong(MediaItem song)
 	{
-		return songs.contains(song);
+		return mediaItems.contains(song);
 	}
 
 	@Override

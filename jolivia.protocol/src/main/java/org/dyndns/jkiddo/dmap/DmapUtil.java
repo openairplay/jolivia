@@ -178,6 +178,8 @@ public final class DmapUtil
 
 	public static final Collection<String> parseMeta(String meta)
 	{
+		if(meta == null)
+			return Collections.emptyList();
 		// Iterable<String> params = Splitter.on(',').split(meta);
 
 		StringTokenizer tok = new StringTokenizer(meta, ",");
