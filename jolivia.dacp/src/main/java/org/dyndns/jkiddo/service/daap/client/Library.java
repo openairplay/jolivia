@@ -160,7 +160,7 @@ public class Library
 
 	public byte[] getAlbumArtwork(long itemId, int imageWidth, int imageHeight) throws Exception
 	{
-		return RequestHelper.requestBitmap(String.format("%s/databases/%d/items/%d/extra_data/artwork?session-id=%s&mw=" + imageWidth + "&mh=" + imageHeight, session.getRequestBase(), session.getDatabase().getItemId(), itemId, session.getSessionId()));
+		return RequestHelper.requestBitmap(String.format("%s/databases/%d/items/%d/extra_data/artwork?session-id=%s&mw=" + imageWidth + "&mh=" + imageHeight + "&group-type=albums", session.getRequestBase(), session.getDatabase().getItemId(), itemId, session.getSessionId()));
 		//The following is what is captured with wireshark
 
 		/*GET /databases/69/groups/165/extra_data/artwork?mw=110&mh=110&group-type=albums&session-id=1689476647 HTTP/1.1

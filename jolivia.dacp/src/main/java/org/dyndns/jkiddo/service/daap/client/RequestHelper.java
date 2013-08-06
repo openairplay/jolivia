@@ -107,14 +107,14 @@ public class RequestHelper
 
 		byte[] buffer = new byte[1024];
 
-		URL url = new URL(remoteUrl);
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		HttpURLConnection connection = (HttpURLConnection) new URL(remoteUrl).openConnection();
 		connection.setAllowUserInteraction(false);
 		connection.setRequestProperty("Viewer-Only-Client", "1");
-//		connection.setRequestProperty("Client-DAAP-Version", "3.11");
-//		connection.setRequestProperty("Client-DPAP-Version", "1.1");
-//		connection.setRequestProperty("Client-iTunes-Sharing-Version", "3.9");
+		connection.setRequestProperty("Client-DAAP-Version", "3.11");
+//		connection.setRequestProperty("Client-iTunes-Sharing-Version", "3.10");
+		connection.setRequestProperty("Client-DPAP-Version", "1.1");
 		connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
+		connection.setRequestProperty("User-Agent", "iPhoto/9.4.3,iTunes/11.0.4");
 		connection.setReadTimeout(READ_TIMEOUT);
 		if(!keepalive)
 		{

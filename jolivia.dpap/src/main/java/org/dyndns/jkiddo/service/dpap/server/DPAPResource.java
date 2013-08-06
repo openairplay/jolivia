@@ -36,7 +36,10 @@ import org.dyndns.jkiddo.dmap.chunks.media.TimeoutInterval;
 import org.dyndns.jkiddo.dmap.chunks.media.UpdateType;
 import org.dyndns.jkiddo.dmap.chunks.picture.FileData;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
+import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicate;
@@ -46,8 +49,10 @@ import com.google.common.collect.Sets;
 
 @Consumes(MediaType.WILDCARD)
 // @Produces(MediaType.WILDCARD)
-public class DPAPResource extends DMAPResource<ImageItemManager> implements IImageLibrary
+public class DPAPResource extends DMAPResource<IItemManager> implements IImageLibrary
 {
+	static final Logger logger = LoggerFactory.getLogger(DPAPResource.class);
+
 	public static final String DPAP_SERVER_PORT_NAME = "DPAP_SERVER_PORT_NAME";
 	public static final String DPAP_RESOURCE = "DPAP_IMPLEMENTATION";
 
@@ -146,6 +151,10 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 				}
 				else
 				{
+					if(isThumbRequest && "dpap.thumb".equals(key))
+						continue;
+					if(!isThumbRequest && "dpap.hires".equals(key))
+						continue;
 					logger.info("Unknown chunk type: " + key);
 				}
 			}
@@ -190,5 +199,13 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 			}
 		});
 		return items;
+	}
+
+	@Override
+	@Path("this_request_is_simply_to_send_a_close_connection_header")
+	@GET
+	public Response closeConnection() throws IOException
+	{
+		return Util.buildEmptyResponse(itemManager.getDMAPKey(), name);
 	}
 }

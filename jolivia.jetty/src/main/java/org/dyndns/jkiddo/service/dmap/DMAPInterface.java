@@ -400,4 +400,12 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 			return musicLibraryResource.artwork(databaseId, groupId, sessionId, mw, mh, group_type);
 		throw new UnknownClientTypeException();
 	}
+
+	@Override
+	@Path("this_request_is_simply_to_send_a_close_connection_header")
+	@GET
+	public Response closeConnection() throws IOException
+	{
+		return imageLibraryResource.closeConnection();
+	}
 }

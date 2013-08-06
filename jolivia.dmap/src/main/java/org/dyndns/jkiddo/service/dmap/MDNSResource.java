@@ -29,7 +29,7 @@ public abstract class MDNSResource implements NetworkTopologyListener
 	private JmmDNS mDNS;
 	protected Integer port;
 
-	public static final Logger logger = LoggerFactory.getLogger(MDNSResource.class);
+	static final Logger logger = LoggerFactory.getLogger(MDNSResource.class);
 	private final Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
 	protected final String hostname = InetAddress.getLocalHost().getHostName();
 	private ServiceInfo serviceInfo;

@@ -57,14 +57,19 @@ import org.dyndns.jkiddo.dmap.chunks.media.UnknownHL;
 import org.dyndns.jkiddo.dmap.chunks.media.UpdateType;
 import org.dyndns.jkiddo.dmap.chunks.unknown.Voting;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
+import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
 @Consumes(MediaType.WILDCARD)
 // @Produces(MediaType.WILDCARD)
-public class DAAPResource extends DMAPResource<MusicItemManager> implements IMusicLibrary
+public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLibrary
 {
+	static final Logger logger = LoggerFactory.getLogger(DAAPResource.class);
+
 	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
 	public static final String DAAP_RESOURCE = "DAAP_IMPLEMENTATION";
 
@@ -127,11 +132,11 @@ public class DAAPResource extends DMAPResource<MusicItemManager> implements IMus
 		serverInfoResponse.add(new ItemName(name));
 		serverInfoResponse.add(itemManager.getAudioProtocolVersion());
 		// serverInfoResponse.add(itemManager.getMusicSharingVersion()); If inserted, DAAP dies
-		
+
 		serverInfoResponse.add(new SupportsExtraData(3));
 		serverInfoResponse.add(new WelcomeMessage("jgjgjhgjgjhgjgyutrutuolmæ"));
 		serverInfoResponse.add(new Voting(true));
-		
+
 		serverInfoResponse.add(new SupportsExtensions(true));
 		serverInfoResponse.add(new SupportsGroups(3));
 		// serverInfoResponse.add(new UnknownSE(0x80000));

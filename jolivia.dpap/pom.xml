@@ -8,6 +8,12 @@
 	</parent>
 	<artifactId>jolivia.dpap</artifactId>
 	<dependencies>
+	    <dependency>
+			<groupId>org.dyndns.jkiddo</groupId>
+			<artifactId>jolivia.dacp</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>org.dyndns.jkiddo</groupId>
 			<artifactId>jolivia.dmap</artifactId>

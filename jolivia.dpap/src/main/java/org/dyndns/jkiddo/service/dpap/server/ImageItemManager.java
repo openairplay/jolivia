@@ -18,6 +18,7 @@ import org.dyndns.jkiddo.dmap.chunks.media.MediaProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.picture.AspectRatio;
 import org.dyndns.jkiddo.dmap.chunks.picture.CreationDate;
 import org.dyndns.jkiddo.dmap.chunks.picture.FileData;
+import org.dyndns.jkiddo.dmap.chunks.picture.ImageComment;
 import org.dyndns.jkiddo.dmap.chunks.picture.ImageFileSize;
 import org.dyndns.jkiddo.dmap.chunks.picture.ImageFilename;
 import org.dyndns.jkiddo.dmap.chunks.picture.ImageFormat;
@@ -64,13 +65,13 @@ public class ImageItemManager implements IItemManager
 				item.addChunk(new ImageFormat(iImageItem.getFormat()));
 				item.addChunk(new ImageRating(iImageItem.getRating()));
 				item.addChunk(new ImageLargeFileSize(iImageItem.getSize()));
+				item.addChunk(new ImageComment("This photo is served by Jolivia"));
 				try
 				{
 					item.addChunk(new FileData(reader.getImage(iImageItem), true));
 				}
 				catch(Exception e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 

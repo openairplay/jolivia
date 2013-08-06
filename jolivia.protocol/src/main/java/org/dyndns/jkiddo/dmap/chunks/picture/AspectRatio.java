@@ -36,6 +36,6 @@ public class AspectRatio extends StringChunk
 	 */
 	public AspectRatio(String AspectRatio)
 	{
-		super("pasp", "dpad.aspectratio", AspectRatio);
+		super("pasp", "dpap.aspectratio", AspectRatio);
 	}
 }

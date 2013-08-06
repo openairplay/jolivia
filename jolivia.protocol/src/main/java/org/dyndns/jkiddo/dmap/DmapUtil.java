@@ -86,10 +86,10 @@ public final class DmapUtil
 	/** APRO Version 3.0.11 (iTunes 11.0.1.12) */
 	public static final int APRO_VERSION_3011 = 0x0003000B;
 
-	/** PPRO Version 1.0.1 (iPhoto 9.4.2) */
+	/** PPRO Version 1.0.1 (iPhoto 9.4.3) */
 	public static final int PPRO_VERSION_101 = 0x00010001;
 
-	/** MPRO Version 2.0.0 (iPhoto 9.4.2) */
+	/** MPRO Version 2.0.0 (iPhoto 9.4.3) */
 	public static final int MPRO_VERSION_200 = 0x00020000;
 
 	/** Default DAAP realm */

@@ -10,10 +10,21 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.service.dpap.server;
 
+import java.io.IOException;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.core.Response;
+
 import org.dyndns.jkiddo.service.dmap.ILibraryResource;
 
 public interface IImageLibrary extends ILibraryResource
 {
 	public static final String DPAP_SERVICE_TYPE = "_dpap._tcp.local.";
+
 	
+	
+	@Path("this_request_is_simply_to_send_a_close_connection_header")
+	@GET
+	public Response closeConnection() throws IOException;
 }
