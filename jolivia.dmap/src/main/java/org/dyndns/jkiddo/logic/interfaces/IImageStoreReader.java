@@ -19,17 +19,19 @@ public interface IImageStoreReader
 	public Set<IImageItem> readImages() throws Exception;
 
 	public URI getImage(IImageItem image) throws Exception;
-
+	
 	interface IImageItem
 	{
 		String getImageFilename();
 
-		int getSize();
+		long getSize();
 
 		String getFormat();
 
 		int getRating();
 
 		Date getCreationDate();
+		
+		byte[] getImageThumb() throws Exception;
 	}
 }

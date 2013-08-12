@@ -68,7 +68,7 @@ public class ImageItemManager implements IItemManager
 				item.addChunk(new ImageComment("This photo is served by Jolivia"));
 				try
 				{
-					item.addChunk(new FileData(reader.getImage(iImageItem), true));
+					item.addChunk(new FileData(iImageItem.getImageThumb()));
 				}
 				catch(Exception e)
 				{

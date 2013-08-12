@@ -1,5 +1,9 @@
 package org.dyndns.jkiddo.logic.desk;
 
+import java.awt.Graphics;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.net.URI;
 import java.util.Collections;
@@ -8,6 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.imageio.ImageIO;
+
+import org.dyndns.jkiddo.dmap.DmapUtil;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,9 +84,9 @@ public class DeskImageStoreReader implements IImageStoreReader
 			}
 
 			@Override
-			public int getSize()
+			public long getSize()
 			{
-				return (int) f.length();
+				return f.length();
 			}
 
 			@Override
@@ -99,6 +106,27 @@ public class DeskImageStoreReader implements IImageStoreReader
 			{
 				return new Date();
 			}
+			
+			@Override
+			public byte[] getImageThumb() throws Exception
+			{
+				byte[] array = DmapUtil.uriTobuffer(getImage(this));
+
+				BufferedImage image = ImageIO.read(new ByteArrayInputStream(array));
+				int max = Math.max(image.getWidth(), image.getHeight());
+				float scale = 240.0f / max;
+				int newW = (int) (image.getWidth() * scale);
+				int newH = (int) (image.getHeight() * scale);
+				BufferedImage scaledImage = new BufferedImage(newW, newH, image.getType());
+
+				Graphics g = scaledImage.getGraphics();
+				g.drawImage(image, 0, 0, newW, newH, null);
+				ByteArrayOutputStream downscaledBytes = new ByteArrayOutputStream();
+				ImageIO.write(scaledImage, "jpeg", downscaledBytes);
+				g.dispose();
+
+				return downscaledBytes.toByteArray();
+			}
 		};
 	}
 	@Override
@@ -110,5 +138,4 @@ public class DeskImageStoreReader implements IImageStoreReader
 		}
 		return mapOfImageToFile.get(image).toURI();
 	}
-
 }

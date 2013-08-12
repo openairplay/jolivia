@@ -33,8 +33,8 @@ public class CreationDate extends DateChunk
 	 * @param CreationDate
 	 *            The creation date of the image.
 	 */
-	public CreationDate(long seconds)
+	public CreationDate(long millis)
 	{
-		super("picd", "dpap.creationdate", seconds);
+		super("picd", "dpap.creationdate", millis / 1000);
 	}
 }

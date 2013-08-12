@@ -33,7 +33,7 @@ public class ImageFileSize extends UIntChunk
 	 * @param filesize
 	 *            The filesize of the image.
 	 */
-	public ImageFileSize(int filesize)
+	public ImageFileSize(long filesize)
 	{
 		super("pifs", "dpap.imagefilesize", filesize);
 	}
