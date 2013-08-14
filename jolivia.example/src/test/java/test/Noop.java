@@ -1,14 +1,23 @@
 package test;
 
+import java.awt.BorderLayout;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Iterator;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
 import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.dmap.Container;
 import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.chunks.Chunk;
 import org.dyndns.jkiddo.dmap.chunks.ChunkFactory;
+import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongTime;
@@ -24,6 +33,7 @@ import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmap.chunks.media.ListingItem;
 import org.dyndns.jkiddo.dmap.chunks.media.ServerInfoResponse;
 import org.dyndns.jkiddo.dmap.chunks.media.UpdateResponse;
+import org.dyndns.jkiddo.dmap.chunks.picture.FileData;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
 import org.dyndns.jkiddo.service.daap.client.RemoteControl;
 import org.dyndns.jkiddo.service.daap.client.RequestHelper;
@@ -166,6 +176,33 @@ public class Noop
 		String requestBase = String.format("http://%s:%d", "localhost", 4000);
 		ServerInfoResponse serverInfoResponse = RequestHelper.requestParsed(String.format("%s/server-info", requestBase));
 		System.out.println(serverInfoResponse);
+	}
+	
+	@Test
+	public void thumbResponse() throws Exception
+	{
+		String requestBase = String.format("http://%s:%d", "192.168.1.26", 5000);
+		DatabaseItems di = RequestHelper.requestParsed(String.format("%s/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:1024','dmap.itemid:1025')", requestBase));
+		System.out.println(di);
+		ListingItem item = di.getListing().getListingItems().iterator().next();
+		byte[] data = item.getSpecificChunk(FileData.class).getValue();
+		
+		BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
+
+		// Debugging ...
+		try
+		{
+			JFrame frame = new JFrame("Image loaded from ImageInputStream");
+			JLabel label = new JLabel(new ImageIcon(image));
+			frame.getContentPane().add(label, BorderLayout.CENTER);
+			frame.pack();
+			frame.setVisible(true);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
 	}
 
 	@Test

@@ -36,7 +36,6 @@ import org.dyndns.jkiddo.dmap.chunks.media.TimeoutInterval;
 import org.dyndns.jkiddo.dmap.chunks.media.UpdateType;
 import org.dyndns.jkiddo.dmap.chunks.picture.FileData;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
-import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +48,7 @@ import com.google.common.collect.Sets;
 
 @Consumes(MediaType.WILDCARD)
 // @Produces(MediaType.WILDCARD)
-public class DPAPResource extends DMAPResource<IItemManager> implements IImageLibrary
+public class DPAPResource extends DMAPResource<ImageItemManager> implements IImageLibrary
 {
 	static final Logger logger = LoggerFactory.getLogger(DPAPResource.class);
 
@@ -141,22 +140,40 @@ public class DPAPResource extends DMAPResource<IItemManager> implements IImageLi
 
 				if(chunk != null)
 				{
-					if("dpap.filedata".equals(chunk.getName()) && !isThumbRequest)
-					{
-						byte[] rawData = itemManager.getItemAsByteArray(databaseId, ((ItemId) item.getChunk("dmap.itemid")).getUnsignedValue());
-						listingItem.add(new FileData(rawData));
-					}
-					else
-						listingItem.add(chunk);
+					listingItem.add(chunk);
+				}
+				else if("dpap.thumb".equals(key))
+				{
+					listingItem.add(new FileData(itemManager.getThumb(databaseId, ((ItemId) item.getChunk("dmap.itemid")).getUnsignedValue())));
+				}
+				else if("dpap.hires".equals(key))
+				{
+					listingItem.add(new FileData(itemManager.getItemAsByteArray(databaseId, ((ItemId) item.getChunk("dmap.itemid")).getUnsignedValue())));
+				}
+				else if("dpap.filedata".equals(key))
+				{
+					continue;
 				}
 				else
-				{
-					if(isThumbRequest && "dpap.thumb".equals(key))
-						continue;
-					if(!isThumbRequest && "dpap.hires".equals(key))
-						continue;
 					logger.info("Unknown chunk type: " + key);
-				}
+//					if("dpap.filedata".equals(chunk.getName()) && !isThumbRequest)
+//					{
+//						listingItem.add(new FileData(itemManager.getItemAsByteArray(databaseId, ((ItemId) item.getChunk("dmap.itemid")).getUnsignedValue())));
+//					}
+//					else if("dpap.filedata".equals(chunk.getName()) && isThumbRequest)
+//					{
+//						listingItem.add(new FileData(itemManager.getThumb(databaseId, ((ItemId) item.getChunk("dmap.itemid")).getUnsignedValue())));
+//					}
+//					else
+//				}
+//				else
+//				{
+//					if(isThumbRequest && "dpap.thumb".equals(key))
+//						continue;
+//					if(!isThumbRequest && "dpap.hires".equals(key))
+//						continue;
+//					logger.info("Unknown chunk type: " + key);
+//				}
 			}
 
 			listing.add(listingItem);

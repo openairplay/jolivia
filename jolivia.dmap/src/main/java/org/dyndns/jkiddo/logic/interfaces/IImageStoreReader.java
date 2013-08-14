@@ -20,6 +20,8 @@ public interface IImageStoreReader
 
 	public URI getImage(IImageItem image) throws Exception;
 	
+	byte[] getImageThumb(IImageItem image) throws Exception;
+	
 	interface IImageItem
 	{
 		String getImageFilename();
@@ -31,7 +33,5 @@ public interface IImageStoreReader
 		int getRating();
 
 		Date getCreationDate();
-		
-		byte[] getImageThumb() throws Exception;
 	}
 }

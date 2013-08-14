@@ -106,27 +106,6 @@ public class DeskImageStoreReader implements IImageStoreReader
 			{
 				return new Date();
 			}
-			
-			@Override
-			public byte[] getImageThumb() throws Exception
-			{
-				byte[] array = DmapUtil.uriTobuffer(getImage(this));
-
-				BufferedImage image = ImageIO.read(new ByteArrayInputStream(array));
-				int max = Math.max(image.getWidth(), image.getHeight());
-				float scale = 240.0f / max;
-				int newW = (int) (image.getWidth() * scale);
-				int newH = (int) (image.getHeight() * scale);
-				BufferedImage scaledImage = new BufferedImage(newW, newH, image.getType());
-
-				Graphics g = scaledImage.getGraphics();
-				g.drawImage(image, 0, 0, newW, newH, null);
-				ByteArrayOutputStream downscaledBytes = new ByteArrayOutputStream();
-				ImageIO.write(scaledImage, "jpeg", downscaledBytes);
-				g.dispose();
-
-				return downscaledBytes.toByteArray();
-			}
 		};
 	}
 	@Override
@@ -137,5 +116,26 @@ public class DeskImageStoreReader implements IImageStoreReader
 			logger.debug("Serving " + image.getImageFilename());
 		}
 		return mapOfImageToFile.get(image).toURI();
+	}
+
+	@Override
+	public byte[] getImageThumb(IImageItem iimage) throws Exception
+	{
+		byte[] array = DmapUtil.uriTobuffer(getImage(iimage));
+
+		BufferedImage image = ImageIO.read(new ByteArrayInputStream(array));
+		int max = Math.max(image.getWidth(), image.getHeight());
+		float scale = 240.0f / max;
+		int newW = (int) (image.getWidth() * scale);
+		int newH = (int) (image.getHeight() * scale);
+		BufferedImage scaledImage = new BufferedImage(newW, newH, image.getType());
+
+		Graphics g = scaledImage.getGraphics();
+		g.drawImage(image, 0, 0, newW, newH, null);
+		ByteArrayOutputStream downscaledBytes = new ByteArrayOutputStream();
+		ImageIO.write(scaledImage, "jpeg", downscaledBytes);
+		g.dispose();
+
+		return downscaledBytes.toByteArray();
 	}
 }

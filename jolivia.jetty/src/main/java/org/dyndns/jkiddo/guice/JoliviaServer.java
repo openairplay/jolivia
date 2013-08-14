@@ -154,6 +154,13 @@ public class JoliviaServer extends GuiceServletContextListener
 					return null;
 				}
 
+				@Override
+				public byte[] getImageThumb(IImageItem image) throws Exception
+				{
+					// TODO Auto-generated method stub
+					return null;
+				}
+
 			};
 		}
 		else

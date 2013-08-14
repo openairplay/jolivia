@@ -17,7 +17,6 @@ import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmap.chunks.media.MediaProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.picture.AspectRatio;
 import org.dyndns.jkiddo.dmap.chunks.picture.CreationDate;
-import org.dyndns.jkiddo.dmap.chunks.picture.FileData;
 import org.dyndns.jkiddo.dmap.chunks.picture.ImageComment;
 import org.dyndns.jkiddo.dmap.chunks.picture.ImageFileSize;
 import org.dyndns.jkiddo.dmap.chunks.picture.ImageFilename;
@@ -66,14 +65,14 @@ public class ImageItemManager implements IItemManager
 				item.addChunk(new ImageRating(iImageItem.getRating()));
 				item.addChunk(new ImageLargeFileSize(iImageItem.getSize()));
 				item.addChunk(new ImageComment("This photo is served by Jolivia"));
-				try
-				{
-					item.addChunk(new FileData(iImageItem.getImageThumb()));
-				}
-				catch(Exception e)
-				{
-					e.printStackTrace();
-				}
+//				try
+//				{
+//					item.addChunk(new FileData(iImageItem.getImageThumb()));
+//				}
+//				catch(Exception e)
+//				{
+//					e.printStackTrace();
+//				}
 
 				return item;
 			}
@@ -159,6 +158,19 @@ public class ImageItemManager implements IItemManager
 		try
 		{
 			return DmapUtil.uriTobuffer(reader.getImage(itemToIImageItem.get(image)));
+		}
+		catch(Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public byte[] getThumb(long databaseId, long itemId)
+	{
+		MediaItem image = library.getDatabase(databaseId).getMasterContainer().getItem(itemId);
+		try
+		{
+			return reader.getImageThumb(itemToIImageItem.get(image));
 		}
 		catch(Exception e)
 		{
