@@ -3,6 +3,7 @@ package test;
 import java.awt.BorderLayout;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Iterator;
@@ -182,7 +183,36 @@ public class Noop
 	public void thumbResponse() throws Exception
 	{
 		String requestBase = String.format("http://%s:%d", "192.168.1.26", 5000);
-		DatabaseItems di = RequestHelper.requestParsed(String.format("%s/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:1024','dmap.itemid:1025')", requestBase));
+		String url = String.format("%s/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:1024','dmap.itemid:1025')", requestBase);
+		DatabaseItems di = RequestHelper.requestParsed(url);
+		System.out.println(di);
+		ListingItem item = di.getListing().getListingItems().iterator().next();
+		byte[] data = item.getSpecificChunk(FileData.class).getValue();
+		
+		BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
+
+		// Debugging ...
+		try
+		{
+			JFrame frame = new JFrame("Image loaded from ImageInputStream");
+			JLabel label = new JLabel(new ImageIcon(image));
+			frame.getContentPane().add(label, BorderLayout.CENTER);
+			frame.pack();
+			frame.setVisible(true);
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Test
+	public void hiresResponse() throws Exception
+	{
+		String requestBase = String.format("http://%s:%d", "192.168.1.26", 5000);
+		String url = String.format("%s/databases/1/items?session-id=1101478641&meta=dpap.hires,dmap.itemid,dpap.filedata&query=('dmap.itemid:1024','dmap.itemid:1025')", requestBase);
+		DatabaseItems di = RequestHelper.requestParsed(url);
 		System.out.println(di);
 		ListingItem item = di.getListing().getListingItems().iterator().next();
 		byte[] data = item.getSpecificChunk(FileData.class).getValue();

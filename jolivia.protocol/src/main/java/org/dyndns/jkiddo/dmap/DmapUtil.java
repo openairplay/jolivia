@@ -157,7 +157,7 @@ public final class DmapUtil
 	 */
 	public static final byte[] serialize(Chunk chunk, boolean compress) throws IOException
 	{
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream(255);
+		ByteArrayOutputStream buffer = new ByteArrayOutputStream(8192);
 		DmapOutputStream out = null;
 
 		if(DmapUtil.COMPRESS && compress)
