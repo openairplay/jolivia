@@ -27,8 +27,8 @@
 
 package org.dyndns.jkiddo.dmap;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -44,7 +44,7 @@ import org.dyndns.jkiddo.dmap.chunks.ShortChunk;
 import org.dyndns.jkiddo.dmap.chunks.StringChunk;
 import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
 
-public class DmapOutputStream extends FilterOutputStream
+public class DmapOutputStream extends BufferedOutputStream
 {
 
 	public DmapOutputStream(OutputStream out)
@@ -142,7 +142,8 @@ public class DmapOutputStream extends FilterOutputStream
 
 		writeContentCode(chunk.getContentCode());
 		writeLength(value.length);
-		write(value, 0, value.length);
+		write(value);
+		//write(value, 0, value.length);
 	}
 	
 	public void writeRawChunk(RawChunk chunk) throws IOException
@@ -150,7 +151,8 @@ public class DmapOutputStream extends FilterOutputStream
 		byte[] value = chunk.getValue();
 		writeContentCode(chunk.getContentCode());
 		writeLength(value.length);
-		write(value, 0, value.length);
+		write(value);
+		//write(value, 0, value.length);
 	}
 
 	public void writeDateChunk(DateChunk chunk) throws IOException

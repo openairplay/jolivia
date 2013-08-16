@@ -27,9 +27,9 @@
 
 package org.dyndns.jkiddo.dmap;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -50,7 +50,7 @@ import org.dyndns.jkiddo.dmap.chunks.media.ListingItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DmapInputStream extends FilterInputStream
+public class DmapInputStream extends BufferedInputStream
 {
 
 	private static final Logger logger = LoggerFactory.getLogger(DmapInputStream.class);

@@ -185,7 +185,6 @@ public class Noop
 		String requestBase = String.format("http://%s:%d", "192.168.1.26", 5000);
 		String url = String.format("%s/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:1024','dmap.itemid:1025')", requestBase);
 		DatabaseItems di = RequestHelper.requestParsed(url);
-		System.out.println(di);
 		ListingItem item = di.getListing().getListingItems().iterator().next();
 		byte[] data = item.getSpecificChunk(FileData.class).getValue();
 		
@@ -213,7 +212,6 @@ public class Noop
 		String requestBase = String.format("http://%s:%d", "192.168.1.26", 5000);
 		String url = String.format("%s/databases/1/items?session-id=1101478641&meta=dpap.hires,dmap.itemid,dpap.filedata&query=('dmap.itemid:1024','dmap.itemid:1025')", requestBase);
 		DatabaseItems di = RequestHelper.requestParsed(url);
-		System.out.println(di);
 		ListingItem item = di.getListing().getListingItems().iterator().next();
 		byte[] data = item.getSpecificChunk(FileData.class).getValue();
 		
