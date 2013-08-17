@@ -9,8 +9,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-@RunWith(Suite.class)
-@SuiteClasses({ Noop.class, TestFunctions.class, TestSampleBuffer.class, TestSignedness.class })
+//@RunWith(Suite.class)
+//@SuiteClasses({ Noop.class, TestFunctions.class, TestSampleBuffer.class, TestSignedness.class })
 public class TestAll
 {
 

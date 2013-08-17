@@ -10,9 +10,23 @@
  ******************************************************************************/
 package org.dyndns.jkiddo;
 
+import java.awt.Button;
+import java.awt.Dialog;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.TextArea;
+import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.EnumSet;
 
 import javax.servlet.DispatcherType;
+import javax.swing.ImageIcon;
 
 import org.dyndns.jkiddo.guice.JoliviaServer;
 import org.dyndns.jkiddo.jetty.extension.DmapConnector;
@@ -126,6 +140,7 @@ public class Jolivia
 
 	public Jolivia(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
 	{
+		setupGui();
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
 
@@ -151,4 +166,109 @@ public class Jolivia
 		logger.info(name + " started");
 		server.join();
 	}
+
+	private void setupGui()
+	{
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+			@Override
+			public void run()
+			{
+				onShutdown();
+			}
+
+		}));
+
+		try
+		{
+			/* Create about dialog */
+			final Dialog aboutDialog = new Dialog((Dialog) null);
+			final GridBagLayout aboutLayout = new GridBagLayout();
+			aboutDialog.setLayout(aboutLayout);
+			aboutDialog.setVisible(false);
+			aboutDialog.setTitle("About Jolivia");
+			aboutDialog.setResizable(false);
+			{
+				/* Message */
+				final TextArea title = new TextArea(AboutMessage.split("\n").length + 1, 64);
+				title.setText(AboutMessage);
+				title.setEditable(false);
+				final GridBagConstraints titleConstraints = new GridBagConstraints();
+				titleConstraints.gridx = 1;
+				titleConstraints.gridy = 1;
+				titleConstraints.fill = GridBagConstraints.HORIZONTAL;
+				titleConstraints.insets = new Insets(0, 0, 0, 0);
+				aboutLayout.setConstraints(title, titleConstraints);
+				aboutDialog.add(title);
+			}
+			{
+				/* Done button */
+				final Button aboutDoneButton = new Button("Done");
+				aboutDoneButton.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(final ActionEvent evt)
+					{
+						aboutDialog.setVisible(false);
+					}
+				});
+				final GridBagConstraints aboutDoneConstraints = new GridBagConstraints();
+				aboutDoneConstraints.gridx = 1;
+				aboutDoneConstraints.gridy = 2;
+				aboutDoneConstraints.anchor = GridBagConstraints.PAGE_END;
+				aboutDoneConstraints.fill = GridBagConstraints.NONE;
+				aboutDoneConstraints.insets = new Insets(0, 0, 0, 0);
+				aboutLayout.setConstraints(aboutDoneButton, aboutDoneConstraints);
+				aboutDialog.add(aboutDoneButton);
+			}
+			aboutDialog.setVisible(false);
+			aboutDialog.setLocationByPlatform(true);
+			aboutDialog.pack();
+
+			/* Create tray icon */
+			final URL trayIconUrl = Jolivia.class.getClassLoader().getResource("icon_32.png");
+			// final URL trayIconUrl = new File("./src/main/resources/icon_32.png").toURI().toURL();
+			TrayIcon trayIcon = new TrayIcon((new ImageIcon(trayIconUrl, "Jolivia").getImage()));
+			trayIcon.setToolTip("Jolivia");
+			trayIcon.setImageAutoSize(true);
+			final PopupMenu popupMenu = new PopupMenu();
+			final MenuItem aboutMenuItem = new MenuItem("About");
+			aboutMenuItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(final ActionEvent evt)
+				{
+					aboutDialog.setLocationByPlatform(true);
+					aboutDialog.setVisible(true);
+				}
+			});
+			popupMenu.add(aboutMenuItem);
+			final MenuItem exitMenuItem = new MenuItem("Quit");
+			exitMenuItem.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(final ActionEvent evt)
+				{
+					onShutdown();
+					System.exit(0);
+				}
+			});
+			popupMenu.add(exitMenuItem);
+			trayIcon.setPopupMenu(popupMenu);
+			SystemTray.getSystemTray().add(trayIcon);
+
+			logger.info("Running with GUI, created system tray icon and menu");
+		}
+		catch(final Exception e)
+		{
+			logger.info("Running headless", e);
+		}
+	}
+
+	protected void onShutdown()
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	private final String AboutMessage = "   * Jolivia *\n" + "\n" + "Copyright (c) 2013 Jens Kristian Villadsen\n" + "\n" + "didms is free software: you can redistribute it and/or modify\n" + "it under the terms of the GNU General Public License as published by\n" + "the Free Software Foundation, either version 3 of the License, or\n" + "(at your option) any later version.\n" + "\n" + "didms is distributed in the hope that it will be useful,\n" + "but WITHOUT ANY WARRANTY; without even the implied warranty of\n" + "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\n" + "GNU General Public License for more details.\n" + "\n" + "You should have received a copy of the GNU General Public License\n" + "along with didms.  If not, see <http://www.gnu.org/licenses/>." + "\n\n";
+	/*
+	 * @Override public void update(Observable arg0, Object arg1) { if(trayIcon != null) { trayIcon.displayMessage(null, arg1.toString(), MessageType.INFO); } }
+	 */
 }
