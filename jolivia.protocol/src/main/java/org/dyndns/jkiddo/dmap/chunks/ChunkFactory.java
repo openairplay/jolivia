@@ -291,6 +291,8 @@ public final class ChunkFactory
 		map.put(new Integer(0x61654D4B), org.dyndns.jkiddo.dmap.chunks.audio.extension.MediaKind.class); // aeMK
 		map.put(new Integer(0x61655356), org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion.class); // aeSV
 		map.put(new Integer(0x61654E56), org.dyndns.jkiddo.dmap.chunks.audio.extension.NormVolume.class); // aeNV
+		map.put(new Integer(0x61654353), org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownCS.class); // aeCS
+		
 	}
 
 	public Class<? extends Chunk> getChunkClass(Integer contentCode)

@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo;
 
+import java.awt.AWTException;
 import java.awt.Button;
 import java.awt.Dialog;
 import java.awt.GridBagConstraints;
@@ -187,7 +188,7 @@ public class Jolivia
 			aboutDialog.setVisible(false);
 			aboutDialog.setTitle("About Jolivia");
 			aboutDialog.setResizable(false);
-			{
+			
 				/* Message */
 				final TextArea title = new TextArea(AboutMessage.split("\n").length + 1, 64);
 				title.setText(AboutMessage);
@@ -199,8 +200,8 @@ public class Jolivia
 				titleConstraints.insets = new Insets(0, 0, 0, 0);
 				aboutLayout.setConstraints(title, titleConstraints);
 				aboutDialog.add(title);
-			}
-			{
+			
+			
 				/* Done button */
 				final Button aboutDoneButton = new Button("Done");
 				aboutDoneButton.addActionListener(new ActionListener() {
@@ -218,13 +219,17 @@ public class Jolivia
 				aboutDoneConstraints.insets = new Insets(0, 0, 0, 0);
 				aboutLayout.setConstraints(aboutDoneButton, aboutDoneConstraints);
 				aboutDialog.add(aboutDoneButton);
-			}
+			
 			aboutDialog.setVisible(false);
 			aboutDialog.setLocationByPlatform(true);
 			aboutDialog.pack();
 
 			/* Create tray icon */
 			final URL trayIconUrl = Jolivia.class.getClassLoader().getResource("icon_32.png");
+			if(trayIconUrl == null)
+			{
+				throw new Exception("No image found");
+			}
 			// final URL trayIconUrl = new File("./src/main/resources/icon_32.png").toURI().toURL();
 			TrayIcon trayIcon = new TrayIcon((new ImageIcon(trayIconUrl, "Jolivia").getImage()));
 			trayIcon.setToolTip("Jolivia");
@@ -255,10 +260,22 @@ public class Jolivia
 
 			logger.info("Running with GUI, created system tray icon and menu");
 		}
-		catch(final Exception e)
+		catch( NullPointerException e)
 		{
 			logger.info("Running headless", e);
 		}
+		catch( RuntimeException e)
+		{
+			logger.info("Running headless", e);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (Throwable e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	protected void onShutdown()

@@ -10,16 +10,24 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.guice;
 
+import java.awt.BorderLayout;
+import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.Set;
 
 import javax.jmdns.JmmDNS;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
+import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
+import org.dyndns.jkiddo.dmap.chunks.media.ListingItem;
 import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
 import org.dyndns.jkiddo.jetty.ProxyFilter;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.raop.ISpeakerListener;
+import org.dyndns.jkiddo.raop.server.IPlayingInformation;
 import org.dyndns.jkiddo.raop.server.RAOPResourceWrapper;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
 import org.dyndns.jkiddo.service.daap.client.PairedRemoteDiscoverer;
@@ -234,6 +242,34 @@ public class JoliviaServer extends GuiceServletContextListener
 			@Override
 			protected void configure()
 			{
+				bind(IPlayingInformation.class).toInstance(new IPlayingInformation() {
+					
+					@Override
+					public void notify(BufferedImage image) {
+						try
+						{
+							JFrame frame = new JFrame("Image loaded from ImageInputStream");
+							JLabel label = new JLabel(new ImageIcon(image));
+							frame.getContentPane().add(label, BorderLayout.CENTER);
+							frame.pack();
+							frame.setVisible(true);
+						}
+						catch(Exception e)
+						{
+							e.printStackTrace();
+//							logger.debug(e.getMessage(), e);
+						}
+						
+					}
+
+					@Override
+					public void notify(ListingItem chunk) {
+						
+						ListingItem listingItem = chunk;
+//						logger.info("Playing " + listingItem.getSpecificChunk(ItemName.class).getValue() + " - " + listingItem.getSpecificChunk(SongArtist.class).getValue());
+						listingItem.getSpecificChunk(ItemName.class);
+					}
+				});
 				bind(Integer.class).annotatedWith(Names.named(RAOPResourceWrapper.RAOP_PORT_NAME)).toInstance(airplayPort);
 				bind(RAOPResourceWrapper.class).asEagerSingleton();
 			}

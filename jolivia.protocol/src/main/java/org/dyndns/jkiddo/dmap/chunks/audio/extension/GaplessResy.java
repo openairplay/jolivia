@@ -1,15 +1,15 @@
 package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
-import org.dyndns.jkiddo.dmap.chunks.BooleanChunk;
+import org.dyndns.jkiddo.dmap.chunks.StringChunk;
 
-public class GaplessResy extends BooleanChunk
+public class GaplessResy extends StringChunk
 {
 	public GaplessResy()
 	{
-		this(false);
+		this("");
 	}
 
-	public GaplessResy(boolean value)
+	public GaplessResy(String value)
 	{
 		super("aeGR", "com.apple.itunes.gapless-resy", value);
 	}

@@ -41,12 +41,16 @@ public class RAOPResourceWrapper extends MDNSResource
 
 	private final String name;
 
+	private final IPlayingInformation playingInformation;
+
 	@Inject
-	public RAOPResourceWrapper(JmmDNS mDNS, @Named(RAOP_PORT_NAME) Integer port, @Named(Util.APPLICATION_NAME) String applicationName) throws IOException
+	public RAOPResourceWrapper(JmmDNS mDNS, @Named(RAOP_PORT_NAME) Integer port, @Named(Util.APPLICATION_NAME) String applicationName, IPlayingInformation iPlayingInformation) throws IOException
 	{
 		super(mDNS, port);
+		this.playingInformation = iPlayingInformation;
 		this.name = applicationName;
 		this.signUp();
+		
 		SimpleChannelUpstreamHandler channel = new SimpleChannelUpstreamHandler() {
 			@Override
 			public void channelOpen(final ChannelHandlerContext ctx, final ChannelStateEvent e) throws Exception
@@ -57,7 +61,7 @@ public class RAOPResourceWrapper extends MDNSResource
 		};
 
 		final ServerBootstrap airTunesRtspBootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(executorService, executorService));
-		airTunesRtspBootstrap.setPipelineFactory(new RaopRtspPipelineFactory(hardwareAddressBytes, channelExecutionHandler, executorService, channel));
+		airTunesRtspBootstrap.setPipelineFactory(new RaopRtspPipelineFactory(hardwareAddressBytes, channelExecutionHandler, executorService, channel, playingInformation));
 		airTunesRtspBootstrap.setOption("reuseAddress", true);
 		airTunesRtspBootstrap.setOption("child.tcpNoDelay", true);
 		airTunesRtspBootstrap.setOption("child.keepAlive", true);

@@ -45,6 +45,7 @@ import org.dyndns.jkiddo.dmap.DmapInputStream;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmap.chunks.media.ListingItem;
+import org.dyndns.jkiddo.raop.server.IPlayingInformation;
 import org.dyndns.jkiddo.service.dmap.Util;
 import org.jboss.netty.bootstrap.ConnectionlessBootstrap;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -225,6 +226,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	private Channel m_controlChannel;
 	private Channel m_timingChannel;
 	private final ExecutionHandler channelExecutionHandler;
+	private final IPlayingInformation playingInformation;
 
 	/**
 	 * Creates an instance, using the ExecutorService for the RTP channel's datagram socket factory
@@ -232,10 +234,11 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	 * @param rtpExecutorService
 	 * @param channelExecutionHandler
 	 */
-	public RaopAudioHandler(final ExecutorService rtpExecutorService, ExecutionHandler channelExecutionHandler)
+	public RaopAudioHandler(final ExecutorService rtpExecutorService, ExecutionHandler channelExecutionHandler, IPlayingInformation playingInformation)
 	{
 		m_rtpExecutorService = rtpExecutorService;
 		this.channelExecutionHandler = channelExecutionHandler;
+		this.playingInformation = playingInformation;
 		reset();
 	}
 
@@ -666,21 +669,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 		{
 			try
 			{
-				BufferedImage image = ImageIO.read(new ByteArrayInputStream(req.getContent().array()));
-
-				// Debugging ...
-				try
-				{
-					JFrame frame = new JFrame("Image loaded from ImageInputStream");
-					JLabel label = new JLabel(new ImageIcon(image));
-					frame.getContentPane().add(label, BorderLayout.CENTER);
-					frame.pack();
-					frame.setVisible(true);
-				}
-				catch(Exception e)
-				{
-					logger.debug(e.getMessage(), e);
-				}
+				playingInformation.notify(ImageIO.read(new ByteArrayInputStream(req.getContent().array())));
 			}
 			catch(IOException e)
 			{
@@ -692,9 +681,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 			try
 			{
 				DmapInputStream stream = new DmapInputStream(new ByteArrayInputStream(req.getContent().array()));
-				ListingItem listingItem = (ListingItem) stream.getChunk();
-				logger.info("Playing " + listingItem.getSpecificChunk(ItemName.class).getValue() + " - " + listingItem.getSpecificChunk(SongArtist.class).getValue());
-				listingItem.getSpecificChunk(ItemName.class);
+				playingInformation.notify((ListingItem)stream.getChunk());
 				stream.close();
 			}
 			catch(IOException e)

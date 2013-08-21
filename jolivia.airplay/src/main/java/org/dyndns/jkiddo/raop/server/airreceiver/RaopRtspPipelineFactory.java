@@ -19,6 +19,7 @@ package org.dyndns.jkiddo.raop.server.airreceiver;
 
 import java.util.concurrent.ExecutorService;
 
+import org.dyndns.jkiddo.raop.server.IPlayingInformation;
 import org.jboss.netty.channel.*;
 import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.rtsp.*;
@@ -33,13 +34,15 @@ public class RaopRtspPipelineFactory implements ChannelPipelineFactory
 	final private ExecutionHandler channelExecutionHandler;
 	final private ExecutorService executorService;
 	private SimpleChannelUpstreamHandler channel;
+	final private IPlayingInformation playingInformation;
 
-	public RaopRtspPipelineFactory(byte[] hardwareAddressBytes, ExecutionHandler channelExecutionHandler, ExecutorService executorService, SimpleChannelUpstreamHandler channel)
+	public RaopRtspPipelineFactory(byte[] hardwareAddressBytes, ExecutionHandler channelExecutionHandler, ExecutorService executorService, SimpleChannelUpstreamHandler channel, IPlayingInformation playingInformation)
 	{
 		this.hardwareAddressBytes = hardwareAddressBytes;
 		this.channelExecutionHandler = channelExecutionHandler;
 		this.executorService = executorService;
 		this.channel = channel;
+		this.playingInformation = playingInformation;
 	}
 
 	@Override
@@ -59,7 +62,7 @@ public class RaopRtspPipelineFactory implements ChannelPipelineFactory
 		pipeline.addLast("challengeResponse", new RaopRtspChallengeResponseHandler(this.hardwareAddressBytes));
 		pipeline.addLast("header", new RaopRtspHeaderHandler());
 		pipeline.addLast("options", new RaopRtspOptionsHandler());
-		pipeline.addLast("audio", new RaopAudioHandler(executorService, channelExecutionHandler));
+		pipeline.addLast("audio", new RaopAudioHandler(executorService, channelExecutionHandler, playingInformation));
 		pipeline.addLast("unsupportedResponse", new RtspUnsupportedResponseHandler());
 
 		return pipeline;
