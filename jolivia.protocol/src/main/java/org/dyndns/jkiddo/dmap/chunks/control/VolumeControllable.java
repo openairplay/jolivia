@@ -10,18 +10,18 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.control;
 
-import org.dyndns.jkiddo.dmap.chunks.BooleanChunk;
+import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
 
-public class UnknownVC extends BooleanChunk
+public class VolumeControllable extends UIntChunk
 {
-	public UnknownVC()
+	public VolumeControllable()
 	{
-		this(false);
+		this(0);
 	}
 
-	public UnknownVC(boolean value)
+	public VolumeControllable(int value)
 	{
-		super("cavc", "com.apple.itunes.unknown-vc", value);
+		super("cavc", "dacp.volumecontrollable", value);
 	}
 
 }

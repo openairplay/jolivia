@@ -149,11 +149,11 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@GET
 	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query) throws IOException
 	{
-//		if(isDaapRequest(httpServletRequest))
-//			return musicLibraryResource.items(databaseId, sessionId, revisionNumber, delta, type, meta, query);
-//		if(isDpapRequest(httpServletRequest))
+		if(isDaapRequest(httpServletRequest))
+			return musicLibraryResource.items(databaseId, sessionId, revisionNumber, delta, type, meta, query);
+		if(isDpapRequest(httpServletRequest))
 			return imageLibraryResource.items(databaseId, sessionId, revisionNumber, delta, type, meta, query);
-//		throw new UnknownClientTypeException();
+		throw new UnknownClientTypeException();
 	}
 
 	@Override

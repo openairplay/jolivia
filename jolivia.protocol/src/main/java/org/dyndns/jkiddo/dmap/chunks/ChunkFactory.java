@@ -110,14 +110,14 @@ public final class ChunkFactory
 		map.put(new Integer(0x63617270), org.dyndns.jkiddo.dmap.chunks.control.RepeatStatus.class); // carp
 		map.put(new Integer(0x63616673), org.dyndns.jkiddo.dmap.chunks.control.FullscreenStatus.class); // cafs
 		map.put(new Integer(0x63617673), org.dyndns.jkiddo.dmap.chunks.control.VisualizerStatus.class); // cavs
-		map.put(new Integer(0x63617663), org.dyndns.jkiddo.dmap.chunks.control.UnknownVC.class); // cavc
-		map.put(new Integer(0x63616173), org.dyndns.jkiddo.dmap.chunks.control.UnknownAS.class); // caas
-		map.put(new Integer(0x63616172), org.dyndns.jkiddo.dmap.chunks.control.UnknownAR.class); // caar
+		map.put(new Integer(0x63617663), org.dyndns.jkiddo.dmap.chunks.control.VolumeControllable.class); // cavc
+		map.put(new Integer(0x63616173), org.dyndns.jkiddo.dmap.chunks.control.AvailableShuffleStates.class); // caas
+		map.put(new Integer(0x63616172), org.dyndns.jkiddo.dmap.chunks.control.AvailableRepeatStates.class); // caar
 		map.put(new Integer(0x63616665), org.dyndns.jkiddo.dmap.chunks.control.UnknownFE.class); // cafe
 		map.put(new Integer(0x63617665), org.dyndns.jkiddo.dmap.chunks.control.UnknownVE.class); // cave
 		map.put(new Integer(0x63617375), org.dyndns.jkiddo.dmap.chunks.control.UnknownSU.class); // casu
 		map.put(new Integer(0x63616e70), org.dyndns.jkiddo.dmap.chunks.control.NowPlaying.class); // canp
-		map.put(new Integer(0x63616e6e), org.dyndns.jkiddo.dmap.chunks.control.TrackName.class); // cann
+		map.put(new Integer(0x63616e6e), org.dyndns.jkiddo.dmap.chunks.control.NowPlayingName.class); // cann
 		map.put(new Integer(0x63616e61), org.dyndns.jkiddo.dmap.chunks.control.TrackArtist.class); // cana
 		map.put(new Integer(0x63616e6c), org.dyndns.jkiddo.dmap.chunks.control.TrackAlbum.class); // canl
 		map.put(new Integer(0x63616e67), org.dyndns.jkiddo.dmap.chunks.control.TrackGenre.class); // cang
@@ -244,7 +244,8 @@ public final class ChunkFactory
 		map.put(new Integer(0x61736472), org.dyndns.jkiddo.dmap.chunks.audio.SongDateReleased.class); // asdr
 		map.put(new Integer(0x61736470), org.dyndns.jkiddo.dmap.chunks.audio.SongDatePurchased.class); // asdp
 
-		map.put(new Integer(0x61654373), org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum.class); // aeCs
+//		map.put(new Integer(0x61654373), org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum.class); // aeCs
+		map.put(new Integer(0x61654353), org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum.class); // aeCS
 		map.put(new Integer(0x61655043), org.dyndns.jkiddo.dmap.chunks.audio.extension.Podcast.class); // aePC
 		map.put(new Integer(0x61655050), org.dyndns.jkiddo.dmap.chunks.audio.extension.PodcastPlaylist.class); // aePP
 		map.put(new Integer(0x61655350), org.dyndns.jkiddo.dmap.chunks.audio.extension.SmartPlaylist.class); // aeSP
@@ -291,7 +292,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x61654D4B), org.dyndns.jkiddo.dmap.chunks.audio.extension.MediaKind.class); // aeMK
 		map.put(new Integer(0x61655356), org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion.class); // aeSV
 		map.put(new Integer(0x61654E56), org.dyndns.jkiddo.dmap.chunks.audio.extension.NormVolume.class); // aeNV
-		map.put(new Integer(0x61654353), org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownCS.class); // aeCS
+//		map.put(new Integer(0x61654353), org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownCS.class); // aeCS
 		
 	}
 

@@ -77,9 +77,9 @@ public class PlayingStatus extends ContainerChunk
 	 * 
 	 * @return
 	 */
-	public TrackName getTrackName()
+	public NowPlayingName getTrackName()
 	{
-		return getSingleChunk(TrackName.class);
+		return getSingleChunk(NowPlayingName.class);
 	}
 
 	/**

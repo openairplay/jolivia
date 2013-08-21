@@ -10,18 +10,18 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.control;
 
-import org.dyndns.jkiddo.dmap.chunks.StringChunk;
+import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
 
-public class TrackName extends StringChunk
+public class AvailableShuffleStates extends UIntChunk
 {
-	public TrackName()
+	public AvailableShuffleStates()
 	{
-		this(null);
+		this(0);
 	}
 
-	public TrackName(String value)
+	public AvailableShuffleStates(int value)
 	{
-		super("cann", "com.apple.itunes.unknown-nn", value);
+		super("caas", "dacp.availableshufflestates", value);
 	}
 
 }

@@ -1,8 +1,9 @@
 package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
-import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
+import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
 
-public class UnknownCS extends UByteChunk{
+public class UnknownCS extends UIntChunk
+{
 
 	public UnknownCS()
 	{

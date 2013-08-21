@@ -248,7 +248,7 @@ public class JoliviaServer extends GuiceServletContextListener
 					public void notify(BufferedImage image) {
 						try
 						{
-							JFrame frame = new JFrame("Image loaded from ImageInputStream");
+							JFrame frame = new JFrame("Cover");
 							JLabel label = new JLabel(new ImageIcon(image));
 							frame.getContentPane().add(label, BorderLayout.CENTER);
 							frame.pack();

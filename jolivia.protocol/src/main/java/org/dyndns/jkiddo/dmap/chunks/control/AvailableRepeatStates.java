@@ -12,16 +12,16 @@ package org.dyndns.jkiddo.dmap.chunks.control;
 
 import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
 
-public class UnknownAR extends UIntChunk
+public class AvailableRepeatStates extends UIntChunk
 {
-	public UnknownAR()
+	public AvailableRepeatStates()
 	{
 		this(0);
 	}
 
-	public UnknownAR(int value)
+	public AvailableRepeatStates(int value)
 	{
-		super("caar", "com.apple.itunes.unknown-ar", value);
+		super("caar", "dacp.availablerepeatstates", value);
 	}
 
 }

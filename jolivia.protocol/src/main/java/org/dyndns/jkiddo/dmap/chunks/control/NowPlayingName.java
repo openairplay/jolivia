@@ -10,18 +10,18 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.control;
 
-import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
+import org.dyndns.jkiddo.dmap.chunks.StringChunk;
 
-public class UnknownAS extends UIntChunk
+public class NowPlayingName extends StringChunk
 {
-	public UnknownAS()
+	public NowPlayingName()
 	{
-		this(0);
+		this(null);
 	}
 
-	public UnknownAS(int value)
+	public NowPlayingName(String value)
 	{
-		super("caas", "com.apple.itunes.unknown-as", value);
+		super("cann", "dacp.nowplayingname", value);
 	}
 
 }

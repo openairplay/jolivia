@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.dyndns.jkiddo;
 
-import java.awt.AWTException;
 import java.awt.Button;
 import java.awt.Dialog;
 import java.awt.GridBagConstraints;
@@ -33,6 +32,7 @@ import org.dyndns.jkiddo.guice.JoliviaServer;
 import org.dyndns.jkiddo.jetty.extension.DmapConnector;
 import org.dyndns.jkiddo.logic.desk.DeskImageStoreReader;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
+import org.dyndns.jkiddo.logic.desk.GoogleStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.raop.ISpeakerListener;
@@ -56,7 +56,14 @@ public class Jolivia
 	{
 		try
 		{
-			new Jolivia(new DeskMusicStoreReader(), new DeskImageStoreReader());
+			IMusicStoreReader reader = null;
+			if(args.length == 2)
+			{
+				reader = new GoogleStoreReader(args[0], args[1]);
+			}
+			else
+				reader = new DeskMusicStoreReader();
+			new Jolivia(reader, new DeskImageStoreReader());
 		}
 		catch(Exception e)
 		{
@@ -188,7 +195,7 @@ public class Jolivia
 			aboutDialog.setVisible(false);
 			aboutDialog.setTitle("About Jolivia");
 			aboutDialog.setResizable(false);
-			
+			{
 				/* Message */
 				final TextArea title = new TextArea(AboutMessage.split("\n").length + 1, 64);
 				title.setText(AboutMessage);
@@ -200,8 +207,8 @@ public class Jolivia
 				titleConstraints.insets = new Insets(0, 0, 0, 0);
 				aboutLayout.setConstraints(title, titleConstraints);
 				aboutDialog.add(title);
-			
-			
+			}
+			{
 				/* Done button */
 				final Button aboutDoneButton = new Button("Done");
 				aboutDoneButton.addActionListener(new ActionListener() {
@@ -219,7 +226,7 @@ public class Jolivia
 				aboutDoneConstraints.insets = new Insets(0, 0, 0, 0);
 				aboutLayout.setConstraints(aboutDoneButton, aboutDoneConstraints);
 				aboutDialog.add(aboutDoneButton);
-			
+			}
 			aboutDialog.setVisible(false);
 			aboutDialog.setLocationByPlatform(true);
 			aboutDialog.pack();
@@ -260,22 +267,10 @@ public class Jolivia
 
 			logger.info("Running with GUI, created system tray icon and menu");
 		}
-		catch( NullPointerException e)
+		catch(Exception e)
 		{
 			logger.info("Running headless", e);
 		}
-		catch( RuntimeException e)
-		{
-			logger.info("Running headless", e);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (Throwable e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
 	}
 
 	protected void onShutdown()

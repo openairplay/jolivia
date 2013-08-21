@@ -32,6 +32,8 @@ import javax.ws.rs.core.UriInfo;
 
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownFR;
+import org.dyndns.jkiddo.dmap.chunks.control.AvailableRepeatStates;
+import org.dyndns.jkiddo.dmap.chunks.control.AvailableShuffleStates;
 import org.dyndns.jkiddo.dmap.chunks.control.FullscreenStatus;
 import org.dyndns.jkiddo.dmap.chunks.control.PlayStatus;
 import org.dyndns.jkiddo.dmap.chunks.control.PlayingStatus;
@@ -41,8 +43,6 @@ import org.dyndns.jkiddo.dmap.chunks.control.ShuffleStatus;
 import org.dyndns.jkiddo.dmap.chunks.control.SpeakerActive;
 import org.dyndns.jkiddo.dmap.chunks.control.SpeakerList;
 import org.dyndns.jkiddo.dmap.chunks.control.StatusRevision;
-import org.dyndns.jkiddo.dmap.chunks.control.UnknownAR;
-import org.dyndns.jkiddo.dmap.chunks.control.UnknownAS;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownCAPR;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownCI;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownFE;
@@ -55,10 +55,10 @@ import org.dyndns.jkiddo.dmap.chunks.control.UnknownSP;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownSS;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownSU;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownSV;
-import org.dyndns.jkiddo.dmap.chunks.control.UnknownVC;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownVD;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownVE;
 import org.dyndns.jkiddo.dmap.chunks.control.VisualizerStatus;
+import org.dyndns.jkiddo.dmap.chunks.control.VolumeControllable;
 import org.dyndns.jkiddo.dmap.chunks.control.extension.SavedGenius;
 import org.dyndns.jkiddo.dmap.chunks.control.extension.UnknownCESX;
 import org.dyndns.jkiddo.dmap.chunks.control.extension.UnknownQU;
@@ -211,9 +211,9 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 		response.add(new RepeatStatus(0));
 		response.add(new FullscreenStatus(0));
 		response.add(new VisualizerStatus(0));
-		response.add(new UnknownVC(true));
-		response.add(new UnknownAS(2));//
-		response.add(new UnknownAR(6));//
+		response.add(new VolumeControllable(0));
+		response.add(new AvailableShuffleStates(2));//
+		response.add(new AvailableRepeatStates(6));//
 		response.add(new UnknownFE(0));
 		response.add(new UnknownVE(0));
 		response.add(new UnknownSU(false));
