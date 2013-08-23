@@ -46,7 +46,7 @@ public class NowPlaying extends RawChunk
 
 	public NowPlaying(byte[] value)
 	{
-		super("canp", "com.apple.itunes.unknown-np", value);
+		super("canp", "dacp.nowplayingids", value);
 
 	}
 

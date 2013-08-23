@@ -21,6 +21,6 @@ public class StatusRevision extends UIntChunk
 
 	public StatusRevision(int value)
 	{
-		super("cmsr", "com.apple.itunes.unknown-sr", value);
+		super("cmsr", "dmcp.serverrevision", value);
 	}
 }

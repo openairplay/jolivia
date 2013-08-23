@@ -10,18 +10,18 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.control;
 
-import org.dyndns.jkiddo.dmap.chunks.StringChunk;
+import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
 
-public class TrackArtist extends StringChunk
+public class CMediaKind extends UIntChunk
 {
-	public TrackArtist()
+	public CMediaKind()
 	{
-		this(null);
+		this(0);
 	}
 
-	public TrackArtist(String value)
+	public CMediaKind(int value)
 	{
-		super("cana", "com.apple.itunes.unknown-na", value);
+		super("cmmk", "dmcp.mediakind", value);
 	}
 
 }

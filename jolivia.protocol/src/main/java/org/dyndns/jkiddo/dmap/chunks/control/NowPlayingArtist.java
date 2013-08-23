@@ -10,17 +10,18 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.control;
 
-import org.dyndns.jkiddo.dmap.chunks.ContainerChunk;
+import org.dyndns.jkiddo.dmap.chunks.StringChunk;
 
-public class UnknownGT extends ContainerChunk
+public class NowPlayingArtist extends StringChunk
 {
-	public UnknownGT()
+	public NowPlayingArtist()
 	{
-		super("cmgt", "com.apple.itunes.unknown-gt");
+		this(null);
 	}
 
-	public RelativeVolume getMasterVolume()
+	public NowPlayingArtist(String value)
 	{
-		return getSingleChunk(RelativeVolume.class);
+		super("cana", "dacp.nowplayingartist", value);
 	}
+
 }

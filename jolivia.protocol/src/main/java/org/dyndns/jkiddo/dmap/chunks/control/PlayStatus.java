@@ -24,7 +24,7 @@ public class PlayStatus extends UByteChunk
 	public PlayStatus(int value)
 	{
 		// # play status: 4=playing, 3=paused
-		super("caps", "com.apple.itunes.unknown-ps", value);
+		super("caps", "dacp.playerstate", value);
 	}
 
 }

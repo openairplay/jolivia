@@ -10,17 +10,18 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.control;
 
-import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
+import org.dyndns.jkiddo.dmap.chunks.StringChunk;
 
-public class UnknownVE extends UByteChunk
+public class NowPlayingGenre extends StringChunk
 {
-	public UnknownVE()
+	public NowPlayingGenre()
 	{
-		this(0);
+		this(null);
 	}
 
-	public UnknownVE(int value)
+	public NowPlayingGenre(String value)
 	{
-		super("cave", "com.apple.itunes.unknown-ve", value);
+		super("cang", "dacp.nowplayinggenre", value);
 	}
+
 }

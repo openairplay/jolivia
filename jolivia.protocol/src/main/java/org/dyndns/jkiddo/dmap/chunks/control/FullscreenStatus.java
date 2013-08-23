@@ -21,6 +21,6 @@ public class FullscreenStatus extends UByteChunk
 
 	public FullscreenStatus(int i)
 	{
-		super("cafs", "com.apple.itunes.unknown-fs", i);
+		super("cafs", "dacp.fullscreen", i);
 	}
 }

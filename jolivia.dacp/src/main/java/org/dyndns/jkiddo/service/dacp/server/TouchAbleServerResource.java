@@ -43,20 +43,20 @@ import org.dyndns.jkiddo.dmap.chunks.control.ShuffleStatus;
 import org.dyndns.jkiddo.dmap.chunks.control.SpeakerActive;
 import org.dyndns.jkiddo.dmap.chunks.control.SpeakerList;
 import org.dyndns.jkiddo.dmap.chunks.control.StatusRevision;
-import org.dyndns.jkiddo.dmap.chunks.control.UnknownCAPR;
+import org.dyndns.jkiddo.dmap.chunks.control.AudioControlProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownCI;
-import org.dyndns.jkiddo.dmap.chunks.control.UnknownFE;
-import org.dyndns.jkiddo.dmap.chunks.control.UnknownGT;
+import org.dyndns.jkiddo.dmap.chunks.control.FullScreenEnabled;
+import org.dyndns.jkiddo.dmap.chunks.control.PropertyResponse;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownIK;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownOV;
-import org.dyndns.jkiddo.dmap.chunks.control.UnknownPR;
+import org.dyndns.jkiddo.dmap.chunks.control.MediaControlProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownRL;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownSP;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownSS;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownSU;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownSV;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownVD;
-import org.dyndns.jkiddo.dmap.chunks.control.UnknownVE;
+import org.dyndns.jkiddo.dmap.chunks.control.VisualizerEnabled;
 import org.dyndns.jkiddo.dmap.chunks.control.VisualizerStatus;
 import org.dyndns.jkiddo.dmap.chunks.control.VolumeControllable;
 import org.dyndns.jkiddo.dmap.chunks.control.extension.SavedGenius;
@@ -180,7 +180,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 		MultivaluedMap<String, String> map = uriInfo.getQueryParameters();
 		map.get("properties");
 
-		UnknownGT response = new UnknownGT();
+		PropertyResponse response = new PropertyResponse();
 		response.add(new Status(200));
 		response.add(new RelativeVolume(100));//
 		return Util.buildResponse(response, "DAAP-Server", name);
@@ -214,8 +214,8 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 		response.add(new VolumeControllable(0));
 		response.add(new AvailableShuffleStates(2));//
 		response.add(new AvailableRepeatStates(6));//
-		response.add(new UnknownFE(0));
-		response.add(new UnknownVE(0));
+		response.add(new FullScreenEnabled(0));
+		response.add(new VisualizerEnabled(0));
 		response.add(new UnknownSU(false));
 		response.add(new UnknownQU(0));
 		return Util.buildResponse(response, "DAAP-Server", name);
@@ -362,8 +362,8 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 		ListingItem item = new ListingItem();
 		item.add(new ItemId(1));//
 		item.add(new UnknownIK(true));
-		item.add(new UnknownPR(0x20001));//
-		item.add(new UnknownCAPR(0x20003));//
+		item.add(new MediaControlProtocolVersion(0x20001));//
+		item.add(new AudioControlProtocolVersion(0x20003));//
 		item.add(new UnknownSP(true));
 		item.add(new UnknownFR(100));
 		item.add(new UnknownSV(true));

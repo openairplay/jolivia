@@ -21,7 +21,7 @@ public class RelativeVolume extends UIntChunk
 
 	public RelativeVolume(long value)
 	{
-		super("cmvo", "com.apple.itunes.unknown-vo", value);
+		super("cmvo", "dmcp.volume", value);
 	}
 
 }

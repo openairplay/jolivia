@@ -11,6 +11,6 @@ public class ReqFplay extends UIntChunk
 
 	public ReqFplay(int i)
 	{
-		super("????", "com.apple.itunes.req-fplay", i);
+		super("????", "com.apple.itunes.unknown.req-fplay", i);
 	}
 }

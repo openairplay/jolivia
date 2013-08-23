@@ -22,7 +22,7 @@ public class ProgressTotal extends UIntChunk
 	public ProgressTotal(int value)
 	{
 		// # total track length in ms
-		super("cast", "com.apple.itunes.unknown-st", value);
+		super("cast", "dacp.songtime", value);
 	}
 
 }

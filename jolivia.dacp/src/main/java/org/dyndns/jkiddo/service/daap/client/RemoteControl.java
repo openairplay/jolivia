@@ -43,7 +43,7 @@ import org.dyndns.jkiddo.dmap.chunks.control.PlayingStatus;
 import org.dyndns.jkiddo.dmap.chunks.control.RelativeVolume;
 import org.dyndns.jkiddo.dmap.chunks.control.SpeakerActive;
 import org.dyndns.jkiddo.dmap.chunks.control.SpeakerList;
-import org.dyndns.jkiddo.dmap.chunks.control.UnknownGT;
+import org.dyndns.jkiddo.dmap.chunks.control.PropertyResponse;
 import org.dyndns.jkiddo.dmap.chunks.control.UnknownVD;
 import org.dyndns.jkiddo.dmap.chunks.media.Dictionary;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
@@ -100,7 +100,7 @@ public class RemoteControl
 
 	public long getMasterVolume() throws Exception
 	{
-		UnknownGT unknown = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/getproperty?properties=dmcp.volume&session-id=%s", session.getRequestBase(), session.getSessionId()));
+		PropertyResponse unknown = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/getproperty?properties=dmcp.volume&session-id=%s", session.getRequestBase(), session.getSessionId()));
 		return unknown.getMasterVolume().getUnsignedValue();
 	}
 

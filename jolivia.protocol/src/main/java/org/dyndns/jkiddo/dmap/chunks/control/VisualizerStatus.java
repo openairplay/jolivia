@@ -21,7 +21,7 @@ public class VisualizerStatus extends UByteChunk
 
 	public VisualizerStatus(int i)
 	{
-		super("cavs", "com.apple.itunes.unknown-vs", i);
+		super("cavs", "dacp.visualizer", i);
 	}
 
 }

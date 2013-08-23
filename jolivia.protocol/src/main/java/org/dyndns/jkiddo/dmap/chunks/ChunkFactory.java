@@ -101,7 +101,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x636D766F), org.dyndns.jkiddo.dmap.chunks.control.RelativeVolume.class); // cmvo
 		map.put(new Integer(0x63616961), org.dyndns.jkiddo.dmap.chunks.control.SpeakerActive.class); // caia
 		map.put(new Integer(0x63617370), org.dyndns.jkiddo.dmap.chunks.control.SpeakerList.class); // casp
-		map.put(new Integer(0x636D6774), org.dyndns.jkiddo.dmap.chunks.control.UnknownGT.class); // cmgt
+		map.put(new Integer(0x636D6774), org.dyndns.jkiddo.dmap.chunks.control.PropertyResponse.class); // cmgt
 		map.put(new Integer(0x63617664), org.dyndns.jkiddo.dmap.chunks.control.UnknownVD.class); // cavd
 		map.put(new Integer(0x636D7374), org.dyndns.jkiddo.dmap.chunks.control.PlayingStatus.class); // cmst
 		map.put(new Integer(0x636D7372), org.dyndns.jkiddo.dmap.chunks.control.StatusRevision.class); // cmsr
@@ -113,15 +113,15 @@ public final class ChunkFactory
 		map.put(new Integer(0x63617663), org.dyndns.jkiddo.dmap.chunks.control.VolumeControllable.class); // cavc
 		map.put(new Integer(0x63616173), org.dyndns.jkiddo.dmap.chunks.control.AvailableShuffleStates.class); // caas
 		map.put(new Integer(0x63616172), org.dyndns.jkiddo.dmap.chunks.control.AvailableRepeatStates.class); // caar
-		map.put(new Integer(0x63616665), org.dyndns.jkiddo.dmap.chunks.control.UnknownFE.class); // cafe
-		map.put(new Integer(0x63617665), org.dyndns.jkiddo.dmap.chunks.control.UnknownVE.class); // cave
+		map.put(new Integer(0x63616665), org.dyndns.jkiddo.dmap.chunks.control.FullScreenEnabled.class); // cafe
+		map.put(new Integer(0x63617665), org.dyndns.jkiddo.dmap.chunks.control.VisualizerEnabled.class); // cave
 		map.put(new Integer(0x63617375), org.dyndns.jkiddo.dmap.chunks.control.UnknownSU.class); // casu
 		map.put(new Integer(0x63616e70), org.dyndns.jkiddo.dmap.chunks.control.NowPlaying.class); // canp
 		map.put(new Integer(0x63616e6e), org.dyndns.jkiddo.dmap.chunks.control.NowPlayingName.class); // cann
-		map.put(new Integer(0x63616e61), org.dyndns.jkiddo.dmap.chunks.control.TrackArtist.class); // cana
-		map.put(new Integer(0x63616e6c), org.dyndns.jkiddo.dmap.chunks.control.TrackAlbum.class); // canl
-		map.put(new Integer(0x63616e67), org.dyndns.jkiddo.dmap.chunks.control.TrackGenre.class); // cang
-		map.put(new Integer(0x636d6d6b), org.dyndns.jkiddo.dmap.chunks.control.UnknownMK.class); // cmmk
+		map.put(new Integer(0x63616e61), org.dyndns.jkiddo.dmap.chunks.control.NowPlayingArtist.class); // cana
+		map.put(new Integer(0x63616e6c), org.dyndns.jkiddo.dmap.chunks.control.NowPlayingAlbum.class); // canl
+		map.put(new Integer(0x63616e67), org.dyndns.jkiddo.dmap.chunks.control.NowPlayingGenre.class); // cang
+		map.put(new Integer(0x636d6d6b), org.dyndns.jkiddo.dmap.chunks.control.CMediaKind.class); // cmmk
 		map.put(new Integer(0x63617361), org.dyndns.jkiddo.dmap.chunks.control.UnknownSA.class); // casa
 		map.put(new Integer(0x63616e74), org.dyndns.jkiddo.dmap.chunks.control.ProgressRemain.class); // cant
 		map.put(new Integer(0x63617374), org.dyndns.jkiddo.dmap.chunks.control.ProgressTotal.class); // cant
@@ -148,8 +148,8 @@ public final class ChunkFactory
 		map.put(new Integer(0x636d7479), org.dyndns.jkiddo.dmap.chunks.control.DeviceType.class); // cmty
 		map.put(new Integer(0x63616369), org.dyndns.jkiddo.dmap.chunks.control.UnknownCI.class); // caci
 		map.put(new Integer(0x636d696b), org.dyndns.jkiddo.dmap.chunks.control.UnknownIK.class); // cmik
-		map.put(new Integer(0x636d7072), org.dyndns.jkiddo.dmap.chunks.control.UnknownPR.class); // cmpr
-		map.put(new Integer(0x63617072), org.dyndns.jkiddo.dmap.chunks.control.UnknownCAPR.class); // capr
+		map.put(new Integer(0x636d7072), org.dyndns.jkiddo.dmap.chunks.control.MediaControlProtocolVersion.class); // cmpr
+		map.put(new Integer(0x63617072), org.dyndns.jkiddo.dmap.chunks.control.AudioControlProtocolVersion.class); // capr
 		map.put(new Integer(0x636d7370), org.dyndns.jkiddo.dmap.chunks.control.UnknownSP.class); // cmsp
 		map.put(new Integer(0x636d7376), org.dyndns.jkiddo.dmap.chunks.control.UnknownSV.class); // cmsv
 		map.put(new Integer(0x63617373), org.dyndns.jkiddo.dmap.chunks.control.UnknownSS.class); // cass

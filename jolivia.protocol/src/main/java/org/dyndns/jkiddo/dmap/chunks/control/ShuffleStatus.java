@@ -22,7 +22,7 @@ public class ShuffleStatus extends UByteChunk
 	public ShuffleStatus(int value)
 	{
 		//# shuffle status: 0=off, 1=on
-		super("cash", "com.apple.itunes.unknown-sh", value);
+		super("cash", "dacp.shufflestate", value);
 	}
 
 }

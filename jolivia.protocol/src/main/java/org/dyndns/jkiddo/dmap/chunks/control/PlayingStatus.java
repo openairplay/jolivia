@@ -19,7 +19,7 @@ public class PlayingStatus extends ContainerChunk
 {
 	public PlayingStatus()
 	{
-		super("cmst", "com.apple.itunes.unknown-st");
+		super("cmst", "dmcp.playstatus");
 	}
 
 	public <T extends Chunk> T getSpecificChunk(Class<T> clazz)
@@ -87,9 +87,9 @@ public class PlayingStatus extends ContainerChunk
 	 * 
 	 * @return
 	 */
-	public TrackArtist getTrackArtist()
+	public NowPlayingArtist getTrackArtist()
 	{
-		return getSingleChunk(TrackArtist.class);
+		return getSingleChunk(NowPlayingArtist.class);
 	}
 
 	/**
@@ -97,9 +97,9 @@ public class PlayingStatus extends ContainerChunk
 	 * 
 	 * @return
 	 */
-	public TrackAlbum getTrackAlbum()
+	public NowPlayingAlbum getTrackAlbum()
 	{
-		return getSingleChunk(TrackAlbum.class);
+		return getSingleChunk(NowPlayingAlbum.class);
 	}
 
 	/**
@@ -107,9 +107,9 @@ public class PlayingStatus extends ContainerChunk
 	 * 
 	 * @return
 	 */
-	public TrackGenre getTrackGenre()
+	public NowPlayingGenre getTrackGenre()
 	{
-		return getSingleChunk(TrackGenre.class);
+		return getSingleChunk(NowPlayingGenre.class);
 	}
 
 	/**

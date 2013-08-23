@@ -22,7 +22,7 @@ public class RepeatStatus extends UByteChunk
 	public RepeatStatus(int value)
 	{
 		// # repeat status: 0=none, 1=single, 2=all
-		super("carp", "com.apple.itunes.unknown-rp", value);
+		super("carp", "dacp.repeatstate", value);
 	}
 
 }

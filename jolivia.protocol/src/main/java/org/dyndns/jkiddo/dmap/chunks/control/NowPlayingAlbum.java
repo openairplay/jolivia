@@ -10,18 +10,18 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.control;
 
-import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
+import org.dyndns.jkiddo.dmap.chunks.StringChunk;
 
-public class UnknownFE extends UByteChunk
+public class NowPlayingAlbum extends StringChunk
 {
-	public UnknownFE()
+	public NowPlayingAlbum()
 	{
-		this(0);
+		this(null);
 	}
 
-	public UnknownFE(int value)
+	public NowPlayingAlbum(String value)
 	{
-		super("cafe", "com.apple.itunes.unknown-fe", value);
+		super("canl", "dacp.nowplayingalbum", value);
 	}
 
 }

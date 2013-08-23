@@ -10,18 +10,17 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.control;
 
-import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
+import org.dyndns.jkiddo.dmap.chunks.ContainerChunk;
 
-public class UnknownMK extends UIntChunk
+public class PropertyResponse extends ContainerChunk
 {
-	public UnknownMK()
+	public PropertyResponse()
 	{
-		this(0);
+		super("cmgt", "dmcp.getpropertyresponse");
 	}
 
-	public UnknownMK(int value)
+	public RelativeVolume getMasterVolume()
 	{
-		super("cmmk", "com.apple.itunes.unknown-mk", value);
+		return getSingleChunk(RelativeVolume.class);
 	}
-
 }

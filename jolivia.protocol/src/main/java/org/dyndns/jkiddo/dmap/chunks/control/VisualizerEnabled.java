@@ -10,18 +10,17 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.control;
 
-import org.dyndns.jkiddo.dmap.chunks.StringChunk;
+import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
 
-public class TrackGenre extends StringChunk
+public class VisualizerEnabled extends UByteChunk
 {
-	public TrackGenre()
+	public VisualizerEnabled()
 	{
-		this(null);
+		this(0);
 	}
 
-	public TrackGenre(String value)
+	public VisualizerEnabled(int value)
 	{
-		super("cang", "com.apple.itunes.unknown-ng", value);
+		super("cave", "dacp.visualizerenabled", value);
 	}
-
 }

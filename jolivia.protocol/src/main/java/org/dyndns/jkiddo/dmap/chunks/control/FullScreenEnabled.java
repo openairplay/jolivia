@@ -10,18 +10,18 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.control;
 
-import org.dyndns.jkiddo.dmap.chunks.StringChunk;
+import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
 
-public class TrackAlbum extends StringChunk
+public class FullScreenEnabled extends UByteChunk
 {
-	public TrackAlbum()
+	public FullScreenEnabled()
 	{
-		this(null);
+		this(0);
 	}
 
-	public TrackAlbum(String value)
+	public FullScreenEnabled(int value)
 	{
-		super("canl", "com.apple.itunes.unknown-nl", value);
+		super("cafe", "dacp.fullscreenenabled", value);
 	}
 
 }

@@ -21,7 +21,7 @@ public class SpeakerActive extends BooleanChunk
 
 	public SpeakerActive(boolean value)
 	{
-		super("caia", "com.apple.itunes.unknown-ia", value);
+		super("caia", "dacp.isactive", value);
 	}
 
 }
