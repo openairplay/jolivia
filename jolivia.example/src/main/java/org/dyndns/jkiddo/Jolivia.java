@@ -10,6 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo;
 
+import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Dialog;
 import java.awt.GridBagConstraints;
@@ -22,21 +23,30 @@ import java.awt.TextArea;
 import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.net.URI;
 import java.net.URL;
 import java.util.EnumSet;
+import java.util.Set;
 
 import javax.servlet.DispatcherType;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 
+import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
+import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
+import org.dyndns.jkiddo.dmap.chunks.media.ListingItem;
 import org.dyndns.jkiddo.guice.JoliviaServer;
 import org.dyndns.jkiddo.jetty.extension.DmapConnector;
-import org.dyndns.jkiddo.logic.desk.DeskImageStoreReader;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
 import org.dyndns.jkiddo.logic.desk.GoogleStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.raop.ISpeakerListener;
+import org.dyndns.jkiddo.raop.server.IPlayingInformation;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
+import org.dyndns.jkiddo.service.daap.client.Session;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.DefaultServlet;
@@ -46,6 +56,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Sets;
 import com.google.inject.servlet.GuiceFilter;
 
 public class Jolivia
@@ -63,7 +74,7 @@ public class Jolivia
 			}
 			else
 				reader = new DeskMusicStoreReader();
-			new Jolivia(reader, new DeskImageStoreReader());
+			new Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).musicStoreReader(reader).build();
 		}
 		catch(Exception e)
 		{
@@ -71,94 +82,170 @@ public class Jolivia
 		}
 	}
 
-	public Jolivia(IClientSessionListener clientSessionListener) throws Exception
+	public static class JoliviaBuilder
 	{
-		this(4000, 5000, 1337, "Jolivia", clientSessionListener, null, null, null);
+		private Integer port = 4000;
+		private Integer airplayPort = 5000;
+		private Integer pairingCode = 1337;
+		private String name = "Jolivia";
+		private ISpeakerListener speakerListener;
+		private IClientSessionListener clientSessionListener = new DefaultClientSessionListener();
+		private IMusicStoreReader musicStoreReader = new DefaultMusicStoreReader();
+		private IImageStoreReader imageStoreReader = new DefaultImageStoreReader();
+		private IPlayingInformation iplayingInformation = new DefaultIPlayingInformation();
+
+		public JoliviaBuilder port(int port)
+		{
+			this.port = port;
+			return this;
+		}
+
+		public JoliviaBuilder pairingCode(int pairingCode)
+		{
+			this.pairingCode = pairingCode;
+			return this;
+		}
+
+		public JoliviaBuilder airplayPort(int airplayPort)
+		{
+			this.airplayPort = airplayPort;
+			return this;
+		}
+
+		public JoliviaBuilder name(String name)
+		{
+			this.name = name;
+			return this;
+		}
+
+		public JoliviaBuilder musicStoreReader(IMusicStoreReader musicStoreReader)
+		{
+			this.musicStoreReader = musicStoreReader;
+			return this;
+		}
+
+		public JoliviaBuilder imageStoreReader(IImageStoreReader imageStoreReader)
+		{
+			this.imageStoreReader = imageStoreReader;
+			return this;
+		}
+
+		public JoliviaBuilder playingInformation(IPlayingInformation iplayingInformation)
+		{
+			this.iplayingInformation = iplayingInformation;
+			return this;
+		}
+
+		public JoliviaBuilder clientSessionListener(IClientSessionListener clientSessionListener)
+		{
+			this.clientSessionListener = clientSessionListener;
+			return this;
+		}
+
+		public Jolivia build() throws Exception
+		{
+			return new Jolivia(this);
+		}
+
+		class DefaultClientSessionListener implements IClientSessionListener
+		{
+			private Session session;
+
+			@Override
+			public void registerNewSession(Session session) throws Exception
+			{
+				this.session = session;
+			}
+
+			@Override
+			public void tearDownSession(String server, int port)
+			{
+				try
+				{
+					session.logout();
+				}
+				catch(Exception e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+
+		class DefaultIPlayingInformation implements IPlayingInformation
+		{
+			@Override
+			public void notify(BufferedImage image)
+			{
+				try
+				{
+					JFrame frame = new JFrame("Cover");
+					frame.getContentPane().add(new JLabel(new ImageIcon(image)), BorderLayout.CENTER);
+					frame.pack();
+					frame.setVisible(true);
+				}
+				catch(Exception e)
+				{
+					logger.debug(e.getMessage(), e);
+				}
+			}
+
+			@Override
+			public void notify(ListingItem listingItem)
+			{
+				logger.info("Playing " + listingItem.getSpecificChunk(ItemName.class).getValue() + " - " + listingItem.getSpecificChunk(SongArtist.class).getValue());
+			}
+		}
+
+		class DefaultImageStoreReader implements IImageStoreReader
+		{
+			@Override
+			public Set<IImageItem> readImages() throws Exception
+			{
+				return Sets.newHashSet();
+			}
+
+			@Override
+			public URI getImage(IImageItem image) throws Exception
+			{
+				return null;
+			}
+
+			@Override
+			public byte[] getImageThumb(IImageItem image) throws Exception
+			{
+				return null;
+			}
+		}
+
+		class DefaultMusicStoreReader implements IMusicStoreReader
+		{
+			@Override
+			public Set<IMusicItem> readTunes() throws Exception
+			{
+				return Sets.newHashSet();
+			}
+
+			@Override
+			public URI getTune(IMusicItem tune) throws Exception
+			{
+				return null;
+			}
+		}
 	}
 
-	public Jolivia(IClientSessionListener clientSessionListener, IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
-	{
-		this(4000, 5000, 1337, "Jolivia", clientSessionListener, null, musicStoreReader, imageStoreReader);
-	}
-
-	public Jolivia(IClientSessionListener clientSessionListener, IImageStoreReader imageStoreReader) throws Exception
-	{
-		this(4000, 5000, 1337, "Jolivia", clientSessionListener, null, null, imageStoreReader);
-	}
-
-	public Jolivia(IClientSessionListener clientSessionListener, IMusicStoreReader musicStoreReader) throws Exception
-	{
-		this(4000, 5000, 1337, "Jolivia", clientSessionListener, null, musicStoreReader, null);
-	}
-
-	public Jolivia(ISpeakerListener speakerListener) throws Exception
-	{
-		this(4000, 5000, 1337, "Jolivia", null, speakerListener, null, null);
-	}
-
-	public Jolivia(ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader) throws Exception
-	{
-		this(4000, 5000, 1337, "Jolivia", null, speakerListener, musicStoreReader, null);
-	}
-
-	public Jolivia(ISpeakerListener speakerListener, IImageStoreReader imageStoreReader) throws Exception
-	{
-		this(4000, 5000, 1337, "Jolivia", null, speakerListener, null, imageStoreReader);
-	}
-
-	public Jolivia(ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
-	{
-		this(4000, 5000, 1337, "Jolivia", null, speakerListener, musicStoreReader, imageStoreReader);
-	}
-
-	public Jolivia(IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
-	{
-		this(4000, 5000, 1337, "Jolivia", clientSessionListener, speakerListener, musicStoreReader, imageStoreReader);
-	}
-
-	public Jolivia(IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader) throws Exception
-	{
-		this(4000, 5000, 1337, "Jolivia", clientSessionListener, speakerListener, musicStoreReader, null);
-	}
-
-	public Jolivia(IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IImageStoreReader imageStoreReader) throws Exception
-	{
-		this(4000, 5000, 1337, "Jolivia", clientSessionListener, speakerListener, null, imageStoreReader);
-	}
-
-	public Jolivia(IClientSessionListener clientSessionListener, ISpeakerListener speakerListener) throws Exception
-	{
-		this(4000, 5000, 1337, "Jolivia", clientSessionListener, speakerListener, null, null);
-	}
-
-	public Jolivia(IImageStoreReader imageStoreReader) throws Exception
-	{
-		this(4000, 5000, 1337, "Jolivia", null, null, null, imageStoreReader);
-	}
-
-	public Jolivia(IMusicStoreReader musicStoreReader) throws Exception
-	{
-		this(4000, 5000, 1337, "Jolivia", null, null, musicStoreReader, null);
-	}
-
-	public Jolivia(IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
-	{
-		this(4000, 5000, 1337, "Jolivia", null, null, musicStoreReader, imageStoreReader);
-	}
-
-	public Jolivia(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IMusicStoreReader musicStoreReader, IImageStoreReader imageStoreReader) throws Exception
+	private Jolivia(JoliviaBuilder builder) throws Exception
 	{
 		setupGui();
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
 
-		Preconditions.checkArgument(!(pairingCode > 9999), "Pairingcode must be expressed within 4 ciphers");
-		logger.info("Starting " + name + " on port " + port);
-		Server server = new Server(port);
+		Preconditions.checkArgument(!(builder.pairingCode > 9999 || builder.pairingCode < 0), "Pairingcode must be expressed within 4 ciphers");
+		logger.info("Starting " + builder.name + " on port " + builder.port);
+		Server server = new Server(builder.port);
 		// Server server = new
 		// Server(InetSocketAddress.createUnresolved("0.0.0.0", port));
 		Connector dmapConnector = new DmapConnector();
-		dmapConnector.setPort(port);
+		dmapConnector.setPort(builder.port);
 		// ServerConnector dmapConnector = new ServerConnector(server, new
 		// DmapConnectionFactory());
 		// dmapConnector.setPort(port);
@@ -166,12 +253,12 @@ public class Jolivia
 
 		// Guice
 		ServletContextHandler sch = new ServletContextHandler(server, "/");
-		sch.addEventListener(new JoliviaServer(port, airplayPort, pairingCode, name, clientSessionListener, speakerListener, imageStoreReader, musicStoreReader));
+		sch.addEventListener(new JoliviaServer(builder.port, builder.airplayPort, builder.pairingCode, builder.name, builder.clientSessionListener, builder.speakerListener, builder.imageStoreReader, builder.musicStoreReader, builder.iplayingInformation));
 		sch.addFilter(GuiceFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 		sch.addServlet(DefaultServlet.class, "/");
 
 		server.start();
-		logger.info(name + " started");
+		logger.info(builder.name + " started");
 		server.join();
 	}
 
@@ -237,7 +324,6 @@ public class Jolivia
 			{
 				throw new Exception("No image found");
 			}
-			// final URL trayIconUrl = new File("./src/main/resources/icon_32.png").toURI().toURL();
 			TrayIcon trayIcon = new TrayIcon((new ImageIcon(trayIconUrl, "Jolivia").getImage()));
 			trayIcon.setToolTip("Jolivia");
 			trayIcon.setImageAutoSize(true);
@@ -279,7 +365,7 @@ public class Jolivia
 
 	}
 
-	private final String AboutMessage = "   * Jolivia *\n" + "\n" + "Copyright (c) 2013 Jens Kristian Villadsen\n" + "\n" + "didms is free software: you can redistribute it and/or modify\n" + "it under the terms of the GNU General Public License as published by\n" + "the Free Software Foundation, either version 3 of the License, or\n" + "(at your option) any later version.\n" + "\n" + "didms is distributed in the hope that it will be useful,\n" + "but WITHOUT ANY WARRANTY; without even the implied warranty of\n" + "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\n" + "GNU General Public License for more details.\n" + "\n" + "You should have received a copy of the GNU General Public License\n" + "along with didms.  If not, see <http://www.gnu.org/licenses/>." + "\n\n";
+	private final String AboutMessage = "   * Jolivia *\n" + "\n" + "Copyright (c) 2013 Jens Kristian Villadsen\n" + "\n" + "Jolivia is free software: you can redistribute it and/or modify\n" + "it under the terms of the GNU General Public License as published by\n" + "the Free Software Foundation, either version 3 of the License, or\n" + "(at your option) any later version.\n" + "\n" + "didms is distributed in the hope that it will be useful,\n" + "but WITHOUT ANY WARRANTY; without even the implied warranty of\n" + "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\n" + "GNU General Public License for more details.\n" + "\n" + "You should have received a copy of the GNU General Public License\n" + "along with didms.  If not, see <http://www.gnu.org/licenses/>." + "\n\n";
 	/*
 	 * @Override public void update(Observable arg0, Object arg1) { if(trayIcon != null) { trayIcon.displayMessage(null, arg1.toString(), MessageType.INFO); } }
 	 */

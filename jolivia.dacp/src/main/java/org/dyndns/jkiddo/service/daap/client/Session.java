@@ -116,8 +116,8 @@ public class Session
 		sessionId = loginResponse.getSessionId().getValue();
 
 		getControlInt();
-		
 		// Update revision at once. As the initial call, this does not block but simply updates the revision.
+//		updateServerRevision();
 		getUpdateBlocking();
 		library = new Library(this);
 		remoteControl = new RemoteControl(this);
@@ -240,4 +240,13 @@ public class Session
 		revision = state.getServerRevision().getUnsignedValue();
 		return state;
 	}
+	
+	public UpdateResponse updateServerRevision() throws Exception
+	{
+		UpdateResponse state = RequestHelper.requestParsed(String.format("%s/update?session-id=%s&revision-number=%s&delta=0", this.getRequestBase(), sessionId, revision), true);
+		revision = state.getServerRevision().getUnsignedValue();
+		return state;
+	}
+	
+
 }

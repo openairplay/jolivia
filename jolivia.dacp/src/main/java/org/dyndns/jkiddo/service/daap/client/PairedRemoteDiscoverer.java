@@ -86,7 +86,7 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 			}
 			catch(Exception e)
 			{
-				logger.warn(e.getMessage(), e);
+				logger.warn("Could not establish session with client", e);
 				database.updateCode(event.getInfo().getName(), null);
 			}
 		}

@@ -56,8 +56,8 @@ import com.google.common.io.Closeables;
 public class RequestHelper
 {
 	private static final int CONNECT_TIMEOUT = 10000;
-	private static final int READ_TIMEOUT = 0; //Infinite
-	
+	private static final int READ_TIMEOUT = 0; // Infinite
+
 	public final static Logger logger = LoggerFactory.getLogger(RequestHelper.class);
 
 	public static byte[] requestBitmap(String remote) throws Exception
@@ -86,7 +86,7 @@ public class RequestHelper
 		logger.debug(url);
 		DmapInputStream inputStream = new DmapInputStream(new ByteArrayInputStream(request(url, keepalive)), specialCaseProtocolViolation);
 		Chunk chunk = inputStream.getChunk();
-		Closeables.close(inputStream,true);
+		Closeables.close(inputStream, true);
 		return (T) chunk;
 	}
 	/**
@@ -110,11 +110,14 @@ public class RequestHelper
 		HttpURLConnection connection = (HttpURLConnection) new URL(remoteUrl).openConnection();
 		connection.setAllowUserInteraction(false);
 		connection.setRequestProperty("Viewer-Only-Client", "1");
+		connection.setRequestProperty("Client-iTunes-Sharing-Version", "3.10");
+
+		// Carefull either Client-DAAP or Client-DPAP
 		connection.setRequestProperty("Client-DAAP-Version", "3.11");
-//		connection.setRequestProperty("Client-iTunes-Sharing-Version", "3.10");
-		connection.setRequestProperty("Client-DPAP-Version", "1.1");
+		// connection.setRequestProperty("Client-DPAP-Version", "1.1");
+
 		connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
-		connection.setRequestProperty("User-Agent", "iPhoto/9.4.3,iTunes/11.0.4");
+		// connection.setRequestProperty("User-Agent", "iPhoto/9.4.3,iTunes/11.0.4");
 		connection.setReadTimeout(READ_TIMEOUT);
 		if(!keepalive)
 		{

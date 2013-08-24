@@ -3,7 +3,6 @@ package test;
 import java.awt.BorderLayout;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.util.Collection;
 import java.util.Iterator;
@@ -44,7 +43,7 @@ import org.junit.Test;
 
 public class Noop
 {
-	// @Test
+	@Test
 	public void usage() throws Exception
 	{
 
@@ -56,7 +55,7 @@ public class Noop
 		// file. Once paired every time you start iTunes this method will be
 		// called. Every time the iTunes instance is
 		// closed the tearDownSession will be invoked.
-		new Jolivia(new IClientSessionListener() {
+		new Jolivia.JoliviaBuilder().clientSessionListener(new IClientSessionListener() {
 
 			private Session session;
 
@@ -151,7 +150,7 @@ public class Noop
 				session.getLibrary().getAlbumArtwork(itemId, 320, 320);
 				session.getRemoteControl().fetchCover(320, 320);
 			}
-		});
+		}).build();
 	}
 
 	@Test
@@ -178,7 +177,7 @@ public class Noop
 		ServerInfoResponse serverInfoResponse = RequestHelper.requestParsed(String.format("%s/server-info", requestBase));
 		System.out.println(serverInfoResponse);
 	}
-	
+
 	@Test
 	public void thumbResponse() throws Exception
 	{
@@ -187,7 +186,7 @@ public class Noop
 		DatabaseItems di = RequestHelper.requestParsed(url);
 		ListingItem item = di.getListing().getListingItems().iterator().next();
 		byte[] data = item.getSpecificChunk(FileData.class).getValue();
-		
+
 		BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
 
 		// Debugging ...
@@ -203,9 +202,9 @@ public class Noop
 		{
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	@Test
 	public void hiresResponse() throws Exception
 	{
@@ -214,7 +213,7 @@ public class Noop
 		DatabaseItems di = RequestHelper.requestParsed(url);
 		ListingItem item = di.getListing().getListingItems().iterator().next();
 		byte[] data = item.getSpecificChunk(FileData.class).getValue();
-		
+
 		BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
 
 		// Debugging ...
@@ -230,7 +229,7 @@ public class Noop
 		{
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	@Test

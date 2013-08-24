@@ -79,11 +79,9 @@ public class PairingDatabase implements IPairingDatabase
 	@Override
 	public void updateCode(String serviceName, String guid)
 	{
-		if(serviceName != null && guid != null)
-		{
-			dbHandler.updateEntry(serviceName, guid);
-		}
+		dbHandler.updateEntry(serviceName, guid);
 	}
+	
 	@Override
 	public String getPairCode()
 	{
