@@ -34,6 +34,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmap.chunks.media.ListingItem;
@@ -173,14 +174,27 @@ public class Jolivia
 
 		class DefaultIPlayingInformation implements IPlayingInformation
 		{
+			private JFrame frame;
+			private JLabel label;
+
+			public DefaultIPlayingInformation()
+			{
+				frame = new JFrame("Cover");
+				label = new JLabel();
+				frame.getContentPane().add(label, BorderLayout.CENTER);
+				frame.pack();
+				frame.setVisible(false);
+			}
+
 			@Override
 			public void notify(BufferedImage image)
 			{
 				try
 				{
-					JFrame frame = new JFrame("Cover");
-					frame.getContentPane().add(new JLabel(new ImageIcon(image)), BorderLayout.CENTER);
+					ImageIcon icon = new ImageIcon(image);
+					label.setIcon(icon);
 					frame.pack();
+					frame.setSize(icon.getIconWidth(), icon.getIconHeight());
 					frame.setVisible(true);
 				}
 				catch(Exception e)
@@ -192,7 +206,10 @@ public class Jolivia
 			@Override
 			public void notify(ListingItem listingItem)
 			{
-				logger.info("Playing " + listingItem.getSpecificChunk(ItemName.class).getValue() + " - " + listingItem.getSpecificChunk(SongArtist.class).getValue());
+				String title = listingItem.getSpecificChunk(ItemName.class).getValue();
+				String artist = listingItem.getSpecificChunk(SongArtist.class).getValue();
+				String album =  listingItem.getSpecificChunk(SongAlbum.class).getValue();
+				frame.setTitle("Playing: " + title + " - " + album + " - " + artist);
 			}
 		}
 
