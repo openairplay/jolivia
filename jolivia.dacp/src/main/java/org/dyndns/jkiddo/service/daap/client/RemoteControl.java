@@ -39,15 +39,15 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import org.dyndns.jkiddo.dmap.chunks.control.PlayingStatus;
-import org.dyndns.jkiddo.dmap.chunks.control.RelativeVolume;
-import org.dyndns.jkiddo.dmap.chunks.control.SpeakerActive;
-import org.dyndns.jkiddo.dmap.chunks.control.SpeakerList;
-import org.dyndns.jkiddo.dmap.chunks.control.PropertyResponse;
-import org.dyndns.jkiddo.dmap.chunks.control.UnknownVD;
 import org.dyndns.jkiddo.dmap.chunks.media.Dictionary;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmap.chunks.media.SpeakerMacAddress;
+import org.dyndns.jkiddo.dmcp.chunks.media.PlayingStatus;
+import org.dyndns.jkiddo.dmcp.chunks.media.PropertyResponse;
+import org.dyndns.jkiddo.dmcp.chunks.media.RelativeVolume;
+import org.dyndns.jkiddo.dmcp.chunks.media.audio.SpeakerActive;
+import org.dyndns.jkiddo.dmcp.chunks.media.audio.SpeakerList;
+import org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownVD;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

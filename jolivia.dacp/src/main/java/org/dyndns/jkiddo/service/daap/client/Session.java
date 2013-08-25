@@ -42,7 +42,6 @@ import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.chunks.audio.BaseContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseContainerns;
 import org.dyndns.jkiddo.dmap.chunks.audio.ServerDatabases;
-import org.dyndns.jkiddo.dmap.chunks.control.UnknownCI;
 import org.dyndns.jkiddo.dmap.chunks.media.ContentCodesResponse;
 import org.dyndns.jkiddo.dmap.chunks.media.DatabaseShareType;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemCount;
@@ -53,6 +52,7 @@ import org.dyndns.jkiddo.dmap.chunks.media.LoginResponse;
 import org.dyndns.jkiddo.dmap.chunks.media.PersistentId;
 import org.dyndns.jkiddo.dmap.chunks.media.ServerInfoResponse;
 import org.dyndns.jkiddo.dmap.chunks.media.UpdateResponse;
+import org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownCI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

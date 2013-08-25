@@ -1,12 +1,13 @@
-jolivia
+Jolivia
 =======
 
 A Java application/library implementation of the DMAP family (DAAP, DACP, DPAP) and RAOP with Guice + Jetty + Zeroconf/Bonojur (through [jmDNS](http://sourceforge.net/projects/jmdns/)). The functionality is planned to resemble what is provided by eg. [dmapd](http://www.flyn.org/projects/dmapd/index.html). It should however be thought of as an integration library, not a final application itself. jolivia is scoped to support the following proprietary protocols:
 
  - Digital Media Access Protocol (DMAP)
- - Digital Audio Access Protocol (DAAP)
- - Digital Photo Access Protocol (DPAP)
- - Digital Audio Control Protocol (DACP)
+  - Digital Audio Access Protocol (DAAP)
+  - Digital Photo Access Protocol (DPAP)
+ - Digital Media Control Protocol (DMCP)
+  - Digital Audio Control Protocol (DACP)
  - Remote Audio Output Protocol (RAOP)
 
 ## Q/A (How do I ... -)
@@ -129,9 +130,9 @@ The session is your 'remote control' instance. On a session you can do the remot
 ## Current functionality ##
 
  * DAAP share as provided by iTunes including Zeroconf service discovery/publication.
+ * DPAP share as provided by iPhoto including Zeroconf service discovery/publication.
  * DACP pairing and remote control functions. Jolivia implements serverside and clientside, meaning that you can use Jolivia for remote control but you can also use eg. Apple Remote against it.
  * RAOP Streaming aka. Airport Express emulation.
- * DPAP share.
 
 ## Planned functionality ##
 
@@ -153,6 +154,7 @@ This project has found great inspiration in many projects and the people behind 
  - [JAirPort](https://github.com/froks/JAirPort)
  - [rkapsi/daap](https://github.com/rkapsi/daap)
  - [qtunes](https://launchpad.net/qtunes)
+ - [dmap-parser](https://github.com/mattstevens/dmap-parser)
 
 This project is licensed under the license presented in the license.txt file. Anyone who uses Jolivia in any kind of software - being commercial or not must notify the author and submit a comment on this project site stating its usage and purpose.
 

@@ -16,7 +16,7 @@ import javax.jmdns.ServiceEvent;
 import javax.jmdns.impl.JmDNSImpl;
 
 import org.dyndns.jkiddo.IDiscoverer;
-import org.dyndns.jkiddo.dmap.chunks.control.PairingContainer;
+import org.dyndns.jkiddo.dmcp.chunks.media.PairingContainer;
 import org.dyndns.jkiddo.service.dacp.client.ITouchRemoteResource;
 import org.dyndns.jkiddo.service.dacp.client.TouchRemoteResource;
 import org.dyndns.jkiddo.service.dmap.Util;
