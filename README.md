@@ -25,7 +25,11 @@ I'll just give you a brief introduction to how the DACP protocol works (you can 
 
 The session is your 'remote control' instance. On a session you can do the remote control stuff or eg. traverse the library. See the following code example:
 
-		// As soon as you have entered the pairing code (defaults to '1337') in iTunes the
+	@Test
+	public void usage() throws Exception
+	{
+
+		// As soon as you have entered the pairing code '1337' in iTunes the
 		// registerNewSession will be invoked and the pairing will be stored in
 		// a local db file and in iTunes as well. Clear the pairing in iTunes by
 		// clearing all remotes in iTunes as usual. Clear the pairing in Jolivia
@@ -33,16 +37,20 @@ The session is your 'remote control' instance. On a session you can do the remot
 		// file. Once paired every time you start iTunes this method will be
 		// called. Every time the iTunes instance is
 		// closed the tearDownSession will be invoked.
-		new Jolivia(new IClientSessionListener() {
+		new Jolivia.JoliviaBuilder().clientSessionListener(new IClientSessionListener() {
 
 			private Session session;
 
 			@Override
-			public void tearDownSession(String server, int port) {
+			public void tearDownSession(String server, int port)
+			{
 				// Maybe do some clean up?
-				try {
+				try
+				{
 					session.logout();
-				} catch (Exception e) {
+				}
+				catch(Exception e)
+				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -50,7 +58,8 @@ The session is your 'remote control' instance. On a session you can do the remot
 
 			@SuppressWarnings("unused")
 			@Override
-			public void registerNewSession(Session session) throws Exception {
+			public void registerNewSession(Session session) throws Exception
+			{
 
 				// Showcase on some actions you can do on a session ...
 				// ////////////////////////////////////////
@@ -64,35 +73,28 @@ The session is your 'remote control' instance. On a session you can do the remot
 
 				// Get all playlists. For now the playlists only contains the
 				// master playlist. This is to be expanded
-				Collection<Container> playlists = itunesDatabase
-						.getContainers();
+				Collection<Container> playlists = itunesDatabase.getContainers();
 
 				// Traverse the library for eg. all tracks
-				for (SongArtist artist : this.session.getLibrary()
-						.getAllArtists().getBrowseArtistListing()
-						.getSongArtists()) {
+				for(SongArtist artist : this.session.getLibrary().getAllArtists().getBrowseArtistListing().getSongArtists())
+				{
 					System.out.println(artist.getValue());
 				}
 
+				long itemId = 0;
+
 				// Extract information from a generic listing
-				for (ListingItem item : this.session.getLibrary()
-						.getAllTracks().getListing().getListingItems()) {
-					System.out.println(item.getSpecificChunk(SongAlbum.class)
-							.getValue());
-					System.out.println(item.getSpecificChunk(SongArtist.class)
-							.getValue());
-					System.out.println(item.getSpecificChunk(SongTime.class)
-							.getValue());
-					System.out.println(item.getSpecificChunk(
-							SongTrackNumber.class).getValue());
-					System.out.println(item.getSpecificChunk(
-							SongUserRating.class).getValue());
-					System.out.println(item.getSpecificChunk(ItemName.class)
-							.getValue());
-					System.out.println(item.getSpecificChunk(ItemKind.class)
-							.getValue());
-					System.out.println(item.getSpecificChunk(ItemId.class)
-							.getValue());
+				for(ListingItem item : this.session.getLibrary().getAllTracks().getListing().getListingItems())
+				{
+					System.out.println(item.getSpecificChunk(SongAlbum.class).getValue());
+					System.out.println(item.getSpecificChunk(SongArtist.class).getValue());
+					System.out.println(item.getSpecificChunk(SongTime.class).getValue());
+					System.out.println(item.getSpecificChunk(SongTrackNumber.class).getValue());
+					System.out.println(item.getSpecificChunk(SongUserRating.class).getValue());
+					System.out.println(item.getSpecificChunk(ItemName.class).getValue());
+					System.out.println(item.getSpecificChunk(ItemKind.class).getValue());
+					System.out.println(item.getSpecificChunk(ItemId.class).getValue());
+					itemId = item.getSpecificChunk(ItemId.class).getValue();
 				}
 
 				// Showcase on some actions you can do on speakers ...
@@ -102,6 +104,8 @@ The session is your 'remote control' instance. On a session you can do the remot
 				remoteControl.setVolume(0);
 				// Set max volume
 				remoteControl.setVolume(100);
+
+				remoteControl.setVolume(0);
 				// Get the master volume
 				remoteControl.getMasterVolume();
 
@@ -110,7 +114,8 @@ The session is your 'remote control' instance. On a session you can do the remot
 
 				// Mark all speakers active meaning they are prepared for being
 				// used for the iTunes instance
-				for (Speaker s : speakers) {
+				for(Speaker s : speakers)
+				{
 					s.setActive(true);
 				}
 				// Assign all the active speakers to the iTunes instance. This
@@ -119,12 +124,15 @@ The session is your 'remote control' instance. On a session you can do the remot
 
 				// Change the volume individually on each speaker
 				speakers = remoteControl.getSpeakers();
-				for (Speaker s : speakers) {
-					remoteControl.setSpeakerVolume(s.getId(), 60, 50, 40, 30,
-							100);
+				for(Speaker s : speakers)
+				{
+					remoteControl.setSpeakerVolume(s.getId(), 60, 50, 40, 30, 100);
 				}
+
+				session.getLibrary().getAlbumArtwork(itemId, 320, 320);
+				session.getRemoteControl().fetchCover(320, 320);
 			}
-		});
+		}).build();
 	}
 
 ## Current functionality ##
