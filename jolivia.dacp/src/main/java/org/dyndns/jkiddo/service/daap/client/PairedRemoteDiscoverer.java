@@ -11,8 +11,6 @@
 package org.dyndns.jkiddo.service.daap.client;
 
 import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -35,7 +33,6 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 	public static final Logger logger = LoggerFactory.getLogger(PairedRemoteDiscoverer.class);
 
 	private JmmDNS mDNS;
-	private final Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
 	private IPairingDatabase database;
 	private IClientSessionListener clientSessionListener;
 
@@ -60,8 +57,13 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 	@Override
 	public void serviceRemoved(ServiceEvent event)
 	{
-		logger.debug("REMOVE: " + event.getName());
-		this.clientSessionListener.tearDownSession(event.getInfo().getServer(), event.getInfo().getPort());
+		logger.info("REMOVE: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
+		final String code = database.findCode(event.getInfo().getName());
+		if(code != null)
+		{
+			logger.debug("Unpairing ... ");
+			this.clientSessionListener.tearDownSession(event.getInfo().getServer(), event.getInfo().getPort());	
+		}
 	}
 
 	@Override
@@ -105,7 +107,6 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 		mdns.addServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
 		mdns.addServiceListener(ITouchAbleServerResource.DACP_TYPE, this);
 		mdns.addServiceListener(ITouchRemoteResource.TOUCH_REMOTE_CLIENT, this);
-		interfaces.put(mdns, address);
 	}
 
 	@Override
@@ -116,6 +117,5 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 		mdns.removeServiceListener(ITouchAbleServerResource.DACP_TYPE, this);
 		mdns.removeServiceListener(ITouchRemoteResource.TOUCH_REMOTE_CLIENT, this);
 		mdns.unregisterAllServices();
-		interfaces.remove(mdns);
 	}
 }
