@@ -18,9 +18,9 @@ import org.dyndns.jkiddo.dmap.chunks.audio.SongFormat;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongSampleRate;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion;
 import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod.PasswordMethod;
+import org.dyndns.jkiddo.dmap.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmap.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmap.chunks.media.MediaProtocolVersion;
-import org.dyndns.jkiddo.dmap.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader.IMusicItem;
@@ -64,6 +64,13 @@ public class MusicItemManager implements IItemManager
 				item.addChunk(new ItemName(iMusicItem.getTitle()));
 				item.addChunk(new SongFormat(SongFormat.MP3));
 				item.addChunk(new SongSampleRate(SongSampleRate.KHZ_44100));
+				
+				//if musicItem has album art remember the following:
+				//
+				//new SongExtraData(1);
+				//new ArtworkChecksum(); 4 bytes
+				//new SongArtworkCount(1);
+
 				return item;
 			}
 		});

@@ -58,7 +58,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("login")
 	@GET
-	public Response login(@QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException
+	public Response login(@QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		String s = Thread.currentThread().getId() + "";
 		LoginResponse loginResponse = new LoginResponse();
@@ -70,7 +70,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("update")
 	@GET
-	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
+	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		String s = Thread.currentThread().getId() + "";
 		if(revisionNumber == delta || revisionNumber == itemManager.getRevision(s, sessionId))
@@ -86,7 +86,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("databases")
 	@GET
-	public Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
+	public Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		ServerDatabases serverDatabases = new ServerDatabases();
 		serverDatabases.add(new Status(200));
@@ -129,7 +129,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("databases/{databaseId}/containers")
 	@GET
-	public Response containers(@PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
+	public Response containers(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		Collection<Container> containers = itemManager.getDatabase(databaseId).getContainers();
 		Iterable<String> parameters = DmapUtil.parseMeta(meta);
@@ -201,7 +201,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("databases/{databaseId}/containers/{containerId}/items")
 	@GET
-	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
+	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		// switch on type - for DPAP type is 'photo'
 		// dpap:

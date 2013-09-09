@@ -4,6 +4,7 @@ import org.dyndns.jkiddo.dmap.chunks.UShortChunk;
 
 public class SongExtraData extends UShortChunk
 {
+	// 1 = album art
 	public SongExtraData()
 	{
 		this(0);

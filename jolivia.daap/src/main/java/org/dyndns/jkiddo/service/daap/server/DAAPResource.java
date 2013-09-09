@@ -123,7 +123,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	@Override
 	@Path("server-info")
 	@GET
-	public Response serverInfo() throws IOException
+	public Response serverInfo(@QueryParam("hsgid") String hsgid) throws IOException
 	{
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 
@@ -226,7 +226,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	@Override
 	@Path("databases/{databaseId}/items")
 	@GET
-	public Response items(@PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query) throws IOException
+	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		// dpap: limited by query
 		// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:2810','dmap.itemid:2811','dmap.itemid:2812','dmap.itemid:2813','dmap.itemid:2814','dmap.itemid:2815','dmap.itemid:2816','dmap.itemid:2817','dmap.itemid:2818','dmap.itemid:2819','dmap.itemid:2820','dmap.itemid:2821','dmap.itemid:2822','dmap.itemid:2823','dmap.itemid:2824','dmap.itemid:2825','dmap.itemid:2826','dmap.itemid:2827','dmap.itemid:2851','dmap.itemid:2852')
@@ -305,9 +305,10 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	}
 
 	@Override
-	@Path("databases/{databaseId}/groups/{groupdId}/extra_data/artwork")
+	//@Path("databases/{databaseId}/groups/{groupdId}/extra_data/artwork")
+	@Path("databases/{databaseId}/items/{groupdId}/extra_data/artwork")
 	@GET
-	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("groupId") long groupId, @QueryParam("session-id") long sessionId, @QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("group-type") String group_type) throws IOException
+	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("groupId") long groupId, @QueryParam("session-id") long sessionId, @QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("group-type") String group_type, @QueryParam("daapSecInfo") String daapSecInfo) throws IOException
 	{
 		throw new NotImplementedException();
 	}
@@ -315,10 +316,10 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	@Override
 	@Path("databases/{databaseId}/groups")
 	@GET
-	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws IOException
+	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String groupType, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") long includeSortHeaders, @QueryParam("query") String query, @QueryParam("session-id") long sessionId, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 
-		if("artists".equalsIgnoreCase(group_type))
+		if("artists".equalsIgnoreCase(groupType))
 		{
 			ArtistSearchContainer response = new ArtistSearchContainer();
 			response.add(new Status(200));
@@ -332,7 +333,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 
 			return Util.buildResponse(response, itemManager.getDMAPKey(), name);
 		}
-		else if("albums".equalsIgnoreCase(group_type))
+		else if("albums".equalsIgnoreCase(groupType))
 		{
 			AlbumSearchContainer response = new AlbumSearchContainer();
 			response.add(new Status(200));

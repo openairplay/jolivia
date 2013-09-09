@@ -1,5 +1,3 @@
-import java.util.NoSuchElementException;
-
 import org.dyndns.jkiddo.dmap.Container;
 import org.dyndns.jkiddo.dmap.Database;
 import org.dyndns.jkiddo.dmap.chunks.audio.BaseContainer;

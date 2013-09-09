@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
+import org.apache.tika.metadata.TikaCoreProperties;
 import org.apache.tika.metadata.XMPDM;
 import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
@@ -86,7 +87,6 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	private IMusicItem populateSong(File file) throws IOException, SAXException, TikaException
 	{
 		BodyContentHandler handler = new BodyContentHandler();
@@ -95,7 +95,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		parser.parse(content, handler, metadata, new ParseContext());
 
 		IMusicItem song = new MusicItem();
-		song.setTitle(metadata.get(Metadata.TITLE));
+		song.setTitle(metadata.get(TikaCoreProperties.TITLE));
 		if(Strings.isNullOrEmpty(song.getTitle()))
 		{
 			song.setTitle(file.getName());
@@ -109,6 +109,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		{
 			logger.debug(e.getMessage(),e);
 		}
+		song.setAlbum(metadata.get(XMPDM.ALBUM));
 		song.setArtist(metadata.get(XMPDM.ARTIST));
 		song.setComposer(metadata.get(XMPDM.COMPOSER));
 		song.setSize(file.length());

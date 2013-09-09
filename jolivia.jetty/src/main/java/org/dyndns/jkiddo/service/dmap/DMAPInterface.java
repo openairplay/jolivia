@@ -99,91 +99,91 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@Path("server-info")
 	@GET
-	public Response serverInfo() throws IOException
+	public Response serverInfo(@QueryParam("hsgid") String hsgid) throws IOException
 	{
-		// if(isRemoteControlRequest(httpServletRequest))
-		// return remoteControlResource.serverInfo();
+		if(isRemoteControlRequest(httpServletRequest))
+			return remoteControlResource.serverInfo(hsgid);
 		if(isDaapRequest(httpServletRequest))
-			return musicLibraryResource.serverInfo();
+			return musicLibraryResource.serverInfo(hsgid);
 		if(isDpapRequest(httpServletRequest))
-			return imageLibraryResource.serverInfo();
+			return imageLibraryResource.serverInfo(hsgid);
 		throw new UnknownClientTypeException();
 	}
 
 	@Override
 	@Path("login")
 	@GET
-	public Response login(@QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value) throws IOException
+	public Response login(@QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		if(isRemoteControlRequest(httpServletRequest))
-			return remoteControlResource.login(guid, value);
+			return remoteControlResource.login(guid, value, hsgid);
 		if(isDaapRequest(httpServletRequest))
-			return musicLibraryResource.login(guid, value);
+			return musicLibraryResource.login(guid, value, hsgid);
 		if(isDpapRequest(httpServletRequest))
-			return imageLibraryResource.login(guid, value);
+			return imageLibraryResource.login(guid, value, hsgid);
 		throw new UnknownClientTypeException();
 	}
 
 	@Override
 	@Path("update")
 	@GET
-	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect) throws IOException
+	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		if(isRemoteControlRequest(httpServletRequest))
 			// return remoteControlResource.update(httpServletRequest, httpServletResponse, info, sessionId, revisionNumber, delta, daapNoDisconnect);
-			return musicLibraryResource.update(sessionId, revisionNumber, delta, daapNoDisconnect);
+			return musicLibraryResource.update(sessionId, revisionNumber, delta, daapNoDisconnect, hsgid);
 		if(isDaapRequest(httpServletRequest))
-			return musicLibraryResource.update(sessionId, revisionNumber, delta, daapNoDisconnect);
+			return musicLibraryResource.update(sessionId, revisionNumber, delta, daapNoDisconnect, hsgid);
 		if(isDpapRequest(httpServletRequest))
-			return imageLibraryResource.update(sessionId, revisionNumber, delta, daapNoDisconnect);
+			return imageLibraryResource.update(sessionId, revisionNumber, delta, daapNoDisconnect, hsgid);
 		throw new UnknownClientTypeException();
 	}
 
 	@Override
 	@Path("databases")
 	@GET
-	public Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta) throws IOException
+	public Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		if(isDaapRequest(httpServletRequest))
-			return musicLibraryResource.databases(sessionId, revisionNumber, delta);
+			return musicLibraryResource.databases(sessionId, revisionNumber, delta, hsgid);
 		if(isDpapRequest(httpServletRequest))
-			return imageLibraryResource.databases(sessionId, revisionNumber, delta);
+			return imageLibraryResource.databases(sessionId, revisionNumber, delta, hsgid);
 		throw new UnknownClientTypeException();
 	}
 
 	@Override
 	@Path("databases/{databaseId}/items")
 	@GET
-	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query) throws IOException
+	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		if(isDaapRequest(httpServletRequest))
-			return musicLibraryResource.items(databaseId, sessionId, revisionNumber, delta, type, meta, query);
+			return musicLibraryResource.items(databaseId, sessionId, revisionNumber, delta, type, meta, query, hsgid);
 		if(isDpapRequest(httpServletRequest))
-			return imageLibraryResource.items(databaseId, sessionId, revisionNumber, delta, type, meta, query);
+			return imageLibraryResource.items(databaseId, sessionId, revisionNumber, delta, type, meta, query, hsgid);
 		throw new UnknownClientTypeException();
 	}
 
 	@Override
 	@Path("databases/{databaseId}/containers")
 	@GET
-	public Response containers(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta) throws IOException
+	public Response containers(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		if(isDaapRequest(httpServletRequest))
-			return musicLibraryResource.containers(databaseId, sessionId, revisionNumber, delta, meta);
+			return musicLibraryResource.containers(databaseId, sessionId, revisionNumber, delta, meta, hsgid);
 		if(isDpapRequest(httpServletRequest))
-			return imageLibraryResource.containers(databaseId, sessionId, revisionNumber, delta, meta);
+			return imageLibraryResource.containers(databaseId, sessionId, revisionNumber, delta, meta, hsgid);
 		throw new UnknownClientTypeException();
 	}
 
 	@Override
 	@Path("databases/{databaseId}/containers/{containerId}/items")
 	@GET
-	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index) throws IOException
+	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		if(isDaapRequest(httpServletRequest))
-			return musicLibraryResource.containerItems(containerId, databaseId, sessionId, revisionNumber, delta, meta, type, group_type, sort, include_sort_headers, query, index);
+			return musicLibraryResource.containerItems(containerId, databaseId, sessionId, revisionNumber, delta, meta, type, group_type, sort, include_sort_headers, query, index, hsgid);
 		if(isDpapRequest(httpServletRequest))
-			return imageLibraryResource.containerItems(containerId, databaseId, sessionId, revisionNumber, delta, meta, type, group_type, sort, include_sort_headers, query, index);
+			return imageLibraryResource.containerItems(containerId, databaseId, sessionId, revisionNumber, delta, meta, type, group_type, sort, include_sort_headers, query, index, hsgid);
 		throw new UnknownClientTypeException();
 	}
 
@@ -232,7 +232,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int/1/pause")
-	public String pause(@QueryParam("session-id") long session_id)
+	public Response pause(@QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.pause(session_id);
 	}
@@ -240,7 +240,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int/1/stop")
-	public String stop(@QueryParam("session-id") long session_id)
+	public Response stop(@QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.stop(session_id);
 	}
@@ -248,7 +248,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int/1/playpause")
-	public String playpause(@QueryParam("session-id") long session_id)
+	public Response playpause(@QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.playpause(session_id);
 	}
@@ -256,7 +256,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int/1/nextitem")
-	public String nextitem(@QueryParam("session-id") long session_id)
+	public Response nextitem(@QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.nextitem(session_id);
 	}
@@ -264,7 +264,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int/1/previtem")
-	public String previtem(@QueryParam("session-id") long session_id)
+	public Response previtem(@QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.previtem(session_id);
 	}
@@ -272,7 +272,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int/1/playlist")
-	public String playlist(@QueryParam("session-id") long session_id)
+	public Response playlist(@QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.playlist(session_id);
 	}
@@ -280,23 +280,23 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int/1/playstatusupdate")
-	public Response playstatusupdate(@QueryParam("revision-number") long revisionNumber, @QueryParam("session-id") long session_id) throws IOException
+	public Response playstatusupdate(@QueryParam("revision-number") long revisionNumber, @QueryParam("session-id") long session_id, @QueryParam("hsgid") String hsgid) throws IOException
 	{
-		return remoteControlResource.playstatusupdate(revisionNumber, session_id);
+		return remoteControlResource.playstatusupdate(revisionNumber, session_id, hsgid);
 	}
 
 	@Override
 	@GET
 	@Path("ctrl-int/1/getspeakers")
-	public Response getspeakers(@QueryParam("session-id") long session_id) throws IOException
+	public Response getspeakers(@QueryParam("session-id") long session_id, @QueryParam("hsgid") String hsgid) throws IOException
 	{
-		return remoteControlResource.getspeakers(session_id);
+		return remoteControlResource.getspeakers(session_id, hsgid);
 	}
 
 	@Override
 	@GET
 	@Path("ctrl-int/1/setspeakers")
-	public String setspeakers(@QueryParam("speaker-id") String speaker_id, @QueryParam("session-id") long session_id)
+	public Response setspeakers(@QueryParam("speaker-id") String speaker_id, @QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.setspeakers(speaker_id, session_id);
 	}
@@ -304,7 +304,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int/1/playspec")
-	public String playspec(@QueryParam("container-item-spec") String container_item_spec, @QueryParam("item-spec") String item_spec, @QueryParam("container-spec") String container_spec, @QueryParam("dacp.shufflestate") String dacp_shufflestate, @QueryParam("database-spec") String database_spec, @QueryParam("playlist-spec") String playlist_spec, @QueryParam("session-id") long session_id)
+	public Response playspec(@QueryParam("container-item-spec") String container_item_spec, @QueryParam("item-spec") String item_spec, @QueryParam("container-spec") String container_spec, @QueryParam("dacp.shufflestate") String dacp_shufflestate, @QueryParam("database-spec") String database_spec, @QueryParam("playlist-spec") String playlist_spec, @QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.playspec(container_item_spec, item_spec, container_spec, dacp_shufflestate, database_spec, playlist_spec, session_id);
 	}
@@ -312,17 +312,17 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@Path("databases/{databaseId}/groups")
 	@GET
-	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers) throws IOException
+	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String groupType, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") long includeSortHeaders, @QueryParam("query") String query, @QueryParam("session-id") long sessionId, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		if(isDaapRequest(httpServletRequest))
-			return musicLibraryResource.groups(databaseId, sessionId, meta, type, group_type, sort, include_sort_headers);
+			return musicLibraryResource.groups(databaseId, meta, type, groupType, sort, includeSortHeaders, query, sessionId, hsgid);
 		throw new UnknownClientTypeException();
 	}
 
 	@Override
 	@GET
 	@Path("ctrl-int/1/setproperty")
-	public String setproperty(@Context UriInfo uriInfo, @QueryParam("dmcp.volume") String dmcpVolume, @QueryParam("dacp.playingtime") String dacpPlayingtime, @QueryParam("dacp.shufflestate") String dacpShufflestate, @QueryParam("dacp.repeatstate") String dacpRepeatstate, @QueryParam("session-id") long session_id)
+	public Response setproperty(@Context UriInfo uriInfo, @QueryParam("dmcp.volume") String dmcpVolume, @QueryParam("dacp.playingtime") String dacpPlayingtime, @QueryParam("dacp.shufflestate") String dacpShufflestate, @QueryParam("dacp.repeatstate") String dacpRepeatstate, @QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.setproperty(uriInfo, dmcpVolume, dacpPlayingtime, dacpShufflestate, dacpRepeatstate, session_id);
 	}
@@ -330,15 +330,15 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int/1/getproperty")
-	public Response getproperty(@Context UriInfo uriInfo, @QueryParam("properties") String properties, @QueryParam("session-id") long session_id) throws IOException
+	public Response getproperty(@Context UriInfo uriInfo, @QueryParam("properties") String properties, @QueryParam("session-id") long session_id, @QueryParam("hsgid") String hsgid) throws IOException
 	{
-		return remoteControlResource.getproperty(uriInfo, properties, session_id);
+		return remoteControlResource.getproperty(uriInfo, properties, session_id, hsgid);
 	}
 
 	@Override
 	@GET
 	@Path("ctrl-int/1/cue")
-	public String cue(@QueryParam("commmand") String command, @QueryParam("query") String query, @QueryParam("index") String index, @QueryParam("sort") String sort, @QueryParam("session-id") long session_id)
+	public Response cue(@QueryParam("commmand") String command, @QueryParam("query") String query, @QueryParam("index") String index, @QueryParam("sort") String sort, @QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.cue(command, query, index, sort, session_id);
 	}
@@ -346,15 +346,15 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int/1/nowplayingartwork")
-	public String nowplayingartwork(@QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("session-id") long session_id)
+	public Response nowplayingartwork(@QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("session-id") long session_id, @QueryParam("hsgid") String hsgid)
 	{
-		return remoteControlResource.nowplayingartwork(mw, mh, session_id);
+		return remoteControlResource.nowplayingartwork(mw, mh, session_id, hsgid);
 	}
 
 	@Override
 	@GET
 	@Path("ctrl-int/1/set-genius-seed")
-	public String editGenius(@QueryParam("database-spec") String database_spec, @QueryParam("item-spec") String item_spec, @QueryParam("session-id") long session_id)
+	public Response editGenius(@QueryParam("database-spec") String database_spec, @QueryParam("item-spec") String item_spec, @QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.editGenius(database_spec, item_spec, session_id);
 	}
@@ -362,7 +362,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@Path("databases/{databaseId}/edit")
 	@GET
-	public String editPlaylist(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("action") String action, @QueryParam("edit-params") String edit_params) throws IOException
+	public Response editPlaylist(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("action") String action, @QueryParam("edit-params") String edit_params) throws IOException
 	{
 		return remoteControlResource.editPlaylist(databaseId, sessionId, action, edit_params);
 	}
@@ -370,24 +370,24 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Override
 	@GET
 	@Path("ctrl-int/1/playqueue-contents")
-	public String playQueueContents(@QueryParam("span") int span, @QueryParam("session-id") long session_id)
+	public Response playQueueContents(@QueryParam("span") int span, @QueryParam("session-id") long session_id)
 	{
 		return remoteControlResource.playQueueContents(span, session_id);
 	}
 	@Override
 	@GET
 	@Path("fp-setup")
-	public String fpSetup(@QueryParam("session-id") long session_id)
+	public Response fpSetup(@QueryParam("session-id") long session_id, @QueryParam("hsgid") String hsgid)
 	{
-		return remoteControlResource.fpSetup(session_id);
+		return remoteControlResource.fpSetup(session_id, hsgid);
 	}
 
 	@Override
 	@GET
 	@Path("ctrl-int")
-	public Response ctrlInt(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse) throws IOException
+	public Response ctrlInt(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("hsgid") String hsgid) throws IOException
 	{
-		return remoteControlResource.ctrlInt(httpServletRequest, httpServletResponse);
+		return remoteControlResource.ctrlInt(httpServletRequest, httpServletResponse, hsgid);
 	}
 
 	@Override
@@ -399,12 +399,13 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	}
 
 	@Override
-	@Path("databases/{databaseId}/groups/{groupdId}/extra_data/artwork")
+	// @Path("databases/{databaseId}/groups/{groupdId}/extra_data/artwork")
+	@Path("databases/{databaseId}/items/{groupdId}/extra_data/artwork")
 	@GET
-	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("groupId") long groupId, @QueryParam("session-id") long sessionId, @QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("group-type") String group_type) throws IOException
+	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("groupId") long groupId, @QueryParam("session-id") long sessionId, @QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("group-type") String group_type, @QueryParam("daapSecInfo") String daapSecInfo) throws IOException
 	{
 		if(isDaapRequest(httpServletRequest))
-			return musicLibraryResource.artwork(databaseId, groupId, sessionId, mw, mh, group_type);
+			return musicLibraryResource.artwork(databaseId, groupId, sessionId, mw, mh, group_type, daapSecInfo);
 		throw new UnknownClientTypeException();
 	}
 
@@ -414,5 +415,23 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	public Response closeConnection() throws IOException
 	{
 		return imageLibraryResource.closeConnection();
+	}
+
+	@Override
+	@GET
+	@Path("home-share-verify")
+	public Response homeShareVerify(@QueryParam("session-id") long session_id, @QueryParam("hsgid") String hsgid, @QueryParam("hspid") String hspid)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	@Path("databases/{databaseId}/containers/{containerId}/items")
+	@GET
+	public Response items(@PathParam("databaseId") long databaseId, @PathParam("containerId") long containerId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("sort") String sort, @QueryParam("query") String query, @QueryParam("include-sort-headers") long includeSortHeaders, @QueryParam("hsgid") String hsgid, @QueryParam("session-id") long sessionId) throws IOException
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

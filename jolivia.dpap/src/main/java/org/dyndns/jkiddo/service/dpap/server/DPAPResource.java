@@ -73,7 +73,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	@Override
 	@Path("server-info")
 	@GET
-	public Response serverInfo() throws IOException
+	public Response serverInfo(@QueryParam("hsgid") String hsgid) throws IOException
 	{
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 		serverInfoResponse.add(new Status(200));
@@ -107,7 +107,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	@Override
 	@Path("databases/{databaseId}/items")
 	@GET
-	public Response items(@PathParam("databaseId") final long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query) throws IOException
+	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		// dpap: limited by query
 		// GET dpap://192.168.1.2:8770/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:2770','dmap.itemid:2771','dmap.itemid:2772','dmap.itemid:2773','dmap.itemid:2774','dmap.itemid:2775','dmap.itemid:2776','dmap.itemid:2777','dmap.itemid:2778','dmap.itemid:2779','dmap.itemid:2780','dmap.itemid:2781','dmap.itemid:2782','dmap.itemid:2783','dmap.itemid:2784','dmap.itemid:2785','dmap.itemid:2786','dmap.itemid:2787','dmap.itemid:2788','dmap.itemid:2789') HTTP/1.1
@@ -118,7 +118,6 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 
 		Collection<MediaItem> items = getMediaItems(databaseId, query);
 		Collection<String> metaParameters = DmapUtil.parseMeta(meta);
-		boolean isThumbRequest = metaParameters.contains("dpap.thumb");
 
 		DatabaseItems databaseItems = new DatabaseItems();
 
