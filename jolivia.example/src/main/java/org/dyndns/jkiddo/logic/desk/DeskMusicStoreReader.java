@@ -41,10 +41,17 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 {
 	private static final Logger logger = LoggerFactory.getLogger(DeskMusicStoreReader.class);
 	private Map<IMusicItem, File> mapOfSongToFile;
-	private String path;
+	private File path;
 	private Parser parser;
 
 	public DeskMusicStoreReader(String path)
+	{
+		parser = new AutoDetectParser();
+		this.mapOfSongToFile = new HashMap<IMusicItem, File>();
+		this.path = new File(path);
+	}
+
+	public DeskMusicStoreReader(File path)
 	{
 		parser = new AutoDetectParser();
 		this.mapOfSongToFile = new HashMap<IMusicItem, File>();
@@ -62,11 +69,11 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	{
 		try
 		{
-			traverseRootPathRecursively(new File(path));
+			traverseRootPathRecursively(path);
 		}
 		catch(Exception e)
 		{
-			logger.info(e.getMessage(),e);
+			logger.info(e.getMessage(), e);
 		}
 		return Collections.unmodifiableSet(mapOfSongToFile.keySet());
 	}
@@ -107,7 +114,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 		catch(Exception e)
 		{
-			logger.debug(e.getMessage(),e);
+			logger.debug(e.getMessage(), e);
 		}
 		song.setAlbum(metadata.get(XMPDM.ALBUM));
 		song.setArtist(metadata.get(XMPDM.ARTIST));
@@ -121,7 +128,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 		catch(Exception e)
 		{
-			logger.debug(e.getMessage(),e);
+			logger.debug(e.getMessage(), e);
 		}
 		return song;
 	}

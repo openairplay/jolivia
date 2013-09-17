@@ -43,12 +43,14 @@ public abstract class MDNSResource implements NetworkTopologyListener
 	// http://www.dns-sd.org/ServiceTypes.html
 	abstract protected ServiceInfo getServiceInfoToRegister();
 
-	protected void cleanup()
+	//protected void cleanup()
+	public void deRegister()
 	{
 		this.mDNS.unregisterAllServices();
 	}
 
-	protected synchronized void signUp() throws IOException
+	//protected synchronized void signUp() throws IOException
+	public synchronized void register() throws IOException
 	{
 		serviceInfo = getServiceInfoToRegister();
 		mDNS.registerService(serviceInfo);

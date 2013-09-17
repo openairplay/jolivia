@@ -86,7 +86,7 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 		this.name = applicationName;
 		this.mDNS.addServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
 		this.mDNS.addNetworkTopologyListener(this);
-		this.signUp();
+		this.register();
 	}
 
 	@Override
@@ -157,7 +157,7 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 			{
 				database.updateCode(event.getInfo().getName(), null);
 				// Seems like someone removed our pairing ... make a re-announcement
-				this.signUp();
+				this.register();
 			}
 		}
 		catch(IOException e)

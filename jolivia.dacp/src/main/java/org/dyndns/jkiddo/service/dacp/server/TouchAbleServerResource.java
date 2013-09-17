@@ -89,7 +89,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 		super(mDNS, port);
 		this.name = applicationName;
 		this.serviceGuid = Util.toServiceGuid(applicationName);
-		this.signUp();
+		this.register();
 	}
 
 	@Override
@@ -401,7 +401,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@Path("databases/{databaseId}/containers/{containerId}/items")
 	@GET
-	public Response items(@PathParam("databaseId") long databaseId, @PathParam("containerId") long containerId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("sort") String sort, @QueryParam("query") String query, @QueryParam("include-sort-headers") long includeSortHeaders, @QueryParam("hsgid") String hsgid, @QueryParam("session-id") long sessionId) throws IOException
+	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 		// TODO Auto-generated method stub
 		return null;

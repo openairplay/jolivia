@@ -26,7 +26,7 @@ public class AirTunesResourceWrapper extends MDNSResource
 	{
 		super(mDNS, port);
 		this.name = applicationName;
-		this.signUp();
+		this.register();
 	}
 
 	// https://code.google.com/p/open-airplay/wiki/Protocol
@@ -45,11 +45,5 @@ public class AirTunesResourceWrapper extends MDNSResource
 		map.put("vv", "1");
 
 		return ServiceInfo.create(AIRPLAY, name, this.port, 0, 0, map);
-	}
-
-	@Override
-	protected void cleanup()
-	{
-		super.cleanup();
 	}
 }

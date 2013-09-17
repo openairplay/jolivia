@@ -425,13 +425,4 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	@Path("databases/{databaseId}/containers/{containerId}/items")
-	@GET
-	public Response items(@PathParam("databaseId") long databaseId, @PathParam("containerId") long containerId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("sort") String sort, @QueryParam("query") String query, @QueryParam("include-sort-headers") long includeSortHeaders, @QueryParam("hsgid") String hsgid, @QueryParam("session-id") long sessionId) throws IOException
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

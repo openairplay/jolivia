@@ -49,7 +49,7 @@ public class RAOPResourceWrapper extends MDNSResource
 		super(mDNS, port);
 		this.playingInformation = iPlayingInformation;
 		this.name = applicationName;
-		this.signUp();
+		this.register();
 		
 		SimpleChannelUpstreamHandler channel = new SimpleChannelUpstreamHandler() {
 			@Override
@@ -115,9 +115,9 @@ public class RAOPResourceWrapper extends MDNSResource
 	}
 
 	@Override
-	protected void cleanup()
+	public void deRegister()
 	{
-		super.cleanup();
+		super.deRegister();
 		allChannels.close().awaitUninterruptibly();
 		executorService.shutdown();
 		channelExecutionHandler.releaseExternalResources();

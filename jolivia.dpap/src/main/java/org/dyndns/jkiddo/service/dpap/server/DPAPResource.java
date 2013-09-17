@@ -67,7 +67,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	{
 		super(mDNS, port, itemManager);
 		this.name = applicationName;
-		this.signUp();
+		this.register();
 	}
 
 	@Override
