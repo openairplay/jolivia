@@ -31,6 +31,8 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
 import org.dyndns.jkiddo.logic.desk.GoogleStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -42,7 +44,9 @@ import java.util.concurrent.Executors;
 public class Window
 {
 
-	private JFrame frmJolivia;
+	static Logger logger = LoggerFactory.getLogger(Window.class);
+	
+	private JFrame mainFormJolivia;
 	private JTextField txtUsername;
 	private JPasswordField pwdPassword;
 	private JTextField textField;
@@ -72,11 +76,11 @@ public class Window
 						}
 					}
 					Window window = new Window();
-					window.frmJolivia.setVisible(true);
+					window.mainFormJolivia.setVisible(true);
 				}
 				catch(Exception e)
 				{
-					e.printStackTrace();
+					logger.error(e.getMessage(),e);
 				}
 			}
 		});
@@ -98,12 +102,12 @@ public class Window
 	 */
 	private void initialize()
 	{
-		frmJolivia = new JFrame();
-		frmJolivia.setTitle("Jolivia");
-		frmJolivia.setResizable(false);
-		frmJolivia.setBounds(100, 100, 450, 258);
-		frmJolivia.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frmJolivia.getContentPane().setLayout(null);
+		mainFormJolivia = new JFrame();
+		mainFormJolivia.setTitle("Jolivia");
+		mainFormJolivia.setResizable(false);
+		mainFormJolivia.setBounds(100, 100, 450, 258);
+		mainFormJolivia.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mainFormJolivia.getContentPane().setLayout(null);
 
 		chckbxUseGoogleMusic = new JCheckBox("Use Google Music as backend");
 		chckbxUseGoogleMusic.addItemListener(new ItemListener() {
@@ -126,34 +130,34 @@ public class Window
 			}
 		});
 		chckbxUseGoogleMusic.setBounds(21, 22, 200, 18);
-		frmJolivia.getContentPane().add(chckbxUseGoogleMusic);
+		mainFormJolivia.getContentPane().add(chckbxUseGoogleMusic);
 
 		txtUsername = new JTextField();
 		txtUsername.setEnabled(false);
 		txtUsername.setToolTipText("Username");
 		txtUsername.setBounds(87, 52, 122, 28);
-		frmJolivia.getContentPane().add(txtUsername);
+		mainFormJolivia.getContentPane().add(txtUsername);
 		txtUsername.setColumns(10);
 
 		pwdPassword = new JPasswordField();
 		pwdPassword.setEnabled(false);
 		pwdPassword.setToolTipText("Password");
 		pwdPassword.setBounds(87, 80, 122, 28);
-		frmJolivia.getContentPane().add(pwdPassword);
+		mainFormJolivia.getContentPane().add(pwdPassword);
 
 		JLabel lblNewLabel = new JLabel("Username:");
 		lblNewLabel.setBounds(6, 58, 69, 16);
-		frmJolivia.getContentPane().add(lblNewLabel);
+		mainFormJolivia.getContentPane().add(lblNewLabel);
 
 		JLabel lblNewLabel_1 = new JLabel("Password:");
 		lblNewLabel_1.setBounds(6, 86, 69, 16);
-		frmJolivia.getContentPane().add(lblNewLabel_1);
+		mainFormJolivia.getContentPane().add(lblNewLabel_1);
 
 		btnNewButton = new JButton("Select path");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e)
 			{
-				int returnVal = fc.showDialog(frmJolivia, "Here");
+				int returnVal = fc.showDialog(mainFormJolivia, "Here");
 				if(returnVal == JFileChooser.APPROVE_OPTION)
 				{
 					path = fc.getSelectedFile();
@@ -162,18 +166,18 @@ public class Window
 			}
 		});
 		btnNewButton.setBounds(87, 120, 122, 28);
-		frmJolivia.getContentPane().add(btnNewButton);
+		mainFormJolivia.getContentPane().add(btnNewButton);
 
 		textField = new JTextField();
 		textField.setEditable(false);
 		textField.setBounds(87, 150, 315, 28);
-		frmJolivia.getContentPane().add(textField);
+		mainFormJolivia.getContentPane().add(textField);
 		textField.setColumns(10);
 		textField.setText(path.getAbsolutePath());
 
 		JLabel lblPath = new JLabel("Path:");
 		lblPath.setBounds(47, 156, 28, 16);
-		frmJolivia.getContentPane().add(lblPath);
+		mainFormJolivia.getContentPane().add(lblPath);
 
 		btnNewButton_1 = new JButton("AWESOMENESS!");
 		btnNewButton_1.addActionListener(new ActionListener() {
@@ -210,9 +214,9 @@ public class Window
 						{
 							handleInvalidCredentials();
 						}
-						catch(Exception ee)
+						catch(Exception e)
 						{
-							ee.printStackTrace();
+							logger.error(e.getMessage(),e);
 							onShutdown();
 						}
 					}
@@ -220,13 +224,13 @@ public class Window
 			}
 		});
 		btnNewButton_1.setBounds(87, 184, 315, 34);
-		frmJolivia.getContentPane().add(btnNewButton_1);
+		mainFormJolivia.getContentPane().add(btnNewButton_1);
 		setupGui();
 	}
 
 	private void handleInvalidCredentials()
 	{
-		JOptionPane.showMessageDialog(frmJolivia, "Don't! - Do it more right ...");
+		JOptionPane.showMessageDialog(mainFormJolivia, "Don't! - Do it more right ...");
 		btnNewButton_1.setText("AWESOMENESS!");
 		btnNewButton_1.setEnabled(true);
 		txtUsername.setEnabled(true);
@@ -328,7 +332,7 @@ public class Window
 		}
 		catch(Exception e)
 		{
-			// logger.info("Running headless", e);
+			logger.error(e.getMessage(),e);
 		}
 	}
 
