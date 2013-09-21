@@ -1,6 +1,6 @@
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.ULongChunk;
+import org.dyndns.jkiddo.dmp.chunks.ULongChunk;
 
 public class SongLongSize extends ULongChunk
 {

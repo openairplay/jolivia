@@ -2,9 +2,9 @@ package org.dyndns.jkiddo.service.dmap;
 
 import java.util.Collection;
 
-import org.dyndns.jkiddo.dmap.Database;
-import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
-import org.dyndns.jkiddo.dmap.chunks.media.AuthenticationMethod;
+import org.dyndns.jkiddo.dmp.Database;
+import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
+import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod;
 
 public interface IItemManager
 {

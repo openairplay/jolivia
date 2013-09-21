@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.StringChunk;
+import org.dyndns.jkiddo.dmp.chunks.StringChunk;
 
 /**
  * The genre of the Song. You can either use the pre-defined genres like ALTERNATIVE, JAZZ etc. or you can use your custom genres.

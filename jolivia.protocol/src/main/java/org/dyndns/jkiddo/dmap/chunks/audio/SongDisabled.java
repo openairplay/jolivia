@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.BooleanChunk;
+import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
 
 /**
  * Enables or disables the Song. Default is enabled. iTunes shows this as the small checkbox next to the Song name.

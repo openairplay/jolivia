@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmcp.chunks.media.extension;
 
-import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
+import org.dyndns.jkiddo.dmp.chunks.UByteChunk;
 
 public class UnknownQU extends UByteChunk
 {

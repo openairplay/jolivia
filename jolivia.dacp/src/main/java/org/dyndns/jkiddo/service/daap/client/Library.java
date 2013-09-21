@@ -41,7 +41,7 @@ import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseBrowse;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
 import org.dyndns.jkiddo.dmap.chunks.audio.ItemsContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongUserRating;
-import org.dyndns.jkiddo.dmap.chunks.media.ListingItem;
+import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

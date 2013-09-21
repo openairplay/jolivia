@@ -1,6 +1,6 @@
 package test;
 
-import org.dyndns.jkiddo.dmap.Database;
+import org.dyndns.jkiddo.dmp.Database;
 import org.dyndns.jkiddo.service.daap.client.RequestHelper;
 import org.dyndns.jkiddo.service.daap.client.Session;
 

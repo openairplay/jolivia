@@ -1,8 +1,8 @@
 package org.dyndns.jkiddo.dmcp.chunks.media;
 import java.util.Collection;
 
-import org.dyndns.jkiddo.dmap.chunks.Chunk;
-import org.dyndns.jkiddo.dmap.chunks.ContainerChunk;
+import org.dyndns.jkiddo.dmp.chunks.Chunk;
+import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
 
 public class PairingContainer extends ContainerChunk {
 

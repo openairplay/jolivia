@@ -1,6 +1,6 @@
 package org.dyndns.jkiddo.dmcp.chunks.media.extension;
 
-import org.dyndns.jkiddo.dmap.chunks.ULongChunk;
+import org.dyndns.jkiddo.dmp.chunks.ULongChunk;
 
 public class UnknownCESX extends ULongChunk {
 	public UnknownCESX() {

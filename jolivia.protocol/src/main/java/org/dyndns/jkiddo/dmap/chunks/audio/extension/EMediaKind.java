@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
-import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
+import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
 public class EMediaKind extends UIntChunk
 {

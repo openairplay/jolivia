@@ -46,8 +46,8 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
-import org.dyndns.jkiddo.dmap.DmapInputStream;
-import org.dyndns.jkiddo.dmap.chunks.Chunk;
+import org.dyndns.jkiddo.dmp.DmapInputStream;
+import org.dyndns.jkiddo.dmp.chunks.Chunk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

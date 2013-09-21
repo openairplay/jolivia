@@ -36,8 +36,8 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.imageio.ImageIO;
 import javax.ws.rs.core.HttpHeaders;
 
-import org.dyndns.jkiddo.dmap.DmapInputStream;
-import org.dyndns.jkiddo.dmap.chunks.media.ListingItem;
+import org.dyndns.jkiddo.dmp.DmapInputStream;
+import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.raop.server.IPlayingInformation;
 import org.dyndns.jkiddo.service.dmap.Util;
 import org.jboss.netty.bootstrap.ConnectionlessBootstrap;

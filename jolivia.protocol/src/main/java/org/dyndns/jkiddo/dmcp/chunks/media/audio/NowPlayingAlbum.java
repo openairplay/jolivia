@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmcp.chunks.media.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.StringChunk;
+import org.dyndns.jkiddo.dmp.chunks.StringChunk;
 
 public class NowPlayingAlbum extends StringChunk
 {

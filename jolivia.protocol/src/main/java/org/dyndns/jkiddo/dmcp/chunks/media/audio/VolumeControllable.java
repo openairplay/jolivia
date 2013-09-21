@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmcp.chunks.media.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
+import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
 public class VolumeControllable extends UIntChunk
 {

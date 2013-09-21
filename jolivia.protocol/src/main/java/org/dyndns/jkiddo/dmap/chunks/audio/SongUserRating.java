@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
+import org.dyndns.jkiddo.dmp.chunks.UByteChunk;
 
 /**
  * You can use this class to assign a rating to a Song to indicate how much you like or dislike a Song. iTunes displays this rating as a set of stars.

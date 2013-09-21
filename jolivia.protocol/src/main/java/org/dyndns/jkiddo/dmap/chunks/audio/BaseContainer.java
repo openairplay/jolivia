@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
+import org.dyndns.jkiddo.dmp.chunks.UByteChunk;
 
 /**
  * Indicates if the container is a 'natural root'.

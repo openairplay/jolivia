@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmcp.chunks.media.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.RawChunk;
+import org.dyndns.jkiddo.dmp.chunks.RawChunk;
 
 public class NowPlaying extends RawChunk
 {

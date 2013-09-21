@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.BooleanChunk;
+import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
 
 /**
  * A Song is either part of a compilation or not (default).

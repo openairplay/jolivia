@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.SByteChunk;
+import org.dyndns.jkiddo.dmp.chunks.SByteChunk;
 
 /**
  * The relative loudness of the Song to the main volume adjuster. You can increase or decrease the loundness by +/- 100%.

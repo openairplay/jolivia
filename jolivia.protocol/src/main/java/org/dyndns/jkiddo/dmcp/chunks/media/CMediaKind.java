@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmcp.chunks.media;
 
-import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
+import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
 public class CMediaKind extends UIntChunk
 {

@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.StringChunk;
+import org.dyndns.jkiddo.dmp.chunks.StringChunk;
 
 /**
  * This is the description of the Song format and not of the song! For example is the description of a MP3 file 'MPEG audio file'.

@@ -1,6 +1,6 @@
 package org.dyndns.jkiddo.dmcp.chunks.media;
 
-import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
+import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 
 public class MediaControlProtocolVersion extends VersionChunk
 {

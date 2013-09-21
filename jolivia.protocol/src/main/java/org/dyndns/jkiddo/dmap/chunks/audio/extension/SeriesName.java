@@ -1,6 +1,6 @@
 package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
-import org.dyndns.jkiddo.dmap.chunks.StringChunk;
+import org.dyndns.jkiddo.dmp.chunks.StringChunk;
 
 public class SeriesName extends StringChunk
 {

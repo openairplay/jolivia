@@ -1,6 +1,6 @@
 package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
-import org.dyndns.jkiddo.dmap.chunks.UByteChunk;
+import org.dyndns.jkiddo.dmp.chunks.UByteChunk;
 
 public class SupportsFairPlay extends UByteChunk
 {

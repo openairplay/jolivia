@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmcp.chunks.media.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.BooleanChunk;
+import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
 
 public class UnknownSU extends BooleanChunk
 {

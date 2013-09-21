@@ -10,8 +10,6 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmcp.chunks.media;
 
-import org.dyndns.jkiddo.dmap.chunks.Chunk;
-import org.dyndns.jkiddo.dmap.chunks.ContainerChunk;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbumId;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.FullscreenStatus;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.NowPlaying;
@@ -26,6 +24,8 @@ import org.dyndns.jkiddo.dmcp.chunks.media.audio.RepeatStatus;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.ShuffleStatus;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.VisualizerStatus;
 import org.dyndns.jkiddo.dmcp.chunks.media.extension.GeniusSelectable;
+import org.dyndns.jkiddo.dmp.chunks.Chunk;
+import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
 
 public class PlayingStatus extends ContainerChunk
 {

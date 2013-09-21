@@ -27,10 +27,10 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.ContainerChunk;
-import org.dyndns.jkiddo.dmap.chunks.media.Listing;
-import org.dyndns.jkiddo.dmap.chunks.media.ReturnedCount;
-import org.dyndns.jkiddo.dmap.chunks.media.SpecifiedTotalCount;
+import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
+import org.dyndns.jkiddo.dmp.chunks.media.Listing;
+import org.dyndns.jkiddo.dmp.chunks.media.ReturnedCount;
+import org.dyndns.jkiddo.dmp.chunks.media.SpecifiedTotalCount;
 
 /**
  * Container for the <tt>/databases/id/containers/id/items</tt> request

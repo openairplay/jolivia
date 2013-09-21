@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
-import org.dyndns.jkiddo.dmap.chunks.BooleanChunk;
+import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
 
 /**
  * Used by Playlist to mark itself as smart or not smart (default). The only difference is a slightly different icon.

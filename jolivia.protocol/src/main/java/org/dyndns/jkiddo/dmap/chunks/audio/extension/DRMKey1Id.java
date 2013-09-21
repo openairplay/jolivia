@@ -1,6 +1,6 @@
 package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
-import org.dyndns.jkiddo.dmap.chunks.ULongChunk;
+import org.dyndns.jkiddo.dmp.chunks.ULongChunk;
 
 public class DRMKey1Id extends ULongChunk
 {

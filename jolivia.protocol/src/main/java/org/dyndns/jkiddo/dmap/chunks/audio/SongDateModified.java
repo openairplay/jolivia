@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.DateChunk;
+import org.dyndns.jkiddo.dmp.chunks.DateChunk;
 
 /**
  * The date when the Song was modified. Date is the difference between the current time and midnight, January 1, 1970 UTC in <u>seconds</u>! <code>int date = (int)(System.currentTimeMillis()/1000);</code>

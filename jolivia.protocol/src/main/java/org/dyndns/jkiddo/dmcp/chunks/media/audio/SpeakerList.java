@@ -10,8 +10,8 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmcp.chunks.media.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.ContainerChunk;
-import org.dyndns.jkiddo.dmap.chunks.media.Dictionary;
+import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
+import org.dyndns.jkiddo.dmp.chunks.media.Dictionary;
 
 public class SpeakerList extends ContainerChunk
 {

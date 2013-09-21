@@ -1,6 +1,6 @@
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.ContainerChunk;
+import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
 
 public class ArtistSearchContainer extends ContainerChunk {
 	public ArtistSearchContainer() {

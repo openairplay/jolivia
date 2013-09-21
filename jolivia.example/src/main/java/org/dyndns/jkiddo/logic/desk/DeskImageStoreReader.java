@@ -14,7 +14,7 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-import org.dyndns.jkiddo.dmap.DmapUtil;
+import org.dyndns.jkiddo.dmp.DmapUtil;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

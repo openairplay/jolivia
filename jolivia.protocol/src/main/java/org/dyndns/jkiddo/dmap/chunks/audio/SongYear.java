@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.UShortChunk;
+import org.dyndns.jkiddo.dmp.chunks.UShortChunk;
 
 /**
  * The year when the Song was released.

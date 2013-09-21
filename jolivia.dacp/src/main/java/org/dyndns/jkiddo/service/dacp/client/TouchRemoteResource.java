@@ -36,11 +36,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.dyndns.jkiddo.IDiscoverer;
-import org.dyndns.jkiddo.dmap.DmapUtil;
 import org.dyndns.jkiddo.dmcp.chunks.media.DeviceName;
 import org.dyndns.jkiddo.dmcp.chunks.media.DeviceType;
 import org.dyndns.jkiddo.dmcp.chunks.media.PairingContainer;
 import org.dyndns.jkiddo.dmcp.chunks.media.PairingGuid;
+import org.dyndns.jkiddo.dmp.DmapUtil;
 import org.dyndns.jkiddo.service.dacp.server.ITouchAbleServerResource;
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.dyndns.jkiddo.service.dmap.Util;

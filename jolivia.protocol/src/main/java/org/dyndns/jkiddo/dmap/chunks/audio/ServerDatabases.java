@@ -27,8 +27,8 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.ContainerChunk;
-import org.dyndns.jkiddo.dmap.chunks.media.Listing;
+import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
+import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 
 /**
  * Container for the <tt>/databases</tt> request

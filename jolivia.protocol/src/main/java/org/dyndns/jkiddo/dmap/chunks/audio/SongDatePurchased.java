@@ -1,6 +1,6 @@
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.DateChunk;
+import org.dyndns.jkiddo.dmp.chunks.DateChunk;
 
 public class SongDatePurchased extends DateChunk
 {

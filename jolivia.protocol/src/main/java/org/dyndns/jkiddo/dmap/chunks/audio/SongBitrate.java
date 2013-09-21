@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.UShortChunk;
+import org.dyndns.jkiddo.dmp.chunks.UShortChunk;
 
 /**
  * The bitrate of this song in kilo bits per second (kbps).

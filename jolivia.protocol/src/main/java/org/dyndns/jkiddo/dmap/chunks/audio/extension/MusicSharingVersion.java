@@ -27,8 +27,8 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
-import org.dyndns.jkiddo.dmap.chunks.UIntChunk;
-import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
+import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
+import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 
 /**
  * Unknown purpose. Is for some reason derivated from signed int. Should be a VersionChunk!

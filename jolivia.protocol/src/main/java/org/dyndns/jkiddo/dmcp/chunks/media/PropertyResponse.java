@@ -10,7 +10,7 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmcp.chunks.media;
 
-import org.dyndns.jkiddo.dmap.chunks.ContainerChunk;
+import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
 
 public class PropertyResponse extends ContainerChunk
 {

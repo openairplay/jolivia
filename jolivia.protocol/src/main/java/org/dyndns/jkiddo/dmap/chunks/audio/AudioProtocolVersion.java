@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmap.chunks.VersionChunk;
+import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 
 /**
  * The protocol version of DAAP. See Library for more information!

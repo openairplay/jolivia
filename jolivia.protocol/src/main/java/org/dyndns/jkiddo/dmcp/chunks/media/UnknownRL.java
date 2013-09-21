@@ -1,6 +1,6 @@
 package org.dyndns.jkiddo.dmcp.chunks.media;
 
-import org.dyndns.jkiddo.dmap.chunks.BooleanChunk;
+import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
 
 public class UnknownRL extends BooleanChunk {
 	public UnknownRL() {
