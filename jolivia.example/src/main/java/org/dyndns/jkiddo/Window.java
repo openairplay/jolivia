@@ -212,7 +212,8 @@ public class Window
 						}
 						catch(InvalidCredentialsException ice)
 						{
-							handleInvalidCredentials();
+							JOptionPane.showMessageDialog(mainFormJolivia, "Don't! - Do it more right ..." + ice.getMessage());
+							resetGuiState();
 						}
 						catch(Exception e)
 						{
@@ -228,9 +229,8 @@ public class Window
 		setupGui();
 	}
 
-	private void handleInvalidCredentials()
+	private void resetGuiState()
 	{
-		JOptionPane.showMessageDialog(mainFormJolivia, "Don't! - Do it more right ...");
 		btnNewButton_1.setText("AWESOMENESS!");
 		btnNewButton_1.setEnabled(true);
 		txtUsername.setEnabled(true);
