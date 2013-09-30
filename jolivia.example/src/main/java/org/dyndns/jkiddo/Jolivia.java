@@ -27,6 +27,7 @@ import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.guice.JoliviaServer;
 import org.dyndns.jkiddo.jetty.extension.DmapConnector;
+import org.dyndns.jkiddo.logic.desk.DeskImageStoreReader;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
 import org.dyndns.jkiddo.logic.desk.GoogleStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
@@ -67,7 +68,8 @@ public class Jolivia
 				reader = new DeskMusicStoreReader();
 				new GReporter("local version");
 			}
-			new Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).musicStoreReader(reader).build();
+			//new Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new DeskImageStoreReader()).build();
+			new Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).imageStoreReader(new DeskImageStoreReader("C:\\Users\\JensKristian\\Dropbox\\Camera Uploads")).build();
 		}
 		catch(Exception e)
 		{

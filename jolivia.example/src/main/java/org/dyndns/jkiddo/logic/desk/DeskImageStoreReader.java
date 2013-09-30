@@ -63,10 +63,15 @@ public class DeskImageStoreReader implements IImageStoreReader
 		if(f.isDirectory())
 		{
 			File[] contents = f.listFiles();
-			for(int i = 0; i < contents.length; i++)
+			if(contents != null)
 			{
-				traverseRootPathRecursively(contents[i]);
+				for(int i = 0; i < contents.length; i++)
+				{
+					traverseRootPathRecursively(contents[i]);
+				}
 			}
+			else
+				logger.debug("Symlink'ish ... " + f.getAbsolutePath());
 		}
 		else if(isImage(f))
 		{

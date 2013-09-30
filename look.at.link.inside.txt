@@ -1,5 +1,0 @@
-
-
-
-
-+  { "ipsa", DMAP_DICT, "dpap.iphotoslideshowadvancedoptions" },
