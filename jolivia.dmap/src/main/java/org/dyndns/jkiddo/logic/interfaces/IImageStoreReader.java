@@ -33,5 +33,9 @@ public interface IImageStoreReader
 		int getRating();
 
 		Date getCreationDate();
+		
+		int getImageWidth();
+		
+		int getImageHeight();
 	}
 }

@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Collections;
 import java.util.Date;
@@ -13,6 +14,8 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
+
+import net.coobird.thumbnailator.Thumbnails;
 
 import org.dyndns.jkiddo.dmp.DmapUtil;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
@@ -58,7 +61,7 @@ public class DeskImageStoreReader implements IImageStoreReader
 		return false;
 	}
 
-	private void traverseRootPathRecursively(File f)
+	private void traverseRootPathRecursively(File f) throws IOException
 	{
 		if(f.isDirectory())
 		{
@@ -79,8 +82,9 @@ public class DeskImageStoreReader implements IImageStoreReader
 		}
 	}
 
-	private IImageItem populateImage(final File f)
+	private IImageItem populateImage(final File f) throws IOException
 	{
+		final BufferedImage image = ImageIO.read(f);
 		return new IImageItem() {
 			@Override
 			public String getImageFilename()
@@ -111,6 +115,18 @@ public class DeskImageStoreReader implements IImageStoreReader
 			{
 				return new Date();
 			}
+
+			@Override
+			public int getImageWidth()
+			{
+				return image.getWidth();
+			}
+
+			@Override
+			public int getImageHeight()
+			{
+				return image.getHeight();
+			}
 		};
 	}
 	@Override
@@ -125,6 +141,13 @@ public class DeskImageStoreReader implements IImageStoreReader
 
 	@Override
 	public byte[] getImageThumb(IImageItem iimage) throws Exception
+	{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		Thumbnails.of(getImage(iimage).toURL()).size(360, 360).outputFormat("jpg").toOutputStream(baos);
+		return baos.toByteArray();
+	}
+
+	private byte[] getImageThumbOld(IImageItem iimage) throws Exception
 	{
 		byte[] array = DmapUtil.uriTobuffer(getImage(iimage));
 

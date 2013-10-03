@@ -4,7 +4,6 @@ import java.awt.FlowLayout;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.util.Collection;
-import java.util.List;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
@@ -17,17 +16,11 @@ import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseContainerns;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
 import org.dyndns.jkiddo.dmap.chunks.audio.ItemsContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.ServerDatabases;
-import org.dyndns.jkiddo.dmp.Container;
 import org.dyndns.jkiddo.dmp.Database;
-import org.dyndns.jkiddo.dmp.chunks.Chunk;
-import org.dyndns.jkiddo.dmp.chunks.media.DatabaseShareType;
-import org.dyndns.jkiddo.dmp.chunks.media.ItemCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
-import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.dmp.chunks.media.LoginResponse;
-import org.dyndns.jkiddo.dmp.chunks.media.PersistentId;
 import org.dyndns.jkiddo.dmp.chunks.media.ServerInfoResponse;
 import org.dyndns.jkiddo.dpap.chunks.picture.FileData;
 import org.dyndns.jkiddo.service.daap.client.RequestHelper;
@@ -35,10 +28,8 @@ import org.junit.Test;
 
 import com.google.common.base.Function;
 import com.google.common.base.Joiner;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
-import com.google.gdata.util.common.base.Join;
 
 public class TestImage
 {
@@ -51,6 +42,7 @@ public class TestImage
 	public TestImage()
 	{
 		host = "192.168.1.75";
+//		host = "localhost";
 		port = 8770;
 	}
 
@@ -115,7 +107,6 @@ public class TestImage
 				frame.setVisible(true);
 			}
 		}
-		//
 	}
 
 	private String getRequestBase()

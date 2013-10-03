@@ -54,25 +54,25 @@ public class ImageItemManager implements IItemManager
 				// dpap:
 				// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/containers/5292/items?session-id=1101478641&meta=dpap.aspectratio,dmap.itemid,dmap.itemname,dpap.imagefilename,dpap.imagefilesize,dpap.creationdate,dpap.imagepixelwidth,dpap.imagepixelheight,dpap.imageformat,dpap.imagerating,dpap.imagecomments,dpap.imagelargefilesize&type=photo
 				MediaItem item = new MediaItem(new ItemKind(ItemKind.IMAGE));
-				item.addChunk(new AspectRatio("1.5"));
+				item.addChunk(new AspectRatio(((double) iImageItem.getImageWidth() / iImageItem.getImageHeight()) + ""));
 				item.addChunk(new CreationDate(iImageItem.getCreationDate().getTime()));
 				item.addChunk(new ImageFilename(iImageItem.getImageFilename()));
 				item.addChunk(new ItemName(iImageItem.getImageFilename()));
 				item.addChunk(new ImageFileSize(iImageItem.getSize()));
-				item.addChunk(new ImagePixelWidth());
-				item.addChunk(new ImagePixelHeight());
+				item.addChunk(new ImagePixelWidth(iImageItem.getImageWidth()));
+				item.addChunk(new ImagePixelHeight(iImageItem.getImageHeight()));
 				item.addChunk(new ImageFormat(iImageItem.getFormat()));
 				item.addChunk(new ImageRating(iImageItem.getRating()));
 				item.addChunk(new ImageLargeFileSize(iImageItem.getSize()));
 				item.addChunk(new ImageComment("This photo is served by Jolivia"));
-//				try
-//				{
-//					item.addChunk(new FileData(iImageItem.getImageThumb()));
-//				}
-//				catch(Exception e)
-//				{
-//					e.printStackTrace();
-//				}
+				// try
+				// {
+				// item.addChunk(new FileData(iImageItem.getImageThumb()));
+				// }
+				// catch(Exception e)
+				// {
+				// e.printStackTrace();
+				// }
 
 				return item;
 			}
@@ -164,7 +164,7 @@ public class ImageItemManager implements IItemManager
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	public byte[] getThumb(long databaseId, long itemId)
 	{
 		MediaItem image = library.getDatabase(databaseId).getMasterContainer().getItem(itemId);

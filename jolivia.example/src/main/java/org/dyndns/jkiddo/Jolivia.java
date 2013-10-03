@@ -69,7 +69,7 @@ public class Jolivia
 				new GReporter("local version");
 			}
 			//new Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new DeskImageStoreReader()).build();
-			new Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).imageStoreReader(new DeskImageStoreReader("C:\\Users\\JensKristian\\Dropbox\\Camera Uploads")).build();
+			new Jolivia.JoliviaBuilder().port(8770).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new DeskImageStoreReader("C:\\Users\\JensKristian\\Desktop\\test")).build();
 		}
 		catch(Exception e)
 		{

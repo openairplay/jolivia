@@ -191,14 +191,35 @@ public final class DmapUtil
 			String token = tok.nextToken();
 
 			// Must be the fist! See DAAP documentation for more info!
-			if(!flag && token.equals("dmap.itemkind"))
+			// if(!flag && token.equals("dmap.itemkind"))
+			// {
+			// list.add(0, token);
+			// flag = true;
+			// }
+			// else
+			// {
+			list.add(token);
+			// }
+		}
+		boolean noItemKind = true;
+		if(list.contains("dmap.itemkind"))
+		{
+			list.remove("dmap.itemkind");
+			list.add(0, "dmap.itemkind");
+			noItemKind = false;
+		}
+		if(list.contains("dmap.itemid"))
+		{
+			if(list.size() > 1)
 			{
-				list.add(0, token);
-				flag = true;
-			}
-			else
-			{
-				list.add(token);
+				list.remove("dmap.itemid");
+				int index = 1;
+				if(noItemKind)
+				{
+					index = 0;
+				}
+
+				list.add(index, "dmap.itemid");
 			}
 		}
 		return Collections.unmodifiableCollection(list);
@@ -615,7 +636,7 @@ public final class DmapUtil
 	// }
 	// return false;
 	// }
-	
+
 	public static byte[] uriTobuffer(URI uri) throws IOException
 	{
 		ByteArrayOutputStream bais = new ByteArrayOutputStream();
