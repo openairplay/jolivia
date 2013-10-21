@@ -13,8 +13,15 @@ import java.awt.PopupMenu;
 import java.awt.SystemTray;
 import java.awt.TextArea;
 import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -34,33 +41,31 @@ import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.io.File;
-import java.net.URL;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import com.google.gdata.util.ServiceException;
 
 public class Window
 {
 
 	static Logger logger = LoggerFactory.getLogger(Window.class);
 	
-	private JFrame mainFormJolivia;
-	private JTextField txtUsername;
-	private JPasswordField pwdPassword;
-	private JTextField textField;
-	private JButton btnNewButton;
-	private JFileChooser fc;
-	private JButton btnNewButton_1;
-	protected File path = new File(System.getProperty("user.home"));
-	protected ExecutorService executor;
+	final private JFrame mainFormJolivia;
+	final private JTextField txtUsername = new JTextField();
+	final private JPasswordField pwdPassword = new JPasswordField();
+	final private JTextField textField;
+	final private JButton btnNewButton;
+	final private JFileChooser fc;
+	final private JButton btnNewButton_1;
+	private File path = new File(System.getProperty("user.home"));
 	private JCheckBox chckbxUseGoogleMusic;
+	private ExecutorService executor;
+	private Jolivia jolivia;
 
 	/**
 	 * Launch the application.
+	 * @throws ServiceException 
+	 * @throws IOException 
 	 */
-	public static void main(String[] args)
+	public static void main(final String[] args) throws IOException, ServiceException
 	{
 		EventQueue.invokeLater(new Runnable() {
 			public void run()
@@ -75,8 +80,7 @@ public class Window
 							break;
 						}
 					}
-					Window window = new Window();
-					window.mainFormJolivia.setVisible(true);
+					new Window(args);
 				}
 				catch(Exception e)
 				{
@@ -84,30 +88,37 @@ public class Window
 				}
 			}
 		});
+		
+		
 	}
 
 	/**
 	 * Create the application.
+	 * @throws ServiceException 
+	 * @throws IOException 
 	 */
-	public Window()
+	public Window(String ... args ) throws IOException, ServiceException
 	{
+		if(args.length == 2)
+		{
+			txtUsername.setText(args[0]);
+			pwdPassword.setText(args[1]);
+			new GReporter(args[0]);
+		}
+		else
+		{
+			new GReporter("local version");
+		}
 		executor = Executors.newSingleThreadExecutor();
 		fc = new JFileChooser(System.getProperty("user.home"));
 		fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		initialize();
-	}
-
-	/**
-	 * Initialize the contents of the frame.
-	 */
-	private void initialize()
-	{
 		mainFormJolivia = new JFrame();
 		mainFormJolivia.setTitle("Jolivia");
 		mainFormJolivia.setResizable(false);
 		mainFormJolivia.setBounds(100, 100, 450, 258);
 		mainFormJolivia.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFormJolivia.getContentPane().setLayout(null);
+		mainFormJolivia.setVisible(true);
 
 		chckbxUseGoogleMusic = new JCheckBox("Use Google Music as backend");
 		chckbxUseGoogleMusic.addItemListener(new ItemListener() {
@@ -132,14 +143,13 @@ public class Window
 		chckbxUseGoogleMusic.setBounds(21, 22, 200, 18);
 		mainFormJolivia.getContentPane().add(chckbxUseGoogleMusic);
 
-		txtUsername = new JTextField();
+		
 		txtUsername.setEnabled(false);
 		txtUsername.setToolTipText("Username");
 		txtUsername.setBounds(87, 52, 122, 28);
 		mainFormJolivia.getContentPane().add(txtUsername);
 		txtUsername.setColumns(10);
 
-		pwdPassword = new JPasswordField();
 		pwdPassword.setEnabled(false);
 		pwdPassword.setToolTipText("Password");
 		pwdPassword.setBounds(87, 80, 122, 28);
@@ -181,9 +191,15 @@ public class Window
 
 		btnNewButton_1 = new JButton("AWESOMENESS!");
 		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e)
+			public void actionPerformed(ActionEvent actionEvent)
 			{
-				btnNewButton_1.setText("Now go to iTunes!");
+				if(jolivia != null)
+				{
+					jolivia.reRegister();
+					return;
+				}
+				
+				btnNewButton_1.setText("Publishing to all networks");
 				btnNewButton_1.setEnabled(false);
 				txtUsername.setEnabled(false);
 				pwdPassword.setEnabled(false);
@@ -208,7 +224,9 @@ public class Window
 								reader = new DeskMusicStoreReader(path);
 								new GReporter("local version");
 							}
-							new Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).musicStoreReader(reader).build();
+							jolivia = new Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).musicStoreReader(reader).build();
+							btnNewButton_1.setText("Reregister to networks");
+							btnNewButton_1.setEnabled(true);
 						}
 						catch(InvalidCredentialsException ice)
 						{

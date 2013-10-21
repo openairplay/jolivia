@@ -10,11 +10,12 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.logic.interfaces;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.Date;
 import java.util.Set;
 
-public interface IImageStoreReader
+public interface IImageStoreReader extends Serializable
 {
 	public Set<IImageItem> readImages() throws Exception;
 

@@ -50,7 +50,7 @@ public class ProxyFilter implements Filter
 		Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
 		while(headerNames.hasMoreElements())
 		{
-			String headerName = (String) headerNames.nextElement();
+			String headerName = headerNames.nextElement();
 			logger.info((headerName + ": " + httpServletRequest.getHeader(headerName)));
 		}
 

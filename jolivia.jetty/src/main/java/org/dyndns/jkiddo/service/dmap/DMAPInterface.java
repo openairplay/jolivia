@@ -91,7 +91,7 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 
 	@Path("favicon.ico")
 	@GET
-	public Response favicon() throws IOException
+	public Response favicon()
 	{
 		return Response.noContent().build();
 	}

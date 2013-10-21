@@ -244,6 +244,8 @@ public class Jolivia
 		}
 	}
 
+	private final JoliviaServer joliviaServer;
+
 	private Jolivia(JoliviaBuilder builder) throws Exception
 	{
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
@@ -263,15 +265,21 @@ public class Jolivia
 
 		// Guice
 		ServletContextHandler sch = new ServletContextHandler(server, "/");
-		sch.addEventListener(new JoliviaServer(builder.port, builder.airplayPort, builder.pairingCode, builder.name, builder.clientSessionListener, builder.speakerListener, builder.imageStoreReader, builder.musicStoreReader, builder.iplayingInformation));
+		joliviaServer = new JoliviaServer(builder.port, builder.airplayPort, builder.pairingCode, builder.name, builder.clientSessionListener, builder.speakerListener, builder.imageStoreReader, builder.musicStoreReader, builder.iplayingInformation);
+		sch.addEventListener(joliviaServer);
 		sch.addFilter(GuiceFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 		sch.addServlet(DefaultServlet.class, "/");
 
 		server.start();
 		logger.info(builder.name + " started");
-		server.join();
+//		server.join();
 	}
-
+	
+	public void reRegister()
+	{
+		this.joliviaServer.reRegister();
+	}
+	
 	
 	/*
 	 * @Override public void update(Observable arg0, Object arg1) { if(trayIcon != null) { trayIcon.displayMessage(null, arg1.toString(), MessageType.INFO); } }
