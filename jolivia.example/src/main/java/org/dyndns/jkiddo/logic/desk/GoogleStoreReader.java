@@ -40,9 +40,10 @@ public class GoogleStoreReader implements IMusicStoreReader
 		for(Song song : set)
 		{
 			MusicItem mi = new MusicItem();
-			mi.setArtist(mi.getArtist());
+			mi.setArtist(song.getArtist());
 			mi.setAlbum(song.getAlbum());
 			mi.setTitle(song.getName());
+			mi.setDuration(song.getDurationMillis());
 			items.put(mi, song);
 		}
 		return items;
@@ -62,6 +63,7 @@ public class GoogleStoreReader implements IMusicStoreReader
 		private String artist;
 		private String album;
 		private String title;
+		private long duration;
 
 		@Override
 		public String getArtist()
@@ -141,6 +143,16 @@ public class GoogleStoreReader implements IMusicStoreReader
 		public void setTitle(String title)
 		{
 			this.title = title;
+		}
+
+		@Override
+		public long getDuration() {
+			return duration;
+		}
+
+		@Override
+		public void setDuration(long value) {
+			duration = value;			
 		}
 	}
 }

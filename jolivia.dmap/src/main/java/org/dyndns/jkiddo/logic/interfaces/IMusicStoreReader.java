@@ -45,5 +45,9 @@ public interface IMusicStoreReader extends Serializable
 		void setYear(int Year);
 
 		void setSize(long size);
+
+		long getDuration();
+		
+		void setDuration(long value);
 	}
 }
