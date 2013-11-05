@@ -41,9 +41,11 @@ public class TestImage
 
 	public TestImage()
 	{
-		host = "192.168.1.75";
-//		host = "localhost";
-		port = 8770;
+//		host = "192.168.1.75";
+		host = "192.168.1.26";
+		// host = "localhost";
+		 port = 8770;
+//		port = 5000;
 	}
 
 	@Test
@@ -80,7 +82,11 @@ public class TestImage
 				return "'dmap.itemid:" + input.getSpecificChunk(ItemId.class).getValue() + "'";
 			}
 		});
+		
+//		itemIds = Lists.newArrayList("'dmap.itemid:1024'","'dmap.itemid:1025'","'dmap.itemid:1026'");
+
 		String queryIds = Joiner.on(",").join(itemIds);
+		
 		// Get thumbs
 		DatabaseItems queriedItem = RequestHelper.requestParsed(String.format("%s/databases/%d/items?session-id=%s&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=(" + queryIds + ")", this.getRequestBase(), databaseId, this.sessionId));
 		for(ListingItem li : queriedItem.getListing().getListingItems())
@@ -107,6 +113,7 @@ public class TestImage
 				frame.setVisible(true);
 			}
 		}
+		System.out.println("Done");
 	}
 
 	private String getRequestBase()

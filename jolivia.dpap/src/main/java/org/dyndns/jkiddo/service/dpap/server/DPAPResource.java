@@ -132,7 +132,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 			ListingItem listingItem = new ListingItem();
 
 			listingItem.add(item.getChunk("dmap.itemkind"));
-
+			
 			for(String key : metaParameters)
 			{
 				Chunk chunk = item.getChunk(key);
@@ -155,24 +155,24 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 				}
 				else
 					logger.info("Unknown chunk type: " + key);
-//					if("dpap.filedata".equals(chunk.getName()) && !isThumbRequest)
-//					{
-//						listingItem.add(new FileData(itemManager.getItemAsByteArray(databaseId, ((ItemId) item.getChunk("dmap.itemid")).getUnsignedValue())));
-//					}
-//					else if("dpap.filedata".equals(chunk.getName()) && isThumbRequest)
-//					{
-//						listingItem.add(new FileData(itemManager.getThumb(databaseId, ((ItemId) item.getChunk("dmap.itemid")).getUnsignedValue())));
-//					}
-//					else
-//				}
-//				else
-//				{
-//					if(isThumbRequest && "dpap.thumb".equals(key))
-//						continue;
-//					if(!isThumbRequest && "dpap.hires".equals(key))
-//						continue;
-//					logger.info("Unknown chunk type: " + key);
-//				}
+				// if("dpap.filedata".equals(chunk.getName()) && !isThumbRequest)
+				// {
+				// listingItem.add(new FileData(itemManager.getItemAsByteArray(databaseId, ((ItemId) item.getChunk("dmap.itemid")).getUnsignedValue())));
+				// }
+				// else if("dpap.filedata".equals(chunk.getName()) && isThumbRequest)
+				// {
+				// listingItem.add(new FileData(itemManager.getThumb(databaseId, ((ItemId) item.getChunk("dmap.itemid")).getUnsignedValue())));
+				// }
+				// else
+				// }
+				// else
+				// {
+				// if(isThumbRequest && "dpap.thumb".equals(key))
+				// continue;
+				// if(!isThumbRequest && "dpap.hires".equals(key))
+				// continue;
+				// logger.info("Unknown chunk type: " + key);
+				// }
 			}
 
 			listing.add(listingItem);
