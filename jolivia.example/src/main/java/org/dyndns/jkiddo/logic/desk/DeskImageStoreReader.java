@@ -24,6 +24,10 @@ import org.slf4j.LoggerFactory;
 
 public class DeskImageStoreReader implements IImageStoreReader
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3205613907987224359L;
 	private static final Logger logger = LoggerFactory.getLogger(DeskImageStoreReader.class);
 	private Map<IImageItem, File> mapOfImageToFile;
 	private String path;

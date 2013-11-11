@@ -39,6 +39,10 @@ import com.google.common.base.Strings;
 
 public class DeskMusicStoreReader implements IMusicStoreReader
 {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6305893445667053678L;
 	private static final Logger logger = LoggerFactory.getLogger(DeskMusicStoreReader.class);
 	private Map<IMusicItem, File> mapOfSongToFile;
 	private File path;
@@ -127,6 +131,14 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		song.setSize(file.length());
 		try
 		{
+			song.setDuration((long)Double.parseDouble(metadata.get(XMPDM.DURATION)));
+		}
+		catch(Exception e)
+		{
+			logger.debug(e.getMessage(), e);
+		}
+		try
+		{
 			Calendar c = Calendar.getInstance();
 			c.setTime(metadata.getDate(XMPDM.SHOT_DATE));
 			song.setYear(c.get(Calendar.YEAR));
@@ -159,6 +171,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		private String artist;
 		private String album;
 		private String title;
+		private long duration;
 
 		public String getTitle()
 		{
@@ -237,6 +250,16 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		{
 			// TODO Auto-generated method stub
 			return 0;
+		}
+
+		@Override
+		public long getDuration() {
+			return duration;
+		}
+
+		@Override
+		public void setDuration(long value) {
+			duration = value;
 		}
 
 	}

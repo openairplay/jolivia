@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.guice;
 
+import java.io.IOException;
+
 import javax.jmdns.JmmDNS;
 
 import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
@@ -33,6 +35,7 @@ import org.dyndns.jkiddo.service.dacp.server.ITouchAbleServerResource;
 import org.dyndns.jkiddo.service.dacp.server.TouchAbleServerResource;
 import org.dyndns.jkiddo.service.dmap.CustomByteArrayProvider;
 import org.dyndns.jkiddo.service.dmap.DMAPInterface;
+import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.dyndns.jkiddo.service.dmap.Util;
 import org.dyndns.jkiddo.service.dpap.server.DPAPResource;
 import org.dyndns.jkiddo.service.dpap.server.IImageLibrary;
@@ -77,6 +80,21 @@ public class JoliviaServer extends GuiceServletContextListener
 		this.imageStoreReader = imageStoreReader;
 		this.iplayingInformation = iplayingInformation;
 	}
+	
+	public void reRegister()
+	{
+		try {
+			((MDNSResource)this.getInjector().getInstance(IImageLibrary.class)).register();
+			((MDNSResource)this.getInjector().getInstance(IMusicLibrary.class)).register();
+			((MDNSResource)this.getInjector().getInstance(ITouchRemoteResource.class)).register();
+			((MDNSResource)this.getInjector().getInstance(ITouchAbleServerResource.class)).register();
+			((MDNSResource)this.getInjector().getInstance(RAOPResourceWrapper.class)).register();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	protected Injector getInjector()
 	{

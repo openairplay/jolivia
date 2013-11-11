@@ -16,7 +16,6 @@ import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseContainerns;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
 import org.dyndns.jkiddo.dmap.chunks.audio.ItemsContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.ServerDatabases;
-import org.dyndns.jkiddo.dmp.Database;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
@@ -37,7 +36,6 @@ public class TestImage
 	private String host;
 	private Integer port;
 	private Integer sessionId;
-	private Database database;
 
 	public TestImage()
 	{

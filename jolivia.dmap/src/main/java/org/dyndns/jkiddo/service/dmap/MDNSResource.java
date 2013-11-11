@@ -54,10 +54,10 @@ public abstract class MDNSResource implements NetworkTopologyListener
 	{
 		serviceInfo = getServiceInfoToRegister();
 		mDNS.registerService(serviceInfo);
-		for(JmDNS mdns : interfaces.keySet())
-		{
-			mdns.registerService(serviceInfo);
-		}
+//		for(JmDNS mdns : interfaces.keySet())
+//		{
+//			mdns.registerService(serviceInfo);
+//		}
 		this.mDNS.addNetworkTopologyListener(this);
 	}
 

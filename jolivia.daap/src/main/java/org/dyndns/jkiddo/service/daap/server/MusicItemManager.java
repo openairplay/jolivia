@@ -11,6 +11,7 @@ import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongFormat;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongSampleRate;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongTime;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion;
 import org.dyndns.jkiddo.dmp.Database;
 import org.dyndns.jkiddo.dmp.DmapUtil;
@@ -64,7 +65,7 @@ public class MusicItemManager implements IItemManager
 				item.addChunk(new ItemName(iMusicItem.getTitle()));
 				item.addChunk(new SongFormat(SongFormat.MP3));
 				item.addChunk(new SongSampleRate(SongSampleRate.KHZ_44100));
-				
+				item.addChunk(new SongTime(iMusicItem.getDuration()));
 				//if musicItem has album art remember the following:
 				//
 				//new SongExtraData(1);
