@@ -42,10 +42,12 @@ public class ImageItemManager implements IItemManager
 	private final Library library;
 	private final IImageStoreReader reader;
 	private final Map<MediaItem, IImageItem> itemToIImageItem;
+	private PasswordMethod authentication;
 
 	@Inject
-	public ImageItemManager(@Named(Util.APPLICATION_NAME) String applicationName, final IImageStoreReader reader) throws Exception
+	public ImageItemManager(@Named(Util.APPLICATION_NAME) String applicationName, final IImageStoreReader reader, final PasswordMethod authentication) throws Exception
 	{
+		this.authentication = authentication;
 		this.reader = reader;
 		this.itemToIImageItem = Maps.uniqueIndex(reader.readImages(), new Function<IImageItem, MediaItem>() {
 			@Override
@@ -87,7 +89,7 @@ public class ImageItemManager implements IItemManager
 	@Override
 	public PasswordMethod getAuthenticationMethod()
 	{
-		return PasswordMethod.NO_PASSWORD;
+		return this.authentication;
 	}
 
 	@Override

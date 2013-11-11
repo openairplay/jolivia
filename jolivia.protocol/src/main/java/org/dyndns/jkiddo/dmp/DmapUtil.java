@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -93,7 +95,7 @@ public final class DmapUtil
 	public static final int MPRO_VERSION_200 = 0x00020000;
 
 	/** Default DAAP realm */
-	static final String DAAP_REALM = "daap";
+	public static final String DAAP_REALM = "daap";
 
 	private DmapUtil()
 	{}
@@ -182,13 +184,13 @@ public final class DmapUtil
 			return Collections.emptyList();
 		// Iterable<String> params = Splitter.on(',').split(meta);
 
-		StringTokenizer tok = new StringTokenizer(meta, ",");
-		List<String> list = new ArrayList<String>(tok.countTokens());
-		boolean flag = false;
+		StringTokenizer tokens = new StringTokenizer(meta, ",");
+		List<String> list = new ArrayList<String>(tokens.countTokens());
+//		boolean flag = false;
 
-		while(tok.hasMoreTokens())
+		while(tokens.hasMoreTokens())
 		{
-			String token = tok.nextToken();
+			String token = tokens.nextToken();
 
 			// Must be the fist! See DAAP documentation for more info!
 			// if(!flag && token.equals("dmap.itemkind"))
@@ -387,18 +389,18 @@ public final class DmapUtil
 	/**
 	 * String to byte Array
 	 */
-	public static byte[] getBytes(String s, String charsetName)
-	{
-		try
-		{
-			return s.getBytes(charsetName);
-		}
-		catch(UnsupportedEncodingException e)
-		{
-			// should never happen
-			throw new RuntimeException(e);
-		}
-	}
+//	public static byte[] getBytes(String s, String charsetName)
+//	{
+//		try
+//		{
+//			return s.getBytes(charsetName);
+//		}
+//		catch(UnsupportedEncodingException e)
+//		{
+//			// should never happen
+//			throw new RuntimeException(e);
+//		}
+//	}
 	//
 	// /**
 	// * Byte Array to String
@@ -508,10 +510,34 @@ public final class DmapUtil
 	/**
 	 * Creates a random nonce
 	 */
-	// public static String nonce()
-	// {
-	// return DigestScheme.createCnonce();
-	// }
+
+	 
+	 public static String nonce() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+		          
+		  return encode(MessageDigest.getInstance("MD5").digest(Long.toString(System.currentTimeMillis()).getBytes("US-ASCII")));
+		 }
+	 
+	 private static String encode(byte[] binaryData) {
+		 
+		 
+		          if (binaryData.length != 16) {
+		              return null;
+		          } 
+		  
+		          char[] buffer = new char[32];
+		          for (int i = 0; i < 16; i++) {
+		              int low = binaryData[i] & 0x0f;
+		              int high = (binaryData[i] & 0xf0) >> 4;
+		              buffer[i * 2] = HEXADECIMAL[high];
+		              buffer[(i * 2) + 1] = HEXADECIMAL[low];
+		          }
+		  
+		          return new String(buffer);
+		      }
+	 private static final char[] HEXADECIMAL = {
+		   '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 
+		 'e', 'f'
+		 };
 	//
 	// public static byte[] toMD5(String s)
 	// {

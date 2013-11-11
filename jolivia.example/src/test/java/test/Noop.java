@@ -146,11 +146,12 @@ public class Noop
 				{
 					remoteControl.setSpeakerVolume(s.getId(), 60, 50, 40, 30, 100);
 				}
-
+remoteControl.playQueue(50);
 				session.getLibrary().getAlbumArtwork(itemId, 320, 320);
 				session.getRemoteControl().fetchCover(320, 320);
 			}
 		}).build();
+		System.out.println("");
 	}
 
 	@Test

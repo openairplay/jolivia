@@ -30,6 +30,8 @@ public class ProxyFilter implements Filter
 {
 	static Logger logger = LoggerFactory.getLogger(ProxyFilter.class);
 
+	//http://simplapi.wordpress.com/2013/01/24/jersey-jax-rs-implements-a-http-basic-auth-decoder/
+		
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException
 	{

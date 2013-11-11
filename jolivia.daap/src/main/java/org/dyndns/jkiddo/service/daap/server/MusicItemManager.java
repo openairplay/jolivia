@@ -47,9 +47,12 @@ public class MusicItemManager implements IItemManager
 	private final IMusicStoreReader reader;
 	private final Map<MediaItem, IMusicItem> itemToIMusicItem;
 
+	private final PasswordMethod passwordMethod;
+
 	@Inject
-	public MusicItemManager(@Named(Util.APPLICATION_NAME) String applicationName, IMusicStoreReader reader) throws Exception
+	public MusicItemManager(@Named(Util.APPLICATION_NAME) String applicationName, IMusicStoreReader reader, PasswordMethod pm) throws Exception
 	{
+		this.passwordMethod = pm;
 		this.reader = reader;
 		this.itemToIMusicItem = Maps.uniqueIndex(reader.readTunes(), new Function<IMusicItem, MediaItem>() {
 			@Override
@@ -84,7 +87,7 @@ public class MusicItemManager implements IItemManager
 	@Override
 	public PasswordMethod getAuthenticationMethod()
 	{
-		return PasswordMethod.NO_PASSWORD;
+		return passwordMethod;
 	}
 
 	@Override

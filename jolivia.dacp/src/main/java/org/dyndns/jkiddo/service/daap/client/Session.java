@@ -117,8 +117,10 @@ public class Session
 
 		getControlInt();
 		// Update revision at once. As the initial call, this does not block but simply updates the revision.
-//		updateServerRevision();
+
+//				updateServerRevision();
 		getUpdateBlocking();
+		
 		library = new Library(this);
 		remoteControl = new RemoteControl(this);
 

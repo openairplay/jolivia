@@ -14,13 +14,16 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collections;
 
 import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
+import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.dmp.DmapUtil;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
 import org.slf4j.Logger;
@@ -60,10 +63,46 @@ public class Util
 		return response.build();
 	}
 
-	public static ResponseBuilder buildResponse(String dmapKey, String dmapServiceName)
+	private static ResponseBuilder buildResponse(String dmapKey, String dmapServiceName)
 	{
-		return new ResponseBuilderImpl().header(HttpHeaders.DATE, DmapUtil.now()).header(dmapKey, dmapServiceName).header(HttpHeaders.CONTENT_TYPE, APPLICATION_X_DMAP_TAGGED).header("Connection", "Keep-Alive").status(Response.Status.OK);
+		return new ResponseBuilderImpl().header(HttpHeaders.DATE, DmapUtil.now())
+				.header(dmapKey, dmapServiceName)
+				.header(HttpHeaders.CONTENT_TYPE, APPLICATION_X_DMAP_TAGGED)
+				.header("Connection", "Keep-Alive")
+				.status(Response.Status.OK);
 	}
+	
+	enum SecurityType
+	{
+		BASIC,DIGEST
+	}
+	
+	public static Response buildAuthenticationResponse(String dmapKey, String dmapServiceName, SecurityType sm) throws NoSuchAlgorithmException, UnsupportedEncodingException
+	{
+		ResponseBuilder builder = new ResponseBuilderImpl().header(HttpHeaders.DATE, DmapUtil.now())
+		.header(dmapKey, dmapServiceName)
+		.header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML)
+		.header(HttpHeaders.CONTENT_LENGTH, "0")
+		.header("Connection", "Keep-Alive")
+		.status(Response.Status.UNAUTHORIZED);
+		
+		switch(sm)
+		{
+			case BASIC:
+				builder.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\""
+                        + DmapUtil.DAAP_REALM + "\"");			
+				break;
+			case DIGEST:
+				builder.header(HttpHeaders.WWW_AUTHENTICATE, "Digest realm=\""
+                        + DmapUtil.DAAP_REALM + "\", nonce=\"" + DmapUtil.nonce()
+                        + "\"");
+				break;
+				default:
+					throw new NotImplementedException();
+		}
+		return builder.build();
+		
+	} 
 
 	public static Response buildEmptyResponse(String dmapKey, String dmapServiceName)
 	{
@@ -100,7 +139,6 @@ public class Util
 			throw new RuntimeException(e);
 		}
 	}
-
 
 	public static String fromHex(String hex)
 	{

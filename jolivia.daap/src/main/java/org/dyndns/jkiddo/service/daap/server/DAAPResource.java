@@ -81,6 +81,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	private static final String ITSH_VERSION_KEY = "iTSh Version";
 	private static final String DAAP_VERSION_KEY = "Version";
 	private static final String PASSWORD_KEY = "Password";
+
 	private final String serviceGuid;
 
 	@Inject
@@ -107,7 +108,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		HashMap<String, String> records = new HashMap<String, String>();
 		records.put(MACHINE_NAME_KEY, name);
 		records.put("OSsi", "0x4E8DAC");
-		records.put(PASSWORD_KEY, "0");
+
 		records.put("Media Kinds Shared", "0");
 		records.put(TXT_VERSION_KEY, TXT_VERSION);
 		records.put(MACHINE_ID_KEY, hexedHostname);
@@ -116,8 +117,13 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		records.put("MID", "0x" + serviceGuid);
 		records.put("dmc", "131081");
 		records.put(DATABASE_ID_KEY, hexedHostname);
-
-		return ServiceInfo.create(DAAP_SERVICE_TYPE, name, port, 0, 0, records);
+		if(PasswordMethod.NO_PASSWORD == itemManager.getAuthenticationMethod())
+		{
+			records.put(PASSWORD_KEY, "0");
+			return ServiceInfo.create(DAAP_SERVICE_TYPE, name, port, 0, 0, records);
+		}
+		records.put(PASSWORD_KEY, "1");
+		return ServiceInfo.create(DAAP_SERVICE_TYPE, name+"_PW", port, 0, 0, records);
 	}
 
 	@Override
@@ -181,7 +187,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		serverInfoResponse.add(new SupportsIndex(true));
 		serverInfoResponse.add(new SupportsResolve(true));
 		serverInfoResponse.add(new DatabaseCount(itemManager.getDatabases().size()));
-		serverInfoResponse.add(new UTCTime(Calendar.getInstance().getTimeInMillis()));
+		serverInfoResponse.add(new UTCTime(Calendar.getInstance().getTimeInMillis()/1000));
 		serverInfoResponse.add(new UTCTimeOffset(7200));
 
 		return Util.buildResponse(serverInfoResponse, itemManager.getDMAPKey(), name);

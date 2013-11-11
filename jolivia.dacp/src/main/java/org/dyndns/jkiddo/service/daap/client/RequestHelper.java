@@ -111,16 +111,21 @@ public class RequestHelper
 		connection.setAllowUserInteraction(false);
 
 		// Carefull either Client-DAAP or Client-DPAP
-		// connection.setRequestProperty("Viewer-Only-Client", "1");
-		// connection.setRequestProperty("Client-iTunes-Sharing-Version", "3.10");
-		// connection.setRequestProperty("Client-DAAP-Version", "3.11");
-		// connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
-
-		connection.setRequestProperty("Client-DPAP-Version", "1.1");
-//		connection.setRequestProperty("Host", "192.168.1.75");
-		connection.setRequestProperty("User-Agent", "iPhoto/9.4.3  (Macintosh; N; PPC)");
-
-		// connection.setRequestProperty("User-Agent", "iPhoto/9.4.3,iTunes/11.0.4");
+		//iTunes
+		{
+		 connection.setRequestProperty("Viewer-Only-Client", "1");
+		 connection.setRequestProperty("Client-iTunes-Sharing-Version", "3.10");
+		 connection.setRequestProperty("Client-DAAP-Version", "3.11");
+		 connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
+		}
+		
+		connection.setRequestProperty("Host", "192.168.1.75");
+		//iPhoto
+		{
+//			connection.setRequestProperty("Client-DPAP-Version", "1.1");
+//			connection.setRequestProperty("User-Agent", "iPhoto/9.4.3  (Macintosh; N; PPC)");
+		}
+		
 		connection.setReadTimeout(READ_TIMEOUT);
 		if(!keepalive)
 		{
@@ -149,7 +154,7 @@ public class RequestHelper
 		{
 			inputStream = connection.getInputStream();
 		}
-
+		
 		ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try
 		{

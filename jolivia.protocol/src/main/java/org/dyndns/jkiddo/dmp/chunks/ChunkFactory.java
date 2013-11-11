@@ -126,6 +126,9 @@ public final class ChunkFactory
 		map.put(new Integer(0x63616e74), org.dyndns.jkiddo.dmcp.chunks.media.audio.ProgressRemain.class); // cant
 		map.put(new Integer(0x63617374), org.dyndns.jkiddo.dmcp.chunks.media.audio.ProgressTotal.class); // cant
 		map.put(new Integer(0x63616473), org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownDS.class); // cant
+		map.put(new Integer(0x63655152), org.dyndns.jkiddo.dmcp.chunks.media.audio.PlayQueueContentsResponse.class); // ceQR
+		map.put(new Integer(0x63655153), org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownQS.class); // ceQS
+		
 
 		map.put(new Integer(0x63655175), org.dyndns.jkiddo.dmcp.chunks.media.extension.UnknownQU.class); // ceQu
 		map.put(new Integer(0x63654753), org.dyndns.jkiddo.dmcp.chunks.media.extension.GeniusSelectable.class); // ceGs

@@ -241,7 +241,7 @@ public class DmapInputStream extends BufferedInputStream
 
 			if(logger.isWarnEnabled())
 			{
-				logger.warn("Expected a chunk with length " + expected + " but got " + length + " (" + chunk.getContentCodeString() + ")");
+				logger.warn("Expected a chunk with length " + expected + " but got " + length + " (" + chunk.getContentCodeString() + ") " + chunk.getClass());
 			}
 		}
 	}

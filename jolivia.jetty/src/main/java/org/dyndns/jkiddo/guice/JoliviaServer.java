@@ -14,6 +14,7 @@ import java.io.IOException;
 
 import javax.jmdns.JmmDNS;
 
+import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
 import org.dyndns.jkiddo.jetty.ProxyFilter;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
@@ -65,8 +66,12 @@ public class JoliviaServer extends GuiceServletContextListener
 	final private IImageStoreReader imageStoreReader;
 	final private IMusicStoreReader musicStoreReader;
 	final private IPlayingInformation iplayingInformation;
+	final private PasswordMethod passwordMethod;
+	
+	private Injector injector;
 
-	public JoliviaServer(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IImageStoreReader imageStoreReader, IMusicStoreReader musicStoreReader, IPlayingInformation iplayingInformation)
+
+	public JoliviaServer(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IImageStoreReader imageStoreReader, IMusicStoreReader musicStoreReader, IPlayingInformation iplayingInformation, PasswordMethod security)
 	{
 		super();
 
@@ -74,6 +79,7 @@ public class JoliviaServer extends GuiceServletContextListener
 		this.pairingCode = pairingCode;
 		this.airplayPort = airplayPort;
 		this.name = name;
+		this.passwordMethod = PasswordMethod.valueOf(security.toString());
 		
 		this.clientSessionListener = clientSessionListener;
 		this.musicStoreReader = musicStoreReader;
@@ -84,11 +90,11 @@ public class JoliviaServer extends GuiceServletContextListener
 	public void reRegister()
 	{
 		try {
-			((MDNSResource)this.getInjector().getInstance(IImageLibrary.class)).register();
-			((MDNSResource)this.getInjector().getInstance(IMusicLibrary.class)).register();
-			((MDNSResource)this.getInjector().getInstance(ITouchRemoteResource.class)).register();
-			((MDNSResource)this.getInjector().getInstance(ITouchAbleServerResource.class)).register();
-			((MDNSResource)this.getInjector().getInstance(RAOPResourceWrapper.class)).register();
+			((MDNSResource)injector.getInstance(IImageLibrary.class)).register();
+			((MDNSResource)injector.getInstance(IMusicLibrary.class)).register();
+			((MDNSResource)injector.getInstance(ITouchRemoteResource.class)).register();
+			((MDNSResource)injector.getInstance(ITouchAbleServerResource.class)).register();
+			((MDNSResource)injector.getInstance(RAOPResourceWrapper.class)).register();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -98,7 +104,7 @@ public class JoliviaServer extends GuiceServletContextListener
 	@Override
 	protected Injector getInjector()
 	{
-		return Guice.createInjector(new AbstractModule() {
+		this.injector = Guice.createInjector(new AbstractModule() {
 
 			@Override
 			protected void configure()
@@ -126,6 +132,7 @@ public class JoliviaServer extends GuiceServletContextListener
 			{
 				bind(Integer.class).annotatedWith(Names.named(DAAPResource.DAAP_PORT_NAME)).toInstance(hostingPort);
 				bind(IMusicLibrary.class).to(DAAPResource.class).asEagerSingleton();
+				bind(PasswordMethod.class).toInstance(passwordMethod);
 				bind(MusicItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(MusicItemManager.class);
 				bind(IMusicStoreReader.class).toInstance(musicStoreReader);
 			}
@@ -172,9 +179,14 @@ public class JoliviaServer extends GuiceServletContextListener
 			protected void configureServlets()
 			{
 				bind(CustomByteArrayProvider.class);
+//				csh.addConstraintMapping(createRelaxation("/server-info"));
+//				csh.addConstraintMapping(createRelaxation("/logout"));
+//				//Following is a hack! It should state /databases/*/items/* instead - however, that cannot be used.
+//				csh.addConstraintMapping(createRelaxation("/databases/*"));
 				filter("*").through(ProxyFilter.class);
 				serve("/*").with(GuiceContainer.class);
 			}
 		});
+		return injector;
 	}
 }

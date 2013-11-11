@@ -16,7 +16,9 @@ public class MediaKind extends UByteChunk
 {
 
 	public final static int KIND_1 = 1;
-	public final static int KIND_4 = 4;
+	public final static int KIND_4 = 4; // PodCast, according to forked-daapd
+	public final static int KIND_6 = 6; // PodCast, according to forked-daapd
+	public final static int KIND_7 = 7; // PodCast, according to forked-daapd
 	public final static int KIND_8 = 8;
 	public final static int KIND_32 = 32;
 
