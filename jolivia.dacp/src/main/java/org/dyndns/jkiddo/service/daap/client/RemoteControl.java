@@ -463,10 +463,9 @@ public class RemoteControl
 		RequestHelper.dispatch(String.format("%s/ctrl-int/1/playqueue-edit?command=add&query='dmap.itemid:" + itemID + "'&queuefilter=playlist:" + playlistId + "&sort=name&mode=1&session-id=%s", session.getRequestBase(), session.getSessionId()));
 	}
 	
-	public void playQueue(final long span) throws Exception
+	public PlayQueueContentsResponse playQueue(final long span) throws Exception
 	{
-		PlayQueueContentsResponse  o = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playqueue-contents?span="+span+"&session-id=%s" , session.getRequestBase(), session.getSessionId()));
-		System.out.println(o);
+		return RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playqueue-contents?span="+span+"&session-id=%s" , session.getRequestBase(), session.getSessionId()));
 	}
 	
 }

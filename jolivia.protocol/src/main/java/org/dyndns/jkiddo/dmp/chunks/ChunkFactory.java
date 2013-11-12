@@ -127,7 +127,23 @@ public final class ChunkFactory
 		map.put(new Integer(0x63617374), org.dyndns.jkiddo.dmcp.chunks.media.audio.ProgressTotal.class); // cant
 		map.put(new Integer(0x63616473), org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownDS.class); // cant
 		map.put(new Integer(0x63655152), org.dyndns.jkiddo.dmcp.chunks.media.audio.PlayQueueContentsResponse.class); // ceQR
-		map.put(new Integer(0x63655153), org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownQS.class); // ceQS
+		map.put(new Integer(0x63617363), org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownSC.class); // casc
+		map.put(new Integer(0x63616b73), org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownKs.class); // caks
+		
+		
+		map.put(new Integer(0x63655153), org.dyndns.jkiddo.dmcp.chunks.media.extension.UnknownQS.class); // ceQS
+		
+		map.put(new Integer(0x63655173), org.dyndns.jkiddo.dmcp.chunks.media.extension.PlayQueueId.class); // ceQs
+		map.put(new Integer(0x6365516e), org.dyndns.jkiddo.dmcp.chunks.media.extension.PlayQueueName.class); // ceQn
+		map.put(new Integer(0x6365516b), org.dyndns.jkiddo.dmcp.chunks.media.extension.UnknownQk.class); // ceQk
+		map.put(new Integer(0x63655169), org.dyndns.jkiddo.dmcp.chunks.media.extension.UnknownQi.class); // ceQi
+		map.put(new Integer(0x6365516d), org.dyndns.jkiddo.dmcp.chunks.media.extension.UnknownQm.class); // ceQm
+		map.put(new Integer(0x6365516c), org.dyndns.jkiddo.dmcp.chunks.media.extension.UnknownQl.class); // ceQl
+		map.put(new Integer(0x63655168), org.dyndns.jkiddo.dmcp.chunks.media.extension.UnknownQh.class); // ceQh
+		map.put(new Integer(0x63655172), org.dyndns.jkiddo.dmcp.chunks.media.extension.PlayQueueArtist.class); // ceQr
+		map.put(new Integer(0x63655161), org.dyndns.jkiddo.dmcp.chunks.media.extension.PlayQueueAlbum.class); // ceQa
+		map.put(new Integer(0x63655167), org.dyndns.jkiddo.dmcp.chunks.media.extension.PlayQueueGenre.class); // ceQg
+		map.put(new Integer(0x63655149), org.dyndns.jkiddo.dmcp.chunks.media.extension.UnknownceQI.class); // ceQI
 		
 
 		map.put(new Integer(0x63655175), org.dyndns.jkiddo.dmcp.chunks.media.extension.UnknownQU.class); // ceQu

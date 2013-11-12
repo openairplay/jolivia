@@ -11,6 +11,11 @@ public class TestSession extends Session
 	{
 		super(host, port, pairingGuid);
 	}
+	
+	public TestSession(String host, int port) throws Exception
+	{
+		super(host, port, "0000000000000001");
+	}
 
 	public Database getTheDatabase()
 	{

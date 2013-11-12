@@ -31,7 +31,6 @@ import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
-import org.dyndns.jkiddo.dmp.chunks.media.ServerInfoResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateResponse;
 import org.dyndns.jkiddo.dpap.chunks.picture.FileData;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
@@ -74,109 +73,93 @@ public class Noop
 				}
 			}
 
-			@SuppressWarnings("unused")
 			@Override
 			public void registerNewSession(Session session) throws Exception
 			{
-
-				// Showcase on some actions you can do on a session ...
-				// ////////////////////////////////////////
-				this.session = session;
-
-				// getUpdateBlocking blocks until an event happens in iTunes -
-				// eg. pressing play, pause, etc. ...
-				UpdateResponse response = this.session.getUpdateBlocking();
-
-				Database itunesDatabase = this.session.getDatabase();
-
-				// Get all playlists. For now the playlists only contains the
-				// master playlist. This is to be expanded
-				Collection<Container> playlists = itunesDatabase.getContainers();
-
-				// Traverse the library for eg. all tracks
-				for(SongArtist artist : this.session.getLibrary().getAllArtists().getBrowseArtistListing().getSongArtists())
-				{
-					System.out.println(artist.getValue());
-				}
-
-				long itemId = 0;
-
-				// Extract information from a generic listing
-				for(ListingItem item : this.session.getLibrary().getAllTracks().getListing().getListingItems())
-				{
-					System.out.println(item.getSpecificChunk(SongAlbum.class).getValue());
-					System.out.println(item.getSpecificChunk(SongArtist.class).getValue());
-					System.out.println(item.getSpecificChunk(SongTime.class).getValue());
-					System.out.println(item.getSpecificChunk(SongTrackNumber.class).getValue());
-					System.out.println(item.getSpecificChunk(SongUserRating.class).getValue());
-					System.out.println(item.getSpecificChunk(ItemName.class).getValue());
-					System.out.println(item.getSpecificChunk(ItemKind.class).getValue());
-					System.out.println(item.getSpecificChunk(ItemId.class).getValue());
-					itemId = item.getSpecificChunk(ItemId.class).getValue();
-				}
-
-				// Showcase on some actions you can do on speakers ...
-				// ////////////////////////////////////////
-				RemoteControl remoteControl = this.session.getRemoteControl();
-				// Set min volume
-				remoteControl.setVolume(0);
-				// Set max volume
-				remoteControl.setVolume(100);
-
-				remoteControl.setVolume(0);
-				// Get the master volume
-				remoteControl.getMasterVolume();
-
-				// Get all speakers visible to iTunes instance
-				Collection<Speaker> speakers = remoteControl.getSpeakers();
-
-				// Mark all speakers active meaning they are prepared for being
-				// used for the iTunes instance
-				for(Speaker s : speakers)
-				{
-					s.setActive(true);
-				}
-				// Assign all the active speakers to the iTunes instance. This
-				// means that all the speakers will now be used for output
-				remoteControl.setSpeakers(speakers);
-
-				// Change the volume individually on each speaker
-				speakers = remoteControl.getSpeakers();
-				for(Speaker s : speakers)
-				{
-					remoteControl.setSpeakerVolume(s.getId(), 60, 50, 40, 30, 100);
-				}
-remoteControl.playQueue(50);
-				session.getLibrary().getAlbumArtwork(itemId, 320, 320);
-				session.getRemoteControl().fetchCover(320, 320);
+				doShowCase(session);
 			}
 		}).build();
 		System.out.println("");
 	}
-
+	
 	@Test
-	public void dummy() throws Exception
+	public void remoteClientTest() throws Exception
 	{
-		try
-		{
-			TestSession session = new TestSession("localhost", 3689, "0000000000000001");
-			// String meta = "dmap.itemid,dmap.parentcontainerid";
-			String meta = "dmap.itemid,com.apple.itunes.req-fplay,com.apple.itunes.itms-genreid,com.apple.itunes.gapless-dur";
-			Object oo = session.fire2();
-			System.out.println(oo);
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
+		doShowCase(new TestSession("localhost", 3689));
 	}
-
-	@Test
-	public void serverInfoResponse() throws Exception
+	
+	private void doShowCase(Session session) throws Exception
 	{
-		String requestBase = String.format("http://%s:%d", "localhost", 4000);
-		ServerInfoResponse serverInfoResponse = RequestHelper.requestParsed(String.format("%s/server-info", requestBase));
-		System.out.println(serverInfoResponse);
+		// Showcase on some actions you can do on a session ...
+		// ////////////////////////////////////////
+
+		// getUpdateBlocking blocks until an event happens in iTunes -
+		// eg. pressing play, pause, etc. ...
+		UpdateResponse response = session.getUpdateBlocking();
+
+		Database itunesDatabase = session.getDatabase();
+
+		// Get all playlists. For now the playlists only contains the
+		// master playlist. This is to be expanded
+		Collection<Container> playlists = itunesDatabase.getContainers();
+
+		// Traverse the library for eg. all tracks
+		for(SongArtist artist : session.getLibrary().getAllArtists().getBrowseArtistListing().getSongArtists())
+		{
+			System.out.println(artist.getValue());
+		}
+
+		long itemId = 0;
+
+		// Extract information from a generic listing
+		for(ListingItem item : session.getLibrary().getAllTracks().getListing().getListingItems())
+		{
+			System.out.println(item.getSpecificChunk(SongAlbum.class).getValue());
+			System.out.println(item.getSpecificChunk(SongArtist.class).getValue());
+			System.out.println(item.getSpecificChunk(SongTime.class).getValue());
+			System.out.println(item.getSpecificChunk(SongTrackNumber.class).getValue());
+			System.out.println(item.getSpecificChunk(SongUserRating.class).getValue());
+			System.out.println(item.getSpecificChunk(ItemName.class).getValue());
+			System.out.println(item.getSpecificChunk(ItemKind.class).getValue());
+			System.out.println(item.getSpecificChunk(ItemId.class).getValue());
+			itemId = item.getSpecificChunk(ItemId.class).getValue();
+		}
+		session.getRemoteControl().playQueue(50);
+
+		// Showcase on some actions you can do on speakers ...
+		// ////////////////////////////////////////
+		RemoteControl remoteControl = session.getRemoteControl();
+		// Set min volume
+		remoteControl.setVolume(0);
+		// Set max volume
+		remoteControl.setVolume(100);
+
+		remoteControl.setVolume(0);
+		// Get the master volume
+		remoteControl.getMasterVolume();
+
+		// Get all speakers visible to iTunes instance
+		Collection<Speaker> speakers = remoteControl.getSpeakers();
+
+		// Mark all speakers active meaning they are prepared for being
+		// used for the iTunes instance
+		for(Speaker s : speakers)
+		{
+			s.setActive(true);
+		}
+		// Assign all the active speakers to the iTunes instance. This
+		// means that all the speakers will now be used for output
+		remoteControl.setSpeakers(speakers);
+
+		// Change the volume individually on each speaker
+		speakers = remoteControl.getSpeakers();
+		for(Speaker s : speakers)
+		{
+			remoteControl.setSpeakerVolume(s.getId(), 60, 50, 40, 30, 100);
+		}
+
+		session.getLibrary().getAlbumArtwork(itemId, 320, 320);
+		session.getRemoteControl().fetchCover(320, 320);
 	}
 
 	@Test
@@ -236,7 +219,7 @@ remoteControl.playQueue(50);
 	@Test
 	public void verifyModel() throws Exception
 	{
-		TestSession session = new TestSession("localhost", 3689, "0000000000000001");
+		TestSession session = new TestSession("localhost", 3689);
 		Iterator<Dictionary> contentCodes = session.getContentCodes().getDictionaries().iterator();
 
 		ChunkFactory chunkFactory = new ChunkFactory();
