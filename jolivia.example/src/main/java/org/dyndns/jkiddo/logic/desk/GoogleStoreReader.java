@@ -22,7 +22,6 @@ public class GoogleStoreReader implements IMusicStoreReader
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3386991300726193018L;
 	private GoogleMusicAPI gm;
 	private Map<IMusicItem, Song> songs;
 

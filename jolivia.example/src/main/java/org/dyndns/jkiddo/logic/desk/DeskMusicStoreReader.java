@@ -42,7 +42,6 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6305893445667053678L;
 	private static final Logger logger = LoggerFactory.getLogger(DeskMusicStoreReader.class);
 	private Map<IMusicItem, File> mapOfSongToFile;
 	private File path;

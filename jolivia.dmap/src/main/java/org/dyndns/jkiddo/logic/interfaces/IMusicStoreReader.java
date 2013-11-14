@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Set;
 
-public interface IMusicStoreReader extends Serializable
+public interface IMusicStoreReader
 {
 	public Set<IMusicItem> readTunes() throws Exception;
 
