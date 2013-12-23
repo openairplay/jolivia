@@ -10,7 +10,6 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.logic.interfaces;
 
-import java.io.Serializable;
 import java.net.URI;
 import java.util.Set;
 
