@@ -43,7 +43,7 @@ public class TestImage
 		host = "192.168.1.26";
 		// host = "localhost";
 		 port = 8770;
-//		port = 5000;
+//		port = 3689;
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class TestImage
 			}
 		});
 		
-//		itemIds = Lists.newArrayList("'dmap.itemid:1024'","'dmap.itemid:1025'","'dmap.itemid:1026'");
+		itemIds = Lists.newArrayList("'dmap.itemid:1024'","'dmap.itemid:1025'","'dmap.itemid:1026'","'dmap.itemid:1027'","'dmap.itemid:1028'");
 
 		String queryIds = Joiner.on(",").join(itemIds);
 		
