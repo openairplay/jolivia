@@ -26,11 +26,11 @@ import org.dyndns.jkiddo.dmap.chunks.audio.ArtistSearchContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
 import org.dyndns.jkiddo.dmap.chunks.audio.SupportsExtraData;
 import org.dyndns.jkiddo.dmap.chunks.audio.SupportsGroups;
-import org.dyndns.jkiddo.dmcp.chunks.media.extension.WelcomeMessage;
 import org.dyndns.jkiddo.dmp.DmapUtil;
 import org.dyndns.jkiddo.dmp.MediaItem;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod;
+import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationSchemes;
 import org.dyndns.jkiddo.dmp.chunks.media.DatabaseCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
@@ -54,7 +54,6 @@ import org.dyndns.jkiddo.dmp.chunks.media.UTCTime;
 import org.dyndns.jkiddo.dmp.chunks.media.UTCTimeOffset;
 import org.dyndns.jkiddo.dmp.chunks.media.UnknownHL;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
-import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.unknown.Voting;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
@@ -140,8 +139,8 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		// serverInfoResponse.add(itemManager.getMusicSharingVersion()); If inserted, DAAP dies
 
 		serverInfoResponse.add(new SupportsExtraData(3));
-		serverInfoResponse.add(new WelcomeMessage("jgjgjhgjgjhgjgyutrutuolmæ"));
-		serverInfoResponse.add(new Voting(true));
+		//serverInfoResponse.add(new WelcomeMessage("jgjgjhgjgjhgjgyutrutuolmæ"));
+		//serverInfoResponse.add(new Voting(true));
 
 		serverInfoResponse.add(new SupportsExtensions(true));
 		serverInfoResponse.add(new SupportsGroups(3));

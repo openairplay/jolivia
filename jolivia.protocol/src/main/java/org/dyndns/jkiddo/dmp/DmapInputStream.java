@@ -145,6 +145,11 @@ public class DmapInputStream extends BufferedInputStream
 	{
 		return readInt(Chunk.INT_LENGTH);
 	}
+	
+	public <T> T getChunk(Class<T> clazz) throws IOException
+	{
+		return (T) getChunk();
+	}
 
 	public Chunk getChunk() throws IOException
 	{

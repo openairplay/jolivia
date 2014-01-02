@@ -78,11 +78,12 @@ public class Jolivia {
 			// DeskImageStoreReader()).build();
 			new Jolivia.JoliviaBuilder()
 					.port(8770)
+					.security(PasswordMethod.NO_PASSWORD)
 					.pairingCode(1337)
 					.musicStoreReader(reader)
 					.imageStoreReader(
 							new DeskImageStoreReader(
-									"C:\\Users\\JensKristian\\Desktop\\test")).security(PasswordMethod.NO_PASSWORD)
+									"C:\\Users\\JensKristian\\Desktop\\test"))
 					.build();
 		} catch (Exception e) {
 			e.printStackTrace();

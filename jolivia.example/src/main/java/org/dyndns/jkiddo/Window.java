@@ -118,8 +118,9 @@ public class Window
 		mainFormJolivia.setBounds(100, 100, 450, 258);
 		mainFormJolivia.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFormJolivia.getContentPane().setLayout(null);
+//		mainFormJolivia.pack();
 		mainFormJolivia.setVisible(true);
-
+		
 		chckbxUseGoogleMusic = new JCheckBox("Use Google Music as backend");
 		chckbxUseGoogleMusic.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e)
