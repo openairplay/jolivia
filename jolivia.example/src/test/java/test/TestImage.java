@@ -40,10 +40,10 @@ public class TestImage
 	public TestImage()
 	{
 //		host = "192.168.1.75";
-		host = "192.168.1.26";
-		// host = "localhost";
-		 port = 8770;
-//		port = 3689;
+//		host = "192.168.1.26";
+		 host = "localhost";
+//		 port = 8770;
+		port = 3689;
 	}
 
 	@Test

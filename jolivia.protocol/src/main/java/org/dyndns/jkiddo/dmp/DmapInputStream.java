@@ -59,6 +59,13 @@ public class DmapInputStream extends BufferedInputStream
 
 	private final boolean specialCaseProtocolViolation;
 
+	private int contentLength;
+
+	private int getChunkContentLength()
+	{
+		return contentLength;
+	}
+
 	public DmapInputStream(InputStream in)
 	{
 		super(in);
@@ -86,7 +93,7 @@ public class DmapInputStream extends BufferedInputStream
 	 * Re: skip(length-Chunk.XYZ_LENGTH); iTunes states in Content-Codes responses that Chunk X is of type Y and has hence the length Z. A Byte has for example the length 1. But in some cases iTunes uses a different length for Bytes! It's probably a bug in iTunes...
 	 */
 
-	private int read(int length) throws IOException
+	private int readByte(int length) throws IOException
 	{
 		skip(length - Chunk.BYTE_LENGTH);
 		return read();
@@ -145,22 +152,22 @@ public class DmapInputStream extends BufferedInputStream
 	{
 		return readInt(Chunk.INT_LENGTH);
 	}
-	
-	public <T> T getChunk(Class<T> clazz) throws IOException
+
+	@SuppressWarnings("unchecked")
+	public <T> T getChunk(Class<T> clazz) throws IOException, ProtocolViolationException
 	{
 		return (T) getChunk();
 	}
 
-	public Chunk getChunk() throws IOException
+	public Chunk getChunk() throws IOException, ProtocolViolationException
 	{
 		int contentCode = readContentCode();
-		int length = readLength();
+		contentLength = readLength();
 
 		if(factory == null)
 		{
 			factory = new ChunkFactory();
 		}
-
 		Chunk chunk = factory.newChunk(contentCode);
 
 		if(specialCaseProtocolViolation)
@@ -171,56 +178,69 @@ public class DmapInputStream extends BufferedInputStream
 			}
 		}
 
-		if(length > 0)
+		if(contentLength > 0)
 		{
 			if(chunk instanceof ByteChunk)
 			{
-				checkLength(chunk, Chunk.BYTE_LENGTH, length);
-				((ByteChunk) chunk).setValue(read(length));
+				checkLength(chunk, Chunk.BYTE_LENGTH, contentLength);
+				((ByteChunk) chunk).setValue(readByte(contentLength));
 			}
 			else if(chunk instanceof ShortChunk)
 			{
-				checkLength(chunk, Chunk.SHORT_LENGTH, length);
-				((ShortChunk) chunk).setValue(readShort(length));
+				checkLength(chunk, Chunk.SHORT_LENGTH, contentLength);
+				((ShortChunk) chunk).setValue(readShort(contentLength));
 			}
 			else if(chunk instanceof IntChunk)
 			{
-				checkLength(chunk, Chunk.INT_LENGTH, length);
-				((IntChunk) chunk).setValue(readInt(length));
+				checkLength(chunk, Chunk.INT_LENGTH, contentLength);
+				((IntChunk) chunk).setValue(readInt(contentLength));
 			}
 			else if(chunk instanceof LongChunk)
 			{
-				checkLength(chunk, Chunk.LONG_LENGTH, length);
-				((LongChunk) chunk).setValue(readLong(length));
+				checkLength(chunk, Chunk.LONG_LENGTH, contentLength);
+				((LongChunk) chunk).setValue(readLong(contentLength));
 			}
 			else if(chunk instanceof StringChunk)
 			{
-				((StringChunk) chunk).setValue(readString(length));
+				((StringChunk) chunk).setValue(readString(contentLength));
 			}
 			else if(chunk instanceof DateChunk)
 			{
-				checkLength(chunk, Chunk.DATE_LENGTH, length);
-				((DateChunk) chunk).setValue(readInt(length));
+				checkLength(chunk, Chunk.DATE_LENGTH, contentLength);
+				((DateChunk) chunk).setValue(readInt(contentLength));
 			}
 			else if(chunk instanceof VersionChunk)
 			{
-				checkLength(chunk, Chunk.VERSION_LENGTH, length);
-				((VersionChunk) chunk).setValue(readInt(length));
+				checkLength(chunk, Chunk.VERSION_LENGTH, contentLength);
+				((VersionChunk) chunk).setValue(readInt(contentLength));
 			}
 			else if(chunk instanceof RawChunk)
 			{
-				byte[] b = new byte[length];
+				byte[] b = new byte[contentLength];
 				read(b, 0, b.length);
 				((RawChunk) chunk).setValue(b);
 			}
 			else if(chunk instanceof ContainerChunk)
 			{
-				byte[] b = new byte[length];
+				byte[] b = new byte[contentLength];
 				read(b, 0, b.length);
 				DmapInputStream in = new DmapInputStream(new ByteArrayInputStream(b), this.specialCaseProtocolViolation);
 				while(in.available() > 0)
 				{
-					((ContainerChunk) chunk).add(in.getChunk());
+
+					try
+					{
+						((ContainerChunk) chunk).add(in.getChunk());
+					}
+					catch(ProtocolViolationException pve)
+					{
+						logger.warn(pve.getMessage(), pve);
+						in.skip(in.getChunkContentLength());
+					}
+					//
+					// Chunk newChunk = in.getChunk();
+					// if(newChunk != null)
+					// ((ContainerChunk) chunk).add(newChunk);
 				}
 				in.close();
 			}

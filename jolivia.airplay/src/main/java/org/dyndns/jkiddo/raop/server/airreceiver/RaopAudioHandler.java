@@ -37,6 +37,7 @@ import javax.imageio.ImageIO;
 import javax.ws.rs.core.HttpHeaders;
 
 import org.dyndns.jkiddo.dmp.DmapInputStream;
+import org.dyndns.jkiddo.dmp.ProtocolViolationException;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.raop.server.IPlayingInformation;
 import org.dyndns.jkiddo.service.dmap.Util;
@@ -678,6 +679,10 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 				stream.close();
 			}
 			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+			catch(ProtocolViolationException e)
 			{
 				e.printStackTrace();
 			}

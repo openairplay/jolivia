@@ -28,7 +28,7 @@
 package org.dyndns.jkiddo.dmp;
 
 /**
- * A DAAP Exception
+ * A DMAP Exception
  * 
  * @author Roger Kapsi
  */
@@ -50,5 +50,10 @@ public class DmapException extends RuntimeException
 	public DmapException(Throwable throwable)
 	{
 		super(throwable);
+	}
+	
+	public DmapException(String s, Throwable throwable)
+	{
+		super(s, throwable);
 	}
 }

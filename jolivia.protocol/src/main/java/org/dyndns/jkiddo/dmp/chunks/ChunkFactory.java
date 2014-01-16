@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.dyndns.jkiddo.dmp.DmapUtil;
+import org.dyndns.jkiddo.dmp.ProtocolViolationException;
 
 public final class ChunkFactory
 {
@@ -263,8 +264,10 @@ public final class ChunkFactory
 		map.put(new Integer(0x61676172), org.dyndns.jkiddo.dmap.chunks.audio.ArtistSearchContainer.class); // agar
 		map.put(new Integer(0x61736472), org.dyndns.jkiddo.dmap.chunks.audio.SongDateReleased.class); // asdr
 		map.put(new Integer(0x61736470), org.dyndns.jkiddo.dmap.chunks.audio.SongDatePurchased.class); // asdp
+		
 		map.put(new Integer(0x6d736375), org.dyndns.jkiddo.dmap.chunks.audio.UnknownCU.class); // mscu
 
+		map.put(new Integer(0x61655347), org.dyndns.jkiddo.dmap.chunks.audio.extension.SavedGenius.class); // aeSG
 		map.put(new Integer(0x61654353), org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum.class); // aeCS
 		map.put(new Integer(0x61655043), org.dyndns.jkiddo.dmap.chunks.audio.extension.Podcast.class); // aePC
 		map.put(new Integer(0x61655050), org.dyndns.jkiddo.dmap.chunks.audio.extension.PodcastPlaylist.class); // aePP
@@ -321,7 +324,7 @@ public final class ChunkFactory
 		return map.get(contentCode);
 	}
 
-	public Chunk newChunk(int contentCode)
+	public Chunk newChunk(int contentCode) throws ProtocolViolationException
 	{
 		Class<? extends Chunk> clazz = getChunkClass(new Integer(contentCode));
 		try
@@ -329,8 +332,8 @@ public final class ChunkFactory
 			return clazz.newInstance();
 		}
 		catch(Exception err)
-		{
-			throw new RuntimeException("Content code: " + DmapUtil.toContentCodeString(contentCode) + " not found. Hash is 0x" + Integer.toHexString(new Integer(contentCode)), err);
+		{ 
+			throw new ProtocolViolationException("Content code: " + DmapUtil.toContentCodeString(contentCode) + " not found. Hash is 0x" + Integer.toHexString(new Integer(contentCode)), err);
 		}
 	}
 }
