@@ -167,7 +167,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x636d7067), org.dyndns.jkiddo.dmcp.chunks.media.PairingGuid.class); // cmpg
 		map.put(new Integer(0x636d6e6d), org.dyndns.jkiddo.dmcp.chunks.media.DeviceName.class); // cmnm
 		map.put(new Integer(0x636d7479), org.dyndns.jkiddo.dmcp.chunks.media.DeviceType.class); // cmty
-		map.put(new Integer(0x63616369), org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownCI.class); // caci
+		map.put(new Integer(0x63616369), org.dyndns.jkiddo.dmcp.chunks.media.audio.DataControlInt.class); // caci
 		map.put(new Integer(0x636d696b), org.dyndns.jkiddo.dmcp.chunks.media.UnknownIK.class); // cmik
 		map.put(new Integer(0x636d7072), org.dyndns.jkiddo.dmcp.chunks.media.MediaControlProtocolVersion.class); // cmpr
 		map.put(new Integer(0x63617072), org.dyndns.jkiddo.dmcp.chunks.media.audio.AudioControlProtocolVersion.class); // capr
@@ -304,7 +304,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x61654b31), org.dyndns.jkiddo.dmap.chunks.audio.extension.DRMKey1Id.class); // aeK1
 		map.put(new Integer(0x61654e44), org.dyndns.jkiddo.dmap.chunks.audio.extension.NonDRMUserId.class); // aeND
 		map.put(new Integer(0x61654452), org.dyndns.jkiddo.dmap.chunks.audio.extension.DRMUserId.class); // aeDR
-		map.put(new Integer(0x61654D6B), org.dyndns.jkiddo.dmap.chunks.audio.extension.EMediaKind.class); // aeMk
+		map.put(new Integer(0x61654D6B), org.dyndns.jkiddo.dmap.chunks.audio.extension.ExtendedMediaKind.class); // aeMk
 		map.put(new Integer(0x61654856), org.dyndns.jkiddo.dmap.chunks.audio.extension.HasVideo.class); // aeHV
 		map.put(new Integer(0x61654149), org.dyndns.jkiddo.dmap.chunks.audio.extension.ITMSArtistId.class); // aeAI
 		map.put(new Integer(0x61654349), org.dyndns.jkiddo.dmap.chunks.audio.extension.ITMSComposerId.class); // aeCI
@@ -316,6 +316,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x61655356), org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion.class); // aeSV
 		map.put(new Integer(0x61654E56), org.dyndns.jkiddo.dmap.chunks.audio.extension.NormVolume.class); // aeNV
 		map.put(new Integer(0x61654373), org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownCS.class); // aeCs
+		map.put(new Integer(0x61654844), org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownHD.class); // aeHD
 		
 	}
 

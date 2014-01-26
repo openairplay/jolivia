@@ -16,9 +16,12 @@ import org.dyndns.jkiddo.Jolivia;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongArtworkCount;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongExtraData;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongTime;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongTrackNumber;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongUserRating;
+import org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum;
 import org.dyndns.jkiddo.dmp.Container;
 import org.dyndns.jkiddo.dmp.Database;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
@@ -123,6 +126,12 @@ public class Noop
 			System.out.println(item.getSpecificChunk(ItemKind.class).getValue());
 			System.out.println(item.getSpecificChunk(ItemId.class).getValue());
 			itemId = item.getSpecificChunk(ItemId.class).getValue();
+			
+			if(item.getSpecificChunk(SongExtraData.class).getValue() > 0)
+			{
+				item.getSpecificChunk(ArtworkChecksum.class).getValue();
+				item.getSpecificChunk(SongArtworkCount.class).getValue();
+			}
 		}
 		session.getRemoteControl().playQueue(50);
 
@@ -158,7 +167,7 @@ public class Noop
 			remoteControl.setSpeakerVolume(s.getId(), 60, 50, 40, 30, 100);
 		}
 
-		session.getLibrary().getAlbumArtwork(itemId, 320, 320);
+		session.getLibrary().getAlbumArtworkAsDatabase(itemId, 320, 320);
 		session.getRemoteControl().fetchCover(320, 320);
 	}
 

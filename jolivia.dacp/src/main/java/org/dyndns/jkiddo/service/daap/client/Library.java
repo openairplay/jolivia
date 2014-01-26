@@ -158,12 +158,27 @@ public class Library
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%s/items?meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbumartist,daap.songalbum,com.apple.itunes.cloud-id,dmap.containeritemid,com.apple.itunes.has-video,com.apple.itunes.itms-songid,com.apple.itunes.extended-media-kind,dmap.downloadstatus,daap.songdisabled&type=music&sort=name&include-sort-headers=1&query=('com.apple.itunes.extended-media-kind:1','com.apple.itunes.extended-media-kind:32')&session-id=%s", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId()), false);
 	}
 
-	public byte[] getAlbumArtwork(long itemId, int imageWidth, int imageHeight) throws Exception
+	public byte[] getAlbumArtworkAsDatabase(long itemId, int imageWidth, int imageHeight) throws Exception
 	{
 		return RequestHelper.requestBitmap(String.format("%s/databases/%d/items/%d/extra_data/artwork?session-id=%s&mw=" + imageWidth + "&mh=" + imageHeight + "&group-type=albums", session.getRequestBase(), session.getDatabase().getItemId(), itemId, session.getSessionId()));
-		//The following is what is captured with wireshark
+	}
 
-		/*GET /databases/69/groups/165/extra_data/artwork?mw=110&mh=110&group-type=albums&session-id=1689476647 HTTP/1.1
-		return RequestHelper.requestBitmap(String.format("%s/databases/%d/groups/%g/extra_data/artwork?session-id=%s&mw=" + imageWidth + "&mh=" + imageHeight, session.getRequestBase(), session.getDatabase().getItemId(), itemId, session.getSessionId()));*/
+	public byte[] getAlbumArtworkAsRemote(long itemId, int imageWidth, int imageHeight) throws Exception
+	{
+		return getAlbumArtworkAsRemote(itemId, imageWidth, imageHeight, null);
+	}
+
+	public byte[] getAlbumArtworkAsRemote(long itemId, int imageWidth, int imageHeight, String hsgid) throws Exception
+	{
+		return RequestHelper.requestBitmap(String.format("%s/databases/%d/groups/%d/extra_data/artwork?session-id=%s&mw=" + imageWidth + "&mh=" + imageHeight + "&group-type=albums", session.getRequestBase(), session.getDatabase().getItemId(), itemId, session.getSessionId()));
+	}
+
+	public ItemsContainer getTestCode(String stuff) throws Exception
+	{
+//		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songextradata,com.apple.itunes.artworkchecksum,daap.songartworkcount,com.apple.itunes.mediakind,daap.songartist,com.apple.itunes.jukebox-vote,com.apple.itunes.jukebox-client-vote,com.apple.itunes.jukebox-score,com.apple.itunes.jukebox-current,com.apple.itunes.extended-media-kind,com.apple.itunes.adam-ids-array&type=music&sort=name&include-sort-headers=1&query=('"+stuff+")", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId()), false);
+		//return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=all&query=('"+stuff+")", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId()), false);
+		//return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=all", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId()), false);
+		
+		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=all&type=music&sort=album&query='daap.songartist:%s'", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId(), stuff), false);
 	}
 }

@@ -51,7 +51,7 @@ import org.dyndns.jkiddo.dmcp.chunks.media.audio.RepeatStatus;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.ShuffleStatus;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.SpeakerActive;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.SpeakerList;
-import org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownCI;
+import org.dyndns.jkiddo.dmcp.chunks.media.audio.DataControlInt;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownOV;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownSS;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownSU;
@@ -346,7 +346,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	public Response ctrlInt(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("hsgid") String hsgid) throws IOException
 	{
 
-		UnknownCI caci = new UnknownCI();
+		DataControlInt caci = new DataControlInt();
 		caci.add(new Status(200));
 		caci.add(new UpdateType(0));
 		caci.add(new SpecifiedTotalCount(4));//

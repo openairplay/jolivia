@@ -16,6 +16,16 @@ public class TestSession extends Session
 	{
 		super(host, port, "0000000000000001");
 	}
+	
+	public TestSession() throws Exception
+	{
+		super("localhost", 3689, "0000000000000001");
+	}
+	
+	public TestSession(String host, int port, String username, String password) throws Exception
+	{
+		super(host, port, username, password);
+	}
 
 	public Database getTheDatabase()
 	{

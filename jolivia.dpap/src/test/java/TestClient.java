@@ -1,7 +1,7 @@
 import org.dyndns.jkiddo.dmap.chunks.audio.BaseContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseContainerns;
 import org.dyndns.jkiddo.dmap.chunks.audio.ServerDatabases;
-import org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownCI;
+import org.dyndns.jkiddo.dmcp.chunks.media.audio.DataControlInt;
 import org.dyndns.jkiddo.dmp.Container;
 import org.dyndns.jkiddo.dmp.Database;
 import org.dyndns.jkiddo.dmp.chunks.media.ContentCodesResponse;
@@ -114,9 +114,9 @@ public class TestClient
 			return serverInfoResponse;
 		}
 
-		public UnknownCI getControlInt() throws Exception
+		public DataControlInt getControlInt() throws Exception
 		{
-			UnknownCI serverInfoResponse = RequestHelper.requestParsed(String.format("%s/ctrl-int", this.getRequestBase()));
+			DataControlInt serverInfoResponse = RequestHelper.requestParsed(String.format("%s/ctrl-int", this.getRequestBase()));
 			return serverInfoResponse;
 		}
 

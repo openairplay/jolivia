@@ -32,7 +32,6 @@ import java.io.ByteArrayInputStream;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
 import org.dyndns.jkiddo.dmp.chunks.ByteChunk;
@@ -104,31 +103,33 @@ public class DmapInputStream extends BufferedInputStream
 		skip(length - Chunk.SHORT_LENGTH);
 		return (read() << 8) | read();
 	}
+	
+
+	private long readDate(int length) throws IOException
+	{
+		skip(length - Chunk.INT_LENGTH);
+		long v = read();
+		v = v << 24;
+		long v2,v3,v4;
+		v2 = (read() << 16);
+		v3 = (read() << 8);
+		v4 = read();
+		v = v | v2 | v3 | v4;
+		return  v;
+	}
 
 	private int readInt(int length) throws IOException
 	{
 		skip(length - Chunk.INT_LENGTH);
-		int size = Chunk.INT_LENGTH;
-		ByteBuffer buffer = ByteBuffer.allocate(size);
-		for(int i = 0; i < size; i++)
-		{
-			buffer.put((byte) read());
-		}
-		buffer.position(0);
-		return buffer.getInt();
+		return (read() << 24) | (read() << 16) | (read() << 8) | read();
 	}
 
 	private long readLong(int length) throws IOException
 	{
 		skip(length - Chunk.LONG_LENGTH);
-		int size = Chunk.LONG_LENGTH;
-		ByteBuffer buffer = ByteBuffer.allocate(size);
-		for(int i = 0; i < size; i++)
-		{
-			buffer.put((byte) read());
-		}
-		buffer.position(0);
-		return buffer.getLong();
+		return (read() << 54l) | (read() << 48l) | (read() << 40l)
+                | (read() << 32l) | (read() << 24l) | (read() << 16l)
+                | (read() << 8l) | read();
 	}
 
 	private String readString(int length) throws IOException
@@ -207,7 +208,7 @@ public class DmapInputStream extends BufferedInputStream
 			else if(chunk instanceof DateChunk)
 			{
 				checkLength(chunk, Chunk.DATE_LENGTH, contentLength);
-				((DateChunk) chunk).setValue(readInt(contentLength));
+				((DateChunk) chunk).setValue(readDate(contentLength));
 			}
 			else if(chunk instanceof VersionChunk)
 			{

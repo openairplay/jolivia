@@ -27,6 +27,8 @@
 
 package org.dyndns.jkiddo.dmp.chunks;
 
+import java.util.Date;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +45,7 @@ public abstract class DateChunk extends AbstractChunk
 	public static final long MIN_VALUE = 0l;
 	public static final long MAX_VALUE = 0xFFFFFFFFl;
 
-	protected int date;
+	protected long date;
 
 	public DateChunk(int type, String name, long value)
 	{
@@ -61,10 +63,15 @@ public abstract class DateChunk extends AbstractChunk
 	{
 		return date & MAX_VALUE;
 	}
+	
+	public Date getValueAsDate()
+	{
+		return new Date(getValue() * 1000);
+	}
 
 	public void setValue(long date)
 	{
-		this.date = (int) checkDateRange(date);
+		this.date = checkDateRange(date);
 	}
 
 	/**

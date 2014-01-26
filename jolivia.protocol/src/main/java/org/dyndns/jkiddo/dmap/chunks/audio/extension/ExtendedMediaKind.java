@@ -12,14 +12,14 @@ package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
 import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
-public class EMediaKind extends UIntChunk
+public class ExtendedMediaKind extends UIntChunk
 {
-	public EMediaKind()
+	public ExtendedMediaKind()
 	{
 		this(0);
 	}
 
-	public EMediaKind(int value)
+	public ExtendedMediaKind(int value)
 	{
 		super("aeMk", "com.apple.itunes.extended-media-kind", value);
 	}
