@@ -28,7 +28,6 @@ package org.dyndns.jkiddo.dmp;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.security.MessageDigest;
@@ -44,6 +43,8 @@ import java.util.StringTokenizer;
 import java.util.zip.GZIPOutputStream;
 
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
+
+import com.google.common.io.Resources;
 
 /**
  * Misc methods and constants
@@ -665,32 +666,7 @@ public final class DmapUtil
 
 	public static byte[] uriTobuffer(URI uri) throws IOException
 	{
-		ByteArrayOutputStream bais = new ByteArrayOutputStream();
-		InputStream is = null;
-		try
-		{
-			is = uri.toURL().openStream();
-			byte[] byteChunk = new byte[4096]; // Or whatever size you want to read in at a time.
-			int n;
-
-			while((n = is.read(byteChunk)) > 0)
-			{
-				bais.write(byteChunk, 0, n);
-			}
-			return bais.toByteArray();
-
-		}
-		catch(IOException e)
-		{
-			throw e;
-		}
-		finally
-		{
-			if(is != null)
-			{
-				is.close();
-			}
-		}
+		return Resources.toByteArray(uri.toURL());
 	}
 
 }

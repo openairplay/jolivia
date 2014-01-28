@@ -40,6 +40,7 @@ import org.dyndns.jkiddo.logic.desk.GoogleStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import com.google.gdata.util.ServiceException;
 
@@ -47,7 +48,7 @@ public class Window
 {
 
 	static Logger logger = LoggerFactory.getLogger(Window.class);
-	
+
 	final private JFrame mainFormJolivia;
 	final private JTextField txtUsername = new JTextField();
 	final private JPasswordField pwdPassword = new JPasswordField();
@@ -62,11 +63,15 @@ public class Window
 
 	/**
 	 * Launch the application.
-	 * @throws ServiceException 
-	 * @throws IOException 
+	 * 
+	 * @throws ServiceException
+	 * @throws IOException
 	 */
 	public static void main(final String[] args) throws IOException, ServiceException
 	{
+		SLF4JBridgeHandler.removeHandlersForRootLogger();
+		SLF4JBridgeHandler.install();
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run()
 			{
@@ -84,20 +89,20 @@ public class Window
 				}
 				catch(Exception e)
 				{
-					logger.error(e.getMessage(),e);
+					logger.error(e.getMessage(), e);
 				}
 			}
 		});
-		
-		
+
 	}
 
 	/**
 	 * Create the application.
-	 * @throws ServiceException 
-	 * @throws IOException 
+	 * 
+	 * @throws ServiceException
+	 * @throws IOException
 	 */
-	public Window(String ... args ) throws IOException, ServiceException
+	public Window(String... args) throws IOException, ServiceException
 	{
 		if(args.length == 2)
 		{
@@ -118,9 +123,9 @@ public class Window
 		mainFormJolivia.setBounds(100, 100, 450, 258);
 		mainFormJolivia.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainFormJolivia.getContentPane().setLayout(null);
-//		mainFormJolivia.pack();
+		// mainFormJolivia.pack();
 		mainFormJolivia.setVisible(true);
-		
+
 		chckbxUseGoogleMusic = new JCheckBox("Use Google Music as backend");
 		chckbxUseGoogleMusic.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e)
@@ -144,7 +149,6 @@ public class Window
 		chckbxUseGoogleMusic.setBounds(21, 22, 200, 18);
 		mainFormJolivia.getContentPane().add(chckbxUseGoogleMusic);
 
-		
 		txtUsername.setEnabled(false);
 		txtUsername.setToolTipText("Username");
 		txtUsername.setBounds(87, 52, 122, 28);
@@ -199,7 +203,7 @@ public class Window
 					jolivia.reRegister();
 					return;
 				}
-				
+
 				btnNewButton_1.setText("Publishing to all networks");
 				btnNewButton_1.setEnabled(false);
 				txtUsername.setEnabled(false);
@@ -236,7 +240,7 @@ public class Window
 						}
 						catch(Exception e)
 						{
-							logger.error(e.getMessage(),e);
+							logger.error(e.getMessage(), e);
 							onShutdown();
 						}
 					}
@@ -261,14 +265,14 @@ public class Window
 
 	private void setupGui()
 	{
-//		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-//			@Override
-//			public void run()
-//			{
-//				onShutdown();
-//			}
-//
-//		}));
+		// Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+		// @Override
+		// public void run()
+		// {
+		// onShutdown();
+		// }
+		//
+		// }));
 
 		try
 		{
@@ -351,7 +355,7 @@ public class Window
 		}
 		catch(Exception e)
 		{
-			logger.error(e.getMessage(),e);
+			logger.error(e.getMessage(), e);
 		}
 	}
 
