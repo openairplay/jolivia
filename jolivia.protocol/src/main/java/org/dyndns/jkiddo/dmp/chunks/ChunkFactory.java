@@ -41,7 +41,7 @@ public final class ChunkFactory
 	public ChunkFactory()
 	{
 		map.put(new Integer(0x668D6368), org.dyndns.jkiddo.dmp.chunks.unknown.HasChildContainers.class); // f?ch
-		map.put(new Integer(0x00000000), org.dyndns.jkiddo.dmp.chunks.unknown.ReqFplay.class); // ????
+		map.put(new Integer(0x3F3F3F3F), org.dyndns.jkiddo.dmp.chunks.unknown.ReqFplay.class); // ????
 
 		map.put(new Integer(0x6D736175), org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.class); // msau
 		map.put(new Integer(0x6D736173), org.dyndns.jkiddo.dmp.chunks.media.AuthenticationSchemes.class); // msas

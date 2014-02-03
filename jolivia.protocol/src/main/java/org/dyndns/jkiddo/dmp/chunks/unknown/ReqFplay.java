@@ -1,8 +1,8 @@
 package org.dyndns.jkiddo.dmp.chunks.unknown;
 
-import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
+import org.dyndns.jkiddo.dmp.chunks.UByteChunk;
 
-public class ReqFplay extends UIntChunk
+public class ReqFplay extends UByteChunk
 {
 	public ReqFplay()
 	{
@@ -11,6 +11,6 @@ public class ReqFplay extends UIntChunk
 
 	public ReqFplay(int i)
 	{
-		super("????", "com.apple.itunes.unknown.req-fplay", i);
+		super("????", "com.apple.itunes.req-fplay", i);
 	}
 }

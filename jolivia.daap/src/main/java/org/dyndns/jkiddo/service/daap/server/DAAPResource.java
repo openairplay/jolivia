@@ -2,6 +2,7 @@ package org.dyndns.jkiddo.service.daap.server;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
@@ -54,7 +55,6 @@ import org.dyndns.jkiddo.dmp.chunks.media.UTCTime;
 import org.dyndns.jkiddo.dmp.chunks.media.UTCTimeOffset;
 import org.dyndns.jkiddo.dmp.chunks.media.UnknownHL;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
-import org.dyndns.jkiddo.dmp.chunks.unknown.Voting;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
@@ -122,7 +122,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 			return ServiceInfo.create(DAAP_SERVICE_TYPE, name, port, 0, 0, records);
 		}
 		records.put(PASSWORD_KEY, "1");
-		return ServiceInfo.create(DAAP_SERVICE_TYPE, name+"_PW", port, 0, 0, records);
+		return ServiceInfo.create(DAAP_SERVICE_TYPE, name + "_PW", port, 0, 0, records);
 	}
 
 	@Override
@@ -139,8 +139,8 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		// serverInfoResponse.add(itemManager.getMusicSharingVersion()); If inserted, DAAP dies
 
 		serverInfoResponse.add(new SupportsExtraData(3));
-		//serverInfoResponse.add(new WelcomeMessage("jgjgjhgjgjhgjgyutrutuolmæ"));
-		//serverInfoResponse.add(new Voting(true));
+		// serverInfoResponse.add(new WelcomeMessage("jgjgjhgjgjhgjgyutrutuolmæ"));
+		// serverInfoResponse.add(new Voting(true));
 
 		serverInfoResponse.add(new SupportsExtensions(true));
 		serverInfoResponse.add(new SupportsGroups(3));
@@ -186,7 +186,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		serverInfoResponse.add(new SupportsIndex(true));
 		serverInfoResponse.add(new SupportsResolve(true));
 		serverInfoResponse.add(new DatabaseCount(itemManager.getDatabases().size()));
-		serverInfoResponse.add(new UTCTime(Calendar.getInstance().getTimeInMillis()/1000));
+		serverInfoResponse.add(new UTCTime(Calendar.getInstance().getTimeInMillis() / 1000));
 		serverInfoResponse.add(new UTCTimeOffset(7200));
 
 		return Util.buildResponse(serverInfoResponse, itemManager.getDMAPKey(), name);
@@ -202,9 +202,11 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		long[] range = getRange(rangeHeader, 0, array.length);
 		int pos = (int) range[0];
 		int end = (int) range[1];
-		byte[] buffer = new byte[end - pos];
-		System.arraycopy(array, pos, buffer, 0, buffer.length);
-		return Util.buildAudioResponse(buffer, pos, buffer.length, itemManager.getDMAPKey(), name);
+		// byte[] buffer = new byte[end - pos];
+		// System.arraycopy(array, pos, buffer, 0, buffer.length);
+		// Arrays.copyOfRange(array,pos,end);
+
+		return Util.buildAudioResponse(Arrays.copyOfRange(array, pos, end), pos, itemManager.getDMAPKey(), name);
 
 	}
 
@@ -310,7 +312,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	}
 
 	@Override
-	//@Path("databases/{databaseId}/groups/{groupdId}/extra_data/artwork")
+	// @Path("databases/{databaseId}/groups/{groupdId}/extra_data/artwork")
 	@Path("databases/{databaseId}/items/{groupdId}/extra_data/artwork")
 	@GET
 	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("groupId") long groupId, @QueryParam("session-id") long sessionId, @QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("group-type") String group_type, @QueryParam("daapSecInfo") String daapSecInfo) throws IOException

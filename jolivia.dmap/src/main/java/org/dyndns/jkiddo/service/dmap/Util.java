@@ -44,20 +44,20 @@ public class Util
 		return buildResponse(dmapKey, dmapServiceName).entity(DmapUtil.serialize(chunk, false)).build();// .header("Content-Encoding", "gzip").build();
 	}
 
-	public static Response buildAudioResponse(byte[] buffer, long position, long size, String dmapKey, String dmapServiceName)
+	public static Response buildAudioResponse(byte[] buffer, long position, String dmapKey, String dmapServiceName)
 	{
 		ResponseBuilder response = new ResponseBuilderImpl().header("Accept-Ranges", "bytes").header(HttpHeaders.DATE, DmapUtil.now()).header(dmapKey, dmapServiceName).header(HttpHeaders.CONTENT_TYPE, APPLICATION_X_DMAP_TAGGED).header("Connection", "close");
 
 		if(position == 0)
 		{
 			response.status(Response.Status.OK);
-			response.header(HttpHeaders.CONTENT_LENGTH, Long.toString(size));
+			response.header(HttpHeaders.CONTENT_LENGTH, Long.toString(buffer.length));
 		}
 		else
 		{
 			response.status(PARTIAL_CONTENT);
-			response.header(HttpHeaders.CONTENT_LENGTH, Long.toString(size - position));
-			response.header("Content-Range", "bytes " + position + "-" + (size - 1) + "/" + size);
+			response.header(HttpHeaders.CONTENT_LENGTH, Long.toString(buffer.length - position));
+			response.header("Content-Range", "bytes " + position + "-" + (buffer.length - 1) + "/" + buffer.length);
 		}
 		response.entity(buffer);
 		return response.build();

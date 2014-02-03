@@ -177,8 +177,8 @@ public class Library
 	{
 //		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songextradata,com.apple.itunes.artworkchecksum,daap.songartworkcount,com.apple.itunes.mediakind,daap.songartist,com.apple.itunes.jukebox-vote,com.apple.itunes.jukebox-client-vote,com.apple.itunes.jukebox-score,com.apple.itunes.jukebox-current,com.apple.itunes.extended-media-kind,com.apple.itunes.adam-ids-array&type=music&sort=name&include-sort-headers=1&query=('"+stuff+")", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId()), false);
 		//return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=all&query=('"+stuff+")", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId()), false);
-		//return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=all", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId()), false);
+		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=all", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId()), false);
 		
-		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=all&type=music&sort=album&query='daap.songartist:%s'", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId(), stuff), false);
+		//return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=all&type=music&sort=album&query='daap.songartist:%s'", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId(), stuff), false);
 	}
 }

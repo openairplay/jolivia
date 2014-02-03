@@ -38,8 +38,8 @@ public class DacpTestBed
 	@Test
 	public void doDaapTests() throws Exception
 	{
-		TestSession session2 = new TestSession();
-		TestSession session = new TestSession("localhost", 3689, "jenskristianvilladsen@hotmail.com", "sdæfkldlsæfk");
+		TestSession session = new TestSession();
+		//TestSession session = new TestSession("localhost", 3689, "jenskristianvilladsen@hotmail.com", "Engineer2Go!");
 		
 		ItemsContainer val = session.getLibrary().getTestCode("Sting");
 		for(ListingItem item : val.getListing().getListingItems())

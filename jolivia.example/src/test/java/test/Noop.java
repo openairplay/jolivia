@@ -255,7 +255,7 @@ public class Noop
 				}
 				if(!shortName.equals(chunk.getContentCodeString()))
 				{
-					System.out.println("			Shortname mismatch! Shortname was " + chunk.getContentCodeString() + ". Expected " + shortName);
+					System.out.println("			Shortname mismatch! Shortname was " + chunk.getContentCodeString() + ". Expected " + shortName + ". Code was " + c.getSpecificChunk(ContentCodesNumber.class).getValue());
 				}
 			}
 			catch(Exception e)

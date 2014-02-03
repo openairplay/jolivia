@@ -11,6 +11,6 @@ public class UnknownHD extends BooleanChunk
 
 	public UnknownHD(boolean b)
 	{
-		super("aeHD","com.apple.itunes.unknown-HD",b);
+		super("aeHD", "com.apple.itunes.is-hd-video", b);
 	}
 }
