@@ -4,6 +4,7 @@ import org.dyndns.jkiddo.dmap.chunks.audio.ServerDatabases;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.DataControlInt;
 import org.dyndns.jkiddo.dmp.Container;
 import org.dyndns.jkiddo.dmp.Database;
+import org.dyndns.jkiddo.dmp.IDatabase;
 import org.dyndns.jkiddo.dmp.chunks.media.ContentCodesResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.DatabaseShareType;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemCount;
@@ -28,7 +29,7 @@ public class TestClient
 		private final String host;
 		private long revision = 1;
 		private final int port, sessionId;
-		protected final Database database;
+		protected final IDatabase database;
 
 		public long getRevision()
 		{
@@ -40,7 +41,7 @@ public class TestClient
 			return sessionId;
 		}
 
-		public Database getDatabase()
+		public IDatabase getDatabase()
 		{
 			return database;
 		}

@@ -15,6 +15,8 @@ import org.dyndns.jkiddo.dmap.chunks.audio.SongTime;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion;
 import org.dyndns.jkiddo.dmp.Database;
 import org.dyndns.jkiddo.dmp.DmapUtil;
+import org.dyndns.jkiddo.dmp.IDatabase;
+import org.dyndns.jkiddo.dmp.ILibrary;
 import org.dyndns.jkiddo.dmp.Library;
 import org.dyndns.jkiddo.dmp.MediaItem;
 import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
@@ -43,7 +45,7 @@ public class MusicItemManager implements IItemManager
 	private static final VersionChunk mediaProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_209);
 	private static final MusicSharingVersion musicSharingVersion = new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_309);
 
-	private final Library library;
+	private final ILibrary library;
 	private final IMusicStoreReader reader;
 	private final Map<MediaItem, IMusicItem> itemToIMusicItem;
 
@@ -81,7 +83,7 @@ public class MusicItemManager implements IItemManager
 
 		this.library = new Library(applicationName);
 		Database database = new Database(applicationName);
-		database.setSongs(null, itemToIMusicItem.keySet());
+		database.setMediaItems(null, itemToIMusicItem.keySet());
 		this.library.addDatabase(null, database);
 	}
 	@Override
@@ -145,13 +147,13 @@ public class MusicItemManager implements IItemManager
 	}
 
 	@Override
-	public Collection<Database> getDatabases()
+	public Collection<IDatabase> getDatabases()
 	{
 		return library.getDatabases();
 	}
 
 	@Override
-	public Database getDatabase(long databaseId)
+	public IDatabase getDatabase(long databaseId)
 	{
 		return library.getDatabase(databaseId);
 	}

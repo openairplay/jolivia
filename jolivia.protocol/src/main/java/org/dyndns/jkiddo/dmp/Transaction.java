@@ -54,7 +54,7 @@ public class Transaction
 		this.open = true;
 	}
 
-	public Library getLibrary()
+	public ILibrary getLibrary()
 	{
 		return library;
 	}
@@ -165,14 +165,14 @@ public class Transaction
 	 * Returns true if Library or one of its Databases was modified
 	 */
 	@SuppressWarnings("unchecked")
-	protected synchronized boolean modified(Library library)
+	protected synchronized boolean modified(ILibrary library)
 	{
 		if(txnMap.containsKey(library))
 		{
 			return true;
 		}
 
-		for(Database database : library.getDatabases())
+		for(IDatabase database : library.getDatabases())
 		{
 			if(modified(database))
 			{
@@ -187,7 +187,7 @@ public class Transaction
 	 * Returns true if Database or one of its Playlists was modified
 	 */
 	@SuppressWarnings("unchecked")
-	public synchronized boolean modified(Database database)
+	public synchronized boolean modified(IDatabase database)
 	{
 		if(txnMap.containsKey(database))
 		{

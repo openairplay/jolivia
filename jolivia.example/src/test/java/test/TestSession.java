@@ -1,6 +1,6 @@
 package test;
 
-import org.dyndns.jkiddo.dmp.Database;
+import org.dyndns.jkiddo.dmp.IDatabase;
 import org.dyndns.jkiddo.service.daap.client.RequestHelper;
 import org.dyndns.jkiddo.service.daap.client.Session;
 
@@ -27,7 +27,7 @@ public class TestSession extends Session
 		super(host, port, username, password);
 	}
 
-	public Database getTheDatabase()
+	public IDatabase getTheDatabase()
 	{
 		return this.database;
 	}

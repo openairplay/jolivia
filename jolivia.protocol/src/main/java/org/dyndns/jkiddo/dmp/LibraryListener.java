@@ -29,5 +29,5 @@ package org.dyndns.jkiddo.dmp;
 
 public interface LibraryListener
 {
-	void libraryChanged(Library library, Library branch);
+	void libraryChanged(ILibrary library, ILibrary branch);
 }

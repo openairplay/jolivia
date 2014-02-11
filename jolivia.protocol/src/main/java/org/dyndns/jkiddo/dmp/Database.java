@@ -44,7 +44,7 @@ import org.dyndns.jkiddo.dmp.chunks.media.ParentContainerId;
  * 
  * @author Roger Kapsi
  */
-public class Database
+public class Database implements IDatabase
 {
 
 	/** databaseId is an 32bit unsigned value! */
@@ -172,30 +172,26 @@ public class Database
 		addPlaylistP(null, masterPlaylist);
 	}
 
-	/**
-	 * Returns the unique id of this Database
-	 * 
-	 * @return unique id of this Database
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#getItemId()
 	 */
+	@Override
 	public long getItemId()
 	{
 		return itemId;
 	}
 
-	/**
-	 * Returns the name of this Database.
-	 * 
-	 * @return name of this Database
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#getName()
 	 */
+	@Override
 	public String getName()
 	{
 		return name;
 	}
 
-	/**
-	 * Sets the name of this Database.
-	 * 
-	 * @param new name
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#setName(org.dyndns.jkiddo.dmp.Transaction, java.lang.String)
 	 */
 	public void setName(Transaction txn, final String name)
 	{
@@ -222,36 +218,36 @@ public class Database
 		this.name = name;
 	}
 
-	/**
-	 * The persistent id of this Database. Unused at the moment!
-	 * 
-	 * @return the persistent id of this Database
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#getPersistentId()
 	 */
+	@Override
 	public long getPersistentId()
 	{
 		return persistentId;
 	}
 
-	/**
-	 * Returns the master Playlist. The master Playlist is created automatically by the Database! There's no technical difference between a master Playlist and a usual Playlist except that it cannot be removed from the Database.
-	 * 
-	 * @return the master Playlist
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#getMasterContainer()
 	 */
+	@Override
 	public Container getMasterContainer()
 	{
 		return masterPlaylist;
 	}
 
-	/**
-	 * Returns an unmodifiable Set with all Playlists in this Database
-	 * 
-	 * @return unmodifiable Set of Playlists
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#getContainers()
 	 */
+	@Override
 	public Collection<Container> getContainers()
 	{
 		return Collections.unmodifiableList(playlists);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#addPlaylists(org.dyndns.jkiddo.dmp.Transaction, java.util.Collection)
+	 */
 	public void addPlaylists(Transaction txn, final Collection<Container> playlists)
 	{
 		for(Container p : playlists)
@@ -259,14 +255,10 @@ public class Database
 			addPlaylist(txn, p);
 		}
 	}
-	/**
-	 * Adds playlist to this Database
-	 * 
-	 * @param txn
-	 *            a Transaction
-	 * @param playlist
-	 *            the Playliost to add
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#addPlaylist(org.dyndns.jkiddo.dmp.Transaction, org.dyndns.jkiddo.dmp.Container)
 	 */
+	@Override
 	public void addPlaylist(Transaction txn, final Container playlist)
 	{
 		if(masterPlaylist.equals(playlist))
@@ -303,13 +295,8 @@ public class Database
 		}
 	}
 
-	/**
-	 * Removes playlist from this Database
-	 * 
-	 * @param txn
-	 *            a Transaction
-	 * @param playlist
-	 *            the Playlist to remove
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#removePlaylist(org.dyndns.jkiddo.dmp.Transaction, org.dyndns.jkiddo.dmp.Container)
 	 */
 	public void removePlaylist(Transaction txn, final Container playlist)
 	{
@@ -348,37 +335,44 @@ public class Database
 		}
 	}
 
-	/**
-	 * Returns the number of Playlists in this Database
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#getPlaylistCount()
 	 */
+	@Override
 	public int getPlaylistCount()
 	{
 		return playlists.size();
 	}
 
-	/**
-	 * Returns true if playlist is in this Database
-	 * 
-	 * @param playlist
-	 * @return true if Database contains playlist
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#containsPlaylist(org.dyndns.jkiddo.dmp.Container)
 	 */
 	public boolean containsPlaylist(Container playlist)
 	{
 		return playlists.contains(playlist);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#toString()
+	 */
 	@Override
 	public String toString()
 	{
 		return "Database(" + getItemId() + ", " + getName() + ")";
 	}
 
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#hashCode()
+	 */
 	@Override
 	public int hashCode()
 	{
 		return (int) (getItemId() & Integer.MAX_VALUE);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object o)
 	{
@@ -386,12 +380,13 @@ public class Database
 		{
 			return false;
 		}
-		return ((Database) o).getItemId() == getItemId();
+		return ((IDatabase) o).getItemId() == getItemId();
 	}
 
-	/**
-	 * Returns all Songs in this Database
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#getItems()
 	 */
+	@Override
 	public Collection<MediaItem> getItems()
 	{
 		Set<MediaItem> songs = null;
@@ -416,16 +411,17 @@ public class Database
 		return Collections.unmodifiableSet(songs);
 	}
 
-	/**
-	 * Returns the number of Songs in this Database
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#getSongCount()
 	 */
+	@Override
 	public int getSongCount()
 	{
 		return getItems().size();
 	}
 
-	/**
-	 * Returns true if song is in this Database
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#containsSong(org.dyndns.jkiddo.dmp.MediaItem)
 	 */
 	public boolean containsSong(MediaItem song)
 	{
@@ -439,11 +435,8 @@ public class Database
 		return false;
 	}
 
-	/**
-	 * Adds Song to all Playlists
-	 * 
-	 * @param txn
-	 * @param song
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#addSong(org.dyndns.jkiddo.dmp.Transaction, org.dyndns.jkiddo.dmp.MediaItem)
 	 */
 	public void addSong(Transaction txn, MediaItem song)
 	{
@@ -456,7 +449,11 @@ public class Database
 		}
 	}
 
-	public void setSongs(Transaction txn, Collection<MediaItem> songs)
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#setMediaItems(org.dyndns.jkiddo.dmp.Transaction, java.util.Collection)
+	 */
+	@Override
+	public void setMediaItems(Transaction txn, Collection<MediaItem> songs)
 	{
 		for(Container playlist : playlists)
 		{
@@ -467,11 +464,8 @@ public class Database
 		}
 	}
 
-	/**
-	 * Removes Song from all Playlists
-	 * 
-	 * @param txn
-	 * @param song
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#removeSong(org.dyndns.jkiddo.dmp.Transaction, org.dyndns.jkiddo.dmp.MediaItem)
 	 */
 	public void removeSong(Transaction txn, MediaItem song)
 	{
@@ -484,6 +478,9 @@ public class Database
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#getSongPlaylists(org.dyndns.jkiddo.dmp.MediaItem)
+	 */
 	public Set<Container> getSongPlaylists(MediaItem song)
 	{
 		Set<Container> ret = null;
@@ -507,11 +504,8 @@ public class Database
 		return Collections.emptySet();
 	}
 
-	/**
-	 * Gets and returns a Song by its ID
-	 * 
-	 * @param songId
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#getSong(long)
 	 */
 	public MediaItem getSong(long itemId)
 	{
@@ -529,12 +523,10 @@ public class Database
 		return null;
 	}
 
-	/**
-	 * Gets and returns a Playlist by its ID
-	 * 
-	 * @param playlistId
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.IDatabase#getContainer(long)
 	 */
+	@Override
 	public Container getContainer(long playlistId)
 	{
 		for(Container playlist : playlists)

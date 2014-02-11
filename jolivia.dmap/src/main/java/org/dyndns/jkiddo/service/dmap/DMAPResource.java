@@ -17,8 +17,8 @@ import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseContainerns;
 import org.dyndns.jkiddo.dmap.chunks.audio.ItemsContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.ServerDatabases;
 import org.dyndns.jkiddo.dmp.Container;
-import org.dyndns.jkiddo.dmp.Database;
 import org.dyndns.jkiddo.dmp.DmapUtil;
+import org.dyndns.jkiddo.dmp.IDatabase;
 import org.dyndns.jkiddo.dmp.MediaItem;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
 import org.dyndns.jkiddo.dmp.chunks.ContentCodesResponseImpl;
@@ -97,9 +97,9 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 
 		Listing listing = new Listing();
 
-		Collection<Database> databases = itemManager.getDatabases();
+		Collection<IDatabase> databases = itemManager.getDatabases();
 
-		for(Database database : databases)
+		for(IDatabase database : databases)
 		{
 			ListingItem listingItem = new ListingItem();
 			listingItem.add(new ItemId(database.getItemId()));

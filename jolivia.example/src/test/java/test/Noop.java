@@ -23,7 +23,7 @@ import org.dyndns.jkiddo.dmap.chunks.audio.SongTrackNumber;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongUserRating;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum;
 import org.dyndns.jkiddo.dmp.Container;
-import org.dyndns.jkiddo.dmp.Database;
+import org.dyndns.jkiddo.dmp.IDatabase;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
 import org.dyndns.jkiddo.dmp.chunks.ChunkFactory;
 import org.dyndns.jkiddo.dmp.chunks.media.ContentCodesName;
@@ -100,7 +100,7 @@ public class Noop
 		// eg. pressing play, pause, etc. ...
 		UpdateResponse response = session.getUpdateBlocking();
 
-		Database itunesDatabase = session.getDatabase();
+		IDatabase itunesDatabase = session.getDatabase();
 
 		// Get all playlists. For now the playlists only contains the
 		// master playlist. This is to be expanded

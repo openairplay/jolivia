@@ -24,7 +24,7 @@ import org.dyndns.jkiddo.dmap.chunks.audio.SongUserRating;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.MediaKind;
 import org.dyndns.jkiddo.dmp.Container;
-import org.dyndns.jkiddo.dmp.Database;
+import org.dyndns.jkiddo.dmp.IDatabase;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
@@ -65,7 +65,7 @@ public class DacpTestBed
 	{
 		TestSession session = new TestSession();
 
-		Database itunesDatabase = session.getDatabase();
+		IDatabase itunesDatabase = session.getDatabase();
 
 		// Get all playlists. For now the playlists only contains the
 		// master playlist. This is to be expanded

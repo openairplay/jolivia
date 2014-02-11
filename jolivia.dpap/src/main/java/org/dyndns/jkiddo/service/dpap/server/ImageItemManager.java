@@ -8,6 +8,8 @@ import javax.inject.Named;
 
 import org.dyndns.jkiddo.dmp.Database;
 import org.dyndns.jkiddo.dmp.DmapUtil;
+import org.dyndns.jkiddo.dmp.IDatabase;
+import org.dyndns.jkiddo.dmp.ILibrary;
 import org.dyndns.jkiddo.dmp.Library;
 import org.dyndns.jkiddo.dmp.MediaItem;
 import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
@@ -39,7 +41,7 @@ public class ImageItemManager implements IItemManager
 	private static final VersionChunk dpapProtocolVersion = new PictureProtocolVersion(DmapUtil.PPRO_VERSION_101);
 	private static final VersionChunk dmapProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_200);
 
-	private final Library library;
+	private final ILibrary library;
 	private final IImageStoreReader reader;
 	private final Map<MediaItem, IImageItem> itemToIImageItem;
 	private PasswordMethod authentication;
@@ -82,7 +84,7 @@ public class ImageItemManager implements IItemManager
 
 		this.library = new Library(applicationName);
 		Database database = new Database(applicationName);
-		database.setSongs(null, itemToIImageItem.keySet());
+		database.setMediaItems(null, itemToIImageItem.keySet());
 		this.library.addDatabase(null, database);
 	}
 
@@ -142,13 +144,13 @@ public class ImageItemManager implements IItemManager
 	}
 
 	@Override
-	public Collection<Database> getDatabases()
+	public Collection<IDatabase> getDatabases()
 	{
 		return library.getDatabases();
 	}
 
 	@Override
-	public Database getDatabase(long databaseId)
+	public IDatabase getDatabase(long databaseId)
 	{
 		return library.getDatabase(databaseId);
 	}

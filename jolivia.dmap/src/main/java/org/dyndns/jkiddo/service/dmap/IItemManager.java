@@ -2,7 +2,7 @@ package org.dyndns.jkiddo.service.dmap;
 
 import java.util.Collection;
 
-import org.dyndns.jkiddo.dmp.Database;
+import org.dyndns.jkiddo.dmp.IDatabase;
 import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod;
 
@@ -24,9 +24,9 @@ public interface IItemManager
 
 	long getRevision(String remoteHost, long sessionId);
 
-	Collection<Database> getDatabases();
+	Collection<IDatabase> getDatabases();
 
-	Database getDatabase(long databaseId);
+	IDatabase getDatabase(long databaseId);
 
 	byte[] getItemAsByteArray(long databaseId, long itemId);
 

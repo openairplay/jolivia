@@ -43,6 +43,7 @@ import org.dyndns.jkiddo.dmap.chunks.audio.ServerDatabases;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.DataControlInt;
 import org.dyndns.jkiddo.dmp.Container;
 import org.dyndns.jkiddo.dmp.Database;
+import org.dyndns.jkiddo.dmp.IDatabase;
 import org.dyndns.jkiddo.dmp.chunks.media.ContentCodesResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.DatabaseShareType;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemCount;
@@ -66,7 +67,7 @@ public class Session
 	private long revision = 1;
 	private final int port, sessionId;
 
-	protected final Database database, radioDatabase;
+	protected final IDatabase database, radioDatabase;
 
 	private final Library library;
 	private final RemoteControl remoteControl;
@@ -81,12 +82,12 @@ public class Session
 		return sessionId;
 	}
 
-	public Database getDatabase()
+	public IDatabase getDatabase()
 	{
 		return database;
 	}
 
-	public Database getRadioDatabase()
+	public IDatabase getRadioDatabase()
 	{
 		return radioDatabase;
 	}
@@ -158,7 +159,7 @@ public class Session
 		radioDatabase = getRadioDatabase(serverDatabases);
 	}
 
-	protected Database getRadioDatabase(ServerDatabases serverDatabases) throws Exception
+	protected IDatabase getRadioDatabase(ServerDatabases serverDatabases) throws Exception
 	{
 		// Radio database
 		final ListingItem database;
@@ -181,7 +182,7 @@ public class Session
 		String databaseName = database.getSpecificChunk(ItemName.class).getValue();
 		int itemId = database.getSpecificChunk(ItemId.class).getValue();
 		long persistentId = database.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue();
-		Database rd = new Database(databaseName, itemId, persistentId);
+		IDatabase rd = new Database(databaseName, itemId, persistentId);
 
 		DatabaseContainerns allPlaylists = getMasterDatabaseContainerList(itemId);
 
@@ -196,7 +197,7 @@ public class Session
 
 	}
 
-	protected Database getLocalDatabase(ServerDatabases serverDatabases) throws Exception
+	protected IDatabase getLocalDatabase(ServerDatabases serverDatabases) throws Exception
 	{
 		// Local database
 		// For now, the LocalDatabase is sufficient

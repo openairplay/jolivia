@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @author Roger Kapsi
  */
-public class Library
+public class Library implements ILibrary
 {
 
 	private static final AtomicLong PERISTENT_ID = new AtomicLong(1);
@@ -54,10 +54,10 @@ public class Library
 	private int totalDatabaseCount = 0;
 
 	/** Set of Databases */
-	private final Set<Database> databases = new HashSet<Database>();
+	private final Set<IDatabase> databases = new HashSet<IDatabase>();
 
 	/** Set of deleted Databases */
-	private Set<Database> deletedDatabases = null;
+	private Set<IDatabase> deletedDatabases = null;
 
 	/** List of listener */
 	private final List<WeakReference<LibraryListener>> listener = new ArrayList<WeakReference<LibraryListener>>();
@@ -75,13 +75,13 @@ public class Library
 			library.deletedDatabases = null;
 		}
 
-		for(Database database : library.databases)
+		for(IDatabase database : library.databases)
 		{
 			if(txn.modified(database))
 			{
 				if(deletedDatabases == null || !deletedDatabases.contains(database))
 				{
-					Database clone = new Database(database, txn);
+					IDatabase clone = new Database((Database) database, txn);
 					databases.add(clone);
 				}
 			}
@@ -106,16 +106,17 @@ public class Library
 
 	}
 
-	/**
-	 * Returns the current revision of this library.
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#getRevision()
 	 */
+	@Override
 	public synchronized int getRevision()
 	{
 		return revision;
 	}
 
-	/**
-	 * Sets the name of this Library. Note: Library must be open or an <tt>IllegalStateException</tt> will be thrown
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#setName(org.dyndns.jkiddo.dmp.Transaction, java.lang.String)
 	 */
 	public void setName(Transaction txn, final String name)
 	{
@@ -140,28 +141,28 @@ public class Library
 		this.name = name;
 	}
 
-	/**
-	 * Returns the name of this Library
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#getName()
 	 */
+	@Override
 	public String getName()
 	{
 		return name;
 	}
 
-	/**
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#getDatabases()
 	 */
-	public Set<Database> getDatabases()
+	@Override
+	public Set<IDatabase> getDatabases()
 	{
 		return Collections.unmodifiableSet(databases);
 	}
 
-	/**
-	 * Adds database to this Library (<b>NOTE</b>: only one Database per Library is supported by iTunes!)
-	 * 
-	 * @param database
-	 * @throws DaapTransactionException
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#addDatabase(org.dyndns.jkiddo.dmp.Transaction, org.dyndns.jkiddo.dmp.Database)
 	 */
+	@Override
 	public void addDatabase(Transaction txn, final Database database)
 	{
 		if(txn != null)
@@ -198,11 +199,8 @@ public class Library
 		}
 	}
 
-	/**
-	 * Removes database from this Library
-	 * 
-	 * @param database
-	 * @throws DaapTransactionException
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#removeDatabase(org.dyndns.jkiddo.dmp.Transaction, org.dyndns.jkiddo.dmp.Database)
 	 */
 	public void removeDatabase(Transaction txn, final Database database)
 	{
@@ -229,29 +227,32 @@ public class Library
 			totalDatabaseCount = databases.size();
 			if(deletedDatabases == null)
 			{
-				deletedDatabases = new HashSet<Database>();
+				deletedDatabases = new HashSet<IDatabase>();
 			}
 			deletedDatabases.add(database);
 		}
 	}
 
-	/**
-	 * Returns true if this Library contains database
-	 * 
-	 * @param database
-	 * @return
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#containsDatabase(org.dyndns.jkiddo.dmp.IDatabase)
 	 */
-	public synchronized boolean containsDatabase(Database database)
+	public synchronized boolean containsDatabase(IDatabase database)
 	{
 		return databases.contains(database);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#beginTransaction()
+	 */
 	public synchronized Transaction beginTransaction()
 	{
 		Transaction txn = new Transaction(this);
 		return txn;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#commit(org.dyndns.jkiddo.dmp.Transaction)
+	 */
 	public synchronized void commit(Transaction txn)
 	{
 		if(txn == null)
@@ -263,7 +264,7 @@ public class Library
 		}
 
 		this.revision++;
-		Library diff = new Library(this, txn);
+		ILibrary diff = new Library(this, txn);
 
 		synchronized(listener)
 		{
@@ -283,14 +284,23 @@ public class Library
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#rollback(org.dyndns.jkiddo.dmp.Transaction)
+	 */
 	public synchronized void rollback(Transaction txn)
 	{
 		// TODO: add code, actually do nothing...
 	}
 
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#close(org.dyndns.jkiddo.dmp.Transaction)
+	 */
 	public synchronized void close(Transaction txn)
 	{}
 
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#toString()
+	 */
 	@Override
 	public String toString()
 	{
@@ -306,6 +316,9 @@ public class Library
 		return PERISTENT_ID.getAndIncrement();
 	}
 
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#addLibraryListener(org.dyndns.jkiddo.dmp.LibraryListener)
+	 */
 	public void addLibraryListener(LibraryListener l)
 	{
 		synchronized(listener)
@@ -314,6 +327,9 @@ public class Library
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#removeLibraryListener(org.dyndns.jkiddo.dmp.LibraryListener)
+	 */
 	public void removeLibraryListener(LibraryListener l)
 	{
 		synchronized(listener)
@@ -330,9 +346,13 @@ public class Library
 		}
 	}
 
-	public Database getDatabase(long databaseId)
+	/* (non-Javadoc)
+	 * @see org.dyndns.jkiddo.dmp.ILibrary#getDatabase(long)
+	 */
+	@Override
+	public IDatabase getDatabase(long databaseId)
 	{
-		for(Database database : databases)
+		for(IDatabase database : databases)
 		{
 			if(database.getItemId() == databaseId)
 			{
