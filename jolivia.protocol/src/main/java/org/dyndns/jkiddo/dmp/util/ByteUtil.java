@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 
-package org.dyndns.jkiddo.dmp;
+package org.dyndns.jkiddo.dmp.util;
 
 /**
  * Miscellaneous Java primitive to byte array and vice versa methods.

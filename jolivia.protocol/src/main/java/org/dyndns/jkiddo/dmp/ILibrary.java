@@ -2,6 +2,8 @@ package org.dyndns.jkiddo.dmp;
 
 import java.util.Set;
 
+import org.dyndns.jkiddo.dmp.model.Database;
+
 public interface ILibrary
 {
 
@@ -30,7 +32,7 @@ public interface ILibrary
 	 * @param database
 	 * @throws DaapTransactionException
 	 */
-	public abstract void addDatabase(Transaction txn, Database database);
+	public abstract void addDatabase(Database database);
 
 	/**
 	 * Removes database from this Library

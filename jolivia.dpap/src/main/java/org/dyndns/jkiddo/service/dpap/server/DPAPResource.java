@@ -17,8 +17,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
-import org.dyndns.jkiddo.dmp.DmapUtil;
-import org.dyndns.jkiddo.dmp.MediaItem;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
 import org.dyndns.jkiddo.dmp.chunks.media.DatabaseCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
@@ -34,6 +32,8 @@ import org.dyndns.jkiddo.dmp.chunks.media.SupportsAutoLogout;
 import org.dyndns.jkiddo.dmp.chunks.media.SupportsIndex;
 import org.dyndns.jkiddo.dmp.chunks.media.TimeoutInterval;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
+import org.dyndns.jkiddo.dmp.model.MediaItem;
+import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.dyndns.jkiddo.dpap.chunks.picture.FileData;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.Util;

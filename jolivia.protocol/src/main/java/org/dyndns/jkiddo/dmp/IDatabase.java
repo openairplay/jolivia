@@ -2,6 +2,9 @@ package org.dyndns.jkiddo.dmp;
 
 import java.util.Collection;
 
+import org.dyndns.jkiddo.dmp.model.Container;
+import org.dyndns.jkiddo.dmp.model.MediaItem;
+
 public interface IDatabase
 {
 
@@ -48,7 +51,7 @@ public interface IDatabase
 	 * @param playlist
 	 *            the Playliost to add
 	 */
-	public abstract void addPlaylist(Transaction txn, Container playlist);
+	public abstract void addPlaylist(Container playlist);
 
 	/**
 	 * Removes playlist from this Database
@@ -94,7 +97,7 @@ public interface IDatabase
 	 * @param song
 	 */
 
-	public abstract void setMediaItems(Transaction txn, Collection<MediaItem> songs);
+	public abstract void setMediaItems(Collection<MediaItem> songs);
 
 	/**
 	 * Removes Song from all Playlists

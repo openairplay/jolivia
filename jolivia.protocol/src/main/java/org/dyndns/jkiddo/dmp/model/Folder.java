@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 
-package org.dyndns.jkiddo.dmp;
+package org.dyndns.jkiddo.dmp.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,9 +52,9 @@ public class Folder extends Container
 	/** */
 	private List<Container> playlists = null;
 
-	protected Folder(Container playlist, Transaction txn)
+	protected Folder(Container playlist)
 	{
-		super(playlist, txn);
+		super(playlist);
 		parentContainerId.setValue(getItemId());
 		playlists = ((Folder) playlist).playlists;
 		init();
@@ -73,13 +73,13 @@ public class Folder extends Container
 	}
 
 	@Override
-	public void addSong(Transaction txn, MediaItem song)
+	public void addSong(MediaItem song)
 	{
 		throw new UnsupportedOperationException("Songs cannot be added to Folders");
 	}
 
 	@Override
-	public void removeSong(Transaction txn, MediaItem song)
+	public void removeSong(MediaItem song)
 	{
 		throw new UnsupportedOperationException("Songs cannot be removed from Folders");
 	}
@@ -96,31 +96,20 @@ public class Folder extends Container
 		return Collections.emptyList();
 	}
 
-	public void addPlaylist(Transaction txn, final Container playlist)
+	public void addPlaylist(final Container playlist)
 	{
 		if(playlist instanceof Folder)
 		{
 			throw new IllegalArgumentException("Recursion is not supported");
 		}
 
-		if(txn != null)
+		
 		{
-			txn.addTxn(this, new Txn() {
-				@Override
-				public void commit(Transaction txn)
-				{
-					addPlaylistP(txn, playlist);
-				}
-			});
-			txn.attach(playlist);
-		}
-		else
-		{
-			addPlaylistP(txn, playlist);
+			addPlaylistP(playlist);
 		}
 	}
 
-	private void addPlaylistP(Transaction txn, Container playlist)
+	private void addPlaylistP(Container playlist)
 	{
 		if(playlists == null)
 		{
@@ -133,31 +122,20 @@ public class Folder extends Container
 		}
 	}
 
-	public void removePlaylist(Transaction txn, final Container playlist)
+	public void removePlaylist(final Container playlist)
 	{
 		if(playlist instanceof Folder)
 		{
 			return;
 		}
 
-		if(txn != null)
+		
 		{
-			txn.addTxn(this, new Txn() {
-				@Override
-				public void commit(Transaction txn)
-				{
-					removePlaylistP(txn, playlist);
-				}
-			});
-			txn.attach(playlist);
-		}
-		else
-		{
-			removePlaylistP(txn, playlist);
+			removePlaylistP(playlist);
 		}
 	}
 
-	private void removePlaylistP(Transaction txn, Container playlist)
+	private void removePlaylistP(Container playlist)
 	{
 		if(playlists == null)
 		{

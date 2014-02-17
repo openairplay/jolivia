@@ -24,8 +24,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 
 import org.dyndns.jkiddo.NotImplementedException;
-import org.dyndns.jkiddo.dmp.DmapUtil;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
+import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

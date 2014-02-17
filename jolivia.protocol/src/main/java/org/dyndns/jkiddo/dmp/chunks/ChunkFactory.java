@@ -30,8 +30,8 @@ package org.dyndns.jkiddo.dmp.chunks;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.dyndns.jkiddo.dmp.DmapUtil;
 import org.dyndns.jkiddo.dmp.ProtocolViolationException;
+import org.dyndns.jkiddo.dmp.util.DmapUtil;
 
 public final class ChunkFactory
 {

@@ -24,7 +24,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.dyndns.jkiddo.dmp;
+package org.dyndns.jkiddo.dmp.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -42,6 +42,7 @@ import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.zip.GZIPOutputStream;
 
+import org.dyndns.jkiddo.dmp.DmapOutputStream;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
 
 import com.google.common.io.Resources;

@@ -29,7 +29,7 @@ package org.dyndns.jkiddo.dmp.chunks;
 
 import java.io.UnsupportedEncodingException;
 
-import org.dyndns.jkiddo.dmp.DmapUtil;
+import org.dyndns.jkiddo.dmp.util.DmapUtil;
 
 /**
  * This class implements a String chunk. DAAP Strings are encoded in UTF-8.

@@ -17,7 +17,7 @@ import javax.imageio.ImageIO;
 
 import net.coobird.thumbnailator.Thumbnails;
 
-import org.dyndns.jkiddo.dmp.DmapUtil;
+import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

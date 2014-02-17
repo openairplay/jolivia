@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 
-package org.dyndns.jkiddo.dmp;
+package org.dyndns.jkiddo.dmp.model;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -109,7 +109,7 @@ public class MediaItem
 	/**
 	 * Returns the unique id of this song
 	 */
-	protected long getItemId()
+	public long getItemId()
 	{
 		return itemId.getUnsignedValue();
 	}

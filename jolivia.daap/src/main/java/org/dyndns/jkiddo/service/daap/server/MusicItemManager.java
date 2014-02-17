@@ -13,17 +13,17 @@ import org.dyndns.jkiddo.dmap.chunks.audio.SongFormat;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongSampleRate;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongTime;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion;
-import org.dyndns.jkiddo.dmp.Database;
-import org.dyndns.jkiddo.dmp.DmapUtil;
 import org.dyndns.jkiddo.dmp.IDatabase;
 import org.dyndns.jkiddo.dmp.ILibrary;
-import org.dyndns.jkiddo.dmp.Library;
-import org.dyndns.jkiddo.dmp.MediaItem;
 import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.MediaProtocolVersion;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
+import org.dyndns.jkiddo.dmp.model.Database;
+import org.dyndns.jkiddo.dmp.model.Library;
+import org.dyndns.jkiddo.dmp.model.MediaItem;
+import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.dyndns.jkiddo.dpap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader.IMusicItem;
@@ -83,8 +83,8 @@ public class MusicItemManager implements IItemManager
 
 		this.library = new Library(applicationName);
 		Database database = new Database(applicationName);
-		database.setMediaItems(null, itemToIMusicItem.keySet());
-		this.library.addDatabase(null, database);
+		database.setMediaItems( itemToIMusicItem.keySet());
+		this.library.addDatabase(database);
 	}
 	@Override
 	public PasswordMethod getAuthenticationMethod()

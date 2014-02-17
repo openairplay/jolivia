@@ -38,8 +38,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.dyndns.jkiddo.dmp.ByteUtil;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
+import org.dyndns.jkiddo.dmp.util.ByteUtil;
 
 /**
  * This tool will help you to detect changes in the DAAP protocol.

@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmp.chunks;
 
-import org.dyndns.jkiddo.dmp.DmapUtil;
+import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

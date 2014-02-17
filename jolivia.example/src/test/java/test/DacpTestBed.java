@@ -23,13 +23,13 @@ import org.dyndns.jkiddo.dmap.chunks.audio.SongTrackNumber;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongUserRating;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.MediaKind;
-import org.dyndns.jkiddo.dmp.Container;
 import org.dyndns.jkiddo.dmp.IDatabase;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
+import org.dyndns.jkiddo.dmp.model.Container;
 import org.junit.Test;
 
 public class DacpTestBed

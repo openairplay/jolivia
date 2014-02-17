@@ -41,8 +41,6 @@ import org.dyndns.jkiddo.dmap.chunks.audio.BaseContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseContainerns;
 import org.dyndns.jkiddo.dmap.chunks.audio.ServerDatabases;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.DataControlInt;
-import org.dyndns.jkiddo.dmp.Container;
-import org.dyndns.jkiddo.dmp.Database;
 import org.dyndns.jkiddo.dmp.IDatabase;
 import org.dyndns.jkiddo.dmp.chunks.media.ContentCodesResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.DatabaseShareType;
@@ -54,6 +52,8 @@ import org.dyndns.jkiddo.dmp.chunks.media.LoginResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.PersistentId;
 import org.dyndns.jkiddo.dmp.chunks.media.ServerInfoResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateResponse;
+import org.dyndns.jkiddo.dmp.model.Container;
+import org.dyndns.jkiddo.dmp.model.Database;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -191,7 +191,7 @@ public class Session
 		{
 			Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), 0, item.getSpecificChunk(ItemId.class).getUnsignedValue(), item.getSpecificChunk(ItemCount.class).getUnsignedValue());
 			logger.debug(String.format("found radio genre=%s", playlist.getName()));
-			rd.addPlaylist(null, playlist);
+			rd.addPlaylist(playlist);
 		}
 		return rd;
 

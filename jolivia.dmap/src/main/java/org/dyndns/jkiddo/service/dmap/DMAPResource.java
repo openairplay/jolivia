@@ -16,10 +16,7 @@ import javax.ws.rs.core.Response;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseContainerns;
 import org.dyndns.jkiddo.dmap.chunks.audio.ItemsContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.ServerDatabases;
-import org.dyndns.jkiddo.dmp.Container;
-import org.dyndns.jkiddo.dmp.DmapUtil;
 import org.dyndns.jkiddo.dmp.IDatabase;
-import org.dyndns.jkiddo.dmp.MediaItem;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
 import org.dyndns.jkiddo.dmp.chunks.ContentCodesResponseImpl;
 import org.dyndns.jkiddo.dmp.chunks.media.ContainerCount;
@@ -41,6 +38,9 @@ import org.dyndns.jkiddo.dmp.chunks.media.UnknownHL;
 import org.dyndns.jkiddo.dmp.chunks.media.UnknownHN;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
+import org.dyndns.jkiddo.dmp.model.Container;
+import org.dyndns.jkiddo.dmp.model.MediaItem;
+import org.dyndns.jkiddo.dmp.util.DmapUtil;
 
 @Consumes(MediaType.WILDCARD)
 @Produces(MediaType.WILDCARD)

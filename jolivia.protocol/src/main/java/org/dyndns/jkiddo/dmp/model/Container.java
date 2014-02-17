@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 
-package org.dyndns.jkiddo.dmp;
+package org.dyndns.jkiddo.dmp.model;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -45,6 +45,7 @@ import org.dyndns.jkiddo.dmap.chunks.audio.PlaylistRepeatMode;
 import org.dyndns.jkiddo.dmap.chunks.audio.PlaylistShuffleMode;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.PodcastPlaylist;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.SmartPlaylist;
+import org.dyndns.jkiddo.dmp.DmapException;
 import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
 import org.dyndns.jkiddo.dmp.chunks.StringChunk;
@@ -95,7 +96,7 @@ public class Container
 	/** Set of deleted Songs */
 	private Set<MediaItem> deletedSongs = null;
 
-	public Container(Container playlist, Transaction txn)
+	public Container(Container playlist)
 	{
 		this.itemId.setValue(playlist.itemId.getValue());
 		this.itemName.setValue(playlist.itemName.getValue());
@@ -110,7 +111,7 @@ public class Container
 
 		for(MediaItem song : playlist.mediaItems)
 		{
-			if(txn.modified(song))
+			//if(txn.modified(song))
 			{
 				if(deletedSongs == null || !deletedSongs.contains(song))
 				{
@@ -199,16 +200,9 @@ public class Container
 	 *            a new name
 	 * @throws DmapException
 	 */
-	public void setName(Transaction txn, String name)
+	public void setName(String name)
 	{
-		if(txn != null)
-		{
-			txn.addTxn(this, createNewTxn("itemName", name));
-		}
-		else
-		{
 			setValue("itemName", name);
-		}
 	}
 
 	/**
@@ -224,13 +218,8 @@ public class Container
 	/**
 	 * Sets whether or not this Playlist is a smart playlist. The difference between smart and common playlists is that smart playlists have a star as an icon and they appear as first in the list.
 	 */
-	public void setSmartPlaylist(Transaction txn, boolean smartPlaylist)
+	public void setSmartPlaylist(boolean smartPlaylist)
 	{
-		if(txn != null)
-		{
-			txn.addTxn(this, createNewTxn("smartPlaylist", smartPlaylist));
-		}
-		else
 		{
 			setValue("smartPlaylist", smartPlaylist);
 		}
@@ -247,13 +236,8 @@ public class Container
 	/**
      *
      */
-	public void setPodcastPlaylist(Transaction txn, final boolean podcastPlaylist)
+	public void setPodcastPlaylist(final boolean podcastPlaylist)
 	{
-		if(txn != null)
-		{
-			txn.addTxn(this, createNewTxn("podcastPlaylist", podcastPlaylist));
-		}
-		else
 		{
 			setValue("podcastPlaylist", podcastPlaylist);
 		}
@@ -270,14 +254,9 @@ public class Container
 	/**
      *
      */
-	public void setRepeatMode(Transaction txn, int repeatMode)
+	public void setRepeatMode(int repeatMode)
 	{
 		UByteChunk.checkUByteRange(repeatMode);
-		if(txn != null)
-		{
-			txn.addTxn(this, createNewTxn("repeatMode", repeatMode));
-		}
-		else
 		{
 			setValue("repeatMode", repeatMode);
 		}
@@ -294,14 +273,9 @@ public class Container
 	/**
      *
      */
-	public void setShuffleMode(Transaction txn, int shuffleMode)
+	public void setShuffleMode(int shuffleMode)
 	{
 		UByteChunk.checkUByteRange(shuffleMode);
-		if(txn != null)
-		{
-			txn.addTxn(this, createNewTxn("shuffleMode", shuffleMode));
-		}
-		else
 		{
 			setValue("shuffleMode", shuffleMode);
 		}
@@ -338,26 +312,14 @@ public class Container
 	 * @param song
 	 * @throws DaapTransactionException
 	 */
-	public void addSong(Transaction txn, final MediaItem song)
+	public void addSong(final MediaItem song)
 	{
-		if(txn != null)
 		{
-			txn.addTxn(this, new Txn() {
-				@Override
-				public void commit(Transaction txn)
-				{
-					addSongP(txn, song);
-				}
-			});
-			txn.attach(song); //
-		}
-		else
-		{
-			addSongP(txn, song);
+			addSongP(song);
 		}
 	}
 
-	private void addSongP(Transaction txn, MediaItem song)
+	private void addSongP(MediaItem song)
 	{
 		if(!containsSong(song) && mediaItems.add(song))
 		{
@@ -369,26 +331,15 @@ public class Container
 		}
 	}
 
-	public void setSongs(Transaction txn, final Collection<MediaItem> songs)
+	public void setSongs(final Collection<MediaItem> songs)
 	{
-		if(txn != null)
+		
 		{
-			txn.addTxn(this, new Txn() {
-				@Override
-				public void commit(Transaction txn)
-				{
-					setSongsP(txn, songs);
-				}
-			});
-			txn.attach(songs); //
-		}
-		else
-		{
-			setSongsP(txn, songs);
+			setSongsP(songs);
 		}
 	}
 
-	private void setSongsP(Transaction txn, Collection<MediaItem> songsCollection)
+	private void setSongsP(Collection<MediaItem> songsCollection)
 	{
 		this.mediaItems.addAll(songsCollection);
 		itemCount.setValue(songsCollection.size());
@@ -400,25 +351,14 @@ public class Container
 	 * @param song
 	 * @throws DaapTransactionException
 	 */
-	public void removeSong(Transaction txn, final MediaItem song)
+	public void removeSong(final MediaItem song)
 	{
-		if(txn != null)
 		{
-			txn.addTxn(this, new Txn() {
-				@Override
-				public void commit(Transaction txn)
-				{
-					removeSongP(txn, song);
-				}
-			});
-		}
-		else
-		{
-			removeSongP(txn, song);
+			removeSongP(song);
 		}
 	}
 
-	private void removeSongP(Transaction txn, MediaItem song)
+	private void removeSongP(MediaItem song)
 	{
 		if(mediaItems.remove(song))
 		{
@@ -493,39 +433,6 @@ public class Container
 	protected String getStringValue(StringChunk chunk)
 	{
 		return (chunk != null) ? chunk.getValue() : null;
-	}
-
-	protected Txn createNewTxn(final String name, boolean value)
-	{
-		return createNewTxn(name, boolean.class, new Boolean(value));
-	}
-
-	protected Txn createNewTxn(final String name, int value)
-	{
-		return createNewTxn(name, int.class, new Integer(value));
-	}
-
-	protected Txn createNewTxn(final String name, long value)
-	{
-		return createNewTxn(name, long.class, new Long(value));
-	}
-
-	protected Txn createNewTxn(final String name, String value)
-	{
-		return createNewTxn(name, String.class, value);
-	}
-
-	protected Txn createNewTxn(final String fieldName, final Class<?> valueClass, final Object value)
-	{
-		Txn txn = new Txn() {
-			@Override
-			public void commit(Transaction txn)
-			{
-				setValue(fieldName, valueClass, value);
-			}
-		};
-
-		return txn;
 	}
 
 	protected void setValue(String fieldName, boolean value)

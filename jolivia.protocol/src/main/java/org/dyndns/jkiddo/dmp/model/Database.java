@@ -25,7 +25,7 @@
  * limitations under the License.
  */
 
-package org.dyndns.jkiddo.dmp;
+package org.dyndns.jkiddo.dmp.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,6 +36,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.dyndns.jkiddo.dmap.chunks.audio.BaseContainer;
+import org.dyndns.jkiddo.dmp.DmapException;
+import org.dyndns.jkiddo.dmp.IDatabase;
 import org.dyndns.jkiddo.dmp.chunks.media.EditCommandSupported;
 import org.dyndns.jkiddo.dmp.chunks.media.ParentContainerId;
 
@@ -83,7 +85,7 @@ public class Database implements IDatabase
 	/** master playlist */
 	private Container masterPlaylist = null;
 
-	protected Database(Database database, Transaction txn)
+	protected Database(Database database)
 	{
 		this.itemId = database.itemId;
 		this.persistentId = database.persistentId;
@@ -99,11 +101,11 @@ public class Database implements IDatabase
 
 		for(Container playlist : database.playlists)
 		{
-			if(txn.modified(playlist))
+			//if(txn.modified(playlist))
 			{
 				if(deletedPlaylists == null || !deletedPlaylists.contains(playlist))
 				{
-					Container clone = new Container(playlist, txn);
+					Container clone = new Container(playlist);
 					playlists.add(clone);
 
 					if(playlist == database.masterPlaylist)
@@ -169,7 +171,7 @@ public class Database implements IDatabase
 		this.masterPlaylist.addChunk(new BaseContainer(1));
 		this.masterPlaylist.addChunk(new ParentContainerId(0));
 		this.masterPlaylist.addChunk(new EditCommandSupported(0));
-		addPlaylistP(null, masterPlaylist);
+		addPlaylistP(masterPlaylist);
 	}
 
 	/* (non-Javadoc)
@@ -193,27 +195,15 @@ public class Database implements IDatabase
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.IDatabase#setName(org.dyndns.jkiddo.dmp.Transaction, java.lang.String)
 	 */
-	public void setName(Transaction txn, final String name)
+	public void setName(final String name)
 	{
-		if(txn != null)
-		{
-			txn.addTxn(this, new Txn() {
-				@Override
-				public void commit(Transaction txn)
-				{
-					setNameP(txn, name);
-				}
-			});
-		}
-		else
-		{
-			setNameP(txn, name);
-		}
+	
+			setNameP(name);
 
-		masterPlaylist.setName(txn, name);
+		masterPlaylist.setName(name);
 	}
 
-	private void setNameP(Transaction txn, String name)
+	private void setNameP(String name)
 	{
 		this.name = name;
 	}
@@ -248,42 +238,30 @@ public class Database implements IDatabase
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.IDatabase#addPlaylists(org.dyndns.jkiddo.dmp.Transaction, java.util.Collection)
 	 */
-	public void addPlaylists(Transaction txn, final Collection<Container> playlists)
+	public void addPlaylists(final Collection<Container> playlists)
 	{
 		for(Container p : playlists)
 		{
-			addPlaylist(txn, p);
+			addPlaylist(p);
 		}
 	}
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.IDatabase#addPlaylist(org.dyndns.jkiddo.dmp.Transaction, org.dyndns.jkiddo.dmp.Container)
 	 */
 	@Override
-	public void addPlaylist(Transaction txn, final Container playlist)
+	public void addPlaylist(final Container playlist)
 	{
 		if(masterPlaylist.equals(playlist))
 		{
 			throw new DmapException("You cannot add the master playlist.");
 		}
 
-		if(txn != null)
 		{
-			txn.addTxn(this, new Txn() {
-				@Override
-				public void commit(Transaction txn)
-				{
-					addPlaylistP(txn, playlist);
-				}
-			});
-			txn.attach(playlist);
-		}
-		else
-		{
-			addPlaylistP(txn, playlist);
+			addPlaylistP(playlist);
 		}
 	}
 
-	private void addPlaylistP(Transaction txn, Container playlist)
+	private void addPlaylistP(Container playlist)
 	{
 		if(!containsPlaylist(playlist) && playlists.add(playlist))
 		{
@@ -298,30 +276,19 @@ public class Database implements IDatabase
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.IDatabase#removePlaylist(org.dyndns.jkiddo.dmp.Transaction, org.dyndns.jkiddo.dmp.Container)
 	 */
-	public void removePlaylist(Transaction txn, final Container playlist)
+	public void removePlaylist(final Container playlist)
 	{
 		if(masterPlaylist.equals(playlist))
 		{
 			throw new DmapException("You cannot remove the master playlist.");
 		}
 
-		if(txn != null)
 		{
-			txn.addTxn(this, new Txn() {
-				@Override
-				public void commit(Transaction txn)
-				{
-					removePlaylistP(txn, playlist);
-				}
-			});
-		}
-		else
-		{
-			removePlaylistP(txn, playlist);
+			removePlaylistP(playlist);
 		}
 	}
 
-	private void removePlaylistP(Transaction txn, Container playlist)
+	private void removePlaylistP(Container playlist)
 	{
 		if(playlists.remove(playlist))
 		{
@@ -438,13 +405,13 @@ public class Database implements IDatabase
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.IDatabase#addSong(org.dyndns.jkiddo.dmp.Transaction, org.dyndns.jkiddo.dmp.MediaItem)
 	 */
-	public void addSong(Transaction txn, MediaItem song)
+	public void addSong(MediaItem song)
 	{
 		for(Container playlist : playlists)
 		{
 			if(!(playlist instanceof Folder))
 			{
-				playlist.addSong(txn, song);
+				playlist.addSong(song);
 			}
 		}
 	}
@@ -453,13 +420,13 @@ public class Database implements IDatabase
 	 * @see org.dyndns.jkiddo.dmp.IDatabase#setMediaItems(org.dyndns.jkiddo.dmp.Transaction, java.util.Collection)
 	 */
 	@Override
-	public void setMediaItems(Transaction txn, Collection<MediaItem> songs)
+	public void setMediaItems(Collection<MediaItem> songs)
 	{
 		for(Container playlist : playlists)
 		{
 			if(!(playlist instanceof Folder))
 			{
-				playlist.setSongs(txn, songs);
+				playlist.setSongs(songs);
 			}
 		}
 	}
@@ -467,13 +434,13 @@ public class Database implements IDatabase
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.IDatabase#removeSong(org.dyndns.jkiddo.dmp.Transaction, org.dyndns.jkiddo.dmp.MediaItem)
 	 */
-	public void removeSong(Transaction txn, MediaItem song)
+	public void removeSong(MediaItem song)
 	{
 		for(Container playlist : playlists)
 		{
 			if(!(playlist instanceof Folder))
 			{
-				playlist.removeSong(txn, song);
+				playlist.removeSong(song);
 			}
 		}
 	}

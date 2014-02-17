@@ -46,6 +46,7 @@ import org.dyndns.jkiddo.dmp.chunks.ShortChunk;
 import org.dyndns.jkiddo.dmp.chunks.StringChunk;
 import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
+import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

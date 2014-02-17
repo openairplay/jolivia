@@ -25,16 +25,16 @@
  * limitations under the License.
  */
 
-package org.dyndns.jkiddo.dmp;
+package org.dyndns.jkiddo.dmp.model;
 
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+
+import org.dyndns.jkiddo.dmp.DmapException;
+import org.dyndns.jkiddo.dmp.IDatabase;
+import org.dyndns.jkiddo.dmp.ILibrary;
 
 /**
  * @author Roger Kapsi
@@ -60,11 +60,10 @@ public class Library implements ILibrary
 	private Set<IDatabase> deletedDatabases = null;
 
 	/** List of listener */
-	private final List<WeakReference<LibraryListener>> listener = new ArrayList<WeakReference<LibraryListener>>();
 
 	protected boolean clone = false;
 
-	protected Library(Library library, Transaction txn)
+	protected Library(Library library)
 	{
 		this.name = library.name;
 		this.revision = library.revision;
@@ -77,14 +76,14 @@ public class Library implements ILibrary
 
 		for(IDatabase database : library.databases)
 		{
-			if(txn.modified(database))
+			/*if(txn.modified(database))
 			{
 				if(deletedDatabases == null || !deletedDatabases.contains(database))
 				{
 					IDatabase clone = new Database((Database) database, txn);
 					databases.add(clone);
 				}
-			}
+			}*/
 		}
 
 		this.totalDatabaseCount = library.totalDatabaseCount;
@@ -96,7 +95,6 @@ public class Library implements ILibrary
 	public Library(String name)
 	{
 		this.name = name;
-		commit(null);
 
 		init();
 	}
@@ -118,25 +116,15 @@ public class Library implements ILibrary
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.ILibrary#setName(org.dyndns.jkiddo.dmp.Transaction, java.lang.String)
 	 */
-	public void setName(Transaction txn, final String name)
+	public void setName(final String name)
 	{
-		if(txn != null)
+		
 		{
-			txn.addTxn(this, new Txn() {
-				@Override
-				public void commit(Transaction txn)
-				{
-					setNameP(txn, name);
-				}
-			});
-		}
-		else
-		{
-			setNameP(txn, name);
+			setNameP(name);
 		}
 	}
 
-	private void setNameP(Transaction txn, String name)
+	private void setNameP(String name)
 	{
 		this.name = name;
 	}
@@ -163,26 +151,15 @@ public class Library implements ILibrary
 	 * @see org.dyndns.jkiddo.dmp.ILibrary#addDatabase(org.dyndns.jkiddo.dmp.Transaction, org.dyndns.jkiddo.dmp.Database)
 	 */
 	@Override
-	public void addDatabase(Transaction txn, final Database database)
+	public void addDatabase(final Database database)
 	{
-		if(txn != null)
+		
 		{
-			txn.addTxn(this, new Txn() {
-				@Override
-				public void commit(Transaction txn)
-				{
-					addDatabaseP(txn, database);
-				}
-			});
-			txn.attach(database);
-		}
-		else
-		{
-			addDatabaseP(txn, database);
+			addDatabaseP(database);
 		}
 	}
 
-	private void addDatabaseP(Transaction txn, Database database)
+	private void addDatabaseP(Database database)
 	{
 		if(!databases.isEmpty())
 		{
@@ -202,25 +179,15 @@ public class Library implements ILibrary
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.ILibrary#removeDatabase(org.dyndns.jkiddo.dmp.Transaction, org.dyndns.jkiddo.dmp.Database)
 	 */
-	public void removeDatabase(Transaction txn, final Database database)
+	public void removeDatabase(final Database database)
 	{
-		if(txn != null)
+		
 		{
-			txn.addTxn(this, new Txn() {
-				@Override
-				public void commit(Transaction txn)
-				{
-					removeDatabaseP(txn, database);
-				}
-			});
-		}
-		else
-		{
-			removeDatabaseP(txn, database);
+			removeDatabaseP( database);
 		}
 	}
 
-	private void removeDatabaseP(Transaction txn, Database database)
+	private void removeDatabaseP(Database database)
 	{
 		if(databases.remove(database))
 		{
@@ -244,50 +211,17 @@ public class Library implements ILibrary
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.ILibrary#beginTransaction()
 	 */
-	public synchronized Transaction beginTransaction()
-	{
-		Transaction txn = new Transaction(this);
-		return txn;
-	}
+	
 
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.ILibrary#commit(org.dyndns.jkiddo.dmp.Transaction)
 	 */
-	public synchronized void commit(Transaction txn)
-	{
-		if(txn == null)
-		{
-			txn = new Transaction(this);
-			txn.addTxn(this, new Txn());
-			txn.commit();
-			return;
-		}
-
-		this.revision++;
-		ILibrary diff = new Library(this, txn);
-
-		synchronized(listener)
-		{
-			Iterator<WeakReference<LibraryListener>> it = listener.iterator();
-			while(it.hasNext())
-			{
-				LibraryListener l = it.next().get();
-				if(l == null)
-				{
-					it.remove();
-				}
-				else
-				{
-					l.libraryChanged(this, diff);
-				}
-			}
-		}
-	}
+	
 
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.ILibrary#rollback(org.dyndns.jkiddo.dmp.Transaction)
 	 */
-	public synchronized void rollback(Transaction txn)
+	public synchronized void rollback()
 	{
 		// TODO: add code, actually do nothing...
 	}
@@ -295,7 +229,7 @@ public class Library implements ILibrary
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.ILibrary#close(org.dyndns.jkiddo.dmp.Transaction)
 	 */
-	public synchronized void close(Transaction txn)
+	public synchronized void close()
 	{}
 
 	/* (non-Javadoc)
@@ -319,33 +253,10 @@ public class Library implements ILibrary
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.ILibrary#addLibraryListener(org.dyndns.jkiddo.dmp.LibraryListener)
 	 */
-	public void addLibraryListener(LibraryListener l)
-	{
-		synchronized(listener)
-		{
-			listener.add(new WeakReference<LibraryListener>(l));
-		}
-	}
 
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.ILibrary#removeLibraryListener(org.dyndns.jkiddo.dmp.LibraryListener)
 	 */
-	public void removeLibraryListener(LibraryListener l)
-	{
-		synchronized(listener)
-		{
-			Iterator<WeakReference<LibraryListener>> it = listener.iterator();
-			while(it.hasNext())
-			{
-				LibraryListener gotten = it.next().get();
-				if(gotten == null || gotten == l)
-				{
-					it.remove();
-				}
-			}
-		}
-	}
-
 	/* (non-Javadoc)
 	 * @see org.dyndns.jkiddo.dmp.ILibrary#getDatabase(long)
 	 */

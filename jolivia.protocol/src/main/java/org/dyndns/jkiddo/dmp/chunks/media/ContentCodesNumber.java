@@ -27,8 +27,8 @@
 
 package org.dyndns.jkiddo.dmp.chunks.media;
 
-import org.dyndns.jkiddo.dmp.DmapUtil;
 import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
+import org.dyndns.jkiddo.dmp.util.DmapUtil;
 
 /**
  * The number of a ContentCode (it's actually a four character code). It is needed to build a list of capabilities of the Server which is send to the client...

@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmp.chunks;
 
-import org.dyndns.jkiddo.dmp.DmapUtil;
+import org.dyndns.jkiddo.dmp.util.DmapUtil;
 
 /**
  * An abstract base class for Chunks.

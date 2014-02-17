@@ -30,7 +30,7 @@ package org.dyndns.jkiddo.dmp.chunks.unknown;
 import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
 
 /**
- * @since iTines 5.0
+ * @since iTunes 5.0
  */
 public class HasChildContainers extends BooleanChunk
 {
