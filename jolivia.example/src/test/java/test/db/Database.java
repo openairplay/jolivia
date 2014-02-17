@@ -18,6 +18,13 @@ public class Database
 		this.library = library;
 	}
 	
+	public Library getLibrary()
+	{
+		return library;
+	}
+
+
+
 	@DatabaseField(generatedId = true)
 	private int itemId;
 	

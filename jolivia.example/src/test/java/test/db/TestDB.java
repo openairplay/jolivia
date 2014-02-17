@@ -1,5 +1,7 @@
 package test.db;
 
+import static org.junit.Assert.*;
+
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.UUID;
@@ -29,7 +31,9 @@ public class TestDB
 		databaseDao = DaoManager.createDao(connectionSource, Database.class);
 
 		TableUtils.createTable(connectionSource, Library.class);
-		TableUtils.createTable(connectionSource, Database.class);		
+		TableUtils.createTable(connectionSource, Database.class);
+		TableUtils.createTable(connectionSource, Container.class);
+		TableUtils.createTable(connectionSource, MediaItem.class);
 	}
 	
 	@After
@@ -39,9 +43,9 @@ public class TestDB
 	}
 	
 	@Test
-	public void dbTest() throws SQLException
+	public void libraryTest() throws SQLException
 	{
-		String name = UUID.randomUUID().toString();
+		String name = randomString();
 		Library library = new Library(name);
 		Database database = new Database(library);
 		
@@ -51,6 +55,27 @@ public class TestDB
 
 		Library library2 = libraryDao.queryForEq("name", name).get(0);
 		Collection<Database> someDatabase = library2.getDatabases();
-		System.out.println("Database: " + library2.getName());
+		Library library3 = someDatabase.iterator().next().getLibrary();
+		
+		assertEquals(library.getName(), library2.getName());
+		assertEquals(library2.getName(), library3.getName());
+	}
+
+	protected String randomString()
+	{
+		return UUID.randomUUID().toString();
+	}
+	
+	@Test
+	public void testAddingMediaItems() throws SQLException
+	{
+		String name = randomString();
+		Library library = new Library(name);
+		Database database = new Database(library);
+		
+		// persist the account object to the database
+		libraryDao.create(library);
+		databaseDao.create(database);
+		
 	}
 }

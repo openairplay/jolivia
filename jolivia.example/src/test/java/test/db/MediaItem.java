@@ -11,4 +11,7 @@ public class MediaItem
 	
 	@DatabaseField(foreign = true)
 	private Database database;
+	
+	@DatabaseField(foreign = true)
+	private Container container;
 }

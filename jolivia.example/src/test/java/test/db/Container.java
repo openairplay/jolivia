@@ -14,7 +14,8 @@ public class Container
 	private Collection<MediaItem> mediaItems = new ArrayList<MediaItem>();
 
 	@DatabaseField(generatedId = true)
-	private String name;
+	private int itemId;
+	
 	public Container()
 	{
 		// TODO Auto-generated constructor stub
