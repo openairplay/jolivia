@@ -49,4 +49,14 @@ public class ItemKind extends UByteChunk
 	{
 		super("mikd", "dmap.itemkind", kind);
 	}
+	
+	@Override
+	public void setValue(int value)
+	{
+		if(value != CONTAINER && value != AUDIO && value != IMAGE)
+		{
+			System.out.println();
+		}
+		super.setValue(value);
+	}
 }

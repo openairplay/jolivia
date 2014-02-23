@@ -32,10 +32,10 @@ import org.dyndns.jkiddo.dmp.chunks.media.ServerRevision;
 import org.dyndns.jkiddo.dmp.chunks.media.SessionId;
 import org.dyndns.jkiddo.dmp.chunks.media.SpecifiedTotalCount;
 import org.dyndns.jkiddo.dmp.chunks.media.Status;
-import org.dyndns.jkiddo.dmp.chunks.media.UnknownHC;
-import org.dyndns.jkiddo.dmp.chunks.media.UnknownHI;
-import org.dyndns.jkiddo.dmp.chunks.media.UnknownHL;
-import org.dyndns.jkiddo.dmp.chunks.media.UnknownHN;
+import org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderChar;
+import org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderIndex;
+import org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderListing;
+import org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderNumber;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
 import org.dyndns.jkiddo.dmp.model.Container;
@@ -255,11 +255,11 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		// }
 		// playlistSongs.add(deletedListing);
 		// }
-		UnknownHL unknownHl = new UnknownHL();
+		SortingHeaderListing unknownHl = new SortingHeaderListing();
 		ListingItem item = new ListingItem();
-		item.add(new UnknownHC(0x54));//
-		item.add(new UnknownHI(0));
-		item.add(new UnknownHN(listing.size()));
+		item.add(new SortingHeaderChar(0x54));//
+		item.add(new SortingHeaderIndex(0));
+		item.add(new SortingHeaderNumber(listing.size()));
 		unknownHl.add(item);
 		itemsContainer.add(unknownHl);
 		return Util.buildResponse(itemsContainer, itemManager.getDMAPKey(), name);

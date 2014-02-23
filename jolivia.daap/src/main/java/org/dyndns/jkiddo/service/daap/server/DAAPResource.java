@@ -51,7 +51,7 @@ import org.dyndns.jkiddo.dmp.chunks.media.SupportsUpdate;
 import org.dyndns.jkiddo.dmp.chunks.media.TimeoutInterval;
 import org.dyndns.jkiddo.dmp.chunks.media.UTCTime;
 import org.dyndns.jkiddo.dmp.chunks.media.UTCTimeOffset;
-import org.dyndns.jkiddo.dmp.chunks.media.UnknownHL;
+import org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderListing;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
@@ -335,7 +335,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 			response.add(new ReturnedCount(0));//
 
 			Listing listing = new Listing();
-			listing.add(new UnknownHL());//
+			listing.add(new SortingHeaderListing());//
 			response.add(listing);
 
 			return Util.buildResponse(response, itemManager.getDMAPKey(), name);

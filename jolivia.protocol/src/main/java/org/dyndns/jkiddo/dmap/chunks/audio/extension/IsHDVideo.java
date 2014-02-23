@@ -2,14 +2,14 @@ package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
 import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
 
-public class UnknownHD extends BooleanChunk
+public class IsHDVideo extends BooleanChunk
 {
-	public UnknownHD()
+	public IsHDVideo()
 	{
 		this(false);
 	}
 
-	public UnknownHD(boolean b)
+	public IsHDVideo(boolean b)
 	{
 		super("aeHD", "com.apple.itunes.is-hd-video", b);
 	}

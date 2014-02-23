@@ -425,4 +425,11 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@GET
+	@Path("resolve")
+	public Response resolve() throws IOException
+	{
+		return null;
+	}
 }

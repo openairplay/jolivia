@@ -89,10 +89,10 @@ public final class ChunkFactory
 		map.put(new Integer(0x6D736D61), org.dyndns.jkiddo.dmp.chunks.media.SpeakerMacAddress.class); // msma
 		map.put(new Integer(0x6D757064), org.dyndns.jkiddo.dmp.chunks.media.UpdateResponse.class); // mupd
 		map.put(new Integer(0x6D757479), org.dyndns.jkiddo.dmp.chunks.media.UpdateType.class); // muty
-		map.put(new Integer(0x6d73686c), org.dyndns.jkiddo.dmp.chunks.media.UnknownHL.class); // mshl
-		map.put(new Integer(0x6d736863), org.dyndns.jkiddo.dmp.chunks.media.UnknownHC.class); // mshc
-		map.put(new Integer(0x6d736869), org.dyndns.jkiddo.dmp.chunks.media.UnknownHI.class); // mshi
-		map.put(new Integer(0x6d73686e), org.dyndns.jkiddo.dmp.chunks.media.UnknownHN.class); // mshn
+		map.put(new Integer(0x6d73686c), org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderListing.class); // mshl
+		map.put(new Integer(0x6d736863), org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderChar.class); // mshc
+		map.put(new Integer(0x6d736869), org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderIndex.class); // mshi
+		map.put(new Integer(0x6d73686e), org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderNumber.class); // mshn
 		map.put(new Integer(0x6d736564), org.dyndns.jkiddo.dmp.chunks.media.Unknowned.class); // msed
 		map.put(new Integer(0x6d736d6c), org.dyndns.jkiddo.dmp.chunks.media.Unknownml.class); // msml
 		map.put(new Integer(0x6d737463), org.dyndns.jkiddo.dmp.chunks.media.UTCTime.class); // mstc
@@ -130,10 +130,9 @@ public final class ChunkFactory
 		map.put(new Integer(0x63655152), org.dyndns.jkiddo.dmcp.chunks.media.audio.PlayQueueContentsResponse.class); // ceQR
 		map.put(new Integer(0x63617363), org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownSC.class); // casc
 		map.put(new Integer(0x63616b73), org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownKs.class); // caks
-		
-		
+
 		map.put(new Integer(0x63655153), org.dyndns.jkiddo.dmcp.chunks.media.extension.UnknownQS.class); // ceQS
-		
+
 		map.put(new Integer(0x63655173), org.dyndns.jkiddo.dmcp.chunks.media.extension.PlayQueueId.class); // ceQs
 		map.put(new Integer(0x6365516e), org.dyndns.jkiddo.dmcp.chunks.media.extension.PlayQueueName.class); // ceQn
 		map.put(new Integer(0x6365516b), org.dyndns.jkiddo.dmcp.chunks.media.extension.UnknownQk.class); // ceQk
@@ -145,7 +144,6 @@ public final class ChunkFactory
 		map.put(new Integer(0x63655161), org.dyndns.jkiddo.dmcp.chunks.media.extension.PlayQueueAlbum.class); // ceQa
 		map.put(new Integer(0x63655167), org.dyndns.jkiddo.dmcp.chunks.media.extension.PlayQueueGenre.class); // ceQg
 		map.put(new Integer(0x63655149), org.dyndns.jkiddo.dmcp.chunks.media.extension.UnknownceQI.class); // ceQI
-		
 
 		map.put(new Integer(0x63655175), org.dyndns.jkiddo.dmcp.chunks.media.extension.UnknownQU.class); // ceQu
 		map.put(new Integer(0x63654753), org.dyndns.jkiddo.dmcp.chunks.media.extension.GeniusSelectable.class); // ceGs
@@ -264,7 +262,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x61676172), org.dyndns.jkiddo.dmap.chunks.audio.ArtistSearchContainer.class); // agar
 		map.put(new Integer(0x61736472), org.dyndns.jkiddo.dmap.chunks.audio.SongDateReleased.class); // asdr
 		map.put(new Integer(0x61736470), org.dyndns.jkiddo.dmap.chunks.audio.SongDatePurchased.class); // asdp
-		
+
 		map.put(new Integer(0x6d736375), org.dyndns.jkiddo.dmap.chunks.audio.UnknownCU.class); // mscu
 
 		map.put(new Integer(0x61655347), org.dyndns.jkiddo.dmap.chunks.audio.extension.SavedGenius.class); // aeSG
@@ -316,8 +314,59 @@ public final class ChunkFactory
 		map.put(new Integer(0x61655356), org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion.class); // aeSV
 		map.put(new Integer(0x61654E56), org.dyndns.jkiddo.dmap.chunks.audio.extension.NormVolume.class); // aeNV
 		map.put(new Integer(0x61654373), org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownCS.class); // aeCs
-		map.put(new Integer(0x61654844), org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownHD.class); // aeHD
-		
+		map.put(new Integer(0x61654844), org.dyndns.jkiddo.dmap.chunks.audio.extension.IsHDVideo.class); // aeHD
+
+		map.put(new Integer(0x61654364), org.dyndns.jkiddo.dmap.chunks.audio.extension.CloudID.class); // aeCd
+		map.put(new Integer(0x61654355), org.dyndns.jkiddo.dmap.chunks.audio.extension.CloudUserID.class); // aeCU
+		map.put(new Integer(0x6165434d), org.dyndns.jkiddo.dmap.chunks.audio.extension.CloudStatus.class); // aeCM
+		map.put(new Integer(0x61654346), org.dyndns.jkiddo.dmap.chunks.audio.extension.CloudFlavorID.class); // aeCF
+		map.put(new Integer(0x6165434b), org.dyndns.jkiddo.dmap.chunks.audio.extension.CloudLibraryKind.class); // aeCK
+
+		/*List<Class<? extends Chunk>> set = Lists.newArrayList(map.values());
+		Collections.sort(set, new Comparator<Class<? extends Chunk>>() {
+
+			@Override
+			public int compare(Class<? extends Chunk> o1, Class<? extends Chunk> o2)
+			{
+				try
+				{
+					return o1.newInstance().getName().compareTo(o2.newInstance().getName());
+				}
+				catch(InstantiationException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				catch(IllegalAccessException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				return 0;
+			}
+		});
+		Iterator<Class<? extends Chunk>> it = set.iterator();
+		while(it.hasNext())
+		{
+			
+			try
+			{
+				// FIVE("", "", 1);
+				Chunk i = it.next().newInstance();
+				System.out.println(i.getContentCodeString() + "(\"" + i.getContentCodeString() + "\",\"" + i.getName() + "\"," + i.getType() + "),");
+			}
+			catch(InstantiationException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			catch(IllegalAccessException e1)
+			{
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}			
+		}*/
 	}
 
 	public Class<? extends Chunk> getChunkClass(Integer contentCode)
@@ -333,7 +382,7 @@ public final class ChunkFactory
 			return clazz.newInstance();
 		}
 		catch(Exception err)
-		{ 
+		{
 			throw new ProtocolViolationException("Content code: " + DmapUtil.toContentCodeString(contentCode) + " not found. Hash is 0x" + Integer.toHexString(new Integer(contentCode)), err);
 		}
 	}

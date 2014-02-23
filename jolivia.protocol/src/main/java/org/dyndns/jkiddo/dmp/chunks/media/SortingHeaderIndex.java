@@ -10,17 +10,17 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmp.chunks.media;
 
-import org.dyndns.jkiddo.dmp.chunks.UShortChunk;
+import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
-public class UnknownHC extends UShortChunk
+public class SortingHeaderIndex extends UIntChunk
 {
-	public UnknownHC()
+	public SortingHeaderIndex()
 	{
 		this(0);
 	}
 
-	public UnknownHC(int value)
+	public SortingHeaderIndex(int value)
 	{
-		super("mshc", "com.apple.itunes.unknown-hl", value);
+		super("mshi", "dmap.sortingheaderindex", value);
 	}
 }

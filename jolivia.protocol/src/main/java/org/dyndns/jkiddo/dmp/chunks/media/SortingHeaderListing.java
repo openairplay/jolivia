@@ -10,17 +10,12 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmp.chunks.media;
 
-import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
+import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
 
-public class UnknownHN extends UIntChunk
+public class SortingHeaderListing extends ContainerChunk
 {
-	public UnknownHN()
+	public SortingHeaderListing()
 	{
-		this(0);
-	}
-
-	public UnknownHN(int value)
-	{
-		super("mshn", "com.apple.itunes.unknown-hn", value);
+		super("mshl", "dmap.sortingheaderlisting");
 	}
 }

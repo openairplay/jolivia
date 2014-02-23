@@ -184,34 +184,13 @@ public final class DmapUtil
 	{
 		if(meta == null)
 			return Collections.emptyList();
-		// Iterable<String> params = Splitter.on(',').split(meta);
 
-		StringTokenizer tokens = new StringTokenizer(meta, ",");
-		List<String> list = new ArrayList<String>(tokens.countTokens());
-//		boolean flag = false;
+		return Collections.unmodifiableCollection(moveItemIdInSecond(createTokenList(meta)));
+	}
 
-		while(tokens.hasMoreTokens())
-		{
-			String token = tokens.nextToken();
-
-			// Must be the fist! See DAAP documentation for more info!
-			// if(!flag && token.equals("dmap.itemkind"))
-			// {
-			// list.add(0, token);
-			// flag = true;
-			// }
-			// else
-			// {
-			list.add(token);
-			// }
-		}
-		boolean noItemKind = true;
-		if(list.contains("dmap.itemkind"))
-		{
-			list.remove("dmap.itemkind");
-			list.add(0, "dmap.itemkind");
-			noItemKind = false;
-		}
+	private static List<String> moveItemIdInSecond(List<String> list)
+	{
+		boolean noItemKind = moveItemKindInFirst(list);
 		if(list.contains("dmap.itemid"))
 		{
 			if(list.size() > 1)
@@ -226,7 +205,33 @@ public final class DmapUtil
 				list.add(index, "dmap.itemid");
 			}
 		}
-		return Collections.unmodifiableCollection(list);
+		return list;
+	}
+
+	private static boolean moveItemKindInFirst(List<String> list)
+	{
+		boolean noItemKind = true;
+		if(list.contains("dmap.itemkind"))
+		{
+			list.remove("dmap.itemkind");
+			list.add(0, "dmap.itemkind");
+			noItemKind = false;
+		}
+		return noItemKind;
+	}
+
+	private static List<String> createTokenList(String meta)
+	{
+		StringTokenizer tokens = new StringTokenizer(meta, ",");
+		List<String> list = new ArrayList<String>(tokens.countTokens());
+
+		while(tokens.hasMoreTokens())
+		{
+			String token = tokens.nextToken();
+			// Must be the fist! See DAAP documentation for more info!
+			list.add(token);
+		}
+		return list;
 	}
 	/**
 	 * Converts major, minor to a DMAP version. Version 2 is for example 0x00020000

@@ -36,7 +36,6 @@ import org.dyndns.jkiddo.dmp.chunks.StringChunk;
  */
 public class SongDescription extends StringChunk
 {
-
 	/**
 	 * Description for a MPEG Audio Layer 3 file (MP3)
 	 */
@@ -61,6 +60,11 @@ public class SongDescription extends StringChunk
 	 * Description for a Playlist URL
 	 */
 	public static final String PLAYLIST_URL = "Playlist URL";
+	
+	/**
+	 * Description for a MPEG4 Advanced Audio Coding file (AAC)
+	 */
+	public static final String PURCHASED_AAC_AUDIO_FILE = "Purchased " + AAC_AUDIO_FILE;
 
 	/**
 	 * Creates a new SongDescription where no description is set. You can change this value with {@see #setValue(String)}.

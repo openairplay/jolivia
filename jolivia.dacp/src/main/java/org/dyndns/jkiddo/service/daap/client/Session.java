@@ -184,15 +184,16 @@ public class Session
 		long persistentId = database.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue();
 		IDatabase rd = new Database(databaseName, itemId, persistentId);
 
-		DatabaseContainerns allPlaylists = getMasterDatabaseContainerList(itemId);
-
-		Iterable<ListingItem> items = allPlaylists.getListing().getListingItems();
-		for(ListingItem item : items)
-		{
-			Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), 0, item.getSpecificChunk(ItemId.class).getUnsignedValue(), item.getSpecificChunk(ItemCount.class).getUnsignedValue());
-			logger.debug(String.format("found radio genre=%s", playlist.getName()));
-			rd.addPlaylist(playlist);
-		}
+//		The following causes iTunes to hang ... TODO why?
+//		DatabaseContainerns allPlaylists = getMasterDatabaseContainerList(itemId);
+//
+//		Iterable<ListingItem> items = allPlaylists.getListing().getListingItems();
+//		for(ListingItem item : items)
+//		{
+//			Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), 0, item.getSpecificChunk(ItemId.class).getUnsignedValue(), item.getSpecificChunk(ItemCount.class).getUnsignedValue());
+//			logger.debug(String.format("found radio genre=%s", playlist.getName()));
+//			rd.addPlaylist(playlist);
+//		}
 		return rd;
 
 	}
