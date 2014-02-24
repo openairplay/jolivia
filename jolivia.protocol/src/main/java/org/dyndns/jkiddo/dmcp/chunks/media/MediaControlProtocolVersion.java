@@ -2,6 +2,10 @@ package org.dyndns.jkiddo.dmcp.chunks.media;
 
 import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.cmpr)
 public class MediaControlProtocolVersion extends VersionChunk
 {
 

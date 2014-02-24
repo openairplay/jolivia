@@ -2,6 +2,10 @@ package org.dyndns.jkiddo.dmcp.chunks.media.extension;
 
 import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.ceQm)
 public class UnknownQm extends UIntChunk  {
 	public UnknownQm() {
 		this(0);

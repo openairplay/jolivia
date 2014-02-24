@@ -34,6 +34,10 @@ import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
  * 
  * @author Roger Kapsi
  */
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.abro)
 public class DatabaseBrowse extends ContainerChunk
 {
 

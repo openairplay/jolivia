@@ -34,6 +34,10 @@ import org.dyndns.jkiddo.dmp.chunks.UShortChunk;
  * 
  * @author Roger Kapsi
  */
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.asbr)
 public class SongBitrate extends UShortChunk
 {
 

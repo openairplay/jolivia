@@ -12,6 +12,10 @@ package org.dyndns.jkiddo.dmp.chunks.media;
 
 import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.mshi)
 public class SortingHeaderIndex extends UIntChunk
 {
 	public SortingHeaderIndex()

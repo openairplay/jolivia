@@ -12,6 +12,10 @@ package org.dyndns.jkiddo.dmcp.chunks.media.audio;
 
 import org.dyndns.jkiddo.dmp.chunks.UByteChunk;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.caps)
 public class PlayStatus extends UByteChunk
 {
 	public static int PLAYING = 4;

@@ -34,6 +34,10 @@ import org.dyndns.jkiddo.dmp.chunks.DateChunk;
  * 
  * @author Roger Kapsi
  */
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.asda)
 public class SongDateAdded extends DateChunk
 {
 

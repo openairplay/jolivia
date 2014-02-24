@@ -12,6 +12,10 @@ package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
 import org.dyndns.jkiddo.dmp.chunks.UByteChunk;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.aePS)
 public class SpecialPlaylist extends UByteChunk
 {
 	// 1 podcast library

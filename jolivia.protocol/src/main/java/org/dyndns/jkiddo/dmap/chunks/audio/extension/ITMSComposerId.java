@@ -35,6 +35,10 @@ import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
  * @author Roger Kapsi
  * @since iTunes 4.5
  */
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.aeCI)
 public class ITMSComposerId extends UIntChunk
 {
 

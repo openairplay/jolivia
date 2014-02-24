@@ -12,6 +12,10 @@ package org.dyndns.jkiddo.dmap.chunks.audio;
 
 import org.dyndns.jkiddo.dmp.chunks.ULongChunk;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.asai)
 public class SongAlbumId extends ULongChunk
 {
 	public SongAlbumId()

@@ -35,6 +35,10 @@ import org.dyndns.jkiddo.dmp.chunks.media.Listing;
  * 
  * @author Roger Kapsi
  */
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.avdb)
 public class ServerDatabases extends ContainerChunk
 {
 

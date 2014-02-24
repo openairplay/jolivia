@@ -43,6 +43,10 @@ import com.google.common.collect.Iterables;
  * @see ListingItem
  * @author Roger Kapsi
  */
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.mlcl)
 public class Listing extends ContainerChunk
 {
 	public final static Logger logger = LoggerFactory.getLogger(Listing.class);

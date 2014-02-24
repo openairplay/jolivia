@@ -12,6 +12,10 @@ package org.dyndns.jkiddo.dmcp.chunks.media.audio;
 
 import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.cant)
 public class ProgressRemain extends UIntChunk
 {
 	public ProgressRemain()

@@ -36,6 +36,10 @@ import org.dyndns.jkiddo.dmp.util.ByteUtil;
  * @author Roger Kapsi
  * @since iTunes 4.5
  */
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.ascd)
 public class SongCodecType extends UIntChunk
 {
 

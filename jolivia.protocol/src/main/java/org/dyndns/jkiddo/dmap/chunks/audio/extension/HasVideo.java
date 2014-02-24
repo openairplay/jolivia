@@ -32,6 +32,10 @@ import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
 /**
  * @sice iTunes 6.0.2
  */
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.aeHV)
 public class HasVideo extends BooleanChunk
 {
 

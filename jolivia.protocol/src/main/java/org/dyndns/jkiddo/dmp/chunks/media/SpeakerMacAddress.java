@@ -12,6 +12,10 @@ package org.dyndns.jkiddo.dmp.chunks.media;
 
 import org.dyndns.jkiddo.dmp.chunks.ULongChunk;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+
+@DMAPAnnotation(type=DmapProtocolDefinition.msma)
 public class SpeakerMacAddress extends ULongChunk
 {
 	public SpeakerMacAddress()
