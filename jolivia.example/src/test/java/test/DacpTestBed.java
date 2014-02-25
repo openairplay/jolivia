@@ -12,6 +12,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import org.dyndns.jkiddo.dmap.chunks.audio.AlbumSearchContainer;
+import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
 import org.dyndns.jkiddo.dmap.chunks.audio.ItemsContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
@@ -24,6 +25,7 @@ import org.dyndns.jkiddo.dmap.chunks.audio.SongUserRating;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.MediaKind;
 import org.dyndns.jkiddo.dmp.IDatabase;
+import org.dyndns.jkiddo.dmp.chunks.media.ContainerItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
@@ -41,7 +43,9 @@ public class DacpTestBed
 		TestSession session = new TestSession();
 		//TestSession session = new TestSession("localhost", 3689, "jenskristianvilladsen@hotmail.com", "Engineer2Go!");
 		
-		ItemsContainer val = session.getLibrary().getTestCode("Sting");
+		ItemsContainer var = session.getLibrary().readSearch("Top of the World", 0, 100);
+		
+		DatabaseItems val = session.getLibrary().getTestCode("Sting");
 		for(ListingItem item : val.getListing().getListingItems())
 		{
 			Date date = item.getSpecificChunk(SongDatePlayed.class).getValueAsDate();
@@ -87,6 +91,7 @@ public class DacpTestBed
 		// Extract information from a generic listing
 		for(ListingItem item : session.getLibrary().getAllTracks().getListing().getListingItems())
 		{
+			System.out.println(item.getSpecificChunk(ItemId.class).getValue());
 			System.out.println(item.getSpecificChunk(SongAlbum.class).getValue());
 			System.out.println(item.getSpecificChunk(SongArtist.class).getValue());
 			System.out.println(item.getSpecificChunk(SongTime.class).getValue());
@@ -94,7 +99,6 @@ public class DacpTestBed
 			System.out.println(item.getSpecificChunk(SongUserRating.class).getValue());
 			System.out.println(item.getSpecificChunk(ItemName.class).getValue());
 			System.out.println(item.getSpecificChunk(ItemKind.class).getValue());
-			System.out.println(item.getSpecificChunk(ItemId.class).getValue());
 			itemId = item.getSpecificChunk(ItemId.class).getValue();
 
 			session.getLibrary().getAlbumArtworkAsRemote(searchContainer.getListing().getListingItems().iterator().next().getSpecificChunk(ItemId.class).getValue(), 480, 480);
