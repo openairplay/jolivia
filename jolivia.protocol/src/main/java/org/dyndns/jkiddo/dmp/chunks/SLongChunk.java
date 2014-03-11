@@ -76,4 +76,10 @@ public abstract class SLongChunk extends AbstractChunk implements LongChunk
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; long)=" + getValue();
 	}
+
+	@Override
+	public void setObjectValue(Object object)
+	{
+		setValue((Long) object);
+	}
 }

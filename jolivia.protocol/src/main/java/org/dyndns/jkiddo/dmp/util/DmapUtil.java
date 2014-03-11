@@ -674,5 +674,4 @@ public final class DmapUtil
 	{
 		return Resources.toByteArray(uri.toURL());
 	}
-
 }

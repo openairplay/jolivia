@@ -11,6 +11,7 @@ import org.dyndns.jkiddo.dmp.ILibrary;
 import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
+import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.MediaProtocolVersion;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.model.Database;
@@ -41,7 +42,7 @@ public class ImageItemManager implements IItemManager
 	private static final VersionChunk dpapProtocolVersion = new PictureProtocolVersion(DmapUtil.PPRO_VERSION_101);
 	private static final VersionChunk dmapProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_200);
 
-	private final ILibrary library;
+	private final Library library;
 	private final IImageStoreReader reader;
 	private final Map<MediaItem, IImageItem> itemToIImageItem;
 	private PasswordMethod authentication;
@@ -49,7 +50,10 @@ public class ImageItemManager implements IItemManager
 	@Inject
 	public ImageItemManager(@Named(Util.APPLICATION_NAME) String applicationName, final IImageStoreReader reader, final PasswordMethod authentication) throws Exception
 	{
-		this.authentication = authentication;
+		library = null;
+		itemToIImageItem = null;
+		this.reader = null; 
+		/*this.authentication = authentication;
 		this.reader = reader;
 		this.itemToIImageItem = Maps.uniqueIndex(reader.readImages(), new Function<IImageItem, MediaItem>() {
 			@Override
@@ -83,9 +87,9 @@ public class ImageItemManager implements IItemManager
 		});
 
 		this.library = new Library(applicationName);
-		Database database = new Database(applicationName);
-		database.setMediaItems(itemToIImageItem.keySet());
-		this.library.addDatabase(database);
+		Database database = new Database(this.library);
+		database.addMediaItems(itemToIImageItem.keySet());
+		this.library.addDatabase(database);*/
 	}
 
 	@Override
@@ -144,13 +148,13 @@ public class ImageItemManager implements IItemManager
 	}
 
 	@Override
-	public Collection<IDatabase> getDatabases()
+	public Collection<Database> getDatabases()
 	{
 		return library.getDatabases();
 	}
 
 	@Override
-	public IDatabase getDatabase(long databaseId)
+	public Database getDatabase(long databaseId)
 	{
 		return library.getDatabase(databaseId);
 	}
@@ -158,7 +162,7 @@ public class ImageItemManager implements IItemManager
 	@Override
 	public byte[] getItemAsByteArray(long databaseId, long itemId)
 	{
-		MediaItem image = library.getDatabase(databaseId).getMasterContainer().getItem(itemId);
+		/*MediaItem image = library.getDatabase(databaseId).getMasterContainer().getItem(itemId);
 		try
 		{
 			return DmapUtil.uriTobuffer(reader.getImage(itemToIImageItem.get(image)));
@@ -166,12 +170,13 @@ public class ImageItemManager implements IItemManager
 		catch(Exception e)
 		{
 			throw new RuntimeException(e);
-		}
+		}*/
+		return null;
 	}
 
 	public byte[] getThumb(long databaseId, long itemId)
 	{
-		MediaItem image = library.getDatabase(databaseId).getMasterContainer().getItem(itemId);
+		/*MediaItem image = library.getDatabase(databaseId).getMasterContainer().getItem(itemId);
 		try
 		{
 			return reader.getImageThumb(itemToIImageItem.get(image));
@@ -179,6 +184,28 @@ public class ImageItemManager implements IItemManager
 		catch(Exception e)
 		{
 			throw new RuntimeException(e);
-		}
+		}*/
+		return null;
+	}
+
+	@Override
+	public Listing getContainers(long databaseId, Iterable<String> parameters)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Listing getMediaItems(long databaseId, long containerId, Iterable<String> parameters)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Listing getMediaItems(long databaseId, Iterable<String> parameters)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

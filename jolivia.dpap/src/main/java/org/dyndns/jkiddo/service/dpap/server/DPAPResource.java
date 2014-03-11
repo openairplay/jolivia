@@ -127,7 +127,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 		databaseItems.add(new ReturnedCount(items.size()));
 
 		Listing listing = new Listing();
-		for(MediaItem item : items)
+		/*for(MediaItem item : items)
 		{
 			ListingItem listingItem = new ListingItem();
 
@@ -176,7 +176,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 			}
 
 			listing.add(listingItem);
-		}
+		}*/
 
 		databaseItems.add(listing);
 
@@ -196,7 +196,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	}
 	private Collection<MediaItem> getMediaItems(final long databaseId, final String query)
 	{
-		final Collection<Integer> itemIds = Collections2.transform(Sets.newHashSet(Splitter.on(",").split(query.replace("(", "").replace(")", ""))), new Function<String, Integer>() {
+		/*final Collection<Integer> itemIds = Collections2.transform(Sets.newHashSet(Splitter.on(",").split(query.replace("(", "").replace(")", ""))), new Function<String, Integer>() {
 			public Integer apply(String s)
 			{
 				if(s.startsWith("'dmap.itemid:"))
@@ -214,7 +214,8 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 				return itemIds.contains(new Integer(chunk.getValue()));
 			}
 		});
-		return items;
+		return items;*/
+		return null;
 	}
 
 	@Override

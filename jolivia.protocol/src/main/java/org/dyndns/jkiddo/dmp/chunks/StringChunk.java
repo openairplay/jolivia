@@ -96,4 +96,10 @@ public abstract class StringChunk extends AbstractChunk
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; string)=" + getValue();
 	}
+	
+	@Override
+	public void setObjectValue(Object object)
+	{
+		setValue((String) object);
+	}
 }

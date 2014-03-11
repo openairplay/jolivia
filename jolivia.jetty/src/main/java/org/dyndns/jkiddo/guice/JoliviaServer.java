@@ -11,6 +11,9 @@
 package org.dyndns.jkiddo.guice;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.sql.SQLException;
 
 import javax.jmdns.JmmDNS;
 
@@ -41,6 +44,7 @@ import org.dyndns.jkiddo.service.dmap.Util;
 import org.dyndns.jkiddo.service.dpap.server.DPAPResource;
 import org.dyndns.jkiddo.service.dpap.server.IImageLibrary;
 import org.dyndns.jkiddo.service.dpap.server.ImageItemManager;
+import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,10 +74,18 @@ public class JoliviaServer extends GuiceServletContextListener
 	
 	private Injector injector;
 
+	private Server h2server;
 
-	public JoliviaServer(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IImageStoreReader imageStoreReader, IMusicStoreReader musicStoreReader, IPlayingInformation iplayingInformation, PasswordMethod security)
+
+	public JoliviaServer(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IImageStoreReader imageStoreReader, IMusicStoreReader musicStoreReader, IPlayingInformation iplayingInformation, PasswordMethod security) throws SQLException, UnknownHostException
 	{
 		super();
+		
+		h2server = Server.createWebServer(new String[] { "-webPort", "9123", "-webAllowOthers" });
+        h2server.start();
+        logger.info("h2 web server started on port http://" + InetAddress.getLocalHost().getHostName() + ":9123/");
+        logger.info("log in with empty username and password");
+        logger.info("jdbc:h2:mem:test");
 
 		this.hostingPort = port;
 		this.pairingCode = pairingCode;

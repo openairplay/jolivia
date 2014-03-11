@@ -113,4 +113,6 @@ public abstract class AbstractChunk implements Chunk
 		}
 		return buffer.toString();
 	}
+
+	public abstract void setObjectValue(Object object);
 }

@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DMAPAnnotation
 {
-	public boolean needsCalculation() default false;
+	public int explicitValue() default -1;
 	public IDmapProtocolDefinition.DmapProtocolDefinition type();
 
 }

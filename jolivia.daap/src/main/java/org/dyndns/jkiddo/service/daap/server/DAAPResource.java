@@ -2,9 +2,9 @@ package org.dyndns.jkiddo.service.daap.server;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -27,17 +27,16 @@ import org.dyndns.jkiddo.dmap.chunks.audio.ArtistSearchContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
 import org.dyndns.jkiddo.dmap.chunks.audio.SupportsExtraData;
 import org.dyndns.jkiddo.dmap.chunks.audio.SupportsGroups;
-import org.dyndns.jkiddo.dmp.chunks.Chunk;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationSchemes;
 import org.dyndns.jkiddo.dmp.chunks.media.DatabaseCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
-import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.dmp.chunks.media.LoginRequired;
 import org.dyndns.jkiddo.dmp.chunks.media.ReturnedCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ServerInfoResponse;
+import org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderListing;
 import org.dyndns.jkiddo.dmp.chunks.media.SpecifiedTotalCount;
 import org.dyndns.jkiddo.dmp.chunks.media.Status;
 import org.dyndns.jkiddo.dmp.chunks.media.SupportsAutoLogout;
@@ -51,9 +50,7 @@ import org.dyndns.jkiddo.dmp.chunks.media.SupportsUpdate;
 import org.dyndns.jkiddo.dmp.chunks.media.TimeoutInterval;
 import org.dyndns.jkiddo.dmp.chunks.media.UTCTime;
 import org.dyndns.jkiddo.dmp.chunks.media.UTCTimeOffset;
-import org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderListing;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
-import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
@@ -62,6 +59,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Iterables;
 
 @Consumes(MediaType.WILDCARD)
 // @Produces(MediaType.WILDCARD)
@@ -128,7 +126,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	@Override
 	@Path("server-info")
 	@GET
-	public Response serverInfo(@QueryParam("hsgid") String hsgid) throws IOException
+	public Response serverInfo(@QueryParam("hsgid") String hsgid) throws IOException, SQLException
 	{
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 
@@ -233,7 +231,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	@Override
 	@Path("databases/{databaseId}/items")
 	@GET
-	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query, @QueryParam("hsgid") String hsgid) throws IOException, SQLException
 	{
 		// dpap: limited by query
 		// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:2810','dmap.itemid:2811','dmap.itemid:2812','dmap.itemid:2813','dmap.itemid:2814','dmap.itemid:2815','dmap.itemid:2816','dmap.itemid:2817','dmap.itemid:2818','dmap.itemid:2819','dmap.itemid:2820','dmap.itemid:2821','dmap.itemid:2822','dmap.itemid:2823','dmap.itemid:2824','dmap.itemid:2825','dmap.itemid:2826','dmap.itemid:2827','dmap.itemid:2851','dmap.itemid:2852')
@@ -247,19 +245,17 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		// return database.getItemId() == databaseId;
 		// }
 		// }).getItems();
-		Collection<MediaItem> items = itemManager.getDatabase(databaseId).getItems();
-
 		Iterable<String> parameters = DmapUtil.parseMeta(meta);
 
 		DatabaseItems databaseSongs = new DatabaseItems();
-
 		databaseSongs.add(new Status(200));
 		databaseSongs.add(new UpdateType(0));
-		databaseSongs.add(new SpecifiedTotalCount(items.size()));
 
-		databaseSongs.add(new ReturnedCount(items.size()));
+		Listing listing = itemManager.getMediaItems(databaseId, parameters);
+		databaseSongs.add(new SpecifiedTotalCount(Iterables.size(listing.getListingItems())));
+		databaseSongs.add(new ReturnedCount(Iterables.size(listing.getListingItems())));
 
-		Listing listing = new Listing();
+		/*
 		for(MediaItem item : items)
 		{
 			ListingItem listingItem = new ListingItem();
@@ -292,7 +288,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 			}
 
 			listing.add(listingItem);
-		}
+		}*/
 
 		databaseSongs.add(listing);
 

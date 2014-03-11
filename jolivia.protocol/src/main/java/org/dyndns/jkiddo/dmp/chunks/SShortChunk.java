@@ -96,4 +96,10 @@ public abstract class SShortChunk extends AbstractChunk implements ShortChunk
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; short)=" + getValue();
 	}
+	
+	@Override
+	public void setObjectValue(Object object)
+	{
+		setValue((Integer) object);
+	}
 }

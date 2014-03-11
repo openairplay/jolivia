@@ -96,4 +96,10 @@ public abstract class ULongChunk extends AbstractChunk implements LongChunk
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; ulong)=" + getUnsignedValue();
 	}
+	
+	@Override
+	public void setObjectValue(Object object)
+	{
+		setValue((Long) object);
+	}
 }

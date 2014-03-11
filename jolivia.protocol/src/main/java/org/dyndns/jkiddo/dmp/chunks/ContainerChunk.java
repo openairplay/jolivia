@@ -144,4 +144,10 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 		}
 		throw new NoSuchElementException("Chunks of type " + clazz + " could not be found");
 	}
+
+	@Override
+	public void setObjectValue(Object object)
+	{
+		System.out.println("setObjectValue(Object object) does not apply for ContainerChunks");
+	}
 }

@@ -27,11 +27,15 @@
 
 package org.dyndns.jkiddo.dmp.chunks.unknown;
 
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
 import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
 
 /**
  * @since iTunes 5.0
  */
+
+@DMAPAnnotation(type=DmapProtocolDefinition.mccr, explicitValue = 0x668D6368)
 public class HasChildContainers extends BooleanChunk
 {
 

@@ -103,4 +103,10 @@ public abstract class DateChunk extends AbstractChunk
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; date)=" + getValue();
 	}
+	
+	@Override
+	public void setObjectValue(Object object)
+	{
+		setValue((Long) object);
+	}
 }

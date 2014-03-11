@@ -1,6 +1,6 @@
 package org.dyndns.jkiddo.dmp;
 
-import java.util.Set;
+import java.util.Collection;
 
 import org.dyndns.jkiddo.dmp.model.Database;
 
@@ -24,7 +24,7 @@ public interface ILibrary
 	/**
 	 * @return
 	 */
-	public abstract Set<IDatabase> getDatabases();
+	public abstract Collection<Database> getDatabases();
 
 	/**
 	 * Adds database to this Library (<b>NOTE</b>: only one Database per Library is supported by iTunes!)
@@ -56,6 +56,6 @@ public interface ILibrary
 
 
 
-	public abstract IDatabase getDatabase(long databaseId);
+	public abstract Database getDatabase(long databaseId);
 
 }

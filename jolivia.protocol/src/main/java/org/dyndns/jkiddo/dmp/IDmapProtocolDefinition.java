@@ -27,7 +27,7 @@ public interface IDmapProtocolDefinition
 			this.length = length;
 		}
 	}
-	public enum DmapProtocolDefinition implements IDmapProtocolDefinition
+	public static enum DmapProtocolDefinition implements IDmapProtocolDefinition
 	{
 		aeCS("aeCS","com.apple.itunes.artworkchecksum",DmapTypeDefinition.U_INT_TYPE),
 		aeGs("aeGs","com.apple.itunes.can-be-genius-seed",DmapTypeDefinition.U_BYTE_TYPE),

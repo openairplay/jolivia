@@ -103,4 +103,10 @@ public abstract class UIntChunk extends AbstractChunk implements IntChunk
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; uint)=" + getUnsignedValue();
 	}
+	
+	@Override
+	public void setObjectValue(Object object)
+	{
+		setValue((Integer) object);
+	}
 }

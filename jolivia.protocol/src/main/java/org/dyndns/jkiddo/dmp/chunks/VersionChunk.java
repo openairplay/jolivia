@@ -153,4 +153,10 @@ public abstract class VersionChunk extends AbstractChunk
 	{
 		return version & 0xFF;
 	}
+	
+	@Override
+	public void setObjectValue(Object object)
+	{
+		setValue((Long) object);
+	}
 }

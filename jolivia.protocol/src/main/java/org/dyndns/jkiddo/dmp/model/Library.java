@@ -27,249 +27,73 @@
 
 package org.dyndns.jkiddo.dmp.model;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.Collection;
 
-import org.dyndns.jkiddo.dmp.DmapException;
-import org.dyndns.jkiddo.dmp.IDatabase;
 import org.dyndns.jkiddo.dmp.ILibrary;
 
-/**
- * @author Roger Kapsi
- */
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "libraries")
 public class Library implements ILibrary
 {
+	@DatabaseField(generatedId = true)
+	private int itemId;
 
-	private static final AtomicLong PERISTENT_ID = new AtomicLong(1);
-
-	/** The revision of this Library */
-	private int revision = 3;
-
-	/** Name of this Library */
+	@DatabaseField
 	private String name;
 
-	/** The total number of Databases in this Library */
-	private int totalDatabaseCount = 0;
+	@DatabaseField
+	private int revision;
 
-	/** Set of Databases */
-	private final Set<IDatabase> databases = new HashSet<IDatabase>();
+	@ForeignCollectionField(eager = true)
+	private Collection<Database> databases;
 
-	/** Set of deleted Databases */
-	private Set<IDatabase> deletedDatabases = null;
-
-	/** List of listener */
-
-	protected boolean clone = false;
-
-	protected Library(Library library)
-	{
-		this.name = library.name;
-		this.revision = library.revision;
-
-		if(library.deletedDatabases != null)
-		{
-			this.deletedDatabases = library.deletedDatabases;
-			library.deletedDatabases = null;
-		}
-
-		for(IDatabase database : library.databases)
-		{
-			/*if(txn.modified(database))
-			{
-				if(deletedDatabases == null || !deletedDatabases.contains(database))
-				{
-					IDatabase clone = new Database((Database) database, txn);
-					databases.add(clone);
-				}
-			}*/
-		}
-
-		this.totalDatabaseCount = library.totalDatabaseCount;
-		this.clone = true;
-
-		init();
-	}
+	public Library()
+	{}
 
 	public Library(String name)
 	{
 		this.name = name;
-
-		init();
+		this.revision = 1;
+		databases = Sets.newHashSet();
 	}
 
-	private void init()
-	{
-
-	}
-
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#getRevision()
-	 */
-	@Override
-	public synchronized int getRevision()
-	{
-		return revision;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#setName(org.dyndns.jkiddo.dmp.Transaction, java.lang.String)
-	 */
-	public void setName(final String name)
-	{
-		
-		{
-			setNameP(name);
-		}
-	}
-
-	private void setNameP(String name)
-	{
-		this.name = name;
-	}
-
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#getName()
-	 */
-	@Override
 	public String getName()
 	{
 		return name;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#getDatabases()
-	 */
-	@Override
-	public Set<IDatabase> getDatabases()
+	public Collection<Database> getDatabases()
 	{
-		return Collections.unmodifiableSet(databases);
+		return databases;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#addDatabase(org.dyndns.jkiddo.dmp.Transaction, org.dyndns.jkiddo.dmp.Database)
-	 */
-	@Override
-	public void addDatabase(final Database database)
+	public Database getDatabase(final long id)
 	{
-		
-		{
-			addDatabaseP(database);
-		}
-	}
+		return Iterables.find(databases, new Predicate<Database>() {
 
-	private void addDatabaseP(Database database)
-	{
-		if(!databases.isEmpty())
-		{
-			throw new DmapException("One Database per Library is maximum.");
-		}
-
-		if(databases.add(database))
-		{
-			totalDatabaseCount = databases.size();
-			if(deletedDatabases != null && deletedDatabases.remove(database) && deletedDatabases.isEmpty())
+			@Override
+			public boolean apply(Database input)
 			{
-				deletedDatabases = null;
+				return input.getItemId() == id;
 			}
-		}
+		});
 	}
 
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#removeDatabase(org.dyndns.jkiddo.dmp.Transaction, org.dyndns.jkiddo.dmp.Database)
-	 */
-	public void removeDatabase(final Database database)
-	{
-		
-		{
-			removeDatabaseP( database);
-		}
-	}
-
-	private void removeDatabaseP(Database database)
-	{
-		if(databases.remove(database))
-		{
-			totalDatabaseCount = databases.size();
-			if(deletedDatabases == null)
-			{
-				deletedDatabases = new HashSet<IDatabase>();
-			}
-			deletedDatabases.add(database);
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#containsDatabase(org.dyndns.jkiddo.dmp.IDatabase)
-	 */
-	public synchronized boolean containsDatabase(IDatabase database)
-	{
-		return databases.contains(database);
-	}
-
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#beginTransaction()
-	 */
-	
-
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#commit(org.dyndns.jkiddo.dmp.Transaction)
-	 */
-	
-
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#rollback(org.dyndns.jkiddo.dmp.Transaction)
-	 */
-	public synchronized void rollback()
-	{
-		// TODO: add code, actually do nothing...
-	}
-
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#close(org.dyndns.jkiddo.dmp.Transaction)
-	 */
-	public synchronized void close()
-	{}
-
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#toString()
-	 */
 	@Override
-	public String toString()
+	public int getRevision()
 	{
-		if(!clone)
-		{
-			return "Library(" + revision + ")";
-		}
-		return "LibraryPatch(" + revision + ")";
+		return revision;
 	}
 
-	protected static long nextPersistentId()
-	{
-		return PERISTENT_ID.getAndIncrement();
-	}
-
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#addLibraryListener(org.dyndns.jkiddo.dmp.LibraryListener)
-	 */
-
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#removeLibraryListener(org.dyndns.jkiddo.dmp.LibraryListener)
-	 */
-	/* (non-Javadoc)
-	 * @see org.dyndns.jkiddo.dmp.ILibrary#getDatabase(long)
-	 */
 	@Override
-	public IDatabase getDatabase(long databaseId)
+	public void addDatabase(Database database)
 	{
-		for(IDatabase database : databases)
-		{
-			if(database.getItemId() == databaseId)
-			{
-				return database;
-			}
-		}
-		return null;
+		databases.add(database);
 	}
 }

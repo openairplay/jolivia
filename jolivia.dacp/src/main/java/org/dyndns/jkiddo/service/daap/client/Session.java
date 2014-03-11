@@ -67,7 +67,7 @@ public class Session
 	private long revision = 1;
 	private final int port, sessionId;
 
-	protected final IDatabase database, radioDatabase;
+	protected final Database database, radioDatabase;
 
 	private final Library library;
 	private final RemoteControl remoteControl;
@@ -82,12 +82,12 @@ public class Session
 		return sessionId;
 	}
 
-	public IDatabase getDatabase()
+	public Database getDatabase()
 	{
 		return database;
 	}
 
-	public IDatabase getRadioDatabase()
+	public Database getRadioDatabase()
 	{
 		return radioDatabase;
 	}
@@ -159,7 +159,7 @@ public class Session
 		radioDatabase = getRadioDatabase(serverDatabases);
 	}
 
-	protected IDatabase getRadioDatabase(ServerDatabases serverDatabases) throws Exception
+	protected Database getRadioDatabase(ServerDatabases serverDatabases) throws Exception
 	{
 		// Radio database
 		final ListingItem database;
@@ -182,7 +182,7 @@ public class Session
 		String databaseName = database.getSpecificChunk(ItemName.class).getValue();
 		int itemId = database.getSpecificChunk(ItemId.class).getValue();
 		long persistentId = database.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue();
-		IDatabase rd = new Database(databaseName, itemId, persistentId);
+		Database rd = new Database(databaseName, itemId, persistentId);
 
 //		The following causes iTunes to hang ... TODO why?
 //		DatabaseContainerns allPlaylists = getMasterDatabaseContainerList(itemId);
@@ -198,7 +198,7 @@ public class Session
 
 	}
 
-	protected IDatabase getLocalDatabase(ServerDatabases serverDatabases) throws Exception
+	protected Database getLocalDatabase(ServerDatabases serverDatabases) throws Exception
 	{
 		// Local database
 		// For now, the LocalDatabase is sufficient
@@ -220,7 +220,7 @@ public class Session
 		// For now, the BasePlayList is sufficient
 		ListingItem item = allPlaylists.getListing().getSingleListingItemContainingClass(BaseContainer.class);
 
-		Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), item.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue(), item.getSpecificChunk(ItemId.class).getUnsignedValue(), item.getSpecificChunk(ItemCount.class).getUnsignedValue());
+		Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), item.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue(), item.getSpecificChunk(ItemId.class).getUnsignedValue());
 		return new Database(databaseName, itemId, persistentId, playlist);
 	}
 

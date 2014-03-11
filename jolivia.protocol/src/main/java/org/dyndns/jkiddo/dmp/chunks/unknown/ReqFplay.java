@@ -5,7 +5,7 @@ import org.dyndns.jkiddo.dmp.chunks.UByteChunk;
 import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.____)
+@DMAPAnnotation(type=DmapProtocolDefinition.____, explicitValue = 0x3F3F3F3F)
 public class ReqFplay extends UByteChunk
 {
 	public ReqFplay()

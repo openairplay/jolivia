@@ -53,4 +53,10 @@ public abstract class RawChunk extends AbstractChunk
 		val += "" + (int)value[value.length - 1] + "}";
 		return indent(indent) + name + "(" + getContentCodeString() + "; raw)=" + val;
 	}
+	
+	@Override
+	public void setObjectValue(Object object)
+	{
+		setValue((byte[]) object);
+	}
 }

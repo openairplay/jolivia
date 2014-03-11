@@ -3,7 +3,6 @@ package test;
 import java.awt.BorderLayout;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.util.Collection;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
@@ -24,14 +23,13 @@ import org.dyndns.jkiddo.dmap.chunks.audio.SongTrackNumber;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongUserRating;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.MediaKind;
-import org.dyndns.jkiddo.dmp.IDatabase;
-import org.dyndns.jkiddo.dmp.chunks.media.ContainerItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.dmp.model.Container;
+import org.dyndns.jkiddo.dmp.model.Database;
 import org.junit.Test;
 
 public class DacpTestBed
@@ -69,11 +67,11 @@ public class DacpTestBed
 	{
 		TestSession session = new TestSession();
 
-		IDatabase itunesDatabase = session.getDatabase();
+		Database itunesDatabase = session.getDatabase();
 
 		// Get all playlists. For now the playlists only contains the
 		// master playlist. This is to be expanded
-		Collection<Container> playlists = itunesDatabase.getContainers();
+		Container playlists = itunesDatabase.getMasterContainer();
 
 		session.getLibrary().getAllAlbums();
 		session.getLibrary().getAllArtists();

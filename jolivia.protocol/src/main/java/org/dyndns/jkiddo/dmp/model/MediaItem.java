@@ -27,134 +27,88 @@
 
 package org.dyndns.jkiddo.dmp.model;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
-import org.dyndns.jkiddo.dmp.chunks.Chunk;
-import org.dyndns.jkiddo.dmp.chunks.media.ContainerItemId;
-import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
-import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
-import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
-import org.dyndns.jkiddo.dmp.chunks.media.PersistentId;
-
-/**
- * There isn't much to say: a Song is a Song.
- * <p>
- * Note: although already mentioned in StringChunk I'd like to point out that <code>null</code> is a valid value for DAAP. Use it to reset Strings. See StringChunk for more information!
- * </p>
- * 
- * @author Roger Kapsi
- */
+@DatabaseTable(tableName = "mediaitems")
 public class MediaItem
 {
+	public MediaItem()
+	{}
 
-	/** songId is an 32bit unsigned value! */
-	private static final AtomicLong MEDIA_ITEM_ID = new AtomicLong(1024);
-
-	private final Map<String, Chunk> chunks = new HashMap<String, Chunk>();
-
-	private final ItemKind itemKind;
-	private final ItemId itemId = new ItemId(MEDIA_ITEM_ID.getAndIncrement());
-	private final ItemName itemName = new ItemName();
-	private final ContainerItemId containerItemId = new ContainerItemId();
-	private final PersistentId persistentId = new PersistentId();
-
-	/**
-	 * Creates a new Song
-	 */
-	public MediaItem(ItemKind itemKind)
+	public MediaItem(Database database)
 	{
-		this.itemKind = itemKind;
-		persistentId.setValue(itemId.getValue());
-		containerItemId.setValue(itemId.getValue());
-		init();
+		this.database = database;
+		this.database.getMasterContainer().addMediaItem(this);
+	}
+	
+	public void setDatabase(Database database)
+	{
+		this.database = database;
 	}
 
-	/*
-	 * public Item() { this.itemKind = new ItemKind(ItemKind.AUDIO); persistentId.setValue(itemId.getValue()); containerItemId.setValue(itemId.getValue()); init(); }
-	 */
+	@DatabaseField(generatedId = true, columnName = "dmap.itemid")
+	private int itemId;
 
-	/**
-	 * Creates a new Song with the provided name
-	 */
-	/*
-	 * public MediaItem(String name) { this(); itemName.setValue(name); }
-	 */
+	@DatabaseField(columnName = "dmap.itemkind", canBeNull = false)
+	private int itemKind;
 
-	private void init()
+	@DatabaseField(columnName = "daap.songalbum")
+	private String songAlbum;
+
+	@DatabaseField(columnName = "daap.songartist")
+	private String songArtist;
+
+	@DatabaseField(columnName = "dmap.itemname")
+	private String itemName;
+
+	@DatabaseField(columnName = "daap.songformat")
+	private String mediaFormat;
+
+	@DatabaseField(columnName = "daap.songsamplerate")
+	private int songSampleRate;
+
+	@DatabaseField(columnName = "daap.songtime")
+	private int songTime;
+
+	@DatabaseField(foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true, canBeNull = false)
+	private Database database;
+
+	@DatabaseField(foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true)
+	private Container container;
+
+	public void setItemKind(int value)
 	{
-		addChunk(itemKind);
-		addChunk(itemName);
-		addChunk(itemId);
-		addChunk(containerItemId);
-
-		// Some clients do not init format (implicit mp3)
-		// and use uninitialized garbage instead
-//		addChunk(FORMAT);
-
-		// VLC requires the sample rate
-//		addChunk(SAMPLE_RATE);
-
-		// Added as part of debug
-		// addChunk(new SongDisabled(true));
-		// addChunk(new AlbumArtist());
-		// addChunk(new EMediaKind(1));
-		// addChunk(new DownloadStatus(true));
-
+		this.itemKind = value;
 	}
 
-	/**
-	 * Returns the unique id of this song
-	 */
-	public long getItemId()
+	public void setSongAlbum(String value)
 	{
-		return itemId.getUnsignedValue();
+		this.songAlbum = value;
 	}
 
-	/**
-	 * Returns the id of this Songs container. Note: same as getId()
-	 */
-	protected long getContainerId()
+	public void setSongArtist(String value)
 	{
-		return containerItemId.getUnsignedValue();
+		this.songArtist = value;
 	}
 
-	public void addChunk(Chunk chunk)
+	public void setItemName(String value)
 	{
-		if(chunk != null)
-		{
-			chunks.put(chunk.getName(), chunk);
-		}
+		this.itemName = value;
 	}
 
-	public Chunk getChunk(String name)
+	public void setMediaFormat(String value)
 	{
-		return chunks.get(name);
+		this.mediaFormat = value;
 	}
 
-	public Collection<Chunk> getChunks()
+	public void setSongSampleRate(int value)
 	{
-		return Collections.unmodifiableCollection(chunks.values());
+		this.songSampleRate = value;
 	}
 
-	@Override
-	public int hashCode()
+	public void setSongTime(int value)
 	{
-		return (int) getItemId();
+		this.songTime = value;
 	}
-
-	@Override
-	public boolean equals(Object o)
-	{
-		if(!(o instanceof MediaItem))
-		{
-			return false;
-		}
-
-		return ((MediaItem) o).getItemId() == getItemId();
-	}
-
 }

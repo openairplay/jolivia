@@ -29,14 +29,58 @@ package org.dyndns.jkiddo.dmp.chunks;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 import org.dyndns.jkiddo.dmp.ProtocolViolationException;
+import org.dyndns.jkiddo.dmp.tools.ReflectionsHelper;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
+import org.reflections.Reflections;
+
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.ImmutableTable;
+import com.google.common.collect.Table;
 
 public final class ChunkFactory
 {
 
-	private final Map<Integer, Class<? extends Chunk>> map = new HashMap<Integer, Class<? extends Chunk>>();
+	private final Map<Integer, Class<? extends AbstractChunk>> map = new HashMap<Integer, Class<? extends AbstractChunk>>();
+
+	private static final ImmutableTable<Integer, String, Class<? extends AbstractChunk>> calculatedMap;
+
+	static
+	{
+		final Table<Integer, String, Class<? extends AbstractChunk>> table = HashBasedTable.create();
+		final Set<Class<?>> reflectedChunks = new Reflections("org.dyndns.jkiddo").getTypesAnnotatedWith(DMAPAnnotation.class);
+		// final Set<Class<?>> reflectedChunks = ReflectionsHelper.getClasses("org.dyndns.jkiddo", DMAPAnnotation.class);
+		for(Class<?> chunk : reflectedChunks)
+		{
+			DMAPAnnotation dmapAnnotation = chunk.getAnnotation(DMAPAnnotation.class);
+			if(dmapAnnotation == null)
+			{
+				throw new RuntimeException("No matching annotation found for class: '" + chunk + "'");
+			}
+			final String longname = dmapAnnotation.type().getLongname();
+			@SuppressWarnings("unchecked")
+			final Class<? extends AbstractChunk> clazz = (Class<? extends AbstractChunk>) chunk;
+			final Integer shortname;
+			if(dmapAnnotation.explicitValue() != -1)
+			{
+				shortname = dmapAnnotation.explicitValue();
+			}
+			else
+			{
+				shortname = DmapUtil.toContentCodeNumber(dmapAnnotation.type().getShortname());
+			}
+			table.put(shortname, longname, clazz);
+		}
+		calculatedMap = ImmutableTable.copyOf(new ImmutableTable.Builder<Integer, String, Class<? extends AbstractChunk>>().putAll(table).build());
+	}
+
+	public static Table<Integer, String, Class<? extends AbstractChunk>> getCalculatedmap()
+	{
+		return calculatedMap;
+	}
 
 	public ChunkFactory()
 	{
@@ -322,51 +366,11 @@ public final class ChunkFactory
 		map.put(new Integer(0x61654346), org.dyndns.jkiddo.dmap.chunks.audio.extension.CloudFlavorID.class); // aeCF
 		map.put(new Integer(0x6165434b), org.dyndns.jkiddo.dmap.chunks.audio.extension.CloudLibraryKind.class); // aeCK
 
-		/*List<Class<? extends Chunk>> set = Lists.newArrayList(map.values());
-		Collections.sort(set, new Comparator<Class<? extends Chunk>>() {
-
-			@Override
-			public int compare(Class<? extends Chunk> o1, Class<? extends Chunk> o2)
-			{
-				try
-				{
-					return o1.newInstance().getName().compareTo(o2.newInstance().getName());
-				}
-				catch(InstantiationException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				catch(IllegalAccessException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-				return 0;
-			}
-		});
-		Iterator<Class<? extends Chunk>> it = set.iterator();
-		while(it.hasNext())
-		{
-			
-			try
-			{
-				// FIVE("", "", 1);
-				Chunk i = it.next().newInstance();
-				System.out.println(i.getContentCodeString() + "(\"" + i.getContentCodeString() + "\",\"" + i.getName() + "\"," + i.getType() + "),");
-			}
-			catch(InstantiationException e1)
-			{
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			catch(IllegalAccessException e1)
-			{
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}			
-		}*/
+		/*
+		 * List<Class<? extends Chunk>> set = Lists.newArrayList(map.values()); Collections.sort(set, new Comparator<Class<? extends Chunk>>() {
+		 * @Override public int compare(Class<? extends Chunk> o1, Class<? extends Chunk> o2) { try { return o1.newInstance().getName().compareTo(o2.newInstance().getName()); } catch(InstantiationException e) { // TODO Auto-generated catch block e.printStackTrace(); } catch(IllegalAccessException e) { // TODO Auto-generated catch block e.printStackTrace(); } return 0; } }); Iterator<Class<? extends Chunk>> it = set.iterator(); while(it.hasNext()) { try { // FIVE("", "", 1); Chunk i = it.next().newInstance(); System.out.println(i.getContentCodeString() + "(\"" + i.getContentCodeString() + "\",\"" + i.getName() + "\"," + i.getType() + "),"); } catch(InstantiationException e1) { // TODO Auto-generated catch block e1.printStackTrace(); } catch(IllegalAccessException e1) { // TODO
+		 * Auto-generated catch block e1.printStackTrace(); } }
+		 */
 	}
 
 	public Class<? extends Chunk> getChunkClass(Integer contentCode)

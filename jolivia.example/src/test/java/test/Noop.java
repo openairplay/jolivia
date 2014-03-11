@@ -35,6 +35,7 @@ import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateResponse;
 import org.dyndns.jkiddo.dmp.model.Container;
+import org.dyndns.jkiddo.dmp.model.Database;
 import org.dyndns.jkiddo.dpap.chunks.picture.FileData;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
 import org.dyndns.jkiddo.service.daap.client.RemoteControl;
@@ -100,7 +101,7 @@ public class Noop
 		// eg. pressing play, pause, etc. ...
 		UpdateResponse response = session.getUpdateBlocking();
 
-		IDatabase itunesDatabase = session.getDatabase();
+		Database itunesDatabase = session.getDatabase();
 
 		// Get all playlists. For now the playlists only contains the
 		// master playlist. This is to be expanded

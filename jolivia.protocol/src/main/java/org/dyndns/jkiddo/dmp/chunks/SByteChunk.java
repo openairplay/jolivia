@@ -96,4 +96,10 @@ public abstract class SByteChunk extends AbstractChunk implements ByteChunk
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; byte)=" + getValue();
 	}
+	
+	@Override
+	public void setObjectValue(Object object)
+	{
+		setValue((Integer) object);
+	}
 }

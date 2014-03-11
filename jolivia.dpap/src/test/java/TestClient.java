@@ -29,7 +29,7 @@ public class TestClient
 		private final String host;
 		private long revision = 1;
 		private final int port, sessionId;
-		protected final IDatabase database;
+		protected final Database database;
 
 		public long getRevision()
 		{
@@ -41,7 +41,7 @@ public class TestClient
 			return sessionId;
 		}
 
-		public IDatabase getDatabase()
+		public Database getDatabase()
 		{
 			return database;
 		}
@@ -88,8 +88,9 @@ public class TestClient
 				// For now, the BasePlayList is sufficient
 				ListingItem item = allPlaylists.getListing().getSingleListingItemContainingClass(BaseContainer.class);
 
-				Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), item.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue(), item.getSpecificChunk(ItemId.class).getUnsignedValue(), item.getSpecificChunk(ItemCount.class).getUnsignedValue());
-				database = new Database(databaseName, itemId, persistentId, playlist);
+				//Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), item.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue(), item.getSpecificChunk(ItemId.class).getUnsignedValue(), item.getSpecificChunk(ItemCount.class).getUnsignedValue());
+				//database = new Database(databaseName, itemId, persistentId, playlist);
+				database = null;
 			}
 
 		}

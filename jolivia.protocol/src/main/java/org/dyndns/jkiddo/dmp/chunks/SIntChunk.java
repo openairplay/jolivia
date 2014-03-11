@@ -76,4 +76,10 @@ public abstract class SIntChunk extends AbstractChunk implements IntChunk
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; int)=" + getValue();
 	}
+	
+	@Override
+	public void setObjectValue(Object object)
+	{
+		setValue((Integer) object);
+	}
 }
