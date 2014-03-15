@@ -12,16 +12,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.dyndns.jkiddo.dmap.chunks.audio.AudioProtocolVersion;
-import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
-import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
-import org.dyndns.jkiddo.dmap.chunks.audio.SongFormat;
-import org.dyndns.jkiddo.dmap.chunks.audio.SongSampleRate;
-import org.dyndns.jkiddo.dmap.chunks.audio.SongTime;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion;
 import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition;
 import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
 import org.dyndns.jkiddo.dmp.chunks.AbstractChunk;
-import org.dyndns.jkiddo.dmp.chunks.ChunkFactory;
 import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.ContainerCount;
@@ -40,7 +34,6 @@ import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.dyndns.jkiddo.dpap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
-import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader.IMusicItem;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
 import org.slf4j.Logger;
@@ -50,7 +43,6 @@ import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import com.google.common.base.Strings;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableCollection;
 import com.google.common.collect.ImmutableList;
@@ -58,10 +50,11 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Table;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
 public class MusicItemManager implements IItemManager
@@ -74,48 +67,53 @@ public class MusicItemManager implements IItemManager
 	private static final MusicSharingVersion musicSharingVersion = new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_309);
 
 	private final IMusicStoreReader reader;
-	private final Map<MediaItem, IMusicItem> itemToIMusicItem;
+	//private final Map<MediaItem, IMusicItem> itemToIMusicItem;
 
 	private final PasswordMethod passwordMethod;
 
-	private Dao<Library, Integer> libraryDao;
-	private Dao<Database, Integer> databaseDao;
-	private Dao<Container, Integer> containerDao;
-	private Dao<MediaItem, Integer> mediaItemDao;
+	private final Dao<Library, Integer> libraryDao;
+	private final Dao<Database, Integer> databaseDao;
+	private final Dao<Container, Integer> containerDao;
+	private final Dao<MediaItem, Integer> mediaItemDao;
+	private final ConnectionSource connectionSource;
 
-	private JdbcConnectionSource connectionSource;
+	private final Table<Integer, String, Class<? extends AbstractChunk>> annotatedtable;
 
 	@Inject
-	public MusicItemManager(@Named(Util.APPLICATION_NAME) String applicationName, IMusicStoreReader reader, PasswordMethod pm) throws Exception
+	public MusicItemManager(@Named(Util.APPLICATION_NAME) String applicationName, IMusicStoreReader reader, PasswordMethod pm, ConnectionSource connectionSource, Table<Integer, String, Class<? extends AbstractChunk>> annotatedtable) throws Exception
 	{
-		String databaseUrl = "jdbc:h2:mem:test";
-		connectionSource = new JdbcConnectionSource(databaseUrl);
-
-		databaseDao = DaoManager.createDao(connectionSource, Database.class);
-		containerDao = DaoManager.createDao(connectionSource, Container.class);
-		mediaItemDao = DaoManager.createDao(connectionSource, MediaItem.class);
-		libraryDao = DaoManager.createDao(connectionSource, Library.class);
-
-		TableUtils.createTableIfNotExists(connectionSource, Library.class);
-		TableUtils.createTableIfNotExists(connectionSource, Database.class);
-		TableUtils.createTableIfNotExists(connectionSource, Container.class);
-		TableUtils.createTableIfNotExists(connectionSource, MediaItem.class);
+		this.connectionSource = connectionSource;
 		
-		Library library = new Library(applicationName);
-		Database database = new Database(applicationName, "music", library);
-		Container container = new Container("MasterPlaylist", -1, -1, database, 1);
+		clearAll();
+
+		databaseDao = DaoManager.createDao(this.connectionSource, Database.class);
+		containerDao = DaoManager.createDao(this.connectionSource, Container.class);
+		mediaItemDao = DaoManager.createDao(this.connectionSource, MediaItem.class);
+		libraryDao = DaoManager.createDao(this.connectionSource, Library.class);
+
+		TableUtils.createTableIfNotExists(this.connectionSource, Library.class);
+		TableUtils.createTableIfNotExists(this.connectionSource, Database.class);
+		TableUtils.createTableIfNotExists(this.connectionSource, Container.class);
+		TableUtils.createTableIfNotExists(this.connectionSource, MediaItem.class);
+
+		final Library library = new Library(applicationName);
+		final Database database = new Database(applicationName, "music", library);
+		final Container container = new Container("MasterPlaylist", -1, -1, database, 1);
 
 		libraryDao.createIfNotExists(library);
 		databaseDao.createIfNotExists(database);
 		containerDao.createIfNotExists(container);
+		databaseDao.refresh(database);
 
+		this.annotatedtable = annotatedtable;
 		this.passwordMethod = pm;
 		this.reader = reader;
-		this.itemToIMusicItem = Maps.uniqueIndex(reader.readTunes(), new Function<IMusicItem, MediaItem>() {
+		/*this.itemToIMusicItem = Maps.uniqueIndex(reader.readTunes(), new Function<IMusicItem, MediaItem>() {
 			@Override
 			public MediaItem apply(IMusicItem iMusicItem)
 			{
-				MediaItem item = new MediaItem();
+				MediaItem item = new MediaItem(database);
+				item.setExternalIdentifer(externalIdentifer);
 				item.setItemKind(new ItemKind(ItemKind.AUDIO).getValue());
 				item.setSongAlbum(new SongAlbum(iMusicItem.getAlbum()).getValue());
 				item.setSongArtist(new SongArtist(iMusicItem.getArtist()).getValue());
@@ -135,14 +133,24 @@ public class MusicItemManager implements IItemManager
 
 				return item;
 			}
-		});
+		});*/
 
-		for(MediaItem item : itemToIMusicItem.keySet())
+		//for(MediaItem item : itemToIMusicItem.keySet())
+		for(MediaItem item : reader.readTunes())
 		{
 			item.setDatabase(database);
+			item.setItemKind(ItemKind.AUDIO);
 			mediaItemDao.createIfNotExists(item);
 		}
 
+	}
+	private void clearAll() throws SQLException 
+	{
+		TableUtils.dropTable(this.connectionSource, Library.class, true);
+		TableUtils.dropTable(this.connectionSource, Database.class, true);
+		TableUtils.dropTable(this.connectionSource, Container.class, true);
+		TableUtils.dropTable(this.connectionSource, MediaItem.class, true);
+		
 	}
 	@Override
 	public PasswordMethod getAuthenticationMethod()
@@ -244,10 +252,9 @@ public class MusicItemManager implements IItemManager
 	{
 		try
 		{
-			// Should have included a querybuilder instead, joined with the databaseID
-			// mediaItemDao.queryBuilder().where().eq("database_id", databaseId).query();
-			MediaItem song = mediaItemDao.queryForId(new Integer((int) itemId));
-			return DmapUtil.uriTobuffer(reader.getTune(itemToIMusicItem.get(song)));
+			MediaItem song = mediaItemDao.queryBuilder().where().eq("database_id", databaseId).and().idEq((int) itemId).queryForFirst();
+			return DmapUtil.uriTobuffer(reader.getTune(song.getExternalIdentifer()));
+			//return DmapUtil.uriTobuffer(reader.getTune(itemToIMusicItem.get(song)));
 		}
 		catch(Exception e)
 		{
@@ -270,7 +277,7 @@ public class MusicItemManager implements IItemManager
 		{
 			// build query ...
 			// and parse it
-			final Class<? extends AbstractChunk> chunkClass = ChunkFactory.getCalculatedmap().get(DmapUtil.toContentCodeNumber(param.getShortname()), param.getLongname());
+			final Class<? extends AbstractChunk> chunkClass = annotatedtable.get(DmapUtil.toContentCodeNumber(param.getShortname()), param.getLongname());
 			try
 			{
 				final AbstractChunk chunk = chunkClass.newInstance();
@@ -279,7 +286,20 @@ public class MusicItemManager implements IItemManager
 				{
 					field.setAccessible(true);
 					Object value = field.get(input);
-					chunk.setObjectValue(value);
+
+					// The following 'if-else' statements handles references
+					if(Database.class.isInstance(value))
+					{
+						// chunk.setObjectValue(((Database) value).getItemId());
+					}
+					if(Container.class.isInstance(value))
+					{
+						// chunk.setObjectValue(((Container) value).getItemId());
+					}
+					else
+					{
+						chunk.setObjectValue(value);
+					}
 					item.add(chunk);
 				}
 			}
@@ -295,8 +315,7 @@ public class MusicItemManager implements IItemManager
 	public Listing getMediaItems(long databaseId, long containerId, Iterable<String> parameters) throws SQLException
 	{
 		final ImmutableCollection<DmapProtocolDefinition> queryParameters = parameters2Definition(parameters, MediaItem.class);
-		// final List<MediaItem> mediaItems = mediaItemDao.queryBuilder().where().eq("database_id", databaseId).and().eq("container_id", containerId).query();
-		final List<MediaItem> mediaItems = mediaItemDao.queryBuilder().where().eq("database_id", databaseId).query();
+		final List<MediaItem> mediaItems = mediaItemDao.queryBuilder().where().eq("database_id", databaseId).and().eq("container_id", containerId).query();
 		return generateListing(queryParameters, mediaItems);
 	}
 
@@ -340,20 +359,20 @@ public class MusicItemManager implements IItemManager
 		}
 		else
 		{
-			final ArrayList<DmapProtocolDefinition> collection = Lists.newArrayList(DmapProtocolDefinition.values());
+			final ImmutableCollection<DmapProtocolDefinition> collection = definitionsTable.get(clazz);
 			return new ImmutableList.Builder<IDmapProtocolDefinition.DmapProtocolDefinition>().addAll(FluentIterable.from(parameters).transform(new Function<String, IDmapProtocolDefinition.DmapProtocolDefinition>() {
 
 				@Override
 				public DmapProtocolDefinition apply(final String inputName)
 				{
-					return Iterables.find(collection, new Predicate<DmapProtocolDefinition>() {
+					return Iterables.tryFind(collection, new Predicate<DmapProtocolDefinition>() {
 
 						@Override
 						public boolean apply(DmapProtocolDefinition input)
 						{
 							return input.getLongname().equals(inputName);
 						}
-					});
+					}).orNull();
 				}
 			}).filter(Predicates.notNull())).build();
 		}

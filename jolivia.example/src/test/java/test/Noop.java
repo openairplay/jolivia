@@ -22,7 +22,6 @@ import org.dyndns.jkiddo.dmap.chunks.audio.SongTime;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongTrackNumber;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongUserRating;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum;
-import org.dyndns.jkiddo.dmp.IDatabase;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
 import org.dyndns.jkiddo.dmp.chunks.ChunkFactory;
 import org.dyndns.jkiddo.dmp.chunks.media.ContentCodesName;

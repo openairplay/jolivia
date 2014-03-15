@@ -38,13 +38,26 @@ public class MediaItem
 
 	public MediaItem(Database database)
 	{
-		this.database = database;
-		this.database.getMasterContainer().addMediaItem(this);
+		setDatabase(database);
 	}
 	
 	public void setDatabase(Database database)
 	{
 		this.database = database;
+		container = this.database.getMasterContainer();
+	}
+	
+	@DatabaseField(canBeNull = false)
+	private String externalIdentifer;
+
+	public String getExternalIdentifer()
+	{
+		return externalIdentifer;
+	}
+
+	public void setExternalIdentifer(String externalIdentifer)
+	{
+		this.externalIdentifer = externalIdentifer;
 	}
 
 	@DatabaseField(generatedId = true, columnName = "dmap.itemid")
@@ -74,7 +87,7 @@ public class MediaItem
 	@DatabaseField(foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true, canBeNull = false)
 	private Database database;
 
-	@DatabaseField(foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true)
+	@DatabaseField(/*columnName="dmap.containeritemid",*/ foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true)
 	private Container container;
 
 	public void setItemKind(int value)

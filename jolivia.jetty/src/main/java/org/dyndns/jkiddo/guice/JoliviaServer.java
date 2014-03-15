@@ -53,6 +53,8 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.support.ConnectionSource;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
@@ -71,48 +73,50 @@ public class JoliviaServer extends GuiceServletContextListener
 	final private IMusicStoreReader musicStoreReader;
 	final private IPlayingInformation iplayingInformation;
 	final private PasswordMethod passwordMethod;
-	
+
 	private Injector injector;
 
 	private Server h2server;
 
-
 	public JoliviaServer(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IImageStoreReader imageStoreReader, IMusicStoreReader musicStoreReader, IPlayingInformation iplayingInformation, PasswordMethod security) throws SQLException, UnknownHostException
 	{
 		super();
-		
+
 		h2server = Server.createWebServer(new String[] { "-webPort", "9123", "-webAllowOthers" });
-        h2server.start();
-        logger.info("h2 web server started on port http://" + InetAddress.getLocalHost().getHostName() + ":9123/");
-        logger.info("log in with empty username and password");
-        logger.info("jdbc:h2:mem:test");
+		h2server.start();
+		logger.info("h2 web server started on port http://" + InetAddress.getLocalHost().getHostName() + ":9123/");
+		logger.info("log in with empty username and password");
+		logger.info("jdbc:h2:mem:test");
 
 		this.hostingPort = port;
 		this.pairingCode = pairingCode;
 		this.airplayPort = airplayPort;
 		this.name = name;
 		this.passwordMethod = PasswordMethod.valueOf(security.toString());
-		
+
 		this.clientSessionListener = clientSessionListener;
 		this.musicStoreReader = musicStoreReader;
 		this.imageStoreReader = imageStoreReader;
 		this.iplayingInformation = iplayingInformation;
 	}
-	
+
 	public void reRegister()
 	{
-		try {
-			((MDNSResource)injector.getInstance(IImageLibrary.class)).register();
-			((MDNSResource)injector.getInstance(IMusicLibrary.class)).register();
-			((MDNSResource)injector.getInstance(ITouchRemoteResource.class)).register();
-			((MDNSResource)injector.getInstance(ITouchAbleServerResource.class)).register();
-			((MDNSResource)injector.getInstance(RAOPResourceWrapper.class)).register();
-			
-		} catch (IOException e) {
+		try
+		{
+			((MDNSResource) injector.getInstance(IImageLibrary.class)).register();
+			((MDNSResource) injector.getInstance(IMusicLibrary.class)).register();
+			((MDNSResource) injector.getInstance(ITouchRemoteResource.class)).register();
+			((MDNSResource) injector.getInstance(ITouchAbleServerResource.class)).register();
+			((MDNSResource) injector.getInstance(RAOPResourceWrapper.class)).register();
+
+		}
+		catch(IOException e)
+		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected Injector getInjector()
 	{
@@ -145,6 +149,14 @@ public class JoliviaServer extends GuiceServletContextListener
 				bind(Integer.class).annotatedWith(Names.named(DAAPResource.DAAP_PORT_NAME)).toInstance(hostingPort);
 				bind(IMusicLibrary.class).to(DAAPResource.class).asEagerSingleton();
 				bind(PasswordMethod.class).toInstance(passwordMethod);
+				try
+				{
+					bind(ConnectionSource.class).toInstance(new JdbcConnectionSource("jdbc:h2:mem:test"));
+				}
+				catch(SQLException e)
+				{
+					throw new RuntimeException(e);
+				}
 				bind(MusicItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(MusicItemManager.class);
 				bind(IMusicStoreReader.class).toInstance(musicStoreReader);
 			}
@@ -191,10 +203,10 @@ public class JoliviaServer extends GuiceServletContextListener
 			protected void configureServlets()
 			{
 				bind(CustomByteArrayProvider.class);
-//				csh.addConstraintMapping(createRelaxation("/server-info"));
-//				csh.addConstraintMapping(createRelaxation("/logout"));
-//				//Following is a hack! It should state /databases/*/items/* instead - however, that cannot be used.
-//				csh.addConstraintMapping(createRelaxation("/databases/*"));
+				// csh.addConstraintMapping(createRelaxation("/server-info"));
+				// csh.addConstraintMapping(createRelaxation("/logout"));
+				// //Following is a hack! It should state /databases/*/items/* instead - however, that cannot be used.
+				// csh.addConstraintMapping(createRelaxation("/databases/*"));
 				filter("*").through(ProxyFilter.class);
 				serve("/*").with(GuiceContainer.class);
 			}

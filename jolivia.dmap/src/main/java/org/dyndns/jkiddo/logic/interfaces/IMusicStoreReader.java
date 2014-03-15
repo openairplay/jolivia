@@ -11,15 +11,18 @@
 package org.dyndns.jkiddo.logic.interfaces;
 
 import java.net.URI;
+import java.util.Collection;
 import java.util.Set;
+
+import org.dyndns.jkiddo.dmp.model.MediaItem;
 
 public interface IMusicStoreReader
 {
-	public Set<IMusicItem> readTunes() throws Exception;
+	public Collection<MediaItem> readTunes() throws Exception;
 
-	public URI getTune(IMusicItem tune) throws Exception;
+	public URI getTune(String tuneIdentifier) throws Exception;
 
-	interface IMusicItem
+	/*interface IMusicItem
 	{
 		String getArtist();
 
@@ -48,5 +51,5 @@ public interface IMusicStoreReader
 		long getDuration();
 		
 		void setDuration(long value);
-	}
+	}*/
 }

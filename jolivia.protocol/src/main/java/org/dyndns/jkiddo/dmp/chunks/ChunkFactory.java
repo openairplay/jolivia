@@ -35,7 +35,6 @@ import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 import org.dyndns.jkiddo.dmp.ProtocolViolationException;
 import org.dyndns.jkiddo.dmp.tools.ReflectionsHelper;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
-import org.reflections.Reflections;
 
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableTable;
@@ -51,8 +50,8 @@ public final class ChunkFactory
 	static
 	{
 		final Table<Integer, String, Class<? extends AbstractChunk>> table = HashBasedTable.create();
-		final Set<Class<?>> reflectedChunks = new Reflections("org.dyndns.jkiddo").getTypesAnnotatedWith(DMAPAnnotation.class);
-		// final Set<Class<?>> reflectedChunks = ReflectionsHelper.getClasses("org.dyndns.jkiddo", DMAPAnnotation.class);
+		// final Set<Class<?>> reflectedChunks = new Reflections("org.dyndns.jkiddo").getTypesAnnotatedWith(DMAPAnnotation.class);
+		final Set<Class<?>> reflectedChunks = ReflectionsHelper.getClasses("org.dyndns.jkiddo", DMAPAnnotation.class);
 		for(Class<?> chunk : reflectedChunks)
 		{
 			DMAPAnnotation dmapAnnotation = chunk.getAnnotation(DMAPAnnotation.class);

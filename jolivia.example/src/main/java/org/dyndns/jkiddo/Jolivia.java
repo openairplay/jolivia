@@ -26,6 +26,7 @@ import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
+import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.guice.JoliviaServer;
 import org.dyndns.jkiddo.jetty.extension.DmapConnector;
 import org.dyndns.jkiddo.logic.desk.DeskImageStoreReader;
@@ -254,13 +255,13 @@ public class Jolivia
 		class DefaultMusicStoreReader implements IMusicStoreReader
 		{
 			@Override
-			public Set<IMusicItem> readTunes() throws Exception
+			public Set<MediaItem> readTunes() throws Exception
 			{
 				return Sets.newHashSet();
 			}
 
 			@Override
-			public URI getTune(IMusicItem tune) throws Exception
+			public URI getTune(String tuneIdentifier) throws Exception
 			{
 				return null;
 			}

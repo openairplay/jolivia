@@ -17,10 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.Collection;
 
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
@@ -30,12 +27,14 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
+import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 
 public class DeskMusicStoreReader implements IMusicStoreReader
 {
@@ -43,32 +42,32 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	 * 
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(DeskMusicStoreReader.class);
-	private Map<IMusicItem, File> mapOfSongToFile;
+	private Collection<MediaItem> mapOfSongToFile;
 	private File path;
 	private Parser parser;
 
 	public DeskMusicStoreReader(String path)
 	{
 		parser = new AutoDetectParser();
-		this.mapOfSongToFile = new HashMap<IMusicItem, File>();
+		this.mapOfSongToFile = Lists.newArrayList();
 		this.path = new File(path);
 	}
 
 	public DeskMusicStoreReader(File path)
 	{
 		parser = new AutoDetectParser();
-		this.mapOfSongToFile = new HashMap<IMusicItem, File>();
+		this.mapOfSongToFile = Lists.newArrayList();
 		this.path = path;
 	}
 
 	public DeskMusicStoreReader()
 	{
 		this(System.getProperty("user.dir") + System.getProperty("file.separator") + "etc");
-		this.mapOfSongToFile = new HashMap<IMusicItem, File>();
+		this.mapOfSongToFile = Lists.newArrayList();
 	}
 
 	@Override
-	public Set<IMusicItem> readTunes()
+	public Collection<MediaItem> readTunes()
 	{
 		try
 		{
@@ -78,7 +77,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		{
 			logger.info(e.getMessage(), e);
 		}
-		return Collections.unmodifiableSet(mapOfSongToFile.keySet());
+		return mapOfSongToFile;
 	}
 
 	protected void traverseRootPathRecursively(File f) throws FileNotFoundException, IOException, InterruptedException, SAXException, TikaException
@@ -98,39 +97,39 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 		else if(isMusic(f))
 		{
-			mapOfSongToFile.put(populateSong(f), f);
+			mapOfSongToFile.add(populateSong(f));
 		}
 	}
 
-	private IMusicItem populateSong(File file) throws IOException, SAXException, TikaException
+	private MediaItem populateSong(File file) throws IOException, SAXException, TikaException
 	{
 		BodyContentHandler handler = new BodyContentHandler();
 		Metadata metadata = new Metadata();
 		InputStream content = new FileInputStream(file);
 		parser.parse(content, handler, metadata, new ParseContext());
 
-		IMusicItem song = new MusicItem();
-		song.setTitle(metadata.get(TikaCoreProperties.TITLE));
-		if(Strings.isNullOrEmpty(song.getTitle()))
+		MediaItem song = new MediaItem();
+		song.setItemName(metadata.get(TikaCoreProperties.TITLE));
+		if(Strings.isNullOrEmpty(metadata.get(TikaCoreProperties.TITLE)))
 		{
-			song.setTitle(file.getName());
+			song.setItemName(file.getName());
 		}
-		song.setGenre(metadata.get(XMPDM.GENRE));
+		// song.setGenre(metadata.get(XMPDM.GENRE));
 		try
 		{
-			song.setTrackNumber(metadata.getInt(XMPDM.TRACK_NUMBER));
+			// song.setTrackNumber(metadata.getInt(XMPDM.TRACK_NUMBER));
 		}
 		catch(Exception e)
 		{
 			logger.debug(e.getMessage(), e);
 		}
-		song.setAlbum(metadata.get(XMPDM.ALBUM));
-		song.setArtist(metadata.get(XMPDM.ARTIST));
-		song.setComposer(metadata.get(XMPDM.COMPOSER));
-		song.setSize(file.length());
+		song.setSongAlbum(metadata.get(XMPDM.ALBUM));
+		song.setSongArtist(metadata.get(XMPDM.ARTIST));
+		// song.setComposer(metadata.get(XMPDM.COMPOSER));
+		// song.setSize(file.length());
 		try
 		{
-			song.setDuration((long)Double.parseDouble(metadata.get(XMPDM.DURATION)));
+			song.setSongTime((int) Double.parseDouble(metadata.get(XMPDM.DURATION)));
 		}
 		catch(Exception e)
 		{
@@ -140,12 +139,13 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		{
 			Calendar c = Calendar.getInstance();
 			c.setTime(metadata.getDate(XMPDM.SHOT_DATE));
-			song.setYear(c.get(Calendar.YEAR));
+			// song.setYear(c.get(Calendar.YEAR));
 		}
 		catch(Exception e)
 		{
 			logger.debug(e.getMessage(), e);
 		}
+		song.setExternalIdentifer(file.getAbsolutePath());
 		return song;
 	}
 	private static boolean isMusic(File f)
@@ -156,110 +156,24 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	}
 
 	@Override
-	public URI getTune(IMusicItem tune) throws Exception
+	public URI getTune(String tune) throws Exception
 	{
-		if(tune != null)
-		{
-			logger.debug("Serving " + tune.getArtist() + " " + tune.getAlbum());
-		}
-		return mapOfSongToFile.get(tune).toURI();
+		return new File(tune).toURI();
 	}
-
-	class MusicItem implements IMusicItem
-	{
-		private String artist;
-		private String album;
-		private String title;
-		private long duration;
-
-		public String getTitle()
-		{
-			return title;
-		}
-
-		@Override
-		public String getArtist()
-		{
-			return artist;
-		}
-
-		@Override
-		public String getAlbum()
-		{
-			return album;
-		}
-
-		@Override
-		public void setArtist(String artist)
-		{
-			this.artist = artist;
-
-		}
-
-		@Override
-		public void setAlbum(String album)
-		{
-			this.album = album;
-
-		}
-
-		@Override
-		public void setTitle(String title)
-		{
-			this.title = title;
-		}
-
-		@Override
-		public void setComposer(String composer)
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void setGenre(String genre)
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void setTrackNumber(int trackNumber)
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void setYear(int Year)
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void setSize(long size)
-		{
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public long getSize()
-		{
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public long getDuration() {
-			return duration;
-		}
-
-		@Override
-		public void setDuration(long value) {
-			duration = value;
-		}
-
-	}
+	/*
+	 * class MusicItem implements IMusicItem { private String artist; private String album; private String title; private long duration; public String getTitle() { return title; }
+	 * @Override public String getArtist() { return artist; }
+	 * @Override public String getAlbum() { return album; }
+	 * @Override public void setArtist(String artist) { this.artist = artist; }
+	 * @Override public void setAlbum(String album) { this.album = album; }
+	 * @Override public void setTitle(String title) { this.title = title; }
+	 * @Override public void setComposer(String composer) { // TODO Auto-generated method stub }
+	 * @Override public void setGenre(String genre) { // TODO Auto-generated method stub }
+	 * @Override public void setTrackNumber(int trackNumber) { // TODO Auto-generated method stub }
+	 * @Override public void setYear(int Year) { // TODO Auto-generated method stub }
+	 * @Override public void setSize(long size) { // TODO Auto-generated method stub }
+	 * @Override public long getSize() { // TODO Auto-generated method stub return 0; }
+	 * @Override public long getDuration() { return duration; }
+	 * @Override public void setDuration(long value) { duration = value; } }
+	 */
 }

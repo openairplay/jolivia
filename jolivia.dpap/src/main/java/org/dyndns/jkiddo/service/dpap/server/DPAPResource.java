@@ -1,6 +1,7 @@
 package org.dyndns.jkiddo.service.dpap.server;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -17,12 +18,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
-import org.dyndns.jkiddo.dmp.chunks.Chunk;
 import org.dyndns.jkiddo.dmp.chunks.media.DatabaseCount;
-import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
-import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.dmp.chunks.media.LoginRequired;
 import org.dyndns.jkiddo.dmp.chunks.media.ReturnedCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ServerInfoResponse;
@@ -34,17 +32,10 @@ import org.dyndns.jkiddo.dmp.chunks.media.TimeoutInterval;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
-import org.dyndns.jkiddo.dpap.chunks.picture.FileData;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Collections2;
-import com.google.common.collect.Sets;
 
 @Consumes(MediaType.WILDCARD)
 // @Produces(MediaType.WILDCARD)
@@ -73,7 +64,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	@Override
 	@Path("server-info")
 	@GET
-	public Response serverInfo(@QueryParam("hsgid") String hsgid) throws IOException
+	public Response serverInfo(@QueryParam("hsgid") String hsgid) throws IOException, SQLException
 	{
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 		serverInfoResponse.add(new Status(200));

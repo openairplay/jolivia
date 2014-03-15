@@ -32,7 +32,6 @@ import org.dyndns.jkiddo.dmp.chunks.media.SpecifiedTotalCount;
 import org.dyndns.jkiddo.dmp.chunks.media.Status;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
-import org.dyndns.jkiddo.dmp.model.Container;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
 
 import com.google.common.collect.Iterables;

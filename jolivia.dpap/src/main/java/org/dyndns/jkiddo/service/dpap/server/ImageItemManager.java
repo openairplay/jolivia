@@ -1,41 +1,24 @@
 package org.dyndns.jkiddo.service.dpap.server;
 
-import java.util.Collection;
+import java.sql.SQLException;
 import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.dyndns.jkiddo.dmp.IDatabase;
-import org.dyndns.jkiddo.dmp.ILibrary;
 import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
-import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
-import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
+import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.MediaProtocolVersion;
-import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.model.Database;
 import org.dyndns.jkiddo.dmp.model.Library;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
-import org.dyndns.jkiddo.dpap.chunks.picture.AspectRatio;
-import org.dyndns.jkiddo.dpap.chunks.picture.CreationDate;
-import org.dyndns.jkiddo.dpap.chunks.picture.ImageComment;
-import org.dyndns.jkiddo.dpap.chunks.picture.ImageFileSize;
-import org.dyndns.jkiddo.dpap.chunks.picture.ImageFilename;
-import org.dyndns.jkiddo.dpap.chunks.picture.ImageFormat;
-import org.dyndns.jkiddo.dpap.chunks.picture.ImageLargeFileSize;
-import org.dyndns.jkiddo.dpap.chunks.picture.ImagePixelHeight;
-import org.dyndns.jkiddo.dpap.chunks.picture.ImagePixelWidth;
-import org.dyndns.jkiddo.dpap.chunks.picture.ImageRating;
 import org.dyndns.jkiddo.dpap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader.IImageItem;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
-
-import com.google.common.base.Function;
-import com.google.common.collect.Maps;
 
 public class ImageItemManager implements IItemManager
 {
@@ -148,12 +131,6 @@ public class ImageItemManager implements IItemManager
 	}
 
 	@Override
-	public Collection<Database> getDatabases()
-	{
-		return library.getDatabases();
-	}
-
-	@Override
 	public Database getDatabase(long databaseId)
 	{
 		return library.getDatabase(databaseId);
@@ -204,6 +181,13 @@ public class ImageItemManager implements IItemManager
 
 	@Override
 	public Listing getMediaItems(long databaseId, Iterable<String> parameters)
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Listing getDatabases() throws SQLException
 	{
 		// TODO Auto-generated method stub
 		return null;
