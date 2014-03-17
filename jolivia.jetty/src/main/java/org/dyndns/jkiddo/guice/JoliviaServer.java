@@ -17,6 +17,8 @@ import java.sql.SQLException;
 
 import javax.jmdns.JmmDNS;
 
+import org.dyndns.jkiddo.dmp.chunks.AbstractChunk;
+import org.dyndns.jkiddo.dmp.chunks.ChunkFactory;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
 import org.dyndns.jkiddo.jetty.ProxyFilter;
@@ -30,6 +32,7 @@ import org.dyndns.jkiddo.service.daap.client.PairedRemoteDiscoverer;
 import org.dyndns.jkiddo.service.daap.client.UnpairedRemoteCrawler;
 import org.dyndns.jkiddo.service.daap.server.DAAPResource;
 import org.dyndns.jkiddo.service.daap.server.IMusicLibrary;
+import org.dyndns.jkiddo.service.daap.server.InMemoryMusicManager;
 import org.dyndns.jkiddo.service.daap.server.MusicItemManager;
 import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
 import org.dyndns.jkiddo.service.dacp.client.ITouchRemoteResource;
@@ -39,6 +42,7 @@ import org.dyndns.jkiddo.service.dacp.server.ITouchAbleServerResource;
 import org.dyndns.jkiddo.service.dacp.server.TouchAbleServerResource;
 import org.dyndns.jkiddo.service.dmap.CustomByteArrayProvider;
 import org.dyndns.jkiddo.service.dmap.DMAPInterface;
+import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.dyndns.jkiddo.service.dmap.Util;
 import org.dyndns.jkiddo.service.dpap.server.DPAPResource;
@@ -48,9 +52,11 @@ import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Table;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -157,7 +163,10 @@ public class JoliviaServer extends GuiceServletContextListener
 				{
 					throw new RuntimeException(e);
 				}
-				bind(MusicItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(MusicItemManager.class);
+
+				bind(new TypeLiteral<Table<Integer, String, Class<? extends AbstractChunk>>>() {}).toInstance(ChunkFactory.getCalculatedmap());
+				//bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(MusicItemManager.class);
+				bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(InMemoryMusicManager.class);
 				bind(IMusicStoreReader.class).toInstance(musicStoreReader);
 			}
 		}, new AbstractModule() {

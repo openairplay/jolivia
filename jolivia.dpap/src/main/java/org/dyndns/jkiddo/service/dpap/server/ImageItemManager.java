@@ -129,12 +129,12 @@ public class ImageItemManager implements IItemManager
 	{
 		return library.getRevision();
 	}
-
+/*
 	@Override
 	public Database getDatabase(long databaseId)
 	{
 		return library.getDatabase(databaseId);
-	}
+	}*/
 
 	@Override
 	public byte[] getItemAsByteArray(long databaseId, long itemId)

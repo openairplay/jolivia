@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
-import org.dyndns.jkiddo.dmp.model.Database;
 
 public interface IItemManager
 {
@@ -26,8 +25,6 @@ public interface IItemManager
 	long getRevision(String remoteHost, long sessionId);
 
 	Listing getDatabases() throws SQLException;
-
-	Database getDatabase(long databaseId) throws SQLException;
 
 	byte[] getItemAsByteArray(long databaseId, long itemId);
 	

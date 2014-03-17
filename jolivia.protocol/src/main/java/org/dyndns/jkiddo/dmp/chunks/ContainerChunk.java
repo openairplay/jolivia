@@ -75,6 +75,15 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 		collection.add(chunk);
 	}
 
+	public void addAll(Collection<Chunk> chunk)
+	{
+		if(chunk == null)
+		{
+			throw new IllegalArgumentException();
+		}
+		collection.addAll(chunk);
+	}
+
 	@Override
 	public Iterator<Chunk> iterator()
 	{

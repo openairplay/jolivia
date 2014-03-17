@@ -82,7 +82,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	private final String serviceGuid;
 
 	@Inject
-	public DAAPResource(JmmDNS mDNS, @Named(DAAP_PORT_NAME) Integer port, @Named(Util.APPLICATION_NAME) String applicationName, @Named(DAAPResource.DAAP_RESOURCE) MusicItemManager itemManager) throws IOException
+	public DAAPResource(JmmDNS mDNS, @Named(DAAP_PORT_NAME) Integer port, @Named(Util.APPLICATION_NAME) String applicationName, @Named(DAAPResource.DAAP_RESOURCE) IItemManager itemManager) throws IOException
 	{
 		super(mDNS, port, itemManager);
 		this.name = applicationName;

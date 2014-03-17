@@ -124,4 +124,40 @@ public class MediaItem
 	{
 		this.songTime = value;
 	}
+
+	public int getItemId()
+	{
+		return itemId;
+	}
+
+	public String getSongAlbum()
+	{
+		return songAlbum;
+	}
+
+	public String getSongArtist()
+	{
+		return songArtist;
+	}
+
+	public String getItemName()
+	{
+		return itemName;
+	}
+
+	public String getMediaFormat()
+	{
+		return mediaFormat;
+	}
+
+	public int getSongSampleRate()
+	{
+		return songSampleRate;
+	}
+
+	public int getSongTime()
+	{
+		return songTime;
+	}
+	
 }
