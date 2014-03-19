@@ -108,11 +108,11 @@ public class Window
 		{
 			txtUsername.setText(args[0]);
 			pwdPassword.setText(args[1]);
-			new GReporter(args[0]);
+			//new GReporter(args[0]);
 		}
 		else
 		{
-			new GReporter("local version");
+			//new GReporter("local version");
 		}
 		executor = Executors.newSingleThreadExecutor();
 		fc = new JFileChooser(System.getProperty("user.home"));
@@ -222,12 +222,12 @@ public class Window
 							if(chckbxUseGoogleMusic.isSelected())
 							{
 								reader = new GoogleStoreReader(txtUsername.getText(), new String(pwdPassword.getPassword()));
-								new GReporter(txtUsername.getText());
+//								new GReporter(txtUsername.getText());
 							}
 							else
 							{
 								reader = new DeskMusicStoreReader(path);
-								new GReporter("local version");
+//								new GReporter("local version");
 							}
 							jolivia = new Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).musicStoreReader(reader).build();
 							btnNewButton_1.setText("Reregister to networks");

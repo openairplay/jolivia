@@ -12,13 +12,16 @@ package org.dyndns.jkiddo.logic.interfaces;
 
 import java.net.URI;
 import java.util.Collection;
-import java.util.Set;
+import java.util.Map;
 
+import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
 
 public interface IMusicStoreReader
 {
 	public Collection<MediaItem> readTunes() throws Exception;
+	
+	public void readTunes(Listing listing, Map<Long, String> map) throws Exception;
 
 	public URI getTune(String tuneIdentifier) throws Exception;
 

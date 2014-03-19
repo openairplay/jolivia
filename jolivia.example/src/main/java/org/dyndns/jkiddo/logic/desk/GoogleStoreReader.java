@@ -11,7 +11,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.Map;
 
+import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 
@@ -74,4 +76,11 @@ public class GoogleStoreReader implements IMusicStoreReader
 	 * @Override public long getDuration() { return duration; }
 	 * @Override public void setDuration(long value) { duration = value; } }
 	 */
+
+	@Override
+	public void readTunes(Listing listing, Map<Long, String> map) throws Exception
+	{
+		throw new RuntimeException("Not implemented");
+		
+	}
 }

@@ -14,6 +14,7 @@ import java.awt.BorderLayout;
 import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.EnumSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.DispatcherType;
@@ -25,6 +26,7 @@ import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
+import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.guice.JoliviaServer;
@@ -264,6 +266,13 @@ public class Jolivia
 			public URI getTune(String tuneIdentifier) throws Exception
 			{
 				return null;
+			}
+
+			@Override
+			public void readTunes(Listing listing, Map<Long, String> map) throws Exception
+			{
+				// TODO Auto-generated method stub
+				
 			}
 		}
 	}

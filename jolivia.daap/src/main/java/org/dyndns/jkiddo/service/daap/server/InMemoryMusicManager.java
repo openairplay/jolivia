@@ -2,38 +2,30 @@ package org.dyndns.jkiddo.service.daap.server;
 
 import java.net.URI;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.dyndns.jkiddo.dmap.chunks.audio.AudioProtocolVersion;
-import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
-import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongComment;
-import org.dyndns.jkiddo.dmap.chunks.audio.SongDataUrl;
-import org.dyndns.jkiddo.dmap.chunks.audio.SongFormat;
-import org.dyndns.jkiddo.dmap.chunks.audio.SongSampleRate;
-import org.dyndns.jkiddo.dmap.chunks.audio.SongTime;
 import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.ContainerCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
-import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.dmp.chunks.media.MediaProtocolVersion;
-import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.dyndns.jkiddo.dpap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
 
-import com.google.common.base.Function;
-import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableMap;
 
 public class InMemoryMusicManager implements IItemManager
@@ -47,7 +39,7 @@ public class InMemoryMusicManager implements IItemManager
 	private final Listing containersResponse;
 	private final Listing mediaItemsResponse;
 	private final IMusicStoreReader storeReader;
-	private final ImmutableMap<Long, ListingItem> map;
+	private final Map<Long, String> map;
 
 	@Override
 	public PasswordMethod getAuthenticationMethod()
@@ -133,8 +125,7 @@ public class InMemoryMusicManager implements IItemManager
 	{
 		try
 		{
-			ListingItem item = map.get(itemId);
-			String identifier = item.getSpecificChunk(SongComment.class).getValue();
+			String identifier = map.get(itemId);
 			URI uri = storeReader.getTune(identifier);
 			return DmapUtil.uriTobuffer(uri);
 		}
@@ -149,7 +140,8 @@ public class InMemoryMusicManager implements IItemManager
 	{
 		final AtomicLong id = new AtomicLong();
 		storeReader = reader;
-		map = FluentIterable.from(reader.readTunes()).transform(new Function<MediaItem, ListingItem>() {
+
+		/*map = FluentIterable.from(reader.readTunes()).transform(new Function<MediaItem, ListingItem>() {
 
 			@Override
 			public ListingItem apply(MediaItem mediaItem)
@@ -175,12 +167,25 @@ public class InMemoryMusicManager implements IItemManager
 			}
 		});
 
-		Listing mediaItemslisting = new Listing();
-		for(ListingItem v : map.values())
+		Listing mediaItemslisting = new Listing();*/
+		/*
+		 * for(ListingItem v : map.values()) { mediaItemslisting.add(v); }
+		 */
+		/*UnmodifiableIterator<ListingItem> coll = map.values().iterator();
+		for(int i = 0; i < 100; i++)
 		{
-			mediaItemslisting.add(v);
-		}
-		mediaItemsResponse = mediaItemslisting;
+			if(coll.hasNext())
+			{
+				mediaItemslisting.add(coll.next());				
+			}
+		}*/
+
+		mediaItemsResponse = new Listing();
+		map = new HashMap<Long,String>();
+		
+		reader.readTunes(mediaItemsResponse, map);
+		
+		
 
 		Listing databaselisting = new Listing();
 		ListingItem databaselistingItem = new ListingItem();

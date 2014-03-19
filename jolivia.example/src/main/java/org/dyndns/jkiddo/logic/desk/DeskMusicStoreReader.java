@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Map;
 
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
@@ -27,6 +28,7 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
+import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.slf4j.Logger;
@@ -176,4 +178,11 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	 * @Override public long getDuration() { return duration; }
 	 * @Override public void setDuration(long value) { duration = value; } }
 	 */
+
+	@Override
+	public void readTunes(Listing listing, Map<Long, String> map) throws Exception
+	{
+		throw new RuntimeException("Not implemented");
+		
+	}
 }
