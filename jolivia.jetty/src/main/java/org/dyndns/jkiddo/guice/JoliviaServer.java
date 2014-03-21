@@ -33,7 +33,6 @@ import org.dyndns.jkiddo.service.daap.client.UnpairedRemoteCrawler;
 import org.dyndns.jkiddo.service.daap.server.DAAPResource;
 import org.dyndns.jkiddo.service.daap.server.IMusicLibrary;
 import org.dyndns.jkiddo.service.daap.server.InMemoryMusicManager;
-import org.dyndns.jkiddo.service.daap.server.MusicItemManager;
 import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
 import org.dyndns.jkiddo.service.dacp.client.ITouchRemoteResource;
 import org.dyndns.jkiddo.service.dacp.client.PairingDatabase;

@@ -12,8 +12,16 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
+import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongFormat;
+import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
+import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
+import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
+import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 
@@ -26,14 +34,16 @@ public class GoogleStoreReader implements IMusicStoreReader
 	 * 
 	 */
 	private GoogleMusicAPI gm;
-	private Collection<MediaItem> songs;
 
 	public GoogleStoreReader(String username, String password) throws IOException, URISyntaxException, InvalidCredentialsException
 	{
 		gm = new GoogleMusicAPI(new ApacheConnector(), new JSON(), new File("."));
 		gm.login(username, password);
+	}
 
-		songs = Collections2.transform(gm.getAllSongs(), new Function<Song, MediaItem>() {
+	public Collection<MediaItem> readTunes() throws Exception
+	{
+		return Collections2.transform(gm.getAllSongs(), new Function<Song, MediaItem>() {
 
 			@Override
 			public MediaItem apply(Song song)
@@ -48,39 +58,34 @@ public class GoogleStoreReader implements IMusicStoreReader
 			}
 		});
 	}
-
-	public Collection<MediaItem> readTunes() throws Exception
-	{
-		return songs;
-	}
 	public URI getTune(String tune) throws Exception
 	{
 		Song song = new Song();
 		song.setId(tune);
 		return gm.getSongURL(song);
 	}
-	/*
-	 * class MusicItem implements IMusicItem { private String artist; private String album; private String title; private long duration;
-	 * @Override public String getArtist() { return artist; }
-	 * @Override public String getAlbum() { return album; }
-	 * @Override public void setArtist(String artist) { this.artist = artist; }
-	 * @Override public void setAlbum(String album) { this.album = album; }
-	 * @Override public void setComposer(String composer) { // TODO Auto-generated method stub }
-	 * @Override public void setGenre(String genre) { // TODO Auto-generated method stub }
-	 * @Override public void setTrackNumber(int trackNumber) { // TODO Auto-generated method stub }
-	 * @Override public void setYear(int Year) { // TODO Auto-generated method stub }
-	 * @Override public void setSize(long size) { // TODO Auto-generated method stub }
-	 * @Override public String getTitle() { return title; }
-	 * @Override public long getSize() { // TODO Auto-generated method stub return 0; }
-	 * @Override public void setTitle(String title) { this.title = title; }
-	 * @Override public long getDuration() { return duration; }
-	 * @Override public void setDuration(long value) { duration = value; } }
-	 */
 
 	@Override
-	public void readTunes(Listing listing, Map<Long, String> map) throws Exception
+	public void readTunesMemoryOptimized(Listing listing, Map<Long, String> map) throws Exception
 	{
-		throw new RuntimeException("Not implemented");
-		
+		Collection<Song> songs = gm.getAllSongs();
+		System.gc();
+		AtomicLong id = new AtomicLong();
+
+		for(Song song : songs)
+		{
+			ListingItem item = new ListingItem();
+			item.add(new ItemKind(ItemKind.AUDIO));
+			item.add(new ItemId(id.get()));
+			item.add(new SongAlbum(song.getAlbum()));
+			item.add(new SongArtist(song.getArtist()));
+			item.add(new ItemName(song.getName()));
+			item.add(new SongFormat(SongFormat.MP3));
+			// item.add(new SongSampleRate(SongSampleRate.KHZ_44100));
+			// item.add(new SongComment(song.getId()));
+			listing.add(item);
+			map.put(Long.valueOf(id.getAndIncrement()), song.getId());
+		}
+		songs.clear();
 	}
 }

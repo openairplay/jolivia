@@ -4,13 +4,11 @@ import java.net.URI;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.dyndns.jkiddo.dmap.chunks.audio.AudioProtocolVersion;
-import org.dyndns.jkiddo.dmap.chunks.audio.SongComment;
 import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.ContainerCount;
@@ -25,8 +23,6 @@ import org.dyndns.jkiddo.dpap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
-
-import com.google.common.collect.ImmutableMap;
 
 public class InMemoryMusicManager implements IItemManager
 {
@@ -125,7 +121,7 @@ public class InMemoryMusicManager implements IItemManager
 	{
 		try
 		{
-			String identifier = map.get(itemId);
+			String identifier = map.get(Long.valueOf(itemId));
 			URI uri = storeReader.getTune(identifier);
 			return DmapUtil.uriTobuffer(uri);
 		}
@@ -138,7 +134,6 @@ public class InMemoryMusicManager implements IItemManager
 	@Inject
 	public InMemoryMusicManager(@Named(Util.APPLICATION_NAME) String applicationName, IMusicStoreReader reader, PasswordMethod pm) throws Exception
 	{
-		final AtomicLong id = new AtomicLong();
 		storeReader = reader;
 
 		/*map = FluentIterable.from(reader.readTunes()).transform(new Function<MediaItem, ListingItem>() {
@@ -179,18 +174,18 @@ public class InMemoryMusicManager implements IItemManager
 				mediaItemslisting.add(coll.next());				
 			}
 		}*/
-
+		
 		mediaItemsResponse = new Listing();
 		map = new HashMap<Long,String>();
 		
-		reader.readTunes(mediaItemsResponse, map);
+		reader.readTunesMemoryOptimized(mediaItemsResponse, map);
 		
 		
 
 		Listing databaselisting = new Listing();
 		ListingItem databaselistingItem = new ListingItem();
 		databaselistingItem.add(new ItemId(1));
-		databaselistingItem.add(new ItemName("Jolivia"));
+		databaselistingItem.add(new ItemName(applicationName));
 		databaselistingItem.add(new ItemCount(1));
 		databaselistingItem.add(new ContainerCount(1));
 		databaselisting.add(databaselistingItem);

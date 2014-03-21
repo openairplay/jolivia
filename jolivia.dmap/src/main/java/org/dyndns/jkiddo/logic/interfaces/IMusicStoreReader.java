@@ -21,7 +21,7 @@ public interface IMusicStoreReader
 {
 	public Collection<MediaItem> readTunes() throws Exception;
 	
-	public void readTunes(Listing listing, Map<Long, String> map) throws Exception;
+	public void readTunesMemoryOptimized(Listing listing, Map<Long, String> map) throws Exception;
 
 	public URI getTune(String tuneIdentifier) throws Exception;
 

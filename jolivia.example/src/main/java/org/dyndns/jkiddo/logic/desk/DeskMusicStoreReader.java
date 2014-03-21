@@ -180,7 +180,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	 */
 
 	@Override
-	public void readTunes(Listing listing, Map<Long, String> map) throws Exception
+	public void readTunesMemoryOptimized(Listing listing, Map<Long, String> map) throws Exception
 	{
 		throw new RuntimeException("Not implemented");
 		
