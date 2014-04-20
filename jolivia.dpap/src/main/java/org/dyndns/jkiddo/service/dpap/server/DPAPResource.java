@@ -18,10 +18,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
+import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmp.chunks.media.DatabaseCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.LoginRequired;
+import org.dyndns.jkiddo.dmp.chunks.media.MediaProtocolVersion;
 import org.dyndns.jkiddo.dmp.chunks.media.ReturnedCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ServerInfoResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.SpecifiedTotalCount;
@@ -32,6 +34,7 @@ import org.dyndns.jkiddo.dmp.chunks.media.TimeoutInterval;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
+import org.dyndns.jkiddo.dpap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.Util;
 import org.slf4j.Logger;
@@ -45,6 +48,9 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 
 	public static final String DPAP_SERVER_PORT_NAME = "DPAP_SERVER_PORT_NAME";
 	public static final String DPAP_RESOURCE = "DPAP_IMPLEMENTATION";
+	
+	private static final VersionChunk dpapProtocolVersion = new PictureProtocolVersion(DmapUtil.PPRO_VERSION_101);
+	private static final VersionChunk dmapProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_200);
 
 	private static final String TXT_VERSION = "1";
 	private static final String TXT_VERSION_KEY = "txtvers";
@@ -68,8 +74,8 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	{
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 		serverInfoResponse.add(new Status(200));
-		serverInfoResponse.add(itemManager.getMediaProtocolVersion());
-		serverInfoResponse.add(itemManager.getPictureProtocolVersion());
+		serverInfoResponse.add(dmapProtocolVersion);
+		serverInfoResponse.add(dpapProtocolVersion);
 		serverInfoResponse.add(new ItemName(name));
 		serverInfoResponse.add(new LoginRequired(false));
 		serverInfoResponse.add(new TimeoutInterval(1800));
@@ -77,7 +83,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 		serverInfoResponse.add(new SupportsIndex(false));
 		serverInfoResponse.add(new DatabaseCount(itemManager.getDatabases().size()));
 
-		return Util.buildResponse(serverInfoResponse, itemManager.getDMAPKey(), name);
+		return Util.buildResponse(serverInfoResponse, getDMAPKey(), name);
 	}
 
 	@Override
@@ -87,8 +93,8 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 		hash = (hash + hash).substring(0, 13);
 		HashMap<String, String> records = new HashMap<String, String>();
 		records.put(TXT_VERSION_KEY, TXT_VERSION);
-		records.put(DPAP_VERSION_KEY, DmapUtil.PPRO_VERSION_200 + "");
-		records.put(IPSH_VERSION_KEY, DmapUtil.PPRO_VERSION_200 + "");
+		records.put(DPAP_VERSION_KEY, DmapUtil.PPRO_VERSION_201 + "");
+		records.put(IPSH_VERSION_KEY, DmapUtil.PPRO_VERSION_201 + "");
 		records.put(MACHINE_ID_KEY, hash);
 		records.put(PASSWORD_KEY, "0");
 
@@ -183,7 +189,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 		// databaseSongs.add(deletedListing);
 		// }
 
-		return Util.buildResponse(databaseItems, itemManager.getDMAPKey(), name);
+		return Util.buildResponse(databaseItems, getDMAPKey(), name);
 	}
 	private Collection<MediaItem> getMediaItems(final long databaseId, final String query)
 	{
@@ -214,6 +220,12 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	@GET
 	public Response closeConnection() throws IOException
 	{
-		return Util.buildEmptyResponse(itemManager.getDMAPKey(), name);
+		return Util.buildEmptyResponse(getDMAPKey(), name);
+	}
+
+	@Override
+	public String getDMAPKey()
+	{
+		return "DPAP-Server";
 	}
 }

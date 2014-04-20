@@ -10,6 +10,8 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.logic.desk;
 
+import gmusic.api.model.Song;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,6 +21,7 @@ import java.net.URI;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.apache.tika.exception.TikaException;
 import org.apache.tika.metadata.Metadata;
@@ -28,7 +31,14 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongFormat;
+import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
+import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
+import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
+import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.slf4j.Logger;
@@ -182,7 +192,26 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	@Override
 	public void readTunesMemoryOptimized(Listing listing, Map<Long, String> map) throws Exception
 	{
-		throw new RuntimeException("Not implemented");
+		
+		Collection<MediaItem> songs = readTunes();
+		System.gc();
+		AtomicLong id = new AtomicLong(1);
+
+		for(MediaItem song : songs)
+		{
+			ListingItem item = new ListingItem();
+			item.add(new ItemKind(ItemKind.AUDIO));
+			item.add(new ItemId(id.get()));
+			item.add(new SongAlbum(song.getSongAlbum()));
+			item.add(new SongArtist(song.getSongArtist()));
+			item.add(new ItemName(song.getItemName()));
+			item.add(new SongFormat(SongFormat.MP3));
+			// item.add(new SongSampleRate(SongSampleRate.KHZ_44100));
+			// item.add(new SongComment(song.getId()));
+			listing.add(item);
+			map.put(Long.valueOf(id.getAndIncrement()), song.getExternalIdentifer());
+		}
+		songs.clear();
 		
 	}
 }

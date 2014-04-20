@@ -19,15 +19,10 @@ import org.dyndns.jkiddo.dmap.chunks.audio.ItemsContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.ServerDatabases;
 import org.dyndns.jkiddo.dmp.chunks.ContentCodesResponseImpl;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
-import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.dmp.chunks.media.LoginResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.ReturnedCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ServerRevision;
 import org.dyndns.jkiddo.dmp.chunks.media.SessionId;
-import org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderChar;
-import org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderIndex;
-import org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderListing;
-import org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderNumber;
 import org.dyndns.jkiddo.dmp.chunks.media.SpecifiedTotalCount;
 import org.dyndns.jkiddo.dmp.chunks.media.Status;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateResponse;
@@ -59,7 +54,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		LoginResponse loginResponse = new LoginResponse();
 		loginResponse.add(new Status(200));
 		loginResponse.add(new SessionId(itemManager.getSessionId(s)));
-		return Util.buildResponse(loginResponse, itemManager.getDMAPKey(), name);
+		return Util.buildResponse(loginResponse, getDMAPKey(), name);
 	}
 
 	@Override
@@ -75,7 +70,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		UpdateResponse updateResponse = new UpdateResponse();
 		updateResponse.add(new Status(200));
 		updateResponse.add(new ServerRevision(itemManager.getRevision(s, sessionId)));
-		return Util.buildResponse(updateResponse, itemManager.getDMAPKey(), name);
+		return Util.buildResponse(updateResponse, getDMAPKey(), name);
 	}
 
 	@Override
@@ -105,7 +100,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		// serverDatabases.add(deletedListing);
 		// }
 
-		return Util.buildResponse(serverDatabases, itemManager.getDMAPKey(), name);
+		return Util.buildResponse(serverDatabases, getDMAPKey(), name);
 	}
 
 	@Override
@@ -168,7 +163,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		// databasePlaylists.add(deletedListing);
 		// }
 
-		return Util.buildResponse(databaseContainers, itemManager.getDMAPKey(), name);
+		return Util.buildResponse(databaseContainers, getDMAPKey(), name);
 	}
 
 	@Override
@@ -216,7 +211,6 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		}*/
 		
 		
-				
 		itemsContainer.add(new SpecifiedTotalCount(Iterables.size(listing.getListingItems())));
 		itemsContainer.add(new ReturnedCount(Iterables.size(listing.getListingItems())));
 		itemsContainer.add(listing);
@@ -231,14 +225,16 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		// }
 		// playlistSongs.add(deletedListing);
 		// }
+		
+		/*
 		SortingHeaderListing sortingHeaderListing = new SortingHeaderListing();
 		ListingItem item = new ListingItem();
 		item.add(new SortingHeaderChar(0x54));//
 		item.add(new SortingHeaderIndex(0));
 		item.add(new SortingHeaderNumber(listing.size()));
 		sortingHeaderListing.add(item);
-		itemsContainer.add(sortingHeaderListing);
-		return Util.buildResponse(itemsContainer, itemManager.getDMAPKey(), name);
+		itemsContainer.add(sortingHeaderListing);*/
+		return Util.buildResponse(itemsContainer, getDMAPKey(), name);
 	}
 
 	@Override
@@ -246,7 +242,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@GET
 	public Response contentCodes() throws IOException
 	{
-		return Util.buildResponse(new ContentCodesResponseImpl(), itemManager.getDMAPKey(), name);
+		return Util.buildResponse(new ContentCodesResponseImpl(), getDMAPKey(), name);
 	}
 
 	@Override
@@ -254,6 +250,8 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@GET
 	public Response logout(@QueryParam("session-id") long sessionId)
 	{
-		return Util.buildEmptyResponse(itemManager.getDMAPKey(), name);
+		return Util.buildEmptyResponse(getDMAPKey(), name);
 	}
+	
+	abstract public String getDMAPKey();
 }

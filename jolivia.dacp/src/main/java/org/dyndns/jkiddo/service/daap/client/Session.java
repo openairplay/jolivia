@@ -39,12 +39,11 @@ import java.util.NoSuchElementException;
 
 import org.dyndns.jkiddo.dmap.chunks.audio.BaseContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseContainerns;
+import org.dyndns.jkiddo.dmap.chunks.audio.ItemsContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.ServerDatabases;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.DataControlInt;
-import org.dyndns.jkiddo.dmp.IDatabase;
 import org.dyndns.jkiddo.dmp.chunks.media.ContentCodesResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.DatabaseShareType;
-import org.dyndns.jkiddo.dmp.chunks.media.ItemCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
@@ -137,7 +136,7 @@ public class Session
 		this.host = host;
 		this.port = port;
 
-		getServerInfo();
+		ServerInfoResponse serverInfo = getServerInfo();
 
 		// http://192.168.254.128:3689/login?pairing-guid=0x0000000000000001
 		logger.debug(String.format("trying login for host=%s and guid=%s", host, pairingGuid));
@@ -215,7 +214,12 @@ public class Session
 		long persistentId = localDatabase.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue();
 
 		// fetch playlists to find the overall magic "Music" playlist
-		DatabaseContainerns allPlaylists = getMasterDatabaseContainerList(itemId);
+		DatabaseContainerns allPlaylists = getDatabaseContainerList(itemId);
+		
+		for(ListingItem container : allPlaylists.getListing().getListingItems())
+		{
+			ItemsContainer containerDetails = getContainerDetails(itemId, container.getSpecificChunk(ItemId.class).getValue());
+		}
 
 		// For now, the BasePlayList is sufficient
 		ListingItem item = allPlaylists.getListing().getSingleListingItemContainingClass(BaseContainer.class);
@@ -224,9 +228,14 @@ public class Session
 		return new Database(databaseName, itemId, persistentId, playlist);
 	}
 
-	protected DatabaseContainerns getMasterDatabaseContainerList(int databaseId) throws Exception
+	private ItemsContainer getContainerDetails(int databaseId, int containerId) throws Exception
 	{
-		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemname,dmap.itemcount,dmap.itemid,dmap.persistentid,daap.baseplaylist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,com.apple.itunes.saved-genius,dmap.parentcontainerid,dmap.editcommandssupported", this.getRequestBase(), databaseId, this.sessionId));
+		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&type=music&meta=dmap.itemkind,dmap.itemid,dmap.containeritemid", this.getRequestBase(), databaseId, containerId, sessionId));
+	}
+
+	protected DatabaseContainerns getDatabaseContainerList(int databaseId) throws Exception
+	{																							   
+		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemid,dmap.itemname,dmap.persistentid,dmap.parentcontainerid,com.apple.itunes.is-podcast-playlist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,dmap.haschildcontainers,com.apple.itunes.saved-genius", this.getRequestBase(), databaseId, this.sessionId));
 	}
 
 	protected ServerDatabases getServerDatabases() throws Exception

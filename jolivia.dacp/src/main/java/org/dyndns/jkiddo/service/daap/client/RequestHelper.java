@@ -122,7 +122,7 @@ public class RequestHelper
 		{
 			connection.setRequestProperty("Viewer-Only-Client", "1");
 			connection.setRequestProperty("Client-iTunes-Sharing-Version", "3.10");
-			connection.setRequestProperty("Client-DAAP-Version", "3.11");
+			connection.setRequestProperty("Client-DAAP-Version", "3.12");
 			connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
 		}
 

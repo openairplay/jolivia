@@ -11,12 +11,9 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.dyndns.jkiddo.dmap.chunks.audio.AudioProtocolVersion;
-import org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion;
 import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition;
 import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
 import org.dyndns.jkiddo.dmp.chunks.AbstractChunk;
-import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.ContainerCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemCount;
@@ -25,14 +22,12 @@ import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
-import org.dyndns.jkiddo.dmp.chunks.media.MediaProtocolVersion;
 import org.dyndns.jkiddo.dmp.chunks.media.PersistentId;
 import org.dyndns.jkiddo.dmp.model.Container;
 import org.dyndns.jkiddo.dmp.model.Database;
 import org.dyndns.jkiddo.dmp.model.Library;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
-import org.dyndns.jkiddo.dpap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
@@ -60,11 +55,6 @@ import com.j256.ormlite.table.TableUtils;
 public class MusicItemManager implements IItemManager
 {
 	private static final Logger logger = LoggerFactory.getLogger(MusicItemManager.class);
-
-	private static final VersionChunk pictureProtocolVersion = new PictureProtocolVersion(DmapUtil.PPRO_VERSION_200);
-	private static final VersionChunk audioProtocolVersion = new AudioProtocolVersion(DmapUtil.APRO_VERSION_3011);
-	private static final VersionChunk mediaProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_209);
-	private static final MusicSharingVersion musicSharingVersion = new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_309);
 
 	private final IMusicStoreReader reader;
 	// private final Map<MediaItem, IMusicItem> itemToIMusicItem;
@@ -142,35 +132,6 @@ public class MusicItemManager implements IItemManager
 	public PasswordMethod getAuthenticationMethod()
 	{
 		return passwordMethod;
-	}
-
-	@Override
-	public VersionChunk getMediaProtocolVersion()
-	{
-		return mediaProtocolVersion;
-	}
-
-	@Override
-	public VersionChunk getAudioProtocolVersion()
-	{
-		return audioProtocolVersion;
-	}
-
-	@Override
-	public VersionChunk getPictureProtocolVersion()
-	{
-		return pictureProtocolVersion;
-	}
-
-	public MusicSharingVersion getMusicSharingVersion()
-	{
-		return musicSharingVersion;
-	}
-
-	@Override
-	public String getDMAPKey()
-	{
-		return "DAAP-Server";
 	}
 
 	@Override

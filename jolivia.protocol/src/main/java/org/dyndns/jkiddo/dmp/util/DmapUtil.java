@@ -76,19 +76,31 @@ public final class DmapUtil
 	private final static SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z", Locale.US);
 
 	/** Music Sharing Version 2.0.1 */
-	public static final int MUSIC_SHARING_VERSION_309 = 0x00020000;
+	//public static final int MUSIC_SHARING_VERSION_309 = 0x00020000;
+	
+	/** Music Sharing Version 3.0.10 */
+	public static final int MUSIC_SHARING_VERSION_3010 = 0x0003000A;
 	/**
 	 * NEWEST BELOW
 	 */
 
+	/** MPRO Version 2.0.10 (iTunes 11.1.5.5) */
+	public static final int MPRO_VERSION_2010 = 0x0002000A;
+
+	/** PPRO Version 2.0.1 (iTunes 11.1.5.5) */
+	public static final int PPRO_VERSION_201 = 0x00020001;
+
+	/** APRO Version 3.0.12 (iTunes 11.1.5.5) */
+	public static final int APRO_VERSION_3012 = 0x0003000C;
+
 	/** MPRO Version 2.0.9 (iTunes 11.0.1.12) */
-	public static final int MPRO_VERSION_209 = 0x00020009;
+	// public static final int MPRO_VERSION_209 = 0x00020009;
 
 	/** PPRO Version 2.0.0 (iTunes 11.0.1.12) */
-	public static final int PPRO_VERSION_200 = 0x00020000;
+	// public static final int PPRO_VERSION_200 = 0x00020000;
 
 	/** APRO Version 3.0.11 (iTunes 11.0.1.12) */
-	public static final int APRO_VERSION_3011 = 0x0003000B;
+	// public static final int APRO_VERSION_3011 = 0x0003000B;
 
 	/** PPRO Version 1.0.1 (iPhoto 9.4.3) */
 	public static final int PPRO_VERSION_101 = 0x00010001;
@@ -396,18 +408,18 @@ public final class DmapUtil
 	/**
 	 * String to byte Array
 	 */
-//	public static byte[] getBytes(String s, String charsetName)
-//	{
-//		try
-//		{
-//			return s.getBytes(charsetName);
-//		}
-//		catch(UnsupportedEncodingException e)
-//		{
-//			// should never happen
-//			throw new RuntimeException(e);
-//		}
-//	}
+	// public static byte[] getBytes(String s, String charsetName)
+	// {
+	// try
+	// {
+	// return s.getBytes(charsetName);
+	// }
+	// catch(UnsupportedEncodingException e)
+	// {
+	// // should never happen
+	// throw new RuntimeException(e);
+	// }
+	// }
 	//
 	// /**
 	// * Byte Array to String
@@ -518,33 +530,32 @@ public final class DmapUtil
 	 * Creates a random nonce
 	 */
 
-	 
-	 public static String nonce() throws NoSuchAlgorithmException, UnsupportedEncodingException {
-		          
-		  return encode(MessageDigest.getInstance("MD5").digest(Long.toString(System.currentTimeMillis()).getBytes("US-ASCII")));
-		 }
-	 
-	 private static String encode(byte[] binaryData) {
-		 
-		 
-		          if (binaryData.length != 16) {
-		              return null;
-		          } 
-		  
-		          char[] buffer = new char[32];
-		          for (int i = 0; i < 16; i++) {
-		              int low = binaryData[i] & 0x0f;
-		              int high = (binaryData[i] & 0xf0) >> 4;
-		              buffer[i * 2] = HEXADECIMAL[high];
-		              buffer[(i * 2) + 1] = HEXADECIMAL[low];
-		          }
-		  
-		          return new String(buffer);
-		      }
-	 private static final char[] HEXADECIMAL = {
-		   '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 
-		 'e', 'f'
-		 };
+	public static String nonce() throws NoSuchAlgorithmException, UnsupportedEncodingException
+	{
+
+		return encode(MessageDigest.getInstance("MD5").digest(Long.toString(System.currentTimeMillis()).getBytes("US-ASCII")));
+	}
+
+	private static String encode(byte[] binaryData)
+	{
+
+		if(binaryData.length != 16)
+		{
+			return null;
+		}
+
+		char[] buffer = new char[32];
+		for(int i = 0; i < 16; i++)
+		{
+			int low = binaryData[i] & 0x0f;
+			int high = (binaryData[i] & 0xf0) >> 4;
+			buffer[i * 2] = HEXADECIMAL[high];
+			buffer[(i * 2) + 1] = HEXADECIMAL[low];
+		}
+
+		return new String(buffer);
+	}
+	private static final char[] HEXADECIMAL = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 	//
 	// public static byte[] toMD5(String s)
 	// {

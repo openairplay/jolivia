@@ -8,28 +8,28 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.dyndns.jkiddo.dmap.chunks.audio.AudioProtocolVersion;
-import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
+import org.dyndns.jkiddo.dmap.chunks.audio.BaseContainer;
+import org.dyndns.jkiddo.dmap.chunks.audio.extension.ExtendedMediaKind;
+import org.dyndns.jkiddo.dmap.chunks.audio.extension.SmartPlaylist;
+import org.dyndns.jkiddo.dmap.chunks.audio.extension.SpecialPlaylist;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.ContainerCount;
+import org.dyndns.jkiddo.dmp.chunks.media.DatabaseShareType;
+import org.dyndns.jkiddo.dmp.chunks.media.EditCommandSupported;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
-import org.dyndns.jkiddo.dmp.chunks.media.MediaProtocolVersion;
+import org.dyndns.jkiddo.dmp.chunks.media.ParentContainerId;
+import org.dyndns.jkiddo.dmp.chunks.media.PersistentId;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
-import org.dyndns.jkiddo.dpap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
 
 public class InMemoryMusicManager implements IItemManager
 {
-
-	private static final VersionChunk pictureProtocolVersion = new PictureProtocolVersion(DmapUtil.PPRO_VERSION_200);
-	private static final VersionChunk audioProtocolVersion = new AudioProtocolVersion(DmapUtil.APRO_VERSION_3011);
-	private static final VersionChunk mediaProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_209);
 
 	private final Listing databasesResponse;
 	private final Listing containersResponse;
@@ -41,30 +41,6 @@ public class InMemoryMusicManager implements IItemManager
 	public PasswordMethod getAuthenticationMethod()
 	{
 		return PasswordMethod.NO_PASSWORD;
-	}
-
-	@Override
-	public VersionChunk getMediaProtocolVersion()
-	{
-		return mediaProtocolVersion;
-	}
-
-	@Override
-	public VersionChunk getAudioProtocolVersion()
-	{
-		return audioProtocolVersion;
-	}
-
-	@Override
-	public VersionChunk getPictureProtocolVersion()
-	{
-		return pictureProtocolVersion;
-	}
-
-	@Override
-	public String getDMAPKey()
-	{
-		return "DAAP-Server";
 	}
 
 	@Override
@@ -101,7 +77,12 @@ public class InMemoryMusicManager implements IItemManager
 	@Override
 	public Listing getMediaItems(long databaseId, long containerId, Iterable<String> parameters) throws SQLException
 	{
-		return mediaItemsResponse;
+		if(containerId == 1 || containerId == 2)
+			return mediaItemsResponse;
+		else
+		{
+			return new Listing();	
+		}
 	}
 
 	@Override
@@ -185,6 +166,10 @@ public class InMemoryMusicManager implements IItemManager
 		Listing databaselisting = new Listing();
 		ListingItem databaselistingItem = new ListingItem();
 		databaselistingItem.add(new ItemId(1));
+		
+		databaselistingItem.add(new DatabaseShareType(DatabaseShareType.LOCAL));
+		databaselistingItem.add(new ExtendedMediaKind(ExtendedMediaKind.UNKNOWN_ONE));
+		
 		databaselistingItem.add(new ItemName(applicationName));
 		databaselistingItem.add(new ItemCount(1));
 		databaselistingItem.add(new ContainerCount(1));
@@ -192,10 +177,42 @@ public class InMemoryMusicManager implements IItemManager
 		databasesResponse = databaselisting;
 
 		Listing containerlisting = new Listing();
-		ListingItem containerlistingItem = new ListingItem();
-		containerlistingItem.add(new ItemId(1));
-		containerlistingItem.add(new ItemName("MasterPlayList"));
-		containerlisting.add(containerlistingItem);
+		//Base container
+		{
+			ListingItem containerlistingItem = new ListingItem();
+			containerlistingItem.add(new ItemId(1));
+			containerlistingItem.add(new PersistentId(149483767));
+			containerlistingItem.add(new ItemName(applicationName + "'s library"));
+			containerlistingItem.add(new BaseContainer(1));
+			containerlistingItem.add(new ParentContainerId(0));
+			containerlistingItem.add(new ItemCount(map.size()));
+			containerlisting.add(containerlistingItem);
+		}
+		
+		{
+			ListingItem containerlistingItem = new ListingItem();
+			containerlistingItem.add(new ItemId(2));
+			containerlistingItem.add(new PersistentId(149483766));
+			containerlistingItem.add(new ItemName("Music"));
+			containerlistingItem.add(new SmartPlaylist(true));
+			containerlistingItem.add(new ParentContainerId(0));
+			containerlistingItem.add(new SpecialPlaylist(SpecialPlaylist.MUSIC_LIBRARY));
+			containerlistingItem.add(new ItemCount(map.size()));
+			containerlisting.add(containerlistingItem);
+		}
+
+		{
+			ListingItem containerlistingItem = new ListingItem();
+			containerlistingItem.add(new ItemId(3));
+			containerlistingItem.add(new PersistentId(149483765));
+			containerlistingItem.add(new ItemName("Movies"));
+			containerlistingItem.add(new SmartPlaylist(true));
+			containerlistingItem.add(new ParentContainerId(0));
+			containerlistingItem.add(new SpecialPlaylist(SpecialPlaylist.MOVIES_LIBRARY));
+			containerlistingItem.add(new EditCommandSupported(0));
+			containerlistingItem.add(new ItemCount(0));
+			containerlisting.add(containerlistingItem);
+		}
 		containersResponse = containerlisting;
 	}
 }

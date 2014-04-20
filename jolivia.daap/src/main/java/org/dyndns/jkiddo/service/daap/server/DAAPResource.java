@@ -24,9 +24,12 @@ import javax.ws.rs.core.Response;
 import org.dyndns.jkiddo.NotImplementedException;
 import org.dyndns.jkiddo.dmap.chunks.audio.AlbumSearchContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.ArtistSearchContainer;
+import org.dyndns.jkiddo.dmap.chunks.audio.AudioProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
 import org.dyndns.jkiddo.dmap.chunks.audio.SupportsExtraData;
 import org.dyndns.jkiddo.dmap.chunks.audio.SupportsGroups;
+import org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion;
+import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationSchemes;
@@ -34,6 +37,7 @@ import org.dyndns.jkiddo.dmp.chunks.media.DatabaseCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.LoginRequired;
+import org.dyndns.jkiddo.dmp.chunks.media.MediaProtocolVersion;
 import org.dyndns.jkiddo.dmp.chunks.media.ReturnedCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ServerInfoResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderListing;
@@ -52,6 +56,7 @@ import org.dyndns.jkiddo.dmp.chunks.media.UTCTime;
 import org.dyndns.jkiddo.dmp.chunks.media.UTCTimeOffset;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
+import org.dyndns.jkiddo.dpap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
@@ -76,8 +81,13 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	private static final String MACHINE_ID_KEY = "Machine ID";
 	private static final String MACHINE_NAME_KEY = "Machine Name";
 	private static final String ITSH_VERSION_KEY = "iTSh Version";
-	private static final String DAAP_VERSION_KEY = "Version";
+	private static final String VERSION_KEY = "Version";
 	private static final String PASSWORD_KEY = "Password";
+
+	private static final VersionChunk pictureProtocolVersion = new PictureProtocolVersion(DmapUtil.PPRO_VERSION_201);
+	private static final VersionChunk audioProtocolVersion = new AudioProtocolVersion(DmapUtil.APRO_VERSION_3012);
+	private static final VersionChunk mediaProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_2010);
+	private static final MusicSharingVersion musicSharingVersion = new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_3010);
 
 	private final String serviceGuid;
 
@@ -106,13 +116,13 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		records.put(MACHINE_NAME_KEY, name);
 		records.put("OSsi", "0x4E8DAC");
 
-		records.put("Media Kinds Shared", "0");
+		records.put("Media Kinds Shared", "9");
 		records.put(TXT_VERSION_KEY, TXT_VERSION);
 		records.put(MACHINE_ID_KEY, hexedHostname);
-		records.put(DAAP_VERSION_KEY, DmapUtil.APRO_VERSION_3011 + "");
-		records.put(ITSH_VERSION_KEY, DmapUtil.MUSIC_SHARING_VERSION_309 + "");
+		records.put(VERSION_KEY, audioProtocolVersion + "");
+		records.put(ITSH_VERSION_KEY, musicSharingVersion + "");
 		records.put("MID", "0x" + serviceGuid);
-		records.put("dmc", "131081");
+		records.put("dmv", mediaProtocolVersion + "");
 		records.put(DATABASE_ID_KEY, hexedHostname);
 		if(PasswordMethod.NO_PASSWORD == itemManager.getAuthenticationMethod())
 		{
@@ -131,10 +141,13 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 
 		serverInfoResponse.add(new Status(200));
-		serverInfoResponse.add(itemManager.getMediaProtocolVersion());
+		serverInfoResponse.add(mediaProtocolVersion);
 		serverInfoResponse.add(new ItemName(name));
-		serverInfoResponse.add(itemManager.getAudioProtocolVersion());
+		serverInfoResponse.add(audioProtocolVersion);
 		// serverInfoResponse.add(itemManager.getMusicSharingVersion()); If inserted, DAAP dies
+		//serverInfoResponse.add(new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_3010));
+		serverInfoResponse.add(musicSharingVersion);
+		
 
 		serverInfoResponse.add(new SupportsExtraData(3));
 		// serverInfoResponse.add(new WelcomeMessage("jgjgjhgjgjhgjgyutrutuolmæ"));
@@ -150,7 +163,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		// serverInfoResponse.add(new UnknownSR(true));
 		// serverInfoResponse.add(new SupportsFairPlay(SupportsFairPlay.UNKNOWN_VALUE));//iTunes 11.0.2.26 says 2. If inserted, DAAP dies
 		// serverInfoResponse.add(new UnknownSX(111));
-		serverInfoResponse.add(itemManager.getPictureProtocolVersion());
+		serverInfoResponse.add(pictureProtocolVersion);
 		// serverInfoResponse.add(new Unknowned(true));
 		// Unknownml msml = new Unknownml();
 		// msml.add(new UnknownMA(0xBF940AB92600L)); //iTunes 11.0.2.26 - Totally unknown
@@ -187,7 +200,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		serverInfoResponse.add(new UTCTime(Calendar.getInstance().getTimeInMillis() / 1000));
 		serverInfoResponse.add(new UTCTimeOffset(7200));
 
-		return Util.buildResponse(serverInfoResponse, itemManager.getDMAPKey(), name);
+		return Util.buildResponse(serverInfoResponse, getDMAPKey(), name);
 	}
 
 	@Override
@@ -204,7 +217,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		// System.arraycopy(array, pos, buffer, 0, buffer.length);
 		// Arrays.copyOfRange(array,pos,end);
 
-		return Util.buildAudioResponse(Arrays.copyOfRange(array, pos, end), pos, itemManager.getDMAPKey(), name);
+		return Util.buildAudioResponse(Arrays.copyOfRange(array, pos, end), pos, getDMAPKey(), name);
 
 	}
 
@@ -256,39 +269,8 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		databaseSongs.add(new ReturnedCount(Iterables.size(listing.getListingItems())));
 
 		/*
-		for(MediaItem item : items)
-		{
-			ListingItem listingItem = new ListingItem();
-
-			if("all".equals(meta))
-			{
-				listingItem.add(item.getChunk("dmap.itemkind"));
-				for(Chunk chunk : item.getChunks())
-				{
-					if(chunk.getName().equals("dmap.itemkind"))
-						continue;
-					listingItem.add(chunk);
-				}
-			}
-			else
-			{
-				for(String key : parameters)
-				{
-					Chunk chunk = item.getChunk(key);
-
-					if(chunk != null)
-					{
-						listingItem.add(chunk);
-					}
-					else
-					{
-						logger.info("Unknown chunk type: " + key);
-					}
-				}
-			}
-
-			listing.add(listingItem);
-		}*/
+		 * for(MediaItem item : items) { ListingItem listingItem = new ListingItem(); if("all".equals(meta)) { listingItem.add(item.getChunk("dmap.itemkind")); for(Chunk chunk : item.getChunks()) { if(chunk.getName().equals("dmap.itemkind")) continue; listingItem.add(chunk); } } else { for(String key : parameters) { Chunk chunk = item.getChunk(key); if(chunk != null) { listingItem.add(chunk); } else { logger.info("Unknown chunk type: " + key); } } } listing.add(listingItem); }
+		 */
 
 		databaseSongs.add(listing);
 
@@ -304,7 +286,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		// databaseSongs.add(deletedListing);
 		// }
 
-		return Util.buildResponse(databaseSongs, itemManager.getDMAPKey(), name);
+		return Util.buildResponse(databaseSongs, getDMAPKey(), name);
 	}
 
 	@Override
@@ -334,7 +316,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 			listing.add(new SortingHeaderListing());//
 			response.add(listing);
 
-			return Util.buildResponse(response, itemManager.getDMAPKey(), name);
+			return Util.buildResponse(response, getDMAPKey(), name);
 		}
 		else if("albums".equalsIgnoreCase(groupType))
 		{
@@ -347,9 +329,14 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 			Listing listing = new Listing();
 			response.add(listing);
 
-			return Util.buildResponse(response, itemManager.getDMAPKey(), name);
+			return Util.buildResponse(response, getDMAPKey(), name);
 		}
 		else
 			throw new NotImplementedException();
+	}
+
+	public String getDMAPKey()
+	{
+		return "DAAP-Server";
 	}
 }

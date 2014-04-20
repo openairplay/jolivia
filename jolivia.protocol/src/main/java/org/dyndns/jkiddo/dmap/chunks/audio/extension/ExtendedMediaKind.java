@@ -18,6 +18,9 @@ import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 @DMAPAnnotation(type=DmapProtocolDefinition.aeMk)
 public class ExtendedMediaKind extends UIntChunk
 {
+	//Probably resembles DatabaseShareType values
+	public static final int UNKNOWN_ONE = 0x01;
+	
 	public ExtendedMediaKind()
 	{
 		this(0);

@@ -6,15 +6,10 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
-import org.dyndns.jkiddo.dmp.chunks.media.MediaProtocolVersion;
-import org.dyndns.jkiddo.dmp.model.Database;
 import org.dyndns.jkiddo.dmp.model.Library;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
-import org.dyndns.jkiddo.dmp.util.DmapUtil;
-import org.dyndns.jkiddo.dpap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader.IImageItem;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
@@ -22,9 +17,6 @@ import org.dyndns.jkiddo.service.dmap.Util;
 
 public class ImageItemManager implements IItemManager
 {
-	private static final VersionChunk dpapProtocolVersion = new PictureProtocolVersion(DmapUtil.PPRO_VERSION_101);
-	private static final VersionChunk dmapProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_200);
-
 	private final Library library;
 	private final IImageStoreReader reader;
 	private final Map<MediaItem, IImageItem> itemToIImageItem;
@@ -79,30 +71,6 @@ public class ImageItemManager implements IItemManager
 	public PasswordMethod getAuthenticationMethod()
 	{
 		return this.authentication;
-	}
-
-	@Override
-	public VersionChunk getMediaProtocolVersion()
-	{
-		return dmapProtocolVersion;
-	}
-
-	@Override
-	public VersionChunk getAudioProtocolVersion()
-	{
-		return null;
-	}
-
-	@Override
-	public VersionChunk getPictureProtocolVersion()
-	{
-		return dpapProtocolVersion;
-	}
-
-	@Override
-	public String getDMAPKey()
-	{
-		return "DPAP-Server";
 	}
 
 	@Override
