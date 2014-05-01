@@ -78,8 +78,8 @@ public final class DmapUtil
 	/** Music Sharing Version 2.0.1 */
 	//public static final int MUSIC_SHARING_VERSION_309 = 0x00020000;
 	
-	/** Music Sharing Version 3.0.10 */
-	public static final int MUSIC_SHARING_VERSION_3010 = 0x0003000A;
+	/** Music Sharing Version 3.0.12 */
+	public static final int MUSIC_SHARING_VERSION_3012 = 0x0003000C;
 	/**
 	 * NEWEST BELOW
 	 */
@@ -137,7 +137,7 @@ public final class DmapUtil
 	 *            a four character content code
 	 * @return content code
 	 */
-	public static int toContentCodeNumber(String contentCode)
+	public static int toContentCodeNumber(final String contentCode)
 	{
 		if(contentCode.length() != 4)
 		{
@@ -150,9 +150,9 @@ public final class DmapUtil
 	/**
 	 * Converts an four byte int to a string
 	 */
-	public static String toContentCodeString(int contentCode)
+	public static String toContentCodeString(final int contentCode)
 	{
-		char[] code = new char[4];
+		final char[] code = new char[4];
 		code[0] = (char) ((contentCode >> 24) & 0xFF);
 		code[1] = (char) ((contentCode >> 16) & 0xFF);
 		code[2] = (char) ((contentCode >> 8) & 0xFF);
@@ -171,14 +171,14 @@ public final class DmapUtil
 	/**
 	 * Serializes the <code>chunk</code> and compresses it optionally. The serialized data is returned as a byte-Array.
 	 */
-	public static final byte[] serialize(Chunk chunk, boolean compress) throws IOException
+	public static final byte[] serialize(final Chunk chunk, final boolean compress) throws IOException
 	{
-		ByteArrayOutputStream buffer = new ByteArrayOutputStream(8192);
+		final ByteArrayOutputStream buffer = new ByteArrayOutputStream(8192);
 		DmapOutputStream out = null;
 
 		if(DmapUtil.COMPRESS && compress)
 		{
-			GZIPOutputStream gzip = new GZIPOutputStream(buffer);
+			final GZIPOutputStream gzip = new GZIPOutputStream(buffer);
 			out = new DmapOutputStream(gzip);
 		}
 		else
@@ -192,7 +192,7 @@ public final class DmapUtil
 		return buffer.toByteArray();
 	}
 
-	public static final Collection<String> parseMeta(String meta)
+	public static final Collection<String> parseMeta(final String meta)
 	{
 		if(meta == null)
 			return Collections.emptyList();
@@ -200,9 +200,9 @@ public final class DmapUtil
 		return Collections.unmodifiableCollection(moveItemIdInSecond(createTokenList(meta)));
 	}
 
-	private static List<String> moveItemIdInSecond(List<String> list)
+	private static List<String> moveItemIdInSecond(final List<String> list)
 	{
-		boolean noItemKind = moveItemKindInFirst(list);
+		final boolean noItemKind = moveItemKindInFirst(list);
 		if(list.contains("dmap.itemid"))
 		{
 			if(list.size() > 1)
@@ -220,7 +220,7 @@ public final class DmapUtil
 		return list;
 	}
 
-	private static boolean moveItemKindInFirst(List<String> list)
+	private static boolean moveItemKindInFirst(final List<String> list)
 	{
 		boolean noItemKind = true;
 		if(list.contains("dmap.itemkind"))
@@ -232,14 +232,14 @@ public final class DmapUtil
 		return noItemKind;
 	}
 
-	private static List<String> createTokenList(String meta)
+	private static List<String> createTokenList(final String meta)
 	{
-		StringTokenizer tokens = new StringTokenizer(meta, ",");
-		List<String> list = new ArrayList<String>(tokens.countTokens());
+		final StringTokenizer tokens = new StringTokenizer(meta, ",");
+		final List<String> list = new ArrayList<String>(tokens.countTokens());
 
 		while(tokens.hasMoreTokens())
 		{
-			String token = tokens.nextToken();
+			final String token = tokens.nextToken();
 			// Must be the fist! See DAAP documentation for more info!
 			list.add(token);
 		}
@@ -252,7 +252,7 @@ public final class DmapUtil
 	 *            the major version (x)
 	 * @return x.0.0
 	 */
-	public static int toVersion(int major)
+	public static int toVersion(final int major)
 	{
 		return toVersion(major, 0, 0);
 	}
@@ -266,7 +266,7 @@ public final class DmapUtil
 	 *            the minor version (y)
 	 * @return x.y.0
 	 */
-	public static int toVersion(int major, int minor)
+	public static int toVersion(final int major, final int minor)
 	{
 		return toVersion(major, minor, 0);
 	}
@@ -282,7 +282,7 @@ public final class DmapUtil
 	 *            the patch version (z)
 	 * @return x.y.z
 	 */
-	public static int toVersion(int major, int minor, int micro)
+	public static int toVersion(final int major, final int minor, final int micro)
 	{
 		return (major & 0xFFFF) << 16 | (minor & 0xFF) << 8 | (micro & 0xFF);
 	}
@@ -536,7 +536,7 @@ public final class DmapUtil
 		return encode(MessageDigest.getInstance("MD5").digest(Long.toString(System.currentTimeMillis()).getBytes("US-ASCII")));
 	}
 
-	private static String encode(byte[] binaryData)
+	private static String encode(final byte[] binaryData)
 	{
 
 		if(binaryData.length != 16)
@@ -544,11 +544,11 @@ public final class DmapUtil
 			return null;
 		}
 
-		char[] buffer = new char[32];
+		final char[] buffer = new char[32];
 		for(int i = 0; i < 16; i++)
 		{
-			int low = binaryData[i] & 0x0f;
-			int high = (binaryData[i] & 0xf0) >> 4;
+			final int low = binaryData[i] & 0x0f;
+			final int high = (binaryData[i] & 0xf0) >> 4;
 			buffer[i * 2] = HEXADECIMAL[high];
 			buffer[(i * 2) + 1] = HEXADECIMAL[low];
 		}
@@ -681,7 +681,7 @@ public final class DmapUtil
 	// return false;
 	// }
 
-	public static byte[] uriTobuffer(URI uri) throws IOException
+	public static byte[] uriTobuffer(final URI uri) throws IOException
 	{
 		return Resources.toByteArray(uri.toURL());
 	}

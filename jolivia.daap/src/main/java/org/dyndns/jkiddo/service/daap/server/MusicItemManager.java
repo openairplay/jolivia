@@ -70,7 +70,7 @@ public class MusicItemManager implements IItemManager
 	private final Table<Integer, String, Class<? extends AbstractChunk>> annotatedtable;
 
 	@Inject
-	public MusicItemManager(@Named(Util.APPLICATION_NAME) String applicationName, IMusicStoreReader reader, PasswordMethod pm, ConnectionSource connectionSource, Table<Integer, String, Class<? extends AbstractChunk>> annotatedtable) throws Exception
+	public MusicItemManager(@Named(Util.APPLICATION_NAME) final String applicationName, final IMusicStoreReader reader, final PasswordMethod pm, final ConnectionSource connectionSource, final Table<Integer, String, Class<? extends AbstractChunk>> annotatedtable) throws Exception
 	{
 		this.connectionSource = connectionSource;
 
@@ -104,7 +104,7 @@ public class MusicItemManager implements IItemManager
 		 * art remember the following: // // new SongExtraData(1); // new ArtworkChecksum(); 4 bytes // new SongArtworkCount(1); return item; } });
 		 */
 
-		Map<Class<?>, Map<DmapProtocolDefinition, Field>> _definitionToFieldsMap = Maps.newHashMap();
+		final Map<Class<?>, Map<DmapProtocolDefinition, Field>> _definitionToFieldsMap = Maps.newHashMap();
 
 		_definitionToFieldsMap.put(MediaItem.class, definitionToField(MediaItem.class, mediaItemAnnotations));
 		_definitionToFieldsMap.put(Container.class, definitionToField(Container.class, containerAnnotations));
@@ -112,7 +112,7 @@ public class MusicItemManager implements IItemManager
 		definitionToFieldsMap = new ImmutableMap.Builder<Class<?>, Map<DmapProtocolDefinition, Field>>().putAll(_definitionToFieldsMap).build();
 
 		// for(MediaItem item : itemToIMusicItem.keySet())
-		for(MediaItem item : reader.readTunes())
+		for(final MediaItem item : reader.readTunes())
 		{
 			item.setDatabase(database);
 			item.setItemKind(ItemKind.AUDIO);
@@ -135,7 +135,7 @@ public class MusicItemManager implements IItemManager
 	}
 
 	@Override
-	public long getSessionId(String remoteHost)
+	public long getSessionId(final String remoteHost)
 	{
 		return 42;
 	}
@@ -147,14 +147,14 @@ public class MusicItemManager implements IItemManager
 		{
 			Thread.sleep(100000000);
 		}
-		catch(InterruptedException ie)
+		catch(final InterruptedException ie)
 		{
 			ie.printStackTrace();
 		}
 	}
 
 	@Override
-	public long getRevision(String remoteHost, long sessionId)
+	public long getRevision(final String remoteHost, final long sessionId)
 	{
 		return 42;
 	}
@@ -162,11 +162,11 @@ public class MusicItemManager implements IItemManager
 	@Override
 	public Listing getDatabases() throws SQLException
 	{
-		Listing listing = new Listing();
+		final Listing listing = new Listing();
 
-		for(Database database : databaseDao.queryForAll())
+		for(final Database database : databaseDao.queryForAll())
 		{
-			ListingItem listingItem = new ListingItem();
+			final ListingItem listingItem = new ListingItem();
 			listingItem.add(new ItemId(database.getItemId()));
 			listingItem.add(new PersistentId(database.getPersistentId()));
 			listingItem.add(new ItemName(database.getName()));
@@ -192,32 +192,32 @@ public class MusicItemManager implements IItemManager
 	 */
 
 	@Override
-	public byte[] getItemAsByteArray(long databaseId, long itemId)
+	public byte[] getItemAsByteArray(final long databaseId, final long itemId)
 	{
 		try
 		{
-			MediaItem song = mediaItemDao.queryBuilder().where().eq("database_id", databaseId).and().idEq((int) itemId).queryForFirst();
+			final MediaItem song = mediaItemDao.queryBuilder().where().eq("database_id", databaseId).and().idEq((int) itemId).queryForFirst();
 			return DmapUtil.uriTobuffer(reader.getTune(song.getExternalIdentifer()));
 			// return DmapUtil.uriTobuffer(reader.getTune(itemToIMusicItem.get(song)));
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Override
-	public Listing getContainers(long databaseId, Iterable<String> parameters) throws SQLException
+	public Listing getContainers(final long databaseId, final Iterable<String> parameters) throws SQLException
 	{
 		final ImmutableCollection<DmapProtocolDefinition> queryParameters = parameters2Definition(parameters, Container.class);
 		final List<Container> containers = containerDao.queryBuilder().where().eq("database_id", databaseId).query();
 		return generateListing(queryParameters, containers);
 	}
 
-	private <T> ListingItem transformEntity(ImmutableCollection<DmapProtocolDefinition> queryParameters, T input)
+	private <T> ListingItem transformEntity(final ImmutableCollection<DmapProtocolDefinition> queryParameters, final T input)
 	{
 		final ListingItem item = new ListingItem();
-		for(DmapProtocolDefinition param : queryParameters)
+		for(final DmapProtocolDefinition param : queryParameters)
 		{
 			// build query ...
 			// and parse it
@@ -225,11 +225,11 @@ public class MusicItemManager implements IItemManager
 			try
 			{
 				final AbstractChunk chunk = chunkClass.newInstance();
-				Field field = definitionToFieldsMap.get(input.getClass()).get(param);
+				final Field field = definitionToFieldsMap.get(input.getClass()).get(param);
 				if(field != null)
 				{
 					field.setAccessible(true);
-					Object value = field.get(input);
+					final Object value = field.get(input);
 
 					// The following 'if-else' statements handles references
 					if(Database.class.isInstance(value))
@@ -247,7 +247,7 @@ public class MusicItemManager implements IItemManager
 					item.add(chunk);
 				}
 			}
-			catch(Exception e)
+			catch(final Exception e)
 			{
 				e.printStackTrace();
 			}
@@ -256,7 +256,7 @@ public class MusicItemManager implements IItemManager
 	}
 
 	@Override
-	public Listing getMediaItems(long databaseId, long containerId, Iterable<String> parameters) throws SQLException
+	public Listing getMediaItems(final long databaseId, final long containerId, final Iterable<String> parameters) throws SQLException
 	{
 		final ImmutableCollection<DmapProtocolDefinition> queryParameters = parameters2Definition(parameters, MediaItem.class);
 		final List<MediaItem> mediaItems = mediaItemDao.queryBuilder().where().eq("database_id", databaseId).and().eq("container_id", containerId).query();
@@ -265,16 +265,16 @@ public class MusicItemManager implements IItemManager
 
 	private <T> Listing generateListing(final ImmutableCollection<DmapProtocolDefinition> queryParameters, final List<T> entities)
 	{
-		FluentIterable<ListingItem> listings = FluentIterable.from(entities).transform(new Function<T, ListingItem>() {
+		final FluentIterable<ListingItem> listings = FluentIterable.from(entities).transform(new Function<T, ListingItem>() {
 
 			@Override
-			public ListingItem apply(T input)
+			public ListingItem apply(final T input)
 			{
 				return transformEntity(queryParameters, input);
 			}
 		});
-		Listing listing = new Listing();
-		for(ListingItem listingItem : listings)
+		final Listing listing = new Listing();
+		for(final ListingItem listingItem : listings)
 		{
 			listing.add(listingItem);
 		}
@@ -282,7 +282,7 @@ public class MusicItemManager implements IItemManager
 		return listing;
 	}
 	@Override
-	public Listing getMediaItems(long databaseId, Iterable<String> parameters) throws SQLException
+	public Listing getMediaItems(final long databaseId, final Iterable<String> parameters) throws SQLException
 	{
 		return getMediaItems(databaseId, getLibrary().getDatabase(databaseId).getMasterContainer().getItemId(), parameters);
 	}
@@ -296,7 +296,7 @@ public class MusicItemManager implements IItemManager
 
 	private final ImmutableMap<Class<?>, ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition>> definitionsTable = new ImmutableMap.Builder<Class<?>, ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition>>().put(Library.class, libraryAnnotations).put(Database.class, databaseAnnotations).put(Container.class, containerAnnotations).put(MediaItem.class, mediaItemAnnotations).build();
 
-	private ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition> parameters2Definition(final Iterable<String> parameters, Class<?> clazz)
+	private ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition> parameters2Definition(final Iterable<String> parameters, final Class<?> clazz)
 	{
 
 		if(Iterables.size(parameters) == 1 && "all".equals(parameters.iterator().next()))
@@ -314,7 +314,7 @@ public class MusicItemManager implements IItemManager
 					return Iterables.tryFind(collection, new Predicate<DmapProtocolDefinition>() {
 
 						@Override
-						public boolean apply(DmapProtocolDefinition input)
+						public boolean apply(final DmapProtocolDefinition input)
 						{
 							return input.getLongname().equals(inputName);
 						}
@@ -324,14 +324,14 @@ public class MusicItemManager implements IItemManager
 		}
 	}
 
-	private ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition> findDbStructureFields(Class<?> clazz)
+	private ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition> findDbStructureFields(final Class<?> clazz)
 	{
 		final ArrayList<DmapProtocolDefinition> collection = Lists.newArrayList(DmapProtocolDefinition.values());
 
 		return new ImmutableList.Builder<IDmapProtocolDefinition.DmapProtocolDefinition>().addAll(FluentIterable.from(Lists.newArrayList(clazz.getDeclaredFields())).transform(new Function<Field, Annotation>() {
 
 			@Override
-			public Annotation apply(Field input)
+			public Annotation apply(final Field input)
 			{
 				return input.getAnnotation(DatabaseField.class);
 			}
@@ -341,10 +341,10 @@ public class MusicItemManager implements IItemManager
 			public DmapProtocolDefinition apply(final Annotation input)
 			{
 				final DatabaseField correctAnnotation = (DatabaseField) input;
-				Optional<DmapProtocolDefinition> result = Iterables.tryFind(collection, new Predicate<DmapProtocolDefinition>() {
+				final Optional<DmapProtocolDefinition> result = Iterables.tryFind(collection, new Predicate<DmapProtocolDefinition>() {
 
 					@Override
-					public boolean apply(DmapProtocolDefinition input)
+					public boolean apply(final DmapProtocolDefinition input)
 					{
 						return input.getLongname().equals(correctAnnotation.columnName());
 					}
@@ -354,14 +354,14 @@ public class MusicItemManager implements IItemManager
 		}).filter(Predicates.notNull())).build();
 	}
 
-	private Map<DmapProtocolDefinition, Field> definitionToField(Class<?> clazz, ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition> definitions)
+	private Map<DmapProtocolDefinition, Field> definitionToField(final Class<?> clazz, final ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition> definitions)
 	{
-		HashMap<DmapProtocolDefinition, Field> map = Maps.newHashMap();
-		for(DmapProtocolDefinition def : definitions)
+		final HashMap<DmapProtocolDefinition, Field> map = Maps.newHashMap();
+		for(final DmapProtocolDefinition def : definitions)
 		{
-			for(Field f : clazz.getDeclaredFields())
+			for(final Field f : clazz.getDeclaredFields())
 			{
-				DatabaseField dbAnnotation = f.getAnnotation(DatabaseField.class);
+				final DatabaseField dbAnnotation = f.getAnnotation(DatabaseField.class);
 				if(dbAnnotation != null)
 				{
 					if(def.getLongname().equals(dbAnnotation.columnName()))

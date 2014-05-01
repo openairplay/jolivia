@@ -87,12 +87,12 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	private static final VersionChunk pictureProtocolVersion = new PictureProtocolVersion(DmapUtil.PPRO_VERSION_201);
 	private static final VersionChunk audioProtocolVersion = new AudioProtocolVersion(DmapUtil.APRO_VERSION_3012);
 	private static final VersionChunk mediaProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_2010);
-	private static final MusicSharingVersion musicSharingVersion = new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_3010);
+	private static final MusicSharingVersion musicSharingVersion = new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_3012);
 
 	private final String serviceGuid;
 
 	@Inject
-	public DAAPResource(JmmDNS mDNS, @Named(DAAP_PORT_NAME) Integer port, @Named(Util.APPLICATION_NAME) String applicationName, @Named(DAAPResource.DAAP_RESOURCE) IItemManager itemManager) throws IOException
+	public DAAPResource(final JmmDNS mDNS, @Named(DAAP_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, @Named(DAAPResource.DAAP_RESOURCE) final IItemManager itemManager) throws IOException
 	{
 		super(mDNS, port, itemManager);
 		this.name = applicationName;
@@ -108,11 +108,11 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		{
 			hexedHostname = Util.toHex(hostname.getBytes("UTF-8"));
 		}
-		catch(UnsupportedEncodingException e)
+		catch(final UnsupportedEncodingException e)
 		{
 			throw new RuntimeException(e);
 		}
-		HashMap<String, String> records = new HashMap<String, String>();
+		final HashMap<String, String> records = new HashMap<String, String>();
 		records.put(MACHINE_NAME_KEY, name);
 		records.put("OSsi", "0x4E8DAC");
 
@@ -136,9 +136,9 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	@Override
 	@Path("server-info")
 	@GET
-	public Response serverInfo(@QueryParam("hsgid") String hsgid) throws IOException, SQLException
+	public Response serverInfo(@QueryParam("hsgid") final String hsgid) throws IOException, SQLException
 	{
-		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
+		final ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 
 		serverInfoResponse.add(new Status(200));
 		serverInfoResponse.add(mediaProtocolVersion);
@@ -171,7 +171,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		serverInfoResponse.add(new LoginRequired(true));
 		serverInfoResponse.add(new TimeoutInterval(1800));
 		serverInfoResponse.add(new SupportsAutoLogout(true));
-		PasswordMethod authenticationMethod = itemManager.getAuthenticationMethod();
+		final PasswordMethod authenticationMethod = itemManager.getAuthenticationMethod();
 		if(!(authenticationMethod == PasswordMethod.NO_PASSWORD))
 		{
 			if(authenticationMethod == PasswordMethod.PASSWORD)
@@ -206,13 +206,13 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	@Override
 	@Path("/databases/{databaseId}/items/{itemId}.{format}")
 	@GET
-	public Response item(@PathParam("databaseId") long databaseId, @PathParam("itemId") long itemId, @PathParam("format") String format, @HeaderParam("Range") String rangeHeader) throws IOException
+	public Response item(@PathParam("databaseId") final long databaseId, @PathParam("itemId") final long itemId, @PathParam("format") final String format, @HeaderParam("Range") final String rangeHeader) throws IOException
 	{
-		byte[] array = itemManager.getItemAsByteArray(databaseId, itemId);
+		final byte[] array = itemManager.getItemAsByteArray(databaseId, itemId);
 
-		long[] range = getRange(rangeHeader, 0, array.length);
-		int pos = (int) range[0];
-		int end = (int) range[1];
+		final long[] range = getRange(rangeHeader, 0, array.length);
+		final int pos = (int) range[0];
+		final int end = (int) range[1];
 		// byte[] buffer = new byte[end - pos];
 		// System.arraycopy(array, pos, buffer, 0, buffer.length);
 		// Arrays.copyOfRange(array,pos,end);
@@ -221,18 +221,18 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 
 	}
 
-	static private long[] getRange(String rangeHeader, long position, long end)
+	static private long[] getRange(final String rangeHeader, long position, long end)
 	{
 		if(!Strings.isNullOrEmpty(rangeHeader))
 		{
-			StringTokenizer token = new StringTokenizer(rangeHeader, "=");
-			String key = token.nextToken().trim();
+			final StringTokenizer token = new StringTokenizer(rangeHeader, "=");
+			final String key = token.nextToken().trim();
 
 			if(("bytes").equals(key) == false)
 			{
 				throw new NullPointerException("Format of range header is unknown");
 			}
-			StringTokenizer rangesToken = new StringTokenizer(token.nextToken(), "-");
+			final StringTokenizer rangesToken = new StringTokenizer(token.nextToken(), "-");
 			position = Long.parseLong(rangesToken.nextToken().trim());
 			if(rangesToken.hasMoreTokens())
 				end = Long.parseLong(rangesToken.nextToken().trim());
@@ -244,7 +244,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	@Override
 	@Path("databases/{databaseId}/items")
 	@GET
-	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query, @QueryParam("hsgid") String hsgid) throws IOException, SQLException
+	public Response items(@PathParam("databaseId") final long databaseId, @QueryParam("session-id") final long sessionId, @QueryParam("revision-number") final long revisionNumber, @QueryParam("delta") final long delta, @QueryParam("type") final String type, @QueryParam("meta") final String meta, @QueryParam("query") final String query, @QueryParam("hsgid") final String hsgid) throws IOException, SQLException
 	{
 		// dpap: limited by query
 		// http://192.168.1.2dpap://192.168.1.2:8770/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:2810','dmap.itemid:2811','dmap.itemid:2812','dmap.itemid:2813','dmap.itemid:2814','dmap.itemid:2815','dmap.itemid:2816','dmap.itemid:2817','dmap.itemid:2818','dmap.itemid:2819','dmap.itemid:2820','dmap.itemid:2821','dmap.itemid:2822','dmap.itemid:2823','dmap.itemid:2824','dmap.itemid:2825','dmap.itemid:2826','dmap.itemid:2827','dmap.itemid:2851','dmap.itemid:2852')
@@ -258,13 +258,13 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		// return database.getItemId() == databaseId;
 		// }
 		// }).getItems();
-		Iterable<String> parameters = DmapUtil.parseMeta(meta);
+		final Iterable<String> parameters = DmapUtil.parseMeta(meta);
 
-		DatabaseItems databaseSongs = new DatabaseItems();
+		final DatabaseItems databaseSongs = new DatabaseItems();
 		databaseSongs.add(new Status(200));
 		databaseSongs.add(new UpdateType(0));
 
-		Listing listing = itemManager.getMediaItems(databaseId, parameters);
+		final Listing listing = itemManager.getMediaItems(databaseId, parameters);
 		databaseSongs.add(new SpecifiedTotalCount(Iterables.size(listing.getListingItems())));
 		databaseSongs.add(new ReturnedCount(Iterables.size(listing.getListingItems())));
 
@@ -293,7 +293,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	// @Path("databases/{databaseId}/groups/{groupdId}/extra_data/artwork")
 	@Path("databases/{databaseId}/items/{groupdId}/extra_data/artwork")
 	@GET
-	public Response artwork(@PathParam("databaseId") long databaseId, @PathParam("groupId") long groupId, @QueryParam("session-id") long sessionId, @QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("group-type") String group_type, @QueryParam("daapSecInfo") String daapSecInfo) throws IOException
+	public Response artwork(@PathParam("databaseId") final long databaseId, @PathParam("groupId") final long groupId, @QueryParam("session-id") final long sessionId, @QueryParam("mw") final String mw, @QueryParam("mh") final String mh, @QueryParam("group-type") final String group_type, @QueryParam("daapSecInfo") final String daapSecInfo) throws IOException
 	{
 		throw new NotImplementedException();
 	}
@@ -301,18 +301,18 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	@Override
 	@Path("databases/{databaseId}/groups")
 	@GET
-	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String groupType, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") long includeSortHeaders, @QueryParam("query") String query, @QueryParam("session-id") long sessionId, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response groups(@PathParam("databaseId") final long databaseId, @QueryParam("meta") final String meta, @QueryParam("type") final String type, @QueryParam("group-type") final String groupType, @QueryParam("sort") final String sort, @QueryParam("include-sort-headers") final long includeSortHeaders, @QueryParam("query") final String query, @QueryParam("session-id") final long sessionId, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
 
 		if("artists".equalsIgnoreCase(groupType))
 		{
-			ArtistSearchContainer response = new ArtistSearchContainer();
+			final ArtistSearchContainer response = new ArtistSearchContainer();
 			response.add(new Status(200));
 			response.add(new UpdateType(0));
 			response.add(new SpecifiedTotalCount(0));//
 			response.add(new ReturnedCount(0));//
 
-			Listing listing = new Listing();
+			final Listing listing = new Listing();
 			listing.add(new SortingHeaderListing());//
 			response.add(listing);
 
@@ -320,13 +320,13 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		}
 		else if("albums".equalsIgnoreCase(groupType))
 		{
-			AlbumSearchContainer response = new AlbumSearchContainer();
+			final AlbumSearchContainer response = new AlbumSearchContainer();
 			response.add(new Status(200));
 			response.add(new UpdateType(0));
 			response.add(new SpecifiedTotalCount(0));//
 			response.add(new ReturnedCount(0));//
 
-			Listing listing = new Listing();
+			final Listing listing = new Listing();
 			response.add(listing);
 
 			return Util.buildResponse(response, getDMAPKey(), name);
@@ -335,6 +335,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 			throw new NotImplementedException();
 	}
 
+	@Override
 	public String getDMAPKey()
 	{
 		return "DAAP-Server";

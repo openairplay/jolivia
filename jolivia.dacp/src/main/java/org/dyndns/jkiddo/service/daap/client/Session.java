@@ -101,7 +101,7 @@ public class Session
 		return remoteControl;
 	}
 
-	public Session(String host, int port, String username, String password) throws Exception
+	public Session(final String host, final int port, final String username, final String password) throws Exception
 	{
 		// start a session with the iTunes server
 		this.host = host;
@@ -110,37 +110,37 @@ public class Session
 		getServerInfo();
 
 		logger.debug(String.format("trying login for host=%s", host));
-		LoginResponse loginResponse = doLogin(username, password);
+		final LoginResponse loginResponse = doLogin(username, password);
 
 		sessionId = loginResponse.getSessionId().getValue();
 
 		getControlInt();
 		// Update revision at once. As the initial call, this does not block but simply updates the revision.
 
-		//See if adding hasFP=1 and hsgid could resolve the following calls
-		
+		// See if adding hasFP=1 and hsgid could resolve the following calls
+
 		// updateServerRevision();
 		getUpdateBlocking();
 
 		library = new Library(this);
 		remoteControl = new RemoteControl(this);
 
-		ServerDatabases serverDatabases = getServerDatabases();
+		final ServerDatabases serverDatabases = getServerDatabases();
 		database = getLocalDatabase(serverDatabases);
 		radioDatabase = getRadioDatabase(serverDatabases);
 	}
 
-	public Session(String host, int port, String pairingGuid) throws Exception
+	public Session(final String host, final int port, final String pairingGuid) throws Exception
 	{
 		// start a session with the iTunes server
 		this.host = host;
 		this.port = port;
 
-		ServerInfoResponse serverInfo = getServerInfo();
+		final ServerInfoResponse serverInfo = getServerInfo();
 
 		// http://192.168.254.128:3689/login?pairing-guid=0x0000000000000001
 		logger.debug(String.format("trying login for host=%s and guid=%s", host, pairingGuid));
-		LoginResponse loginResponse = doLogin(pairingGuid);
+		final LoginResponse loginResponse = doLogin(pairingGuid);
 
 		sessionId = loginResponse.getSessionId().getValue();
 
@@ -153,12 +153,12 @@ public class Session
 		library = new Library(this);
 		remoteControl = new RemoteControl(this);
 
-		ServerDatabases serverDatabases = getServerDatabases();
+		final ServerDatabases serverDatabases = getServerDatabases();
 		database = getLocalDatabase(serverDatabases);
 		radioDatabase = getRadioDatabase(serverDatabases);
 	}
 
-	protected Database getRadioDatabase(ServerDatabases serverDatabases) throws Exception
+	protected Database getRadioDatabase(final ServerDatabases serverDatabases) throws Exception
 	{
 		// Radio database
 		final ListingItem database;
@@ -166,75 +166,75 @@ public class Session
 		{
 			database = serverDatabases.getListing().getSingleListingItem(new Predicate<ListingItem>() {
 				@Override
-				public boolean apply(ListingItem input)
+				public boolean apply(final ListingItem input)
 				{
 					return DatabaseShareType.RADIO == input.getSpecificChunk(DatabaseShareType.class).getValue();
 				}
 			});
 		}
-		catch(NoSuchElementException nee)
+		catch(final NoSuchElementException nee)
 		{
 			logger.debug("No radio databases found", nee);
 			return null;
 		}
 
-		String databaseName = database.getSpecificChunk(ItemName.class).getValue();
-		int itemId = database.getSpecificChunk(ItemId.class).getValue();
-		long persistentId = database.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue();
-		Database rd = new Database(databaseName, itemId, persistentId);
+		final String databaseName = database.getSpecificChunk(ItemName.class).getValue();
+		final int itemId = database.getSpecificChunk(ItemId.class).getValue();
+		final long persistentId = database.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue();
+		final Database rd = new Database(databaseName, itemId, persistentId);
 
-//		The following causes iTunes to hang ... TODO why?
-//		DatabaseContainerns allPlaylists = getMasterDatabaseContainerList(itemId);
-//
-//		Iterable<ListingItem> items = allPlaylists.getListing().getListingItems();
-//		for(ListingItem item : items)
-//		{
-//			Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), 0, item.getSpecificChunk(ItemId.class).getUnsignedValue(), item.getSpecificChunk(ItemCount.class).getUnsignedValue());
-//			logger.debug(String.format("found radio genre=%s", playlist.getName()));
-//			rd.addPlaylist(playlist);
-//		}
+		// The following causes iTunes to hang ... TODO why?
+		// DatabaseContainerns allPlaylists = getMasterDatabaseContainerList(itemId);
+		//
+		// Iterable<ListingItem> items = allPlaylists.getListing().getListingItems();
+		// for(ListingItem item : items)
+		// {
+		// Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), 0, item.getSpecificChunk(ItemId.class).getUnsignedValue(), item.getSpecificChunk(ItemCount.class).getUnsignedValue());
+		// logger.debug(String.format("found radio genre=%s", playlist.getName()));
+		// rd.addPlaylist(playlist);
+		// }
 		return rd;
 
 	}
 
-	protected Database getLocalDatabase(ServerDatabases serverDatabases) throws Exception
+	protected Database getLocalDatabase(final ServerDatabases serverDatabases) throws Exception
 	{
 		// Local database
 		// For now, the LocalDatabase is sufficient
-		ListingItem localDatabase = serverDatabases.getListing().getSingleListingItem(new Predicate<ListingItem>() {
+		final ListingItem localDatabase = serverDatabases.getListing().getSingleListingItem(new Predicate<ListingItem>() {
 			@Override
-			public boolean apply(ListingItem input)
+			public boolean apply(final ListingItem input)
 			{
 				return DatabaseShareType.LOCAL == input.getSpecificChunk(DatabaseShareType.class).getValue();
 			}
 		});
 
-		String databaseName = localDatabase.getSpecificChunk(ItemName.class).getValue();
-		int itemId = localDatabase.getSpecificChunk(ItemId.class).getValue();
-		long persistentId = localDatabase.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue();
+		final String databaseName = localDatabase.getSpecificChunk(ItemName.class).getValue();
+		final int itemId = localDatabase.getSpecificChunk(ItemId.class).getValue();
+		final long persistentId = localDatabase.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue();
 
 		// fetch playlists to find the overall magic "Music" playlist
-		DatabaseContainerns allPlaylists = getDatabaseContainerList(itemId);
-		
-		for(ListingItem container : allPlaylists.getListing().getListingItems())
+		final DatabaseContainerns allPlaylists = getDatabaseContainerList(itemId);
+
+		for(final ListingItem container : allPlaylists.getListing().getListingItems())
 		{
-			ItemsContainer containerDetails = getContainerDetails(itemId, container.getSpecificChunk(ItemId.class).getValue());
+			final ItemsContainer containerDetails = getContainerDetails(itemId, container.getSpecificChunk(ItemId.class).getValue());
 		}
 
 		// For now, the BasePlayList is sufficient
-		ListingItem item = allPlaylists.getListing().getSingleListingItemContainingClass(BaseContainer.class);
+		final ListingItem item = allPlaylists.getListing().getSingleListingItemContainingClass(BaseContainer.class);
 
-		Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), item.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue(), item.getSpecificChunk(ItemId.class).getUnsignedValue());
+		final Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), item.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue(), item.getSpecificChunk(ItemId.class).getUnsignedValue());
 		return new Database(databaseName, itemId, persistentId, playlist);
 	}
 
-	private ItemsContainer getContainerDetails(int databaseId, int containerId) throws Exception
+	private ItemsContainer getContainerDetails(final int databaseId, final int containerId) throws Exception
 	{
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&type=music&meta=dmap.itemkind,dmap.itemid,dmap.containeritemid", this.getRequestBase(), databaseId, containerId, sessionId));
 	}
 
-	protected DatabaseContainerns getDatabaseContainerList(int databaseId) throws Exception
-	{																							   
+	protected DatabaseContainerns getDatabaseContainerList(final int databaseId) throws Exception
+	{
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemid,dmap.itemname,dmap.persistentid,dmap.parentcontainerid,com.apple.itunes.is-podcast-playlist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,dmap.haschildcontainers,com.apple.itunes.saved-genius", this.getRequestBase(), databaseId, this.sessionId));
 	}
 
@@ -243,12 +243,12 @@ public class Session
 		return RequestHelper.requestParsed(String.format("%s/databases?session-id=%s", this.getRequestBase(), this.sessionId));
 	}
 
-	private LoginResponse doLogin(String username, String password) throws Exception
+	private LoginResponse doLogin(final String username, final String password) throws Exception
 	{
 		return RequestHelper.requestParsed(String.format("%s/login?hsgid=%s&hasFP=1", this.getRequestBase(), RequestHelper.requestPList(username, password)));
 	}
 
-	protected LoginResponse doLogin(String pairingGuid) throws Exception
+	protected LoginResponse doLogin(final String pairingGuid) throws Exception
 	{
 		return RequestHelper.requestParsed(String.format("%s/login?pairing-guid=0x%s", this.getRequestBase(), pairingGuid));
 	}
@@ -298,14 +298,14 @@ public class Session
 		// until something happens
 		// GET /update?revision-number=1&daap-no-disconnect=1&session-id=1250589827
 
-		UpdateResponse state = RequestHelper.requestParsed(String.format("%s/update?revision-number=%d&daap-no-disconnect=1&session-id=%s", this.getRequestBase(), revision, sessionId), true);
+		final UpdateResponse state = RequestHelper.requestParsed(String.format("%s/update?revision-number=%d&daap-no-disconnect=1&session-id=%s", this.getRequestBase(), revision, sessionId), true);
 		revision = state.getServerRevision().getUnsignedValue();
 		return state;
 	}
 
 	public UpdateResponse updateServerRevision() throws Exception
 	{
-		UpdateResponse state = RequestHelper.requestParsed(String.format("%s/update?session-id=%s&revision-number=%s&delta=0", this.getRequestBase(), sessionId, revision), true);
+		final UpdateResponse state = RequestHelper.requestParsed(String.format("%s/update?session-id=%s&revision-number=%s&delta=0", this.getRequestBase(), sessionId, revision), true);
 		revision = state.getServerRevision().getUnsignedValue();
 		return state;
 	}
