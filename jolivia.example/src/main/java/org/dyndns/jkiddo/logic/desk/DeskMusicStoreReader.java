@@ -10,8 +10,6 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.logic.desk;
 
-import gmusic.api.model.Song;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

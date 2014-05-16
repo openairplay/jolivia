@@ -67,7 +67,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>14.0.1</version>
+			<version>17.0</version>
 		</dependency>
 
 		<!-- <dependency> <groupId>org.jdbi</groupId> <artifactId>jdbi</artifactId> 
@@ -117,7 +117,7 @@
 		<module>jolivia.dpap</module>
 		<module>jolivia.protocol</module>
 		<module>jolivia.jetty</module>
-		<!-- <module>jolivia.example</module>-->
-		<module>jolivia.ws.example</module>
+		<module>jolivia.example</module>
+		<!--  <module>jolivia.ws.example</module>-->
 	</modules>
 </project>

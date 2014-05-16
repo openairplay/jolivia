@@ -33,7 +33,6 @@ import org.dyndns.jkiddo.guice.JoliviaServer;
 import org.dyndns.jkiddo.jetty.extension.DmapConnector;
 import org.dyndns.jkiddo.logic.desk.DeskImageStoreReader;
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
-import org.dyndns.jkiddo.logic.desk.GoogleStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IImageStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.dyndns.jkiddo.raop.ISpeakerListener;
@@ -73,16 +72,16 @@ public class Jolivia
 		try
 		{
 			IMusicStoreReader reader = null;
-			if(args.length == 2)
+			/*if(args.length == 2)
 			{
 				reader = new GoogleStoreReader(args[0], args[1]);
 				new GReporter(args[0]);
 			}
 			else
-			{
+			{*/
 				reader = new DeskMusicStoreReader();
-				new GReporter("local version");
-			}
+				//new GReporter("local version");
+			//}
 			// new
 			// Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new
 			// DeskImageStoreReader()).build();

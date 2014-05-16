@@ -57,7 +57,7 @@ public class TestDB
 		connectionSource.close();
 	}
 
-	@Test
+	//@Test
 	public void libraryTest() throws SQLException
 	{
 		Server h2server = Server.createWebServer(new String[] { "-webPort", "9123", "-webAllowOthers" });
@@ -82,7 +82,7 @@ public class TestDB
 		System.out.println();
 	}
 	
-	@Test
+	//@Test
 	public void testMap()
 	{
 		Table<Integer, String, Class<? extends AbstractChunk>> table = ChunkFactory.getCalculatedmap();

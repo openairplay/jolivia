@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 import com.google.common.io.Closeables;
 import com.google.gdata.client.spreadsheet.FeedURLFactory;
@@ -22,7 +23,7 @@ public class GReporter
 		String applicationName = "Jolivia";
 		String key = "0AgNbnXkaY4ktdFRtMExWRGxITUR4cmlKS09DZDZwNXc";
 		SpreadsheetService service = new SpreadsheetService(applicationName);
-		service.setUserCredentials("joliviajolivia@gmail.com", "1Ohmnibus");
+		service.setUserCredentials("joliviajolivia@gmail.com", UUID.randomUUID().toString());
 		service.setProtocolVersion(SpreadsheetService.Versions.V3);
 
 		URL url = FeedURLFactory.getDefault().getWorksheetFeedUrl(key, "private", "full");

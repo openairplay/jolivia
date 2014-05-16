@@ -46,7 +46,7 @@ public class TestImage
 		port = 3689;
 	}
 
-	@Test
+	//@Test
 	public void testSession() throws Exception
 	{
 		// -----------------------------------------------------------------------------------------------------

@@ -3,7 +3,6 @@ package test;
 import java.awt.BorderLayout;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.util.Date;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -11,22 +10,17 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import org.dyndns.jkiddo.dmap.chunks.audio.AlbumSearchContainer;
-import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
-import org.dyndns.jkiddo.dmap.chunks.audio.ItemsContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtworkCount;
-import org.dyndns.jkiddo.dmap.chunks.audio.SongDatePlayed;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongExtraData;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongTime;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongTrackNumber;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongUserRating;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum;
-import org.dyndns.jkiddo.dmap.chunks.audio.extension.MediaKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
-import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.dmp.model.Container;
 import org.dyndns.jkiddo.dmp.model.Database;
@@ -35,34 +29,7 @@ import org.junit.Test;
 public class DacpTestBed
 {
 
-	@Test
-	public void doDaapTests() throws Exception
-	{
-		TestSession session = new TestSession();
-		//TestSession session = new TestSession("localhost", 3689, "jenskristianvilladsen@hotmail.com", "Engineer2Go!");
-		
-		ItemsContainer var = session.getLibrary().readSearch("Top of the World", 0, 100);
-		
-		DatabaseItems val = session.getLibrary().getTestCode("Sting");
-		for(ListingItem item : val.getListing().getListingItems())
-		{
-			Date date = item.getSpecificChunk(SongDatePlayed.class).getValueAsDate();
-			System.out.println(date);
-		}
-		//'com.apple.itunes.extended-media-kind:1','com.apple.itunes.extended-media-kind:32'
-		Listing result = session.getLibrary().getTestCode("'com.apple.itunes.mediakind:1'").getListing();
-		
-		for( ListingItem r : result.getListingItems())
-		{
-			if(r.getSpecificChunk(MediaKind.class).getValue() > 4)
-			{
-				System.out.println();
-			}
-		}
-		System.out.println("");
-	}
-
-	@Test
+	//@Test
 	public void doDaap() throws Exception
 	{
 		TestSession session = new TestSession();

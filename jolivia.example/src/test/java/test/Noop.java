@@ -45,7 +45,7 @@ import org.junit.Test;
 
 public class Noop
 {
-	@Test
+	//@Test
 	public void usage() throws Exception
 	{
 
@@ -85,7 +85,7 @@ public class Noop
 		System.out.println("");
 	}
 	
-	@Test
+	//@Test
 	public void remoteClientTest() throws Exception
 	{
 		doShowCase(new TestSession("localhost", 3689));
@@ -171,7 +171,7 @@ public class Noop
 		session.getRemoteControl().fetchCover(320, 320);
 	}
 
-	@Test
+	//@Test
 	public void thumbResponse() throws Exception
 	{
 		String requestBase = String.format("http://%s:%d", "192.168.1.26", 5000);
@@ -198,7 +198,7 @@ public class Noop
 
 	}
 
-	@Test
+	//@Test
 	public void hiresResponse() throws Exception
 	{
 		String requestBase = String.format("http://%s:%d", "192.168.1.26", 5000);
@@ -225,7 +225,7 @@ public class Noop
 
 	}
 
-	@Test
+	//@Test
 	public void verifyModel() throws Exception
 	{
 		TestSession session = new TestSession("localhost", 3689);

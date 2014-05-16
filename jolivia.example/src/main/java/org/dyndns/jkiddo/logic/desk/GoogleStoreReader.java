@@ -1,4 +1,4 @@
-package org.dyndns.jkiddo.logic.desk;
+/*package org.dyndns.jkiddo.logic.desk;
 
 import gmusic.api.comm.ApacheConnector;
 import gmusic.api.comm.JSON;
@@ -30,9 +30,7 @@ import com.google.common.collect.Collections2;
 
 public class GoogleStoreReader implements IMusicStoreReader
 {
-	/**
-	 * 
-	 */
+	
 	private GoogleMusicAPI gm;
 
 	public GoogleStoreReader(String username, String password) throws IOException, URISyntaxException, InvalidCredentialsException
@@ -88,4 +86,4 @@ public class GoogleStoreReader implements IMusicStoreReader
 		}
 		songs.clear();
 	}
-}
+}*/

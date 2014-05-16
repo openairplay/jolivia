@@ -6,8 +6,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import test.db.TestDB;
+
 @RunWith(Suite.class)
-@SuiteClasses({ TestImage.class })
+@SuiteClasses({ TestDB.class })
 public class TestAll {
 
 	@BeforeClass

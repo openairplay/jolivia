@@ -1,7 +1,5 @@
 package org.dyndns.jkiddo;
 
-import gmusic.api.impl.InvalidCredentialsException;
-
 import java.awt.Button;
 import java.awt.Dialog;
 import java.awt.EventQueue;
@@ -29,14 +27,12 @@ import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.dyndns.jkiddo.logic.desk.DeskMusicStoreReader;
-import org.dyndns.jkiddo.logic.desk.GoogleStoreReader;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -219,25 +215,25 @@ public class Window
 						try
 						{
 							IMusicStoreReader reader = null;
-							if(chckbxUseGoogleMusic.isSelected())
+							/*if(chckbxUseGoogleMusic.isSelected())
 							{
 								reader = new GoogleStoreReader(txtUsername.getText(), new String(pwdPassword.getPassword()));
 //								new GReporter(txtUsername.getText());
 							}
 							else
-							{
+							{*/
 								reader = new DeskMusicStoreReader(path);
 //								new GReporter("local version");
-							}
+							//}
 							jolivia = new Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).musicStoreReader(reader).build();
 							btnNewButton_1.setText("Reregister to networks");
 							btnNewButton_1.setEnabled(true);
 						}
-						catch(InvalidCredentialsException ice)
+						/*catch(InvalidCredentialsException ice)
 						{
 							JOptionPane.showMessageDialog(mainFormJolivia, "Don't! - Do it more right ..." + ice.getMessage());
 							resetGuiState();
-						}
+						}*/
 						catch(Exception e)
 						{
 							logger.error(e.getMessage(), e);
