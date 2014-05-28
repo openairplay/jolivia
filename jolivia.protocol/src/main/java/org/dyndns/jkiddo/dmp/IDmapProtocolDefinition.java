@@ -18,15 +18,15 @@ public interface IDmapProtocolDefinition
 		CONTAINER_TYPE(12,-1 ),
 		RAW_TYPE(13,-1 );
 
-		private int type;
-		private int length;
+		private final int type;
+		private final int length;
 
-		DmapTypeDefinition(int type, int length)
+		DmapTypeDefinition(final int type, final int length)
 		{
 			this.type = type;
 			this.length = length;
 		}
-	}
+	} 
 	public static enum DmapProtocolDefinition implements IDmapProtocolDefinition
 	{
 		aeCS("aeCS","com.apple.itunes.artworkchecksum",DmapTypeDefinition.U_INT_TYPE),
@@ -37,6 +37,7 @@ public interface IDmapProtocolDefinition
 		aeCM("aeCM","com.apple.itunes.cloud-status",DmapTypeDefinition.U_BYTE_TYPE),
 		aeCU("aeCU","com.apple.itunes.cloud-user-id",DmapTypeDefinition.U_LONG_TYPE),
 		aeCR("aeCR","com.apple.itunes.content-rating",DmapTypeDefinition.STRING_TYPE),
+		aecp("aecp","com.apple.itunes.collection-description",DmapTypeDefinition.STRING_TYPE),
 		aeK1("aeK1","com.apple.itunes.drm-key1-id",DmapTypeDefinition.U_LONG_TYPE),
 		aeK2("aeK2","com.apple.itunes.drm-key2-id",DmapTypeDefinition.U_LONG_TYPE),
 		aeDP("aeDP","com.apple.itunes.drm-platform-id",DmapTypeDefinition.U_INT_TYPE),
@@ -316,7 +317,7 @@ public interface IDmapProtocolDefinition
 		private final String longname;
 		private final DmapTypeDefinition type;
 
-		DmapProtocolDefinition(String shortname, String longname, DmapTypeDefinition type)
+		DmapProtocolDefinition(final String shortname, final String longname, final DmapTypeDefinition type)
 		{
 			this.shortname = shortname;
 			this.longname = longname;
