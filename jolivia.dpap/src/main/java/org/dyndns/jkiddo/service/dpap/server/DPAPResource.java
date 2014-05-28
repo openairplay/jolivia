@@ -60,7 +60,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	private static final String PASSWORD_KEY = "Password";
 
 	@Inject
-	public DPAPResource(JmmDNS mDNS, @Named(DPAP_SERVER_PORT_NAME) Integer port, @Named(Util.APPLICATION_NAME) String applicationName, @Named(DPAP_RESOURCE) ImageItemManager itemManager) throws IOException
+	public DPAPResource(final JmmDNS mDNS, @Named(DPAP_SERVER_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, @Named(DPAP_RESOURCE) final ImageItemManager itemManager) throws IOException
 	{
 		super(mDNS, port, itemManager);
 		this.name = applicationName;
@@ -70,9 +70,9 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	@Override
 	@Path("server-info")
 	@GET
-	public Response serverInfo(@QueryParam("hsgid") String hsgid) throws IOException, SQLException
+	public Response serverInfo(@QueryParam("hsgid") final String hsgid) throws IOException, SQLException
 	{
-		ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
+		final ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 		serverInfoResponse.add(new Status(200));
 		serverInfoResponse.add(dmapProtocolVersion);
 		serverInfoResponse.add(dpapProtocolVersion);
@@ -91,7 +91,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	{
 		String hash = Integer.toHexString(hostname.hashCode()).toUpperCase();
 		hash = (hash + hash).substring(0, 13);
-		HashMap<String, String> records = new HashMap<String, String>();
+		final HashMap<String, String> records = new HashMap<String, String>();
 		records.put(TXT_VERSION_KEY, TXT_VERSION);
 		records.put(DPAP_VERSION_KEY, DmapUtil.PPRO_VERSION_201 + "");
 		records.put(IPSH_VERSION_KEY, DmapUtil.PPRO_VERSION_201 + "");
@@ -104,7 +104,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	@Override
 	@Path("databases/{databaseId}/items")
 	@GET
-	public Response items(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("type") String type, @QueryParam("meta") String meta, @QueryParam("query") String query, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response items(@PathParam("databaseId") final long databaseId, @QueryParam("session-id") final long sessionId, @QueryParam("revision-number") final long revisionNumber, @QueryParam("delta") final long delta, @QueryParam("type") final String type, @QueryParam("meta") final String meta, @QueryParam("query") final String query, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
 		// dpap: limited by query
 		// GET dpap://192.168.1.2:8770/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:2770','dmap.itemid:2771','dmap.itemid:2772','dmap.itemid:2773','dmap.itemid:2774','dmap.itemid:2775','dmap.itemid:2776','dmap.itemid:2777','dmap.itemid:2778','dmap.itemid:2779','dmap.itemid:2780','dmap.itemid:2781','dmap.itemid:2782','dmap.itemid:2783','dmap.itemid:2784','dmap.itemid:2785','dmap.itemid:2786','dmap.itemid:2787','dmap.itemid:2788','dmap.itemid:2789') HTTP/1.1
@@ -113,17 +113,17 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 
 		// look at meta to determine if it should be full size or not
 
-		Collection<MediaItem> items = getMediaItems(databaseId, query);
-		Collection<String> metaParameters = DmapUtil.parseMeta(meta);
+		final Collection<MediaItem> items = getMediaItems(databaseId, query);
+		DmapUtil.parseMeta(meta);
 
-		DatabaseItems databaseItems = new DatabaseItems();
+		final DatabaseItems databaseItems = new DatabaseItems();
 
 		databaseItems.add(new Status(200));
 		databaseItems.add(new UpdateType(0));
 		databaseItems.add(new SpecifiedTotalCount(items.size()));
 		databaseItems.add(new ReturnedCount(items.size()));
 
-		Listing listing = new Listing();
+		final Listing listing = new Listing();
 		/*for(MediaItem item : items)
 		{
 			ListingItem listingItem = new ListingItem();

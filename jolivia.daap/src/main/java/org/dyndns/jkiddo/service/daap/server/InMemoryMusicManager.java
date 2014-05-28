@@ -44,7 +44,7 @@ public class InMemoryMusicManager implements IItemManager
 	}
 
 	@Override
-	public long getSessionId(String remoteHost)
+	public long getSessionId(final String remoteHost)
 	{
 		return 42;
 	}
@@ -56,26 +56,26 @@ public class InMemoryMusicManager implements IItemManager
 		{
 			Thread.sleep(100000000);
 		}
-		catch(InterruptedException ie)
+		catch(final InterruptedException ie)
 		{
 			ie.printStackTrace();
 		}
 	}
 
 	@Override
-	public long getRevision(String remoteHost, long sessionId)
+	public long getRevision(final String remoteHost, final long sessionId)
 	{
 		return 42;
 	}
 
 	@Override
-	public Listing getContainers(long databaseId, Iterable<String> parameters) throws SQLException
+	public Listing getContainers(final long databaseId, final Iterable<String> parameters) throws SQLException
 	{
 		return containersResponse;
 	}
 
 	@Override
-	public Listing getMediaItems(long databaseId, long containerId, Iterable<String> parameters) throws SQLException
+	public Listing getMediaItems(final long databaseId, final long containerId, final Iterable<String> parameters) throws SQLException
 	{
 		if(containerId == 1 || containerId == 2)
 			return mediaItemsResponse;
@@ -86,7 +86,7 @@ public class InMemoryMusicManager implements IItemManager
 	}
 
 	@Override
-	public Listing getMediaItems(long databaseId, Iterable<String> parameters) throws SQLException
+	public Listing getMediaItems(final long databaseId, final Iterable<String> parameters) throws SQLException
 	{
 		return mediaItemsResponse;
 	}
@@ -98,22 +98,22 @@ public class InMemoryMusicManager implements IItemManager
 	}
 
 	@Override
-	public byte[] getItemAsByteArray(long databaseId, long itemId)
+	public byte[] getItemAsByteArray(final long databaseId, final long itemId)
 	{
 		try
 		{
-			String identifier = map.get(Long.valueOf(itemId));
-			URI uri = storeReader.getTune(identifier);
+			final String identifier = map.get(Long.valueOf(itemId));
+			final URI uri = storeReader.getTune(identifier);
 			return DmapUtil.uriTobuffer(uri);
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			throw new RuntimeException(e);
 		}
 	}
 
 	@Inject
-	public InMemoryMusicManager(@Named(Util.APPLICATION_NAME) String applicationName, IMusicStoreReader reader, PasswordMethod pm) throws Exception
+	public InMemoryMusicManager(@Named(Util.APPLICATION_NAME) final String applicationName, final IMusicStoreReader reader, final PasswordMethod pm) throws Exception
 	{
 		storeReader = reader;
 
@@ -163,8 +163,8 @@ public class InMemoryMusicManager implements IItemManager
 		
 		
 
-		Listing databaselisting = new Listing();
-		ListingItem databaselistingItem = new ListingItem();
+		final Listing databaselisting = new Listing();
+		final ListingItem databaselistingItem = new ListingItem();
 		databaselistingItem.add(new ItemId(1));
 		
 		databaselistingItem.add(new DatabaseShareType(DatabaseShareType.LOCAL));
@@ -176,10 +176,10 @@ public class InMemoryMusicManager implements IItemManager
 		databaselisting.add(databaselistingItem);
 		databasesResponse = databaselisting;
 
-		Listing containerlisting = new Listing();
+		final Listing containerlisting = new Listing();
 		//Base container
 		{
-			ListingItem containerlistingItem = new ListingItem();
+			final ListingItem containerlistingItem = new ListingItem();
 			containerlistingItem.add(new ItemId(1));
 			containerlistingItem.add(new PersistentId(149483767));
 			containerlistingItem.add(new ItemName(applicationName + "'s library"));
@@ -190,7 +190,7 @@ public class InMemoryMusicManager implements IItemManager
 		}
 		
 		{
-			ListingItem containerlistingItem = new ListingItem();
+			final ListingItem containerlistingItem = new ListingItem();
 			containerlistingItem.add(new ItemId(2));
 			containerlistingItem.add(new PersistentId(149483766));
 			containerlistingItem.add(new ItemName("Music"));
@@ -202,7 +202,7 @@ public class InMemoryMusicManager implements IItemManager
 		}
 
 		{
-			ListingItem containerlistingItem = new ListingItem();
+			final ListingItem containerlistingItem = new ListingItem();
 			containerlistingItem.add(new ItemId(3));
 			containerlistingItem.add(new PersistentId(149483765));
 			containerlistingItem.add(new ItemName("Movies"));
