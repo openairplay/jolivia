@@ -90,6 +90,9 @@ public final class DmapUtil
 	/** MPRO Version 2.0.10 (iTunes 11.1.5.5) */
 	public static final int MPRO_VERSION_2010 = 0x0002000A;
 
+	
+	public static final int CONTROL_VERSION_205 = 0x00020005;
+	
 	/** PPRO Version 2.0.1 (iTunes 11.1.5.5) */
 	public static final int PPRO_VERSION_201 = 0x00020001;
 

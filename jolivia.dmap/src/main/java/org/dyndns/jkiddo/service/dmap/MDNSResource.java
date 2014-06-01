@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class MDNSResource implements NetworkTopologyListener
 {
-	private JmmDNS mDNS;
+	private final JmmDNS mDNS;
 	protected Integer port;
 
 	static final Logger logger = LoggerFactory.getLogger(MDNSResource.class);
@@ -34,7 +34,7 @@ public abstract class MDNSResource implements NetworkTopologyListener
 	protected final String hostname = InetAddress.getLocalHost().getHostName();
 	private ServiceInfo serviceInfo;
 
-	public MDNSResource(JmmDNS mDNS, Integer port) throws IOException
+	public MDNSResource(final JmmDNS mDNS, final Integer port) throws IOException
 	{
 		this.mDNS = mDNS;
 		this.port = port;
@@ -53,6 +53,7 @@ public abstract class MDNSResource implements NetworkTopologyListener
 	public synchronized void register() throws IOException
 	{
 		serviceInfo = getServiceInfoToRegister();
+		//serviceInfo.setText(props);x
 		mDNS.registerService(serviceInfo);
 //		for(JmDNS mdns : interfaces.keySet())
 //		{
@@ -62,16 +63,16 @@ public abstract class MDNSResource implements NetworkTopologyListener
 	}
 
 	@Override
-	public synchronized void inetAddressAdded(NetworkTopologyEvent event)
+	public synchronized void inetAddressAdded(final NetworkTopologyEvent event)
 	{
-		JmDNS mdns = event.getDNS();
-		InetAddress address = event.getInetAddress();
+		final JmDNS mdns = event.getDNS();
+		final InetAddress address = event.getInetAddress();
 		try
 		{
 			logger.info("Registering service: " + serviceInfo.getQualifiedName());
 			mdns.registerService(serviceInfo);
 		}
-		catch(IOException e)
+		catch(final IOException e)
 		{
 			logger.error(e.getMessage(), e);
 		}
@@ -79,9 +80,9 @@ public abstract class MDNSResource implements NetworkTopologyListener
 	}
 
 	@Override
-	public synchronized void inetAddressRemoved(NetworkTopologyEvent event)
+	public synchronized void inetAddressRemoved(final NetworkTopologyEvent event)
 	{
-		JmDNS mdns = event.getDNS();
+		final JmDNS mdns = event.getDNS();
 		mdns.unregisterService(serviceInfo);
 		mdns.unregisterAllServices();
 		interfaces.remove(mdns);

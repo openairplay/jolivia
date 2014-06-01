@@ -44,14 +44,14 @@ public class RAOPResourceWrapper extends MDNSResource
 	private final IPlayingInformation playingInformation;
 
 	@Inject
-	public RAOPResourceWrapper(JmmDNS mDNS, @Named(RAOP_PORT_NAME) Integer port, @Named(Util.APPLICATION_NAME) String applicationName, IPlayingInformation iPlayingInformation) throws IOException
+	public RAOPResourceWrapper(final JmmDNS mDNS, @Named(RAOP_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, final IPlayingInformation iPlayingInformation) throws IOException
 	{
 		super(mDNS, port);
 		this.playingInformation = iPlayingInformation;
 		this.name = applicationName;
 		this.register();
 		
-		SimpleChannelUpstreamHandler channel = new SimpleChannelUpstreamHandler() {
+		final SimpleChannelUpstreamHandler channel = new SimpleChannelUpstreamHandler() {
 			@Override
 			public void channelOpen(final ChannelHandlerContext ctx, final ChannelStateEvent e) throws Exception
 			{
@@ -73,9 +73,9 @@ public class RAOPResourceWrapper extends MDNSResource
 	@Override
 	protected ServiceInfo getServiceInfoToRegister()
 	{
-		Map<String, String> map = Maps.newHashMap();
+		final Map<String, String> map = Maps.newHashMap();
 
-		map.put("am", "Jolivia");
+		map.put("am", "Jolivia,1");
 		// map.put("am", "AirPort4,107");
 		map.put("ch", "2");
 		map.put("cn", "0,1");

@@ -44,6 +44,7 @@ import org.dyndns.jkiddo.dmcp.chunks.media.UnknownSV;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.AudioControlProtocolVersion;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.AvailableRepeatStates;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.AvailableShuffleStates;
+import org.dyndns.jkiddo.dmcp.chunks.media.audio.DataControlInt;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.FullScreenEnabled;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.FullscreenStatus;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.PlayStatus;
@@ -51,7 +52,6 @@ import org.dyndns.jkiddo.dmcp.chunks.media.audio.RepeatStatus;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.ShuffleStatus;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.SpeakerActive;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.SpeakerList;
-import org.dyndns.jkiddo.dmcp.chunks.media.audio.DataControlInt;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownOV;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownSS;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownSU;
@@ -72,6 +72,7 @@ import org.dyndns.jkiddo.dmp.chunks.media.SpeakerMacAddress;
 import org.dyndns.jkiddo.dmp.chunks.media.SpecifiedTotalCount;
 import org.dyndns.jkiddo.dmp.chunks.media.Status;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
+import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.dyndns.jkiddo.service.dmap.Util;
@@ -84,7 +85,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	private final String serviceGuid;
 
 	@Inject
-	public TouchAbleServerResource(JmmDNS mDNS, @Named(DACP_SERVER_PORT_NAME) Integer port, @Named(Util.APPLICATION_NAME) String applicationName, IPairingDatabase pairingDatabase) throws IOException
+	public TouchAbleServerResource(final JmmDNS mDNS, @Named(DACP_SERVER_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, final IPairingDatabase pairingDatabase) throws IOException
 	{
 		super(mDNS, port);
 		this.name = applicationName;
@@ -151,9 +152,9 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("ctrl-int/1/setproperty")
-	public Response setproperty(@Context UriInfo uriInfo, @QueryParam("dmcp.volume") String dmcpVolume, @QueryParam("dacp.playingtime") String dacpPlayingtime, @QueryParam("dacp.shufflestate") String dacpShufflestate, @QueryParam("dacp.repeatstate") String dacpRepeatstate, @QueryParam("session-id") long session_id)
+	public Response setproperty(@Context final UriInfo uriInfo, @QueryParam("dmcp.volume") final String dmcpVolume, @QueryParam("dacp.playingtime") final String dacpPlayingtime, @QueryParam("dacp.shufflestate") final String dacpShufflestate, @QueryParam("dacp.repeatstate") final String dacpRepeatstate, @QueryParam("session-id") final long session_id)
 	{
-		MultivaluedMap<String, String> map = uriInfo.getQueryParameters();
+		final MultivaluedMap<String, String> map = uriInfo.getQueryParameters();
 		map.get("dmcp.volume");
 		map.get("dacp.playingtime");
 		map.get("dacp.shufflestate");
@@ -168,12 +169,12 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("ctrl-int/1/getproperty")
-	public Response getproperty(@Context UriInfo uriInfo, @QueryParam("properties") String properties, @QueryParam("session-id") long session_id, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response getproperty(@Context final UriInfo uriInfo, @QueryParam("properties") final String properties, @QueryParam("session-id") final long session_id, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
-		MultivaluedMap<String, String> map = uriInfo.getQueryParameters();
+		final MultivaluedMap<String, String> map = uriInfo.getQueryParameters();
 		map.get("properties");
 
-		PropertyResponse response = new PropertyResponse();
+		final PropertyResponse response = new PropertyResponse();
 		response.add(new Status(200));
 		response.add(new RelativeVolume(100));//
 		return Util.buildResponse(response, "DAAP-Server", name);
@@ -182,7 +183,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("ctrl-int/1/playstatusupdate")
-	public Response playstatusupdate(@QueryParam("revision-number") long revisionNumber, @QueryParam("session-id") long session_id, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response playstatusupdate(@QueryParam("revision-number") final long revisionNumber, @QueryParam("session-id") final long session_id, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
 		if(revisionNumber == 0x24)
 		{
@@ -190,13 +191,13 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 			{
 				Thread.sleep(10000000);
 			}
-			catch(InterruptedException e)
+			catch(final InterruptedException e)
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		PlayingStatus response = new PlayingStatus();
+		final PlayingStatus response = new PlayingStatus();
 		response.add(new Status(200));
 		response.add(new StatusRevision(0x24));//
 		response.add(new PlayStatus(2));//
@@ -217,7 +218,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("ctrl-int/1/cue")
-	public Response cue(@QueryParam("commmand") String command, @QueryParam("query") String query, @QueryParam("index") String index, @QueryParam("sort") String sort, @QueryParam("session-id") long session_id)
+	public Response cue(@QueryParam("commmand") final String command, @QueryParam("query") final String query, @QueryParam("index") final String index, @QueryParam("sort") final String sort, @QueryParam("session-id") final long session_id)
 	{
 		throw new NotImplementedException();
 	}
@@ -225,11 +226,11 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("ctrl-int/1/getspeakers")
-	public Response getspeakers(@QueryParam("session-id") long session_id, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response getspeakers(@QueryParam("session-id") final long session_id, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
-		SpeakerList response = new SpeakerList();
+		final SpeakerList response = new SpeakerList();
 		response.add(new Status(200));
-		Dictionary dictionary = new Dictionary();
+		final Dictionary dictionary = new Dictionary();
 		dictionary.add(new ItemName("My Compounter"));
 		dictionary.add(new RelativeVolume(100));
 		dictionary.add(new UnknownVD(true));
@@ -251,7 +252,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("/ctrl-int/1/playspec")
-	public Response playspec(@QueryParam("container-item-spec") String container_item_spec, @QueryParam("item-spec") String item_spec, @QueryParam("container-spec") String container_spec, @QueryParam("dacp.shufflestate") String dacp_shufflestate, @QueryParam("database-spec") String database_spec, @QueryParam("playlist-spec") String playlist_spec, @QueryParam("session-id") long session_id)
+	public Response playspec(@QueryParam("container-item-spec") final String container_item_spec, @QueryParam("item-spec") final String item_spec, @QueryParam("container-spec") final String container_spec, @QueryParam("dacp.shufflestate") final String dacp_shufflestate, @QueryParam("database-spec") final String database_spec, @QueryParam("playlist-spec") final String playlist_spec, @QueryParam("session-id") final long session_id)
 	{
 		throw new NotImplementedException();
 	}
@@ -259,7 +260,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("/ctrl-int/1/nowplayingartwork")
-	public Response nowplayingartwork(@QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("session-id") long session_id, @QueryParam("hsgid") String hsgid)
+	public Response nowplayingartwork(@QueryParam("mw") final String mw, @QueryParam("mh") final String mh, @QueryParam("session-id") final long session_id, @QueryParam("hsgid") final String hsgid)
 	{
 		throw new NotImplementedException();
 	}
@@ -267,7 +268,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("/ctrl-int/1/set-genius-seed")
-	public Response editGenius(@QueryParam("database-spec") String database_spec, @QueryParam("item-spec") String item_spec, @QueryParam("session-id") long session_id)
+	public Response editGenius(@QueryParam("database-spec") final String database_spec, @QueryParam("item-spec") final String item_spec, @QueryParam("session-id") final long session_id)
 	{
 		throw new NotImplementedException();
 	}
@@ -275,7 +276,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@Path("/databases/{databaseId}/edit")
 	@GET
-	public Response editPlaylist(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("action") String action, @QueryParam("edit-params") String edit_params) throws IOException
+	public Response editPlaylist(@PathParam("databaseId") final long databaseId, @QueryParam("session-id") final long sessionId, @QueryParam("action") final String action, @QueryParam("edit-params") final String edit_params) throws IOException
 	{
 		throw new NotImplementedException();
 	}
@@ -288,22 +289,22 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 		{
 			hexedHostname = Util.toHex(hostname.getBytes("UTF-8"));
 		}
-		catch(UnsupportedEncodingException e)
+		catch(final UnsupportedEncodingException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		final HashMap<String, String> records = new HashMap<String, String>();
-		records.put("Ver", "131073");
+		records.put("Ver", DmapUtil.CONTROL_VERSION_205 +"");
 		records.put("CtlN", name);
 		records.put("OSsi", "0x4E8DAC");
-		records.put("iV", "196617");
+		records.put("iV", "196618");
 		records.put("DbId", hexedHostname);
 		records.put("DvTy", "iTunes");
 		records.put("txtvers", "1");
-		records.put("RmSV", "65536");
-		records.put("DvSv", "2818");
+		records.put("iCSV", "65539");
+		records.put("DvSv", "2850");
 
 		return ServiceInfo.create(TOUCH_ABLE_SERVER, serviceGuid, port, 0, 0, records);
 	}
@@ -311,7 +312,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("ctrl-int/1/playqueue-contents")
-	public Response playQueueContents(@QueryParam("span") int span, @QueryParam("session-id") long session_id)
+	public Response playQueueContents(@QueryParam("span") final int span, @QueryParam("session-id") final long session_id)
 	{
 		throw new NotImplementedException();
 	}
@@ -319,7 +320,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("fp-setup")
-	public Response fpSetup(@QueryParam("session-id") long session_id, @QueryParam("hsgid") String hsgid)
+	public Response fpSetup(@QueryParam("session-id") final long session_id, @QueryParam("hsgid") final String hsgid)
 	{
 		throw new NotImplementedException();
 	}
@@ -327,7 +328,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("login")
-	public Response login(@QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response login(@QueryParam("pairing-guid") final String guid, @QueryParam("hasFP") final int value, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
 		throw new NotImplementedException();
 	}
@@ -335,7 +336,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@Path("update")
 	@GET
-	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response update(@QueryParam("session-id") final long sessionId, @QueryParam("revision-number") final long revisionNumber, @QueryParam("delta") final long delta, @QueryParam("daap-no-disconnect") final int daapNoDisconnect, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
 		throw new NotImplementedException();
 	}
@@ -343,16 +344,16 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("ctrl-int")
-	public Response ctrlInt(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response ctrlInt(@Context final HttpServletRequest httpServletRequest, @Context final HttpServletResponse httpServletResponse, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
 
-		DataControlInt caci = new DataControlInt();
+		final DataControlInt caci = new DataControlInt();
 		caci.add(new Status(200));
 		caci.add(new UpdateType(0));
 		caci.add(new SpecifiedTotalCount(4));//
 		caci.add(new ReturnedCount(1));//
-		Listing listing = new Listing();
-		ListingItem item = new ListingItem();
+		final Listing listing = new Listing();
+		final ListingItem item = new ListingItem();
 		item.add(new ItemId(1));//
 		item.add(new UnknownIK(true));
 		item.add(new MediaControlProtocolVersion(0x20001));//
@@ -375,7 +376,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("/ctrl-int/1/playqueue-edit")
-	public Response playQueueEdit(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("commmand") String command, @QueryParam("query") String query, @QueryParam("queuefilter") String index, @QueryParam("sort") String sort, @QueryParam("session-id") long session_id) throws Exception
+	public Response playQueueEdit(@Context final HttpServletRequest httpServletRequest, @Context final HttpServletResponse httpServletResponse, @QueryParam("commmand") final String command, @QueryParam("query") final String query, @QueryParam("queuefilter") final String index, @QueryParam("sort") final String sort, @QueryParam("session-id") final long session_id) throws Exception
 	{
 		return Util.buildEmptyResponse("DAAP-Server", name);
 	}
@@ -383,7 +384,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("server-info")
-	public Response serverInfo(@QueryParam("hsgid") String hsgid) throws IOException
+	public Response serverInfo(@QueryParam("hsgid") final String hsgid) throws IOException
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -392,7 +393,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("home-share-verify")
-	public Response homeShareVerify(@QueryParam("session-id") long session_id, @QueryParam("hsgid") String hsgid, @QueryParam("hspid") String hspid)
+	public Response homeShareVerify(@QueryParam("session-id") final long session_id, @QueryParam("hsgid") final String hsgid, @QueryParam("hspid") final String hspid)
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -401,7 +402,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@Path("databases/{databaseId}/containers/{containerId}/items")
 	@GET
-	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response containerItems(@PathParam("containerId") final long containerId, @PathParam("databaseId") final long databaseId, @QueryParam("session-id") final long sessionId, @QueryParam("revision-number") final long revisionNumber, @QueryParam("delta") final long delta, @QueryParam("meta") final String meta, @QueryParam("type") final String type, @QueryParam("group-type") final String group_type, @QueryParam("sort") final String sort, @QueryParam("include-sort-headers") final String include_sort_headers, @QueryParam("query") final String query, @QueryParam("index") final String index, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -410,7 +411,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@Path("databases")
 	@GET
-	public Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response databases(@QueryParam("session-id") final long sessionId, @QueryParam("revision-number") final long revisionNumber, @QueryParam("delta") final long delta, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -419,7 +420,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@Path("databases/{databaseId}/containers")
 	@GET
-	public Response containers(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response containers(@PathParam("databaseId") final long databaseId, @QueryParam("session-id") final long sessionId, @QueryParam("revision-number") final long revisionNumber, @QueryParam("delta") final long delta, @QueryParam("meta") final String meta, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
 		// TODO Auto-generated method stub
 		return null;
@@ -428,7 +429,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@Path("databases/{databaseId}/groups")
 	@GET
-	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String groupType, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") long includeSortHeaders, @QueryParam("query") String query, @QueryParam("session-id") long sessionId, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response groups(@PathParam("databaseId") final long databaseId, @QueryParam("meta") final String meta, @QueryParam("type") final String type, @QueryParam("group-type") final String groupType, @QueryParam("sort") final String sort, @QueryParam("include-sort-headers") final long includeSortHeaders, @QueryParam("query") final String query, @QueryParam("session-id") final long sessionId, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
 		// TODO Auto-generated method stub
 		return null;
