@@ -67,35 +67,90 @@ public class RequestHelper
 
 	public final static Logger logger = LoggerFactory.getLogger(RequestHelper.class);
 
-	public static byte[] requestBitmap(String remote) throws Exception
+	public static byte[] requestBitmap(final String remote) throws Exception
 	{
 		return request(remote, false);
 	}
 
-	public static void dispatch(String remoteUrl) throws Exception
+	public static void dispatch(final String remoteUrl) throws Exception
 	{
 		request(remoteUrl, false);
 	}
 
-	public static <T extends Chunk> T requestParsed(String url, boolean keepalive) throws Exception
+	public static <T extends Chunk> T requestParsed(final String url, final boolean keepalive) throws Exception
 	{
 		return requestParsed(url, keepalive, false);
 	}
 
-	public static <T extends Chunk> T requestParsed(String url) throws Exception
+	public static <T extends Chunk> T requestParsed(final String url) throws Exception
 	{
 		return requestParsed(url, false);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends Chunk> T requestParsed(String url, boolean keepalive, boolean specialCaseProtocolViolation) throws Exception
+	public static <T extends Chunk> T requestParsed(final String url, final boolean keepalive, final boolean specialCaseProtocolViolation) throws Exception
 	{
 		logger.debug(url);
-		DmapInputStream inputStream = new DmapInputStream(new ByteArrayInputStream(request(url, keepalive)), specialCaseProtocolViolation);
-		Chunk chunk = inputStream.getChunk();
+		final DmapInputStream inputStream = new DmapInputStream(new ByteArrayInputStream(request(url, keepalive)), specialCaseProtocolViolation);
+		final Chunk chunk = inputStream.getChunk();
 		Closeables.close(inputStream, true);
 		return (T) chunk;
 	}
+	
+	
+	public static byte[] requestPost(final String remoteUrl, final byte[] content) throws Exception
+	{
+		final byte[] buffer = new byte[1024];
+		final HttpURLConnection connection = (HttpURLConnection) new URL(remoteUrl).openConnection();
+		connection.setRequestMethod("POST");
+		connection.setDoOutput(true);
+		connection.getOutputStream().write(content);
+		connection.connect();
+
+		if(connection.getResponseCode() >= HttpURLConnection.HTTP_UNAUTHORIZED)
+			throw new Exception("HTTP Error Response Code: " + connection.getResponseCode());
+
+		// obtain the encoding returned by the server
+		final String encoding = connection.getContentEncoding();
+		
+		InputStream inputStream = null;
+
+		// create the appropriate stream wrapper based on the encoding type
+		if(encoding != null && encoding.equalsIgnoreCase("gzip"))
+		{
+			inputStream = new GZIPInputStream(connection.getInputStream());
+		}
+		else if(encoding != null && encoding.equalsIgnoreCase("deflate"))
+		{
+			inputStream = new InflaterInputStream(connection.getInputStream(), new Inflater(true));
+		}
+		else
+		{
+			inputStream = connection.getInputStream();
+		}
+
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+		try
+		{
+			int bytesRead;
+			while((bytesRead = inputStream.read(buffer)) != -1)
+			{
+				os.write(buffer, 0, bytesRead);
+			}
+		}
+		finally
+		{
+			os.flush();
+			os.close();
+			if(inputStream != null)
+			{
+				inputStream.close();
+			}
+		}
+
+		return os.toByteArray();
+	}
+	
 	/**
 	 * Performs the HTTP request and gathers the response from the server. The gzip and deflate headers are sent in case the server can respond with compressed answers saving network bandwidth and speeding up responses.
 	 * <p>
@@ -108,7 +163,7 @@ public class RequestHelper
 	 * @throws Exception
 	 *             if any error occurs
 	 */
-	private static byte[] request(String remoteUrl, boolean keepalive) throws Exception
+	private static byte[] request(final String remoteUrl, final boolean keepalive) throws Exception
 	{
 		logger.debug(String.format("started request(remote=%s)", remoteUrl));
 
@@ -124,6 +179,7 @@ public class RequestHelper
 			connection.setRequestProperty("Client-iTunes-Sharing-Version", "3.10");
 			connection.setRequestProperty("Client-DAAP-Version", "3.12");
 			connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
+			connection.setRequestProperty("User-Agent", "Remote/813");
 		}
 
 		// connection.setRequestProperty("Host", "192.168.1.75");
@@ -145,7 +201,7 @@ public class RequestHelper
 			throw new Exception("HTTP Error Response Code: " + connection.getResponseCode());
 
 		// obtain the encoding returned by the server
-		String encoding = connection.getContentEncoding();
+		final String encoding = connection.getContentEncoding();
 
 		InputStream inputStream = null;
 
@@ -163,7 +219,7 @@ public class RequestHelper
 			inputStream = connection.getInputStream();
 		}
 
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
 		try
 		{
 			int bytesRead;
@@ -202,14 +258,14 @@ public class RequestHelper
 			encoded = encoded.replaceAll("\\+", "%20");
 			encoded = encoded.replaceAll("%27", "%5C'");
 		}
-		catch(UnsupportedEncodingException e)
+		catch(final UnsupportedEncodingException e)
 		{
 			logger.warn("escapeUrlString Exception:" + e.getMessage());
 		}
 		return encoded;
 	}
 
-	public static String requestPList(String username, String password) throws Exception
+	public static String requestPList(final String username, final String password) throws Exception
 	{
 		final HttpURLConnection connection = (HttpURLConnection) new URL("https://homesharing.itunes.apple.com" + "/WebObjects/MZHomeSharing.woa/wa/getShareIdentifiers").openConnection();
 		connection.setAllowUserInteraction(false);
@@ -223,15 +279,15 @@ public class RequestHelper
 		connection.setRequestProperty("Content-Type", "text/xml");
 		connection.setReadTimeout(READ_TIMEOUT);
 		
-		NSDictionary root = new NSDictionary();
+		final NSDictionary root = new NSDictionary();
 		root.put("appleId", username);
 		root.put("guid", "empty");
 		root.put("password", password);
-		String xml = root.toXMLPropertyList();
+		final String xml = root.toXMLPropertyList();
 		connection.connect();
 		
-		OutputStream os = connection.getOutputStream();
-		BufferedWriter writer = new BufferedWriter(
+		final OutputStream os = connection.getOutputStream();
+		final BufferedWriter writer = new BufferedWriter(
 		        new OutputStreamWriter(os, "UTF-8"));
 		writer.write(xml);
 		writer.flush();
@@ -243,7 +299,7 @@ public class RequestHelper
 			throw new Exception("HTTP Error Response Code: " + connection.getResponseCode());
 
 		// obtain the encoding returned by the server
-		String encoding = connection.getContentEncoding();
+		final String encoding = connection.getContentEncoding();
 
 		final InputStream inputStream;
 
@@ -260,11 +316,11 @@ public class RequestHelper
 		{
 			inputStream = connection.getInputStream();
 		}
-		NSDictionary dictionary = (NSDictionary) PropertyListParser.parse(inputStream);
-		NSString o1 = (NSString) dictionary.get("spid");
-		NSNumber o2 = (NSNumber) dictionary.get("status");
-		NSNumber o3 = (NSNumber) dictionary.get("dsid");
-		NSString o4 = (NSString) dictionary.get("sgid");
+		final NSDictionary dictionary = (NSDictionary) PropertyListParser.parse(inputStream);
+		final NSString o1 = (NSString) dictionary.get("spid");
+		final NSNumber o2 = (NSNumber) dictionary.get("status");
+		final NSNumber o3 = (NSNumber) dictionary.get("dsid");
+		final NSString o4 = (NSString) dictionary.get("sgid");
 		if(o1 == null && o3 == null && o4 == null && o2.intValue() == 5505)
 			throw new Exception("bad password");
 		return o4.getContent();

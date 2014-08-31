@@ -36,11 +36,12 @@ public class InMemoryMusicManager implements IItemManager
 	private final Listing mediaItemsResponse;
 	private final IMusicStoreReader storeReader;
 	private final Map<Long, String> map;
+	private final PasswordMethod passwordMethod;
 
 	@Override
 	public PasswordMethod getAuthenticationMethod()
 	{
-		return PasswordMethod.NO_PASSWORD;
+		return passwordMethod;
 	}
 
 	@Override
@@ -115,6 +116,7 @@ public class InMemoryMusicManager implements IItemManager
 	@Inject
 	public InMemoryMusicManager(@Named(Util.APPLICATION_NAME) final String applicationName, final IMusicStoreReader reader, final PasswordMethod pm) throws Exception
 	{
+		this.passwordMethod = pm;
 		storeReader = reader;
 
 		/*map = FluentIterable.from(reader.readTunes()).transform(new Function<MediaItem, ListingItem>() {

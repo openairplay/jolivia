@@ -22,6 +22,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import org.dyndns.jkiddo.Jolivia.JoliviaBuilder.SecurityScheme;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
@@ -29,6 +30,7 @@ import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
+import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.dyndns.jkiddo.guice.JoliviaServer;
 import org.dyndns.jkiddo.jetty.extension.DmapConnector;
 import org.dyndns.jkiddo.logic.desk.DeskImageStoreReader;
@@ -64,7 +66,7 @@ public class Jolivia
 {
 	static Logger logger = LoggerFactory.getLogger(Jolivia.class);
 
-	public static void main(String[] args)
+	public static void main(final String[] args)
 	{
 
 		// return ServiceInfo.create("_mobileiphoto._udp.local.",
@@ -72,22 +74,19 @@ public class Jolivia
 		try
 		{
 			IMusicStoreReader reader = null;
-			/*if(args.length == 2)
-			{
-				reader = new GoogleStoreReader(args[0], args[1]);
-				new GReporter(args[0]);
-			}
-			else
-			{*/
-				reader = new DeskMusicStoreReader();
-				//new GReporter("local version");
-			//}
+			/*
+			 * if(args.length == 2) { reader = new GoogleStoreReader(args[0], args[1]); new GReporter(args[0]); } else {
+			 */
+			reader = new DeskMusicStoreReader();
+			// new GReporter("local version");
+			// }
 			// new
 			// Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new
 			// DeskImageStoreReader()).build();
-			new Jolivia.JoliviaBuilder().port(8770).security(PasswordMethod.NO_PASSWORD).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new DeskImageStoreReader("C:\\Users\\JensKristian\\Desktop\\test")).build();
+			final Jolivia j = new Jolivia.JoliviaBuilder().port(8770).security(PasswordMethod.USERNAME_AND_PASSWORD, SecurityScheme.BASIC).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new DeskImageStoreReader("C:\\Users\\JensKristian\\Desktop\\test")).build();
+			System.out.println(j);
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -105,56 +104,63 @@ public class Jolivia
 		private IImageStoreReader imageStoreReader = new DefaultImageStoreReader();
 		private IPlayingInformation iplayingInformation = new DefaultIPlayingInformation();
 		private PasswordMethod security = PasswordMethod.NO_PASSWORD;
+		private SecurityScheme scheme = null;
 
-		public JoliviaBuilder port(int port)
+		public JoliviaBuilder port(final int port)
 		{
 			this.port = port;
 			return this;
 		}
 
-		public JoliviaBuilder pairingCode(int pairingCode)
+		public JoliviaBuilder pairingCode(final int pairingCode)
 		{
 			this.pairingCode = pairingCode;
 			return this;
 		}
 
-		public JoliviaBuilder airplayPort(int airplayPort)
+		public JoliviaBuilder airplayPort(final int airplayPort)
 		{
 			this.airplayPort = airplayPort;
 			return this;
 		}
 
-		public JoliviaBuilder name(String name)
+		public JoliviaBuilder name(final String name)
 		{
 			this.name = name;
 			return this;
 		}
 
-		public JoliviaBuilder security(PasswordMethod security)
+		public enum SecurityScheme
 		{
+			DIGEST, BASIC
+		}
+
+		public JoliviaBuilder security(final PasswordMethod security, final SecurityScheme scheme)
+		{
+			this.scheme = scheme;
 			this.security = security;
 			return this;
 		}
 
-		public JoliviaBuilder musicStoreReader(IMusicStoreReader musicStoreReader)
+		public JoliviaBuilder musicStoreReader(final IMusicStoreReader musicStoreReader)
 		{
 			this.musicStoreReader = musicStoreReader;
 			return this;
 		}
 
-		public JoliviaBuilder imageStoreReader(IImageStoreReader imageStoreReader)
+		public JoliviaBuilder imageStoreReader(final IImageStoreReader imageStoreReader)
 		{
 			this.imageStoreReader = imageStoreReader;
 			return this;
 		}
 
-		public JoliviaBuilder playingInformation(IPlayingInformation iplayingInformation)
+		public JoliviaBuilder playingInformation(final IPlayingInformation iplayingInformation)
 		{
 			this.iplayingInformation = iplayingInformation;
 			return this;
 		}
 
-		public JoliviaBuilder clientSessionListener(IClientSessionListener clientSessionListener)
+		public JoliviaBuilder clientSessionListener(final IClientSessionListener clientSessionListener)
 		{
 			this.clientSessionListener = clientSessionListener;
 			return this;
@@ -162,7 +168,7 @@ public class Jolivia
 
 		public Jolivia build() throws Exception
 		{
-			SLF4JBridgeHandler.removeHandlersForRootLogger(); 
+			SLF4JBridgeHandler.removeHandlersForRootLogger();
 			SLF4JBridgeHandler.install();
 			return new Jolivia(this);
 		}
@@ -172,19 +178,19 @@ public class Jolivia
 			private Session session;
 
 			@Override
-			public void registerNewSession(Session session) throws Exception
+			public void registerNewSession(final Session session) throws Exception
 			{
 				this.session = session;
 			}
 
 			@Override
-			public void tearDownSession(String server, int port)
+			public void tearDownSession(final String server, final int port)
 			{
 				try
 				{
 					session.logout();
 				}
-				catch(Exception e)
+				catch(final Exception e)
 				{
 					e.printStackTrace();
 				}
@@ -193,8 +199,8 @@ public class Jolivia
 
 		class DefaultIPlayingInformation implements IPlayingInformation
 		{
-			private JFrame frame;
-			private JLabel label;
+			private final JFrame frame;
+			private final JLabel label;
 
 			public DefaultIPlayingInformation()
 			{
@@ -206,28 +212,28 @@ public class Jolivia
 			}
 
 			@Override
-			public void notify(BufferedImage image)
+			public void notify(final BufferedImage image)
 			{
 				try
 				{
-					ImageIcon icon = new ImageIcon(image);
+					final ImageIcon icon = new ImageIcon(image);
 					label.setIcon(icon);
 					frame.pack();
 					frame.setSize(icon.getIconWidth(), icon.getIconHeight());
 					frame.setVisible(true);
 				}
-				catch(Exception e)
+				catch(final Exception e)
 				{
 					logger.debug(e.getMessage(), e);
 				}
 			}
 
 			@Override
-			public void notify(ListingItem listingItem)
+			public void notify(final ListingItem listingItem)
 			{
-				String title = listingItem.getSpecificChunk(ItemName.class).getValue();
-				String artist = listingItem.getSpecificChunk(SongArtist.class).getValue();
-				String album = listingItem.getSpecificChunk(SongAlbum.class).getValue();
+				final String title = listingItem.getSpecificChunk(ItemName.class).getValue();
+				final String artist = listingItem.getSpecificChunk(SongArtist.class).getValue();
+				final String album = listingItem.getSpecificChunk(SongAlbum.class).getValue();
 				frame.setTitle("Playing: " + title + " - " + album + " - " + artist);
 			}
 		}
@@ -241,13 +247,13 @@ public class Jolivia
 			}
 
 			@Override
-			public URI getImage(IImageItem image) throws Exception
+			public URI getImage(final IImageItem image) throws Exception
 			{
 				return null;
 			}
 
 			@Override
-			public byte[] getImageThumb(IImageItem image) throws Exception
+			public byte[] getImageThumb(final IImageItem image) throws Exception
 			{
 				return null;
 			}
@@ -262,33 +268,33 @@ public class Jolivia
 			}
 
 			@Override
-			public URI getTune(String tuneIdentifier) throws Exception
+			public URI getTune(final String tuneIdentifier) throws Exception
 			{
 				return null;
 			}
 
 			@Override
-			public void readTunesMemoryOptimized(Listing listing, Map<Long, String> map) throws Exception
+			public void readTunesMemoryOptimized(final Listing listing, final Map<Long, String> map) throws Exception
 			{
 				// TODO Auto-generated method stub
-				
+
 			}
 		}
 	}
 
 	private final JoliviaServer joliviaServer;
 
-	private Jolivia(JoliviaBuilder builder) throws Exception
+	private Jolivia(final JoliviaBuilder builder) throws Exception
 	{
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
 
 		Preconditions.checkArgument(!(builder.pairingCode > 9999 || builder.pairingCode < 0), "Pairingcode must be expressed within 4 ciphers");
 		logger.info("Starting " + builder.name + " on port " + builder.port);
-		Server server = new Server(builder.port);
+		final Server server = new Server(builder.port);
 		// Server server = new
 		// Server(InetSocketAddress.createUnresolved("0.0.0.0", port));
-		Connector dmapConnector = new DmapConnector();
+		final Connector dmapConnector = new DmapConnector();
 		dmapConnector.setPort(builder.port);
 		// ServerConnector dmapConnector = new ServerConnector(server, new
 		// DmapConnectionFactory());
@@ -296,14 +302,22 @@ public class Jolivia
 		server.setConnectors(new Connector[] { dmapConnector });
 
 		// Guice
-		ServletContextHandler sch = new ServletContextHandler(server, "/");
+		final ServletContextHandler sch = new ServletContextHandler(server, "/");
 		joliviaServer = new JoliviaServer(builder.port, builder.airplayPort, builder.pairingCode, builder.name, builder.clientSessionListener, builder.speakerListener, builder.imageStoreReader, builder.musicStoreReader, builder.iplayingInformation, builder.security);
 		sch.addEventListener(joliviaServer);
 		sch.addFilter(GuiceFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
-		// if(builder.security == AuthenticationSchemes.BASIC_SCHEME)
-		// sch.setSecurityHandler(getSecurityHandler("iTunes_11.1.2","admin",DmapUtil.DAAP_REALM, new BasicAuthenticator()));
-		// if(builder.security == AuthenticationSchemes.DIGEST_SCHEME)
-		// sch.setSecurityHandler(getSecurityHandler("iTunes_11.1.2","admin",DmapUtil.DAAP_REALM, new DigestAuthenticator()));
+
+		final String username;
+		if(builder.security == PasswordMethod.PASSWORD)
+			username = DmapUtil.DEFAULT_USER;
+		else
+			username = "whatever";
+		final String password = "admin";
+
+		if(builder.scheme == SecurityScheme.BASIC)
+			sch.setSecurityHandler(getSecurityHandler(username, password, DmapUtil.DAAP_REALM, new BasicAuthenticator()));
+		if(builder.scheme == SecurityScheme.DIGEST)
+			sch.setSecurityHandler(getSecurityHandler(username, password, DmapUtil.DAAP_REALM, new DigestAuthenticator()));
 		sch.addServlet(DefaultServlet.class, "/");
 
 		server.start();
@@ -311,14 +325,14 @@ public class Jolivia
 		// server.join();
 	}
 
-	private SecurityHandler getSecurityHandler(String username, String password, String realm, Authenticator authenticator)
+	private SecurityHandler getSecurityHandler(final String username, final String password, final String realm, final Authenticator authenticator)
 	{
 
-		HashLoginService loginService = new HashLoginService();
+		final HashLoginService loginService = new HashLoginService();
 		loginService.putUser(username, Credential.getCredential(password), new String[] { "user" });
 		loginService.setName(realm);
 
-		Constraint globalConstraint = new Constraint();
+		final Constraint globalConstraint = new Constraint();
 		if(BasicAuthenticator.class.equals(authenticator.getClass()))
 			globalConstraint.setName(Constraint.__BASIC_AUTH);
 		if(DigestAuthenticator.class.equals(authenticator.getClass()))
@@ -326,11 +340,11 @@ public class Jolivia
 		globalConstraint.setRoles(new String[] { "user" });
 		globalConstraint.setAuthenticate(true);
 
-		ConstraintMapping globalConstraintMapping = new ConstraintMapping();
+		final ConstraintMapping globalConstraintMapping = new ConstraintMapping();
 		globalConstraintMapping.setConstraint(globalConstraint);
 		globalConstraintMapping.setPathSpec("/*");
 
-		ConstraintSecurityHandler csh = new ConstraintSecurityHandler();
+		final ConstraintSecurityHandler csh = new ConstraintSecurityHandler();
 		csh.setAuthenticator(authenticator);
 		csh.setRealmName(realm);
 		csh.addConstraintMapping(globalConstraintMapping);
@@ -343,12 +357,12 @@ public class Jolivia
 		return csh;
 	}
 
-	private static ConstraintMapping createRelaxation(String pathSpec)
+	private static ConstraintMapping createRelaxation(final String pathSpec)
 	{
-		Constraint relaxation = new Constraint();
+		final Constraint relaxation = new Constraint();
 		relaxation.setName(Constraint.ANY_ROLE);
 		relaxation.setAuthenticate(false);
-		ConstraintMapping constraintMapping = new ConstraintMapping();
+		final ConstraintMapping constraintMapping = new ConstraintMapping();
 		constraintMapping.setConstraint(relaxation);
 		constraintMapping.setPathSpec(pathSpec);
 		return constraintMapping;

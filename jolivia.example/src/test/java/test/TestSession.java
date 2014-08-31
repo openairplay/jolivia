@@ -7,12 +7,12 @@ import org.dyndns.jkiddo.service.daap.client.Session;
 public class TestSession extends Session
 {
 
-	public TestSession(String host, int port, String pairingGuid) throws Exception
+	public TestSession(final String host, final int port, final String pairingGuid) throws Exception
 	{
 		super(host, port, pairingGuid);
 	}
 	
-	public TestSession(String host, int port) throws Exception
+	public TestSession(final String host, final int port) throws Exception
 	{
 		super(host, port, "0000000000000001");
 	}
@@ -22,18 +22,18 @@ public class TestSession extends Session
 		super("localhost", 3689, "0000000000000001");
 	}
 	
-	public TestSession(String host, int port, String username, String password) throws Exception
+	public TestSession(final String host, final int port, final String username, final String password) throws Exception
 	{
 		super(host, port, username, password);
 	}
-
+	
 	public Database getTheDatabase()
 	{
 		return this.database;
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T fire(String request) throws Exception
+	public <T> T fire(final String request) throws Exception
 	{
 		return (T) RequestHelper.requestParsed(String.format("%s" + request, getRequestBase()));
 	}

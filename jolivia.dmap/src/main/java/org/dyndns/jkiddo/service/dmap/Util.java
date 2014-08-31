@@ -36,17 +36,18 @@ public class Util
 	public static final String APPLICATION_NAME = "APPLICATION_NAME";
 	public static final String APPLICATION_X_DMAP_TAGGED = "application/x-dmap-tagged";
 	private static final Logger logger = LoggerFactory.getLogger(Util.class);
-	
+
 	private static final int PARTIAL_CONTENT = 206;
 
-	public static Response buildResponse(Chunk chunk, String dmapKey, String dmapServiceName) throws IOException
+	public static Response buildResponse(final Chunk chunk, final String dmapKey, final String dmapServiceName) throws IOException
 	{
-		return buildResponse(dmapKey, dmapServiceName).entity(DmapUtil.serialize(chunk, false)).build();// .header("Content-Encoding", "gzip").build();
+		final byte[] binaryChunk = DmapUtil.serialize(chunk, false);
+		return buildResponse(dmapKey, dmapServiceName).entity(binaryChunk).header(HttpHeaders.CONTENT_LENGTH, binaryChunk.length + "").build();// .header("Content-Encoding", "gzip").build();
 	}
 
-	public static Response buildAudioResponse(byte[] buffer, long position, String dmapKey, String dmapServiceName)
+	public static Response buildAudioResponse(final byte[] buffer, final long position, final String dmapKey, final String dmapServiceName)
 	{
-		ResponseBuilder response = new ResponseBuilderImpl().header("Accept-Ranges", "bytes").header(HttpHeaders.DATE, DmapUtil.now()).header(dmapKey, dmapServiceName).header(HttpHeaders.CONTENT_TYPE, APPLICATION_X_DMAP_TAGGED).header("Connection", "close");
+		final ResponseBuilder response = new ResponseBuilderImpl().header("Accept-Ranges", "bytes").header(HttpHeaders.DATE, DmapUtil.now()).header(dmapKey, dmapServiceName).header(HttpHeaders.CONTENT_TYPE, APPLICATION_X_DMAP_TAGGED).header("Connection", "close");
 
 		if(position == 0)
 		{
@@ -63,93 +64,84 @@ public class Util
 		return response.build();
 	}
 
-	private static ResponseBuilder buildResponse(String dmapKey, String dmapServiceName)
+	private static ResponseBuilder buildResponse(final String dmapKey, final String dmapServiceName)
 	{
-		return new ResponseBuilderImpl().header(HttpHeaders.DATE, DmapUtil.now())
-				.header(dmapKey, dmapServiceName)
-				.header(HttpHeaders.CONTENT_TYPE, APPLICATION_X_DMAP_TAGGED)
-				.header("Connection", "Keep-Alive")
-				.status(Response.Status.OK);
+		return new ResponseBuilderImpl().header(HttpHeaders.DATE, DmapUtil.now()).header(dmapKey, dmapServiceName).header(HttpHeaders.CONTENT_TYPE, APPLICATION_X_DMAP_TAGGED).header("Connection", "Keep-Alive").status(Response.Status.OK);
 	}
-	
+
 	enum SecurityType
 	{
-		BASIC,DIGEST
+		BASIC, DIGEST
 	}
-	
-	public static Response buildAuthenticationResponse(String dmapKey, String dmapServiceName, SecurityType sm) throws NoSuchAlgorithmException, UnsupportedEncodingException
+
+	public static Response buildAuthenticationResponse(final String dmapKey, final String dmapServiceName, final SecurityType sm) throws NoSuchAlgorithmException, UnsupportedEncodingException
 	{
-		ResponseBuilder builder = new ResponseBuilderImpl().header(HttpHeaders.DATE, DmapUtil.now())
-		.header(dmapKey, dmapServiceName)
-		.header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML)
-		.header(HttpHeaders.CONTENT_LENGTH, "0")
-		.header("Connection", "Keep-Alive")
-		.status(Response.Status.UNAUTHORIZED);
-		
+		final ResponseBuilder builder = new ResponseBuilderImpl().header(HttpHeaders.DATE, DmapUtil.now()).header(dmapKey, dmapServiceName).header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_HTML).header(HttpHeaders.CONTENT_LENGTH, "0").header("Connection", "Keep-Alive").status(Response.Status.UNAUTHORIZED);
+
 		switch(sm)
 		{
 			case BASIC:
-				builder.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\""
-                        + DmapUtil.DAAP_REALM + "\"");			
+				builder.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"" + DmapUtil.DAAP_REALM + "\"");
 				break;
 			case DIGEST:
-				builder.header(HttpHeaders.WWW_AUTHENTICATE, "Digest realm=\""
-                        + DmapUtil.DAAP_REALM + "\", nonce=\"" + DmapUtil.nonce()
-                        + "\"");
+				builder.header(HttpHeaders.WWW_AUTHENTICATE, "Digest realm=\"" + DmapUtil.DAAP_REALM + "\", nonce=\"" + DmapUtil.nonce() + "\"");
 				break;
-				default:
-					throw new NotImplementedException();
+			default:
+				throw new NotImplementedException();
 		}
 		return builder.build();
-		
-	} 
 
-	public static Response buildEmptyResponse(String dmapKey, String dmapServiceName)
+	}
+
+	public static Response buildEmptyResponse(final String dmapKey, final String dmapServiceName)
 	{
 		return buildResponse(dmapKey, dmapServiceName).status(Response.Status.NO_CONTENT).build();
 	}
-	
-	public static String toHex(String value)
+
+	public static String toHex(final String value)
 	{
 		try
 		{
 			return toHex(value.getBytes("UTF-8"));
 		}
-		catch(UnsupportedEncodingException e)
+		catch(final UnsupportedEncodingException e)
 		{
 			throw new RuntimeException(e);
 		}
 	}
-	
-	public static String toHex(byte[] code)
+
+	public static String toHex(final byte[] code)
 	{
-		StringBuilder sb = new StringBuilder();
-		for(byte b : code)
+		final StringBuilder sb = new StringBuilder();
+		for(final byte b : code)
 		{
 			sb.append(String.format("%02x", b & 0xff));
 		}
 		return sb.toString().toUpperCase();
 	}
-	
-	public static String toServiceGuid(String name)
+
+	public static String toServiceGuid(final String name)
 	{
-		try {
-			return toHex((name+"1111111111111111").getBytes("UTF-8")).substring(0, 16);
-		} catch (UnsupportedEncodingException e) {
+		try
+		{
+			return toHex((name + "1111111111111111").getBytes("UTF-8")).substring(0, 16);
+		}
+		catch(final UnsupportedEncodingException e)
+		{
 			throw new RuntimeException(e);
 		}
 	}
 
-	public static String fromHex(String hex)
+	public static String fromHex(final String hex)
 	{
-		StringBuilder str = new StringBuilder();
+		final StringBuilder str = new StringBuilder();
 		for(int i = 0; i < hex.length(); i += 2)
 		{
 			str.append((char) Integer.parseInt(hex.substring(i, i + 2), 16));
 		}
 		return str.toString();
 	}
-	
+
 	/**
 	 * Converts an array of bytes to a hexadecimal string
 	 * 
@@ -167,11 +159,11 @@ public class Util
 		}
 		return s.toString();
 	}
-	
+
 	public static String toMacString(final byte[] bytes)
 	{
-		String hex = toHexString(bytes);
-		return hex.substring(0,2) +  ":" + hex.substring(2,4) + ":" + hex.substring(4,6) + ":" + hex.substring(6,8) + ":" + hex.substring(8,10) + ":" + hex.substring(10,12);
+		final String hex = toHexString(bytes);
+		return hex.substring(0, 2) + ":" + hex.substring(2, 4) + ":" + hex.substring(4, 6) + ":" + hex.substring(6, 8) + ":" + hex.substring(8, 10) + ":" + hex.substring(10, 12);
 	}
 
 	/**

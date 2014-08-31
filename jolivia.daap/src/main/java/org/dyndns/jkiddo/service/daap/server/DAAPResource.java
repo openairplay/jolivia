@@ -97,6 +97,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		super(mDNS, port, itemManager);
 		this.name = applicationName;
 		this.serviceGuid = Util.toServiceGuid(applicationName);
+		
 		this.register();
 	}
 

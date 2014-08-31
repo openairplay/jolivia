@@ -81,9 +81,9 @@ public class JoliviaServer extends GuiceServletContextListener
 
 	private Injector injector;
 
-	private Server h2server;
+	private final Server h2server;
 
-	public JoliviaServer(Integer port, Integer airplayPort, Integer pairingCode, String name, IClientSessionListener clientSessionListener, ISpeakerListener speakerListener, IImageStoreReader imageStoreReader, IMusicStoreReader musicStoreReader, IPlayingInformation iplayingInformation, PasswordMethod security) throws SQLException, UnknownHostException
+	public JoliviaServer(final Integer port, final Integer airplayPort, final Integer pairingCode, final String name, final IClientSessionListener clientSessionListener, final ISpeakerListener speakerListener, final IImageStoreReader imageStoreReader, final IMusicStoreReader musicStoreReader, final IPlayingInformation iplayingInformation, final PasswordMethod security) throws SQLException, UnknownHostException
 	{
 		super();
 
@@ -116,7 +116,7 @@ public class JoliviaServer extends GuiceServletContextListener
 			((MDNSResource) injector.getInstance(RAOPResourceWrapper.class)).register();
 
 		}
-		catch(IOException e)
+		catch(final IOException e)
 		{
 			e.printStackTrace();
 		}
@@ -158,7 +158,7 @@ public class JoliviaServer extends GuiceServletContextListener
 				{
 					bind(ConnectionSource.class).toInstance(new JdbcConnectionSource("jdbc:h2:mem:test"));
 				}
-				catch(SQLException e)
+				catch(final SQLException e)
 				{
 					throw new RuntimeException(e);
 				}
@@ -211,10 +211,6 @@ public class JoliviaServer extends GuiceServletContextListener
 			protected void configureServlets()
 			{
 				bind(CustomByteArrayProvider.class);
-				// csh.addConstraintMapping(createRelaxation("/server-info"));
-				// csh.addConstraintMapping(createRelaxation("/logout"));
-				// //Following is a hack! It should state /databases/*/items/* instead - however, that cannot be used.
-				// csh.addConstraintMapping(createRelaxation("/databases/*"));
 				filter("*").through(ProxyFilter.class);
 				serve("/*").with(GuiceContainer.class);
 			}

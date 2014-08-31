@@ -35,6 +35,9 @@
 
 package org.dyndns.jkiddo.service.daap.client;
 
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 
 import org.dyndns.jkiddo.dmap.chunks.audio.BaseContainer;
@@ -53,10 +56,12 @@ import org.dyndns.jkiddo.dmp.chunks.media.ServerInfoResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateResponse;
 import org.dyndns.jkiddo.dmp.model.Container;
 import org.dyndns.jkiddo.dmp.model.Database;
+import org.dyndns.jkiddo.service.dmap.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 
 public class Session
 {
@@ -64,12 +69,16 @@ public class Session
 
 	private final String host;
 	private long revision = 1;
-	private final int port, sessionId;
+	private final int port;
+
+	private final int sessionId;
 
 	protected final Database database, radioDatabase;
 
 	private final Library library;
 	private final RemoteControl remoteControl;
+
+	private final String homeSharingGid;
 
 	public long getRevision()
 	{
@@ -107,20 +116,30 @@ public class Session
 		this.host = host;
 		this.port = port;
 
-		getServerInfo();
+		final ServerInfoResponse serverInfoRespone = getServerInfo();
 
 		logger.debug(String.format("trying login for host=%s", host));
-		final LoginResponse loginResponse = doLogin(username, password);
+		final String gid = RequestHelper.requestPList(username, password);
+		homeSharingGid = "&hsgid=" + gid;
+		final LoginResponse loginResponse = doLoginWithHomeSharingGid(gid);
 
 		sessionId = loginResponse.getSessionId().getValue();
 
-		getControlInt();
+		final DataControlInt ctrl_int = getControlInt();
+		/*
+		 * fp_setup_first(); fp_setup_second();
+		 */
+
+		// final String hspid = "609dfd84-ae92-4492-8a2d-cc26b8c18cdc";
+		final String hspid = "0";
+
+		verifyHomeShare(hspid);
 		// Update revision at once. As the initial call, this does not block but simply updates the revision.
 
 		// See if adding hasFP=1 and hsgid could resolve the following calls
 
 		// updateServerRevision();
-		getUpdateBlocking();
+		// getUpdateBlocking();
 
 		library = new Library(this);
 		remoteControl = new RemoteControl(this);
@@ -132,6 +151,7 @@ public class Session
 
 	public Session(final String host, final int port, final String pairingGuid) throws Exception
 	{
+		homeSharingGid = "";
 		// start a session with the iTunes server
 		this.host = host;
 		this.port = port;
@@ -230,22 +250,22 @@ public class Session
 
 	private ItemsContainer getContainerDetails(final int databaseId, final int containerId) throws Exception
 	{
-		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&type=music&meta=dmap.itemkind,dmap.itemid,dmap.containeritemid", this.getRequestBase(), databaseId, containerId, sessionId));
+		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&type=music&meta=dmap.itemkind,dmap.itemid,dmap.containeritemid" + homeSharingGid, this.getRequestBase(), databaseId, containerId, sessionId));
 	}
 
 	protected DatabaseContainerns getDatabaseContainerList(final int databaseId) throws Exception
 	{
-		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemid,dmap.itemname,dmap.persistentid,dmap.parentcontainerid,com.apple.itunes.is-podcast-playlist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,dmap.haschildcontainers,com.apple.itunes.saved-genius", this.getRequestBase(), databaseId, this.sessionId));
+		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers?session-id=%s&meta=dmap.itemid,dmap.itemname,dmap.persistentid,dmap.parentcontainerid,com.apple.itunes.is-podcast-playlist,com.apple.itunes.special-playlist,com.apple.itunes.smart-playlist,dmap.haschildcontainers,com.apple.itunes.saved-genius" + homeSharingGid, this.getRequestBase(), databaseId, this.sessionId));
 	}
 
 	protected ServerDatabases getServerDatabases() throws Exception
 	{
-		return RequestHelper.requestParsed(String.format("%s/databases?session-id=%s", this.getRequestBase(), this.sessionId));
+		return RequestHelper.requestParsed(String.format("%s/databases?session-id=%s" + homeSharingGid, this.getRequestBase(), this.sessionId));
 	}
 
-	private LoginResponse doLogin(final String username, final String password) throws Exception
+	private LoginResponse doLoginWithHomeSharingGid(final String gid) throws Exception
 	{
-		return RequestHelper.requestParsed(String.format("%s/login?hsgid=%s&hasFP=1", this.getRequestBase(), RequestHelper.requestPList(username, password)));
+		return RequestHelper.requestParsed(String.format("%s/login?hasFP=1&hsgid=%s", this.getRequestBase(), gid));
 	}
 
 	protected LoginResponse doLogin(final String pairingGuid) throws Exception
@@ -275,13 +295,16 @@ public class Session
 
 	public DataControlInt getControlInt() throws Exception
 	{
-		return RequestHelper.requestParsed(String.format("%s/ctrl-int", this.getRequestBase()));
+		if("".equals(homeSharingGid))
+			return RequestHelper.requestParsed(String.format("%s/ctrl-int", this.getRequestBase()));
+		else
+			return RequestHelper.requestParsed(String.format("%s/ctrl-int?" + homeSharingGid.subSequence(1, homeSharingGid.length()), this.getRequestBase()));
 	}
 
 	// Query the media server about the content codes it handles
 	public ContentCodesResponse getContentCodes() throws Exception
 	{
-		return RequestHelper.requestParsed(String.format("%s/content-codes?session-id=%s", this.getRequestBase(), this.sessionId));
+		return RequestHelper.requestParsed(String.format("%s/content-codes?session-id=%s" + homeSharingGid, this.getRequestBase(), this.sessionId));
 	}
 
 	/**
@@ -298,16 +321,47 @@ public class Session
 		// until something happens
 		// GET /update?revision-number=1&daap-no-disconnect=1&session-id=1250589827
 
-		final UpdateResponse state = RequestHelper.requestParsed(String.format("%s/update?revision-number=%d&daap-no-disconnect=1&session-id=%s", this.getRequestBase(), revision, sessionId), true);
+		final UpdateResponse state = RequestHelper.requestParsed(String.format("%s/update?revision-number=%d&daap-no-disconnect=1&session-id=%s" + homeSharingGid, this.getRequestBase(), revision, sessionId), true);
 		revision = state.getServerRevision().getUnsignedValue();
 		return state;
 	}
 
 	public UpdateResponse updateServerRevision() throws Exception
 	{
-		final UpdateResponse state = RequestHelper.requestParsed(String.format("%s/update?session-id=%s&revision-number=%s&delta=0", this.getRequestBase(), sessionId, revision), true);
+		final UpdateResponse state = RequestHelper.requestParsed(String.format("%s/update?session-id=%s&revision-number=%s&delta=0" + homeSharingGid, this.getRequestBase(), sessionId, revision), true);
 		revision = state.getServerRevision().getUnsignedValue();
 		return state;
 	}
 
+	private void verifyHomeShare(final String hspid) throws Exception
+	{
+		RequestHelper.requestParsed(String.format("%s/home-share-verify?hspid=" + hspid + "&session-id=%s" + homeSharingGid, this.getRequestBase(), this.sessionId));
+	}
+
+	private void fp_setup_first() throws Exception
+	{
+
+		final byte[] value = new byte[] { 2, 0, 0, (byte) 187 };
+		final byte[] nr = { 1 };
+		final ArrayList<byte[]> bytes = Lists.newArrayList("FPLYd".getBytes(), new byte[] { 1 }, nr, new byte[] { 0, 0, 0, 0 }, new byte[] { (byte) value.length }, value);
+		final byte[] cert = RequestHelper.requestPost(String.format("%s/fp-setup?session-id=%s" + homeSharingGid, this.getRequestBase(), this.sessionId), concatenateByteArrays(bytes));
+		System.out.println(Util.toHex(cert));
+		return;
+	}
+
+	private void fp_setup_second()
+	{
+		// TODO Auto-generated method stub
+
+	}
+
+	private static byte[] concatenateByteArrays(final List<byte[]> blocks)
+	{
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+		for(final byte[] b : blocks)
+		{
+			os.write(b, 0, b.length);
+		}
+		return os.toByteArray();
+	}
 }
