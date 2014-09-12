@@ -86,6 +86,8 @@ public class JoliviaServer extends GuiceServletContextListener
 	public JoliviaServer(final Integer port, final Integer airplayPort, final Integer pairingCode, final String name, final IClientSessionListener clientSessionListener, final ISpeakerListener speakerListener, final IImageStoreReader imageStoreReader, final IMusicStoreReader musicStoreReader, final IPlayingInformation iplayingInformation, final PasswordMethod security) throws SQLException, UnknownHostException
 	{
 		super();
+		
+		System.setProperty("java.net.preferIPv4Stack", "true");
 
 		h2server = Server.createWebServer(new String[] { "-webPort", "9123", "-webAllowOthers" });
 		h2server.start();
