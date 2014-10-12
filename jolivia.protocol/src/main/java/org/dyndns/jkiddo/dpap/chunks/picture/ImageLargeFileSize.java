@@ -17,10 +17,10 @@ import org.dyndns.jkiddo.dmp.chunks.ULongChunk;
  * 
  * @author Charles Ikeson
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.plsz)
+@DMAPAnnotation(type=DmapChunkDefinition.plsz)
 public class ImageLargeFileSize extends ULongChunk
 {
 	/**

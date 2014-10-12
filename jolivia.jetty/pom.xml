@@ -11,12 +11,12 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
-			<version>8.1.13.v20130916</version>
+			<version>8.1.16.v20140903</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey.contribs</groupId>
 			<artifactId>jersey-guice</artifactId>
-			<version>1.17.1</version>
+			<version>1.18.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.dyndns.jkiddo</groupId>

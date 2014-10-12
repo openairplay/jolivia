@@ -32,10 +32,10 @@ import org.dyndns.jkiddo.dmp.chunks.StringChunk;
 /**
  * @since iTines 5.0
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.asky)
+@DMAPAnnotation(type=DmapChunkDefinition.asky)
 public class SongKeywords extends StringChunk
 {
 

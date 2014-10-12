@@ -17,10 +17,10 @@ import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
  * 
  * @author Charles Ikeson
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.ppro)
+@DMAPAnnotation(type=DmapChunkDefinition.ppro)
 public class PictureProtocolVersion extends VersionChunk
 {
 	public PictureProtocolVersion()

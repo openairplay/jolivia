@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition;
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.chunks.AbstractChunk;
 import org.dyndns.jkiddo.dmp.chunks.ChunkFactory;
 import org.dyndns.jkiddo.dmp.model.Container;
@@ -85,8 +85,8 @@ public class TestDB
 	//@Test
 	public void testMap()
 	{
-		Table<Integer, String, Class<? extends AbstractChunk>> table = ChunkFactory.getCalculatedmap();
-		DmapProtocolDefinition def = IDmapProtocolDefinition.DmapProtocolDefinition.abcp;
+		Table<Integer, String, Class<? extends AbstractChunk>> table = ChunkFactory.getCalculatedMap();
+		DmapChunkDefinition def = IDmapProtocolDefinition.DmapChunkDefinition.abcp;
 		Class<? extends AbstractChunk> clazz = table.get(DmapUtil.toContentCodeNumber(def.getShortname()), def.getLongname());
 		System.out.println(clazz);
 	}

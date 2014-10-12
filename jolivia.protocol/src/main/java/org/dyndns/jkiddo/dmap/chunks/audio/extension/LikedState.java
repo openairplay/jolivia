@@ -2,10 +2,10 @@ package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
 import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.aels)
+@DMAPAnnotation(type=DmapChunkDefinition.aels)
 public class LikedState extends UIntChunk
 {
 	public LikedState()

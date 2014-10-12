@@ -34,10 +34,10 @@ import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
  * 
  * @author Roger Kapsi
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.arif)
+@DMAPAnnotation(type=DmapChunkDefinition.arif)
 public class ResolveInfo extends ContainerChunk
 {
 

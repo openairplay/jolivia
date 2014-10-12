@@ -37,10 +37,10 @@ import org.dyndns.jkiddo.dmp.chunks.media.SpecifiedTotalCount;
  * 
  * @author Roger Kapsi
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.adbs)
+@DMAPAnnotation(type=DmapChunkDefinition.adbs)
 public class DatabaseItems extends ContainerChunk
 {
 

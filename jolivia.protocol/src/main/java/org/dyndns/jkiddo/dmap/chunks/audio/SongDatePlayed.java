@@ -2,10 +2,10 @@ package org.dyndns.jkiddo.dmap.chunks.audio;
 
 import org.dyndns.jkiddo.dmp.chunks.DateChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.aspl)
+@DMAPAnnotation(type=DmapChunkDefinition.aspl)
 public class SongDatePlayed extends DateChunk
 {
 	public SongDatePlayed()

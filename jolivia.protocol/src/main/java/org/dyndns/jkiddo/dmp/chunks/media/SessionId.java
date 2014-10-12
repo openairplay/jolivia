@@ -34,10 +34,10 @@ import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
  * 
  * @author Roger Kapsi
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.mlid)
+@DMAPAnnotation(type=DmapChunkDefinition.mlid)
 public class SessionId extends UIntChunk
 {
 

@@ -12,10 +12,10 @@ package org.dyndns.jkiddo.dmcp.chunks.media.extension;
 
 import org.dyndns.jkiddo.dmp.chunks.UByteChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.ceGS)
+@DMAPAnnotation(type=DmapChunkDefinition.ceGS)
 public class GeniusSelectable extends UByteChunk
 {
 	public GeniusSelectable()

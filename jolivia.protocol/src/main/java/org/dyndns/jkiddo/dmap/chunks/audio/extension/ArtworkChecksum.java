@@ -10,12 +10,11 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
-import org.dyndns.jkiddo.dmp.DMAPAnnotation;
-
-@DMAPAnnotation(type=DmapProtocolDefinition.aeCS)
+@DMAPAnnotation(type=DmapChunkDefinition.aeCs)
 public class ArtworkChecksum extends UIntChunk
 {
 
@@ -24,8 +23,8 @@ public class ArtworkChecksum extends UIntChunk
 		this(0);
 	}
 
-	public ArtworkChecksum(int value)
+	public ArtworkChecksum(final int value)
 	{
-		super("aeCS", "com.apple.itunes.artworkchecksum", value);
+		super("aeCs", "com.apple.itunes.artworkchecksum", value);
 	}
 }

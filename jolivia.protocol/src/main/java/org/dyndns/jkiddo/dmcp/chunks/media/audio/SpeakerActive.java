@@ -12,10 +12,10 @@ package org.dyndns.jkiddo.dmcp.chunks.media.audio;
 
 import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.caia)
+@DMAPAnnotation(type=DmapChunkDefinition.caia)
 public class SpeakerActive extends BooleanChunk
 {
 	public SpeakerActive()

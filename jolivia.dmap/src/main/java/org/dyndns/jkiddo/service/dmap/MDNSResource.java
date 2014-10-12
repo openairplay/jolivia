@@ -46,7 +46,7 @@ public abstract class MDNSResource implements NetworkTopologyListener
 	//protected void cleanup()
 	public void deRegister()
 	{
-		this.mDNS.unregisterAllServices();
+		this.mDNS.unregisterService(serviceInfo);
 	}
 
 	//protected synchronized void signUp() throws IOException

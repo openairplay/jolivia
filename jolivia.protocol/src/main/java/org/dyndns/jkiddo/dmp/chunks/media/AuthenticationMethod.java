@@ -32,10 +32,10 @@ import org.dyndns.jkiddo.dmp.chunks.UByteChunk;
 /**
  * @author Roger Kapsi
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.msau)
+@DMAPAnnotation(type=DmapChunkDefinition.msau)
 public class AuthenticationMethod extends UByteChunk
 {
 	public enum PasswordMethod

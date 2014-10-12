@@ -52,9 +52,9 @@ public final class ChunkFactory
 		final Table<Integer, String, Class<? extends AbstractChunk>> table = HashBasedTable.create();
 		// final Set<Class<?>> reflectedChunks = new Reflections("org.dyndns.jkiddo").getTypesAnnotatedWith(DMAPAnnotation.class);
 		final Set<Class<?>> reflectedChunks = ReflectionsHelper.getClasses("org.dyndns.jkiddo", DMAPAnnotation.class);
-		for(Class<?> chunk : reflectedChunks)
+		for(final Class<?> chunk : reflectedChunks)
 		{
-			DMAPAnnotation dmapAnnotation = chunk.getAnnotation(DMAPAnnotation.class);
+			final DMAPAnnotation dmapAnnotation = chunk.getAnnotation(DMAPAnnotation.class);
 			if(dmapAnnotation == null)
 			{
 				throw new RuntimeException("No matching annotation found for class: '" + chunk + "'");
@@ -62,23 +62,28 @@ public final class ChunkFactory
 			final String longname = dmapAnnotation.type().getLongname();
 			@SuppressWarnings("unchecked")
 			final Class<? extends AbstractChunk> clazz = (Class<? extends AbstractChunk>) chunk;
-			final Integer shortname;
-			if(dmapAnnotation.explicitValue() != -1)
+			final Integer hash;
+			if(dmapAnnotation.hash() != -1)
 			{
-				shortname = dmapAnnotation.explicitValue();
+				hash = dmapAnnotation.hash();
 			}
 			else
 			{
-				shortname = DmapUtil.toContentCodeNumber(dmapAnnotation.type().getShortname());
+				hash = DmapUtil.toContentCodeNumber(dmapAnnotation.type().getShortname());
 			}
-			table.put(shortname, longname, clazz);
+			table.put(hash, longname, clazz);
 		}
 		calculatedMap = ImmutableTable.copyOf(new ImmutableTable.Builder<Integer, String, Class<? extends AbstractChunk>>().putAll(table).build());
 	}
 
-	public static Table<Integer, String, Class<? extends AbstractChunk>> getCalculatedmap()
+	public static Table<Integer, String, Class<? extends AbstractChunk>> getCalculatedMap()
 	{
 		return calculatedMap;
+	}
+	
+	public Map<Integer, Class<? extends AbstractChunk>> getStaticTypedMap()
+	{
+		return map;
 	}
 
 	public ChunkFactory()
@@ -309,7 +314,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x6d736375), org.dyndns.jkiddo.dmap.chunks.audio.UnknownCU.class); // mscu
 
 		map.put(new Integer(0x61655347), org.dyndns.jkiddo.dmap.chunks.audio.extension.SavedGenius.class); // aeSG
-		map.put(new Integer(0x61654353), org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum.class); // aeCS
+		map.put(new Integer(0x61654353), org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum.class); // aeCs
 		map.put(new Integer(0x61655043), org.dyndns.jkiddo.dmap.chunks.audio.extension.Podcast.class); // aePC
 		map.put(new Integer(0x61655050), org.dyndns.jkiddo.dmap.chunks.audio.extension.PodcastPlaylist.class); // aePP
 		map.put(new Integer(0x61655350), org.dyndns.jkiddo.dmap.chunks.audio.extension.SmartPlaylist.class); // aeSP
@@ -356,7 +361,7 @@ public final class ChunkFactory
 		map.put(new Integer(0x61654D4B), org.dyndns.jkiddo.dmap.chunks.audio.extension.MediaKind.class); // aeMK
 		map.put(new Integer(0x61655356), org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion.class); // aeSV
 		map.put(new Integer(0x61654E56), org.dyndns.jkiddo.dmap.chunks.audio.extension.NormVolume.class); // aeNV
-		map.put(new Integer(0x61654373), org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownCS.class); // aeCs
+		//map.put(new Integer(0x61654373), org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownCS.class); // aeCs
 		map.put(new Integer(0x61654844), org.dyndns.jkiddo.dmap.chunks.audio.extension.IsHDVideo.class); // aeHD
 
 		map.put(new Integer(0x61654364), org.dyndns.jkiddo.dmap.chunks.audio.extension.CloudID.class); // aeCd
@@ -372,19 +377,20 @@ public final class ChunkFactory
 		 */
 	}
 
-	public Class<? extends Chunk> getChunkClass(Integer contentCode)
+	public Class<? extends Chunk> getChunkClass(final Integer contentCode)
 	{
-		return map.get(contentCode);
+		return calculatedMap.row(contentCode).values().iterator().next();
+		//return map.get(contentCode);
 	}
 
-	public Chunk newChunk(int contentCode) throws ProtocolViolationException
+	public Chunk newChunk(final int contentCode) throws ProtocolViolationException
 	{
-		Class<? extends Chunk> clazz = getChunkClass(new Integer(contentCode));
+		final Class<? extends Chunk> clazz = getChunkClass(new Integer(contentCode));
 		try
 		{
 			return clazz.newInstance();
 		}
-		catch(Exception err)
+		catch(final Exception err)
 		{
 			throw new ProtocolViolationException("Content code: " + DmapUtil.toContentCodeString(contentCode) + " not found. Hash is 0x" + Integer.toHexString(new Integer(contentCode)), err);
 		}

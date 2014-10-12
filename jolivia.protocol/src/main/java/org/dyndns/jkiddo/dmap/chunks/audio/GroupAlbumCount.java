@@ -2,10 +2,10 @@ package org.dyndns.jkiddo.dmap.chunks.audio;
 
 import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.agac)
+@DMAPAnnotation(type=DmapChunkDefinition.agac)
 public class GroupAlbumCount extends UIntChunk {
 	public GroupAlbumCount() {
 		this(0);

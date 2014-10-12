@@ -17,10 +17,10 @@ import org.dyndns.jkiddo.dmp.chunks.StringChunk;
  * 
  * @author Charles Ikeson
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.pfmt)
+@DMAPAnnotation(type=DmapChunkDefinition.pfmt)
 public class ImageFormat extends StringChunk
 {
 	/**

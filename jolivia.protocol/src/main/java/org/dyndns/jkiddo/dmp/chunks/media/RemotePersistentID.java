@@ -12,10 +12,10 @@ package org.dyndns.jkiddo.dmp.chunks.media;
 
 import org.dyndns.jkiddo.dmp.chunks.ULongChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.mrpr)
+@DMAPAnnotation(type=DmapChunkDefinition.mrpr)
 public class RemotePersistentID extends ULongChunk
 {
 	public RemotePersistentID()

@@ -12,10 +12,10 @@ package org.dyndns.jkiddo.dmcp.chunks.media.audio;
 
 import org.dyndns.jkiddo.dmp.chunks.RawChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.canp)
+@DMAPAnnotation(type=DmapChunkDefinition.canp)
 public class NowPlaying extends RawChunk
 {
 	private long databaseId;

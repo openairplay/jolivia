@@ -142,20 +142,16 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		final ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 
 		serverInfoResponse.add(new Status(200));
-		serverInfoResponse.add(mediaProtocolVersion);
 		serverInfoResponse.add(new ItemName(name));
 		serverInfoResponse.add(audioProtocolVersion);
-		// serverInfoResponse.add(itemManager.getMusicSharingVersion()); If inserted, DAAP dies
-		//serverInfoResponse.add(new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_3010));
 		serverInfoResponse.add(musicSharingVersion);
-		
+		serverInfoResponse.add(pictureProtocolVersion);
+		serverInfoResponse.add(mediaProtocolVersion);
 
 		serverInfoResponse.add(new SupportsExtraData(3));
-		// serverInfoResponse.add(new WelcomeMessage("jgjgjhgjgjhgjgyutrutuolmæ"));
-		// serverInfoResponse.add(new Voting(true));
-
 		serverInfoResponse.add(new SupportsExtensions(true));
 		serverInfoResponse.add(new SupportsGroups(3));
+		
 		// serverInfoResponse.add(new UnknownSE(0x80000));
 		// serverInfoResponse.add(new UnknownMQ(true));
 		// serverInfoResponse.add(new UnknownFR(0x64));
@@ -164,11 +160,11 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		// serverInfoResponse.add(new UnknownSR(true));
 		// serverInfoResponse.add(new SupportsFairPlay(SupportsFairPlay.UNKNOWN_VALUE));//iTunes 11.0.2.26 says 2. If inserted, DAAP dies
 		// serverInfoResponse.add(new UnknownSX(111));
-		serverInfoResponse.add(pictureProtocolVersion);
 		// serverInfoResponse.add(new Unknowned(true));
 		// Unknownml msml = new Unknownml();
 		// msml.add(new UnknownMA(0xBF940AB92600L)); //iTunes 11.0.2.26 - Totally unknown
 		// serverInfoResponse.add(msml);
+		
 		serverInfoResponse.add(new LoginRequired(true));
 		serverInfoResponse.add(new TimeoutInterval(1800));
 		serverInfoResponse.add(new SupportsAutoLogout(true));
@@ -214,9 +210,6 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		final long[] range = getRange(rangeHeader, 0, array.length);
 		final int pos = (int) range[0];
 		final int end = (int) range[1];
-		// byte[] buffer = new byte[end - pos];
-		// System.arraycopy(array, pos, buffer, 0, buffer.length);
-		// Arrays.copyOfRange(array,pos,end);
 
 		return Util.buildAudioResponse(Arrays.copyOfRange(array, pos, end), pos, getDMAPKey(), name);
 

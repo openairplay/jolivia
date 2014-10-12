@@ -12,10 +12,10 @@ package org.dyndns.jkiddo.dmp.chunks.media;
 
 import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.mdbk)
+@DMAPAnnotation(type=DmapChunkDefinition.mdbk)
 public class DatabaseShareType extends UIntChunk
 {
 	public static final int LOCAL = 0x01;

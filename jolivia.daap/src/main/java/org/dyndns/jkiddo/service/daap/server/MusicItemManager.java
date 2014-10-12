@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition;
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.chunks.AbstractChunk;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.ContainerCount;
@@ -104,12 +104,12 @@ public class MusicItemManager implements IItemManager
 		 * art remember the following: // // new SongExtraData(1); // new ArtworkChecksum(); 4 bytes // new SongArtworkCount(1); return item; } });
 		 */
 
-		final Map<Class<?>, Map<DmapProtocolDefinition, Field>> _definitionToFieldsMap = Maps.newHashMap();
+		final Map<Class<?>, Map<DmapChunkDefinition, Field>> _definitionToFieldsMap = Maps.newHashMap();
 
 		_definitionToFieldsMap.put(MediaItem.class, definitionToField(MediaItem.class, mediaItemAnnotations));
 		_definitionToFieldsMap.put(Container.class, definitionToField(Container.class, containerAnnotations));
 
-		definitionToFieldsMap = new ImmutableMap.Builder<Class<?>, Map<DmapProtocolDefinition, Field>>().putAll(_definitionToFieldsMap).build();
+		definitionToFieldsMap = new ImmutableMap.Builder<Class<?>, Map<DmapChunkDefinition, Field>>().putAll(_definitionToFieldsMap).build();
 
 		// for(MediaItem item : itemToIMusicItem.keySet())
 		for(final MediaItem item : reader.readTunes())
@@ -209,15 +209,15 @@ public class MusicItemManager implements IItemManager
 	@Override
 	public Listing getContainers(final long databaseId, final Iterable<String> parameters) throws SQLException
 	{
-		final ImmutableCollection<DmapProtocolDefinition> queryParameters = parameters2Definition(parameters, Container.class);
+		final ImmutableCollection<DmapChunkDefinition> queryParameters = parameters2Definition(parameters, Container.class);
 		final List<Container> containers = containerDao.queryBuilder().where().eq("database_id", databaseId).query();
 		return generateListing(queryParameters, containers);
 	}
 
-	private <T> ListingItem transformEntity(final ImmutableCollection<DmapProtocolDefinition> queryParameters, final T input)
+	private <T> ListingItem transformEntity(final ImmutableCollection<DmapChunkDefinition> queryParameters, final T input)
 	{
 		final ListingItem item = new ListingItem();
-		for(final DmapProtocolDefinition param : queryParameters)
+		for(final DmapChunkDefinition param : queryParameters)
 		{
 			// build query ...
 			// and parse it
@@ -258,12 +258,12 @@ public class MusicItemManager implements IItemManager
 	@Override
 	public Listing getMediaItems(final long databaseId, final long containerId, final Iterable<String> parameters) throws SQLException
 	{
-		final ImmutableCollection<DmapProtocolDefinition> queryParameters = parameters2Definition(parameters, MediaItem.class);
+		final ImmutableCollection<DmapChunkDefinition> queryParameters = parameters2Definition(parameters, MediaItem.class);
 		final List<MediaItem> mediaItems = mediaItemDao.queryBuilder().where().eq("database_id", databaseId).and().eq("container_id", containerId).query();
 		return generateListing(queryParameters, mediaItems);
 	}
 
-	private <T> Listing generateListing(final ImmutableCollection<DmapProtocolDefinition> queryParameters, final List<T> entities)
+	private <T> Listing generateListing(final ImmutableCollection<DmapChunkDefinition> queryParameters, final List<T> entities)
 	{
 		final FluentIterable<ListingItem> listings = FluentIterable.from(entities).transform(new Function<T, ListingItem>() {
 
@@ -287,34 +287,34 @@ public class MusicItemManager implements IItemManager
 		return getMediaItems(databaseId, getLibrary().getDatabase(databaseId).getMasterContainer().getItemId(), parameters);
 	}
 
-	private final ImmutableMap<Class<?>, Map<DmapProtocolDefinition, Field>> definitionToFieldsMap;
+	private final ImmutableMap<Class<?>, Map<DmapChunkDefinition, Field>> definitionToFieldsMap;
 
-	private final ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition> libraryAnnotations = findDbStructureFields(Library.class);
-	private final ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition> databaseAnnotations = findDbStructureFields(Database.class);
-	private final ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition> containerAnnotations = findDbStructureFields(Container.class);
-	private final ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition> mediaItemAnnotations = findDbStructureFields(MediaItem.class);
+	private final ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> libraryAnnotations = findDbStructureFields(Library.class);
+	private final ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> databaseAnnotations = findDbStructureFields(Database.class);
+	private final ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> containerAnnotations = findDbStructureFields(Container.class);
+	private final ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> mediaItemAnnotations = findDbStructureFields(MediaItem.class);
 
-	private final ImmutableMap<Class<?>, ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition>> definitionsTable = new ImmutableMap.Builder<Class<?>, ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition>>().put(Library.class, libraryAnnotations).put(Database.class, databaseAnnotations).put(Container.class, containerAnnotations).put(MediaItem.class, mediaItemAnnotations).build();
+	private final ImmutableMap<Class<?>, ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition>> definitionsTable = new ImmutableMap.Builder<Class<?>, ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition>>().put(Library.class, libraryAnnotations).put(Database.class, databaseAnnotations).put(Container.class, containerAnnotations).put(MediaItem.class, mediaItemAnnotations).build();
 
-	private ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition> parameters2Definition(final Iterable<String> parameters, final Class<?> clazz)
+	private ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> parameters2Definition(final Iterable<String> parameters, final Class<?> clazz)
 	{
 
-		if(Iterables.size(parameters) == 1 && "all".equals(parameters.iterator().next()))
+		if(Iterables.size(parameters) == 1 && "all".equalsIgnoreCase(parameters.iterator().next()))
 		{
 			return definitionsTable.get(clazz);
 		}
 		else
 		{
-			final ImmutableCollection<DmapProtocolDefinition> collection = definitionsTable.get(clazz);
-			return new ImmutableList.Builder<IDmapProtocolDefinition.DmapProtocolDefinition>().addAll(FluentIterable.from(parameters).transform(new Function<String, IDmapProtocolDefinition.DmapProtocolDefinition>() {
+			final ImmutableCollection<DmapChunkDefinition> collection = definitionsTable.get(clazz);
+			return new ImmutableList.Builder<IDmapProtocolDefinition.DmapChunkDefinition>().addAll(FluentIterable.from(parameters).transform(new Function<String, IDmapProtocolDefinition.DmapChunkDefinition>() {
 
 				@Override
-				public DmapProtocolDefinition apply(final String inputName)
+				public DmapChunkDefinition apply(final String inputName)
 				{
-					return Iterables.tryFind(collection, new Predicate<DmapProtocolDefinition>() {
+					return Iterables.tryFind(collection, new Predicate<DmapChunkDefinition>() {
 
 						@Override
-						public boolean apply(final DmapProtocolDefinition input)
+						public boolean apply(final DmapChunkDefinition input)
 						{
 							return input.getLongname().equals(inputName);
 						}
@@ -324,27 +324,27 @@ public class MusicItemManager implements IItemManager
 		}
 	}
 
-	private ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition> findDbStructureFields(final Class<?> clazz)
+	private ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> findDbStructureFields(final Class<?> clazz)
 	{
-		final ArrayList<DmapProtocolDefinition> collection = Lists.newArrayList(DmapProtocolDefinition.values());
+		final ArrayList<DmapChunkDefinition> collection = Lists.newArrayList(DmapChunkDefinition.values());
 
-		return new ImmutableList.Builder<IDmapProtocolDefinition.DmapProtocolDefinition>().addAll(FluentIterable.from(Lists.newArrayList(clazz.getDeclaredFields())).transform(new Function<Field, Annotation>() {
+		return new ImmutableList.Builder<IDmapProtocolDefinition.DmapChunkDefinition>().addAll(FluentIterable.from(Lists.newArrayList(clazz.getDeclaredFields())).transform(new Function<Field, Annotation>() {
 
 			@Override
 			public Annotation apply(final Field input)
 			{
 				return input.getAnnotation(DatabaseField.class);
 			}
-		}).filter(Predicates.notNull()).transform(new Function<Annotation, IDmapProtocolDefinition.DmapProtocolDefinition>() {
+		}).filter(Predicates.notNull()).transform(new Function<Annotation, IDmapProtocolDefinition.DmapChunkDefinition>() {
 
 			@Override
-			public DmapProtocolDefinition apply(final Annotation input)
+			public DmapChunkDefinition apply(final Annotation input)
 			{
 				final DatabaseField correctAnnotation = (DatabaseField) input;
-				final Optional<DmapProtocolDefinition> result = Iterables.tryFind(collection, new Predicate<DmapProtocolDefinition>() {
+				final Optional<DmapChunkDefinition> result = Iterables.tryFind(collection, new Predicate<DmapChunkDefinition>() {
 
 					@Override
-					public boolean apply(final DmapProtocolDefinition input)
+					public boolean apply(final DmapChunkDefinition input)
 					{
 						return input.getLongname().equals(correctAnnotation.columnName());
 					}
@@ -354,10 +354,10 @@ public class MusicItemManager implements IItemManager
 		}).filter(Predicates.notNull())).build();
 	}
 
-	private Map<DmapProtocolDefinition, Field> definitionToField(final Class<?> clazz, final ImmutableCollection<IDmapProtocolDefinition.DmapProtocolDefinition> definitions)
+	private Map<DmapChunkDefinition, Field> definitionToField(final Class<?> clazz, final ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> definitions)
 	{
-		final HashMap<DmapProtocolDefinition, Field> map = Maps.newHashMap();
-		for(final DmapProtocolDefinition def : definitions)
+		final HashMap<DmapChunkDefinition, Field> map = Maps.newHashMap();
+		for(final DmapChunkDefinition def : definitions)
 		{
 			for(final Field f : clazz.getDeclaredFields())
 			{

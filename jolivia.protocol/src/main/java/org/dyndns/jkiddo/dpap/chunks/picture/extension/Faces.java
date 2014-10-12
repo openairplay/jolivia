@@ -13,10 +13,10 @@ package org.dyndns.jkiddo.dpap.chunks.picture.extension;
 
 import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.pefc)
+@DMAPAnnotation(type=DmapChunkDefinition.pefc)
 public class Faces extends ContainerChunk
 {
 

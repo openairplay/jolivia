@@ -12,10 +12,10 @@ package org.dyndns.jkiddo.dpap.chunks.picture.extension;
 
 import org.dyndns.jkiddo.dmp.chunks.DateChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.peed)
+@DMAPAnnotation(type=DmapChunkDefinition.peed)
 public class ExposureDate extends DateChunk
 {
 	public ExposureDate()

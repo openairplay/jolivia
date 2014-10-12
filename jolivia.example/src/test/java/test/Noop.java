@@ -62,14 +62,14 @@ public class Noop
 			private Session session;
 
 			@Override
-			public void tearDownSession(String server, int port)
+			public void tearDownSession(final String server, final int port)
 			{
 				// Maybe do some clean up?
 				try
 				{
 					session.logout();
 				}
-				catch(Exception e)
+				catch(final Exception e)
 				{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -77,7 +77,7 @@ public class Noop
 			}
 
 			@Override
-			public void registerNewSession(Session session) throws Exception
+			public void registerNewSession(final Session session) throws Exception
 			{
 				doShowCase(session);
 			}
@@ -91,23 +91,23 @@ public class Noop
 		doShowCase(new TestSession("localhost", 3689));
 	}
 	
-	private void doShowCase(Session session) throws Exception
+	private void doShowCase(final Session session) throws Exception
 	{
 		// Showcase on some actions you can do on a session ...
 		// ////////////////////////////////////////
 
 		// getUpdateBlocking blocks until an event happens in iTunes -
 		// eg. pressing play, pause, etc. ...
-		UpdateResponse response = session.getUpdateBlocking();
+		final UpdateResponse response = session.getUpdateBlocking();
 
-		Database itunesDatabase = session.getDatabase();
+		final Database itunesDatabase = session.getDatabase();
 
 		// Get all playlists. For now the playlists only contains the
 		// master playlist. This is to be expanded
-		Collection<Container> playlists = itunesDatabase.getContainers();
+		final Collection<Container> playlists = itunesDatabase.getContainers();
 
 		// Traverse the library for eg. all tracks
-		for(SongArtist artist : session.getLibrary().getAllArtists().getBrowseArtistListing().getSongArtists())
+		for(final SongArtist artist : session.getLibrary().getAllArtists().getBrowseArtistListing().getSongArtists())
 		{
 			System.out.println(artist.getValue());
 		}
@@ -115,7 +115,7 @@ public class Noop
 		long itemId = 0;
 
 		// Extract information from a generic listing
-		for(ListingItem item : session.getLibrary().getAllTracks().getListing().getListingItems())
+		for(final ListingItem item : session.getLibrary().getAllTracks().getListing().getListingItems())
 		{
 			System.out.println(item.getSpecificChunk(SongAlbum.class).getValue());
 			System.out.println(item.getSpecificChunk(SongArtist.class).getValue());
@@ -137,7 +137,7 @@ public class Noop
 
 		// Showcase on some actions you can do on speakers ...
 		// ////////////////////////////////////////
-		RemoteControl remoteControl = session.getRemoteControl();
+		final RemoteControl remoteControl = session.getRemoteControl();
 		// Set min volume
 		remoteControl.setVolume(0);
 		// Set max volume
@@ -152,7 +152,7 @@ public class Noop
 
 		// Mark all speakers active meaning they are prepared for being
 		// used for the iTunes instance
-		for(Speaker s : speakers)
+		for(final Speaker s : speakers)
 		{
 			s.setActive(true);
 		}
@@ -162,7 +162,7 @@ public class Noop
 
 		// Change the volume individually on each speaker
 		speakers = remoteControl.getSpeakers();
-		for(Speaker s : speakers)
+		for(final Speaker s : speakers)
 		{
 			remoteControl.setSpeakerVolume(s.getId(), 60, 50, 40, 30, 100);
 		}
@@ -174,24 +174,24 @@ public class Noop
 	//@Test
 	public void thumbResponse() throws Exception
 	{
-		String requestBase = String.format("http://%s:%d", "192.168.1.26", 5000);
-		String url = String.format("%s/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:1024','dmap.itemid:1025')", requestBase);
-		DatabaseItems di = RequestHelper.requestParsed(url);
-		ListingItem item = di.getListing().getListingItems().iterator().next();
-		byte[] data = item.getSpecificChunk(FileData.class).getValue();
+		final String requestBase = String.format("http://%s:%d", "192.168.1.26", 5000);
+		final String url = String.format("%s/databases/1/items?session-id=1101478641&meta=dpap.thumb,dmap.itemid,dpap.filedata&query=('dmap.itemid:1024','dmap.itemid:1025')", requestBase);
+		final DatabaseItems di = RequestHelper.requestParsed(url);
+		final ListingItem item = di.getListing().getListingItems().iterator().next();
+		final byte[] data = item.getSpecificChunk(FileData.class).getValue();
 
-		BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
+		final BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
 
 		// Debugging ...
 		try
 		{
-			JFrame frame = new JFrame("Image loaded from ImageInputStream");
-			JLabel label = new JLabel(new ImageIcon(image));
+			final JFrame frame = new JFrame("Image loaded from ImageInputStream");
+			final JLabel label = new JLabel(new ImageIcon(image));
 			frame.getContentPane().add(label, BorderLayout.CENTER);
 			frame.pack();
 			frame.setVisible(true);
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -201,49 +201,49 @@ public class Noop
 	//@Test
 	public void hiresResponse() throws Exception
 	{
-		String requestBase = String.format("http://%s:%d", "192.168.1.26", 5000);
-		String url = String.format("%s/databases/1/items?session-id=1101478641&meta=dpap.hires,dmap.itemid,dpap.filedata&query=('dmap.itemid:1024','dmap.itemid:1025')", requestBase);
-		DatabaseItems di = RequestHelper.requestParsed(url);
-		ListingItem item = di.getListing().getListingItems().iterator().next();
-		byte[] data = item.getSpecificChunk(FileData.class).getValue();
+		final String requestBase = String.format("http://%s:%d", "192.168.1.26", 5000);
+		final String url = String.format("%s/databases/1/items?session-id=1101478641&meta=dpap.hires,dmap.itemid,dpap.filedata&query=('dmap.itemid:1024','dmap.itemid:1025')", requestBase);
+		final DatabaseItems di = RequestHelper.requestParsed(url);
+		final ListingItem item = di.getListing().getListingItems().iterator().next();
+		final byte[] data = item.getSpecificChunk(FileData.class).getValue();
 
-		BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
+		final BufferedImage image = ImageIO.read(new ByteArrayInputStream(data));
 
 		// Debugging ...
 		try
 		{
-			JFrame frame = new JFrame("Image loaded from ImageInputStream");
-			JLabel label = new JLabel(new ImageIcon(image));
+			final JFrame frame = new JFrame("Image loaded from ImageInputStream");
+			final JLabel label = new JLabel(new ImageIcon(image));
 			frame.getContentPane().add(label, BorderLayout.CENTER);
 			frame.pack();
 			frame.setVisible(true);
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			e.printStackTrace();
 		}
 
 	}
 
-	//@Test
+	@Test
 	public void verifyModel() throws Exception
 	{
-		TestSession session = new TestSession("localhost", 3689);
-		Iterator<Dictionary> contentCodes = session.getContentCodes().getDictionaries().iterator();
+		final TestSession session = new TestSession("localhost", 3689);
+		final Iterator<Dictionary> contentCodes = session.getContentCodes().getDictionaries().iterator();
 
-		ChunkFactory chunkFactory = new ChunkFactory();
+		final ChunkFactory chunkFactory = new ChunkFactory();
 		System.out.println("Listing codes ...");
 
 		while(contentCodes.hasNext())
 		{
-			Dictionary c = contentCodes.next();
-			String shortName = c.getSpecificChunk(ContentCodesNumber.class).getValueContentCode();
-			Integer type = +c.getSpecificChunk(ContentCodesType.class).getValue();
-			String longName = c.getSpecificChunk(ContentCodesName.class).getValue();
+			final Dictionary c = contentCodes.next();
+			final String shortName = c.getSpecificChunk(ContentCodesNumber.class).getValueContentCode();
+			final Integer type = +c.getSpecificChunk(ContentCodesType.class).getValue();
+			final String longName = c.getSpecificChunk(ContentCodesName.class).getValue();
 
 			try
 			{
-				Chunk chunk = chunkFactory.newChunk(stringReadAsInt(shortName));
+				final Chunk chunk = chunkFactory.newChunk(stringReadAsInt(shortName));
 				System.out.println(shortName + " : " + type + " : " + longName + " : " + chunk.getClass().getSimpleName());
 				if(chunk.getType() != type)
 				{
@@ -258,16 +258,16 @@ public class Noop
 					System.out.println("			Shortname mismatch! Shortname was " + chunk.getContentCodeString() + ". Expected " + shortName + ". Code was " + c.getSpecificChunk(ContentCodesNumber.class).getValue());
 				}
 			}
-			catch(Exception e)
+			catch(final Exception e)
 			{
 				System.out.println(shortName + " : " + type + " : " + longName + " : ");
 				System.out.println("					Chunck could not be identified, having " + stringReadAsInt(shortName));
 			}
 		}
 	}
-	private static int stringReadAsInt(String s)
+	private static int stringReadAsInt(final String s)
 	{
-		ByteBuffer buffer = ByteBuffer.allocate(s.length());
+		final ByteBuffer buffer = ByteBuffer.allocate(s.length());
 		for(int i = 0; i < s.length(); i++)
 		{
 			buffer.put((byte) s.charAt(i));

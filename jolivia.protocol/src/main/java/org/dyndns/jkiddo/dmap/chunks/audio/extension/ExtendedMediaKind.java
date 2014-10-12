@@ -12,10 +12,10 @@ package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
 import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.aeMk)
+@DMAPAnnotation(type=DmapChunkDefinition.aeMk)
 public class ExtendedMediaKind extends UIntChunk
 {
 	//Probably resembles DatabaseShareType values

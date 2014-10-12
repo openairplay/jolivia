@@ -43,6 +43,8 @@ public class RAOPResourceWrapper extends MDNSResource
 
 	private final IPlayingInformation playingInformation;
 
+	private final ServerBootstrap airTunesRtspBootstrap;
+
 	@Inject
 	public RAOPResourceWrapper(final JmmDNS mDNS, @Named(RAOP_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, final IPlayingInformation iPlayingInformation) throws IOException
 	{
@@ -60,7 +62,7 @@ public class RAOPResourceWrapper extends MDNSResource
 			}
 		};
 
-		final ServerBootstrap airTunesRtspBootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(executorService, executorService));
+		airTunesRtspBootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(executorService, executorService));
 		airTunesRtspBootstrap.setPipelineFactory(new RaopRtspPipelineFactory(hardwareAddressBytes, channelExecutionHandler, executorService, channel, playingInformation));
 		airTunesRtspBootstrap.setOption("reuseAddress", true);
 		airTunesRtspBootstrap.setOption("child.tcpNoDelay", true);
@@ -118,6 +120,7 @@ public class RAOPResourceWrapper extends MDNSResource
 	public void deRegister()
 	{
 		super.deRegister();
+		airTunesRtspBootstrap.shutdown();
 		allChannels.close().awaitUninterruptibly();
 		executorService.shutdown();
 		channelExecutionHandler.releaseExternalResources();

@@ -15,6 +15,7 @@ import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.EnumSet;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 import javax.servlet.DispatcherType;
@@ -84,7 +85,6 @@ public class Jolivia
 			// Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new
 			// DeskImageStoreReader()).build();
 			final Jolivia j = new Jolivia.JoliviaBuilder().port(8770).security(PasswordMethod.USERNAME_AND_PASSWORD, SecurityScheme.BASIC).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new DeskImageStoreReader("C:\\Users\\JensKristian\\Desktop\\test")).build();
-			System.out.println(j);
 		}
 		catch(final Exception e)
 		{
@@ -292,6 +292,7 @@ public class Jolivia
 		Preconditions.checkArgument(!(builder.pairingCode > 9999 || builder.pairingCode < 0), "Pairingcode must be expressed within 4 ciphers");
 		logger.info("Starting " + builder.name + " on port " + builder.port);
 		final Server server = new Server(builder.port);
+		
 		// Server server = new
 		// Server(InetSocketAddress.createUnresolved("0.0.0.0", port));
 		final Connector dmapConnector = new DmapConnector();
@@ -322,7 +323,8 @@ public class Jolivia
 
 		server.start();
 		logger.info(builder.name + " started");
-		// server.join();
+		new Scanner(System.in).nextLine();
+		server.stop();
 	}
 
 	private SecurityHandler getSecurityHandler(final String username, final String password, final String realm, final Authenticator authenticator)

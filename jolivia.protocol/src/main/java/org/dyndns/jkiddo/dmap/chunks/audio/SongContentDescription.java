@@ -32,10 +32,10 @@ import org.dyndns.jkiddo.dmp.chunks.StringChunk;
 /**
  * @since iTunes 5.0
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.ascn)
+@DMAPAnnotation(type=DmapChunkDefinition.ascn)
 public class SongContentDescription extends StringChunk
 {
 

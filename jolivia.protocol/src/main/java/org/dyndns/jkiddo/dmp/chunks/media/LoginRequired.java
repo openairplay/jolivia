@@ -34,10 +34,10 @@ import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
  * 
  * @author Roger Kapsi
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.mslr)
+@DMAPAnnotation(type=DmapChunkDefinition.mslr)
 public class LoginRequired extends BooleanChunk
 {
 

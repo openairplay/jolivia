@@ -12,10 +12,10 @@ package org.dyndns.jkiddo.dpap.chunks.picture.extension;
 
 import org.dyndns.jkiddo.dmp.chunks.DateChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.pemd)
+@DMAPAnnotation(type=DmapChunkDefinition.pemd)
 public class ModificationDate extends DateChunk
 {
 	public ModificationDate()

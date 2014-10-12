@@ -16,6 +16,7 @@ import java.net.UnknownHostException;
 import java.sql.SQLException;
 
 import javax.jmdns.JmmDNS;
+import javax.servlet.ServletContextEvent;
 
 import org.dyndns.jkiddo.dmp.chunks.AbstractChunk;
 import org.dyndns.jkiddo.dmp.chunks.ChunkFactory;
@@ -51,6 +52,7 @@ import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Table;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -86,7 +88,7 @@ public class JoliviaServer extends GuiceServletContextListener
 	public JoliviaServer(final Integer port, final Integer airplayPort, final Integer pairingCode, final String name, final IClientSessionListener clientSessionListener, final ISpeakerListener speakerListener, final IImageStoreReader imageStoreReader, final IMusicStoreReader musicStoreReader, final IPlayingInformation iplayingInformation, final PasswordMethod security) throws SQLException, UnknownHostException
 	{
 		super();
-
+		System.setProperty("java.net.preferIPv4Stack", "true");
 		h2server = Server.createWebServer(new String[] { "-webPort", "9123", "-webAllowOthers" });
 		h2server.start();
 		logger.info("h2 web server started on port http://" + InetAddress.getLocalHost().getHostName() + ":9123/");
@@ -105,16 +107,18 @@ public class JoliviaServer extends GuiceServletContextListener
 		this.iplayingInformation = iplayingInformation;
 	}
 
+	private ImmutableSet<MDNSResource> getMDNSResources()
+	{
+		return ImmutableSet.<MDNSResource> builder().add((MDNSResource) injector.getInstance(IImageLibrary.class)).add((MDNSResource) injector.getInstance(IMusicLibrary.class)).add((MDNSResource) injector.getInstance(ITouchRemoteResource.class)).add((MDNSResource) injector.getInstance(ITouchAbleServerResource.class)).add((injector.getInstance(RAOPResourceWrapper.class))).build();
+	}
 	public void reRegister()
 	{
 		try
 		{
-			((MDNSResource) injector.getInstance(IImageLibrary.class)).register();
-			((MDNSResource) injector.getInstance(IMusicLibrary.class)).register();
-			((MDNSResource) injector.getInstance(ITouchRemoteResource.class)).register();
-			((MDNSResource) injector.getInstance(ITouchAbleServerResource.class)).register();
-			((MDNSResource) injector.getInstance(RAOPResourceWrapper.class)).register();
-
+			for(final MDNSResource r : getMDNSResources())
+			{
+				r.register();
+			}
 		}
 		catch(final IOException e)
 		{
@@ -163,8 +167,8 @@ public class JoliviaServer extends GuiceServletContextListener
 					throw new RuntimeException(e);
 				}
 
-				bind(new TypeLiteral<Table<Integer, String, Class<? extends AbstractChunk>>>() {}).toInstance(ChunkFactory.getCalculatedmap());
-				//bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(MusicItemManager.class);
+				bind(new TypeLiteral<Table<Integer, String, Class<? extends AbstractChunk>>>() {}).toInstance(ChunkFactory.getCalculatedMap());
+				// bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(MusicItemManager.class);
 				bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(InMemoryMusicManager.class);
 				bind(IMusicStoreReader.class).toInstance(musicStoreReader);
 			}
@@ -216,5 +220,24 @@ public class JoliviaServer extends GuiceServletContextListener
 			}
 		});
 		return injector;
+	}
+	@Override
+	public void contextDestroyed(final ServletContextEvent servletContextEvent)
+	{
+		h2server.stop();
+		for(final MDNSResource r : getMDNSResources())
+		{
+			r.deRegister();
+		}
+		injector.getInstance(JmmDNS.class).unregisterAllServices();
+		try
+		{
+			injector.getInstance(JmmDNS.class).close();
+		}
+		catch(final IOException e)
+		{
+			logger.error(e.getMessage(), e);
+		}
+		super.contextDestroyed(servletContextEvent);
 	}
 }

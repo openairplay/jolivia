@@ -17,10 +17,10 @@ import org.dyndns.jkiddo.dmp.chunks.RawChunk;
  * 
  * @author Charles Ikeson
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.pfdt)
+@DMAPAnnotation(type=DmapChunkDefinition.pfdt)
 public class FileData extends RawChunk
 {
 

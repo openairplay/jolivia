@@ -34,10 +34,10 @@ import org.dyndns.jkiddo.dmp.chunks.StringChunk;
  * 
  * @author Roger Kapsi
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.asdt)
+@DMAPAnnotation(type=DmapChunkDefinition.asdt)
 public class SongDescription extends StringChunk
 {
 	/**

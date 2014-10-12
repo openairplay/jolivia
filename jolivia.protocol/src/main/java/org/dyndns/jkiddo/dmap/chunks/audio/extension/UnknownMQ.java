@@ -2,10 +2,10 @@ package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
 import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.aeMQ)
+@DMAPAnnotation(type=DmapChunkDefinition.aeMQ)
 public class UnknownMQ extends BooleanChunk
 {
 	public UnknownMQ()

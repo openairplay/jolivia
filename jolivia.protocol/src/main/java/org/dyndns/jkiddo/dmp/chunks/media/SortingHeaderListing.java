@@ -12,10 +12,10 @@ package org.dyndns.jkiddo.dmp.chunks.media;
 
 import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.mshl)
+@DMAPAnnotation(type=DmapChunkDefinition.mshl)
 public class SortingHeaderListing extends ContainerChunk
 {
 	public SortingHeaderListing()

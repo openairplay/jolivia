@@ -26,10 +26,20 @@ public interface IDmapProtocolDefinition
 			this.type = type;
 			this.length = length;
 		}
+
+		public int getType()
+		{
+			return type;
+		}
+
+		public int getLength()
+		{
+			return length;
+		}
 	} 
-	public static enum DmapProtocolDefinition implements IDmapProtocolDefinition
+	public static enum DmapChunkDefinition implements IDmapProtocolDefinition
 	{
-		aeCS("aeCS","com.apple.itunes.artworkchecksum",DmapTypeDefinition.U_INT_TYPE),
+		aeCs("aeCs","com.apple.itunes.artworkchecksum",DmapTypeDefinition.U_INT_TYPE),
 		aeGs("aeGs","com.apple.itunes.can-be-genius-seed",DmapTypeDefinition.U_BYTE_TYPE),
 		aeCF("aeCF","com.apple.itunes.cloud-flavor-id",DmapTypeDefinition.U_LONG_TYPE),
 		aeCd("aeCd","com.apple.itunes.cloud-id",DmapTypeDefinition.U_LONG_TYPE),
@@ -317,7 +327,7 @@ public interface IDmapProtocolDefinition
 		private final String longname;
 		private final DmapTypeDefinition type;
 
-		DmapProtocolDefinition(final String shortname, final String longname, final DmapTypeDefinition type)
+		DmapChunkDefinition(final String shortname, final String longname, final DmapTypeDefinition type)
 		{
 			this.shortname = shortname;
 			this.longname = longname;

@@ -27,10 +27,10 @@ import org.dyndns.jkiddo.dmcp.chunks.media.extension.GeniusSelectable;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
 import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.cmst)
+@DMAPAnnotation(type=DmapChunkDefinition.cmst)
 public class PlayingStatus extends ContainerChunk
 {
 	public PlayingStatus()

@@ -18,6 +18,7 @@ import org.dyndns.jkiddo.dmap.chunks.audio.SongTime;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongTrackNumber;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongUserRating;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum;
+import org.dyndns.jkiddo.dmp.chunks.media.ContentCodesResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
@@ -29,24 +30,26 @@ import org.junit.Test;
 public class DacpTestBed
 {
 
-	//@Test
+	@Test
 	public void doDaap() throws Exception
 	{
-		TestSession session = new TestSession();
+		final TestSession session = new TestSession();
 
-		Database itunesDatabase = session.getDatabase();
+		final Database itunesDatabase = session.getDatabase();
+		final ContentCodesResponse codes = session.getContentCodes();
+		
 
 		// Get all playlists. For now the playlists only contains the
 		// master playlist. This is to be expanded
-		Container playlists = itunesDatabase.getMasterContainer();
+		final Container playlists = itunesDatabase.getMasterContainer();
 
 		session.getLibrary().getAllAlbums();
 		session.getLibrary().getAllArtists();
 
-		AlbumSearchContainer searchContainer = session.getLibrary().getAlbums("Abba");
+		final AlbumSearchContainer searchContainer = session.getLibrary().getAlbums("Abba");
 
 		// Traverse the library for eg. all tracks
-		for(SongArtist artist : session.getLibrary().getAllArtists().getBrowseArtistListing().getSongArtists())
+		for(final SongArtist artist : session.getLibrary().getAllArtists().getBrowseArtistListing().getSongArtists())
 		{
 			System.out.println(artist.getValue());
 		}
@@ -54,7 +57,7 @@ public class DacpTestBed
 		long itemId = 0;
 
 		// Extract information from a generic listing
-		for(ListingItem item : session.getLibrary().getAllTracks().getListing().getListingItems())
+		for(final ListingItem item : session.getLibrary().getAllTracks().getListing().getListingItems())
 		{
 			System.out.println(item.getSpecificChunk(ItemId.class).getValue());
 			System.out.println(item.getSpecificChunk(SongAlbum.class).getValue());
@@ -67,20 +70,20 @@ public class DacpTestBed
 			itemId = item.getSpecificChunk(ItemId.class).getValue();
 
 			session.getLibrary().getAlbumArtworkAsRemote(searchContainer.getListing().getListingItems().iterator().next().getSpecificChunk(ItemId.class).getValue(), 480, 480);
-			byte[] art = session.getLibrary().getAlbumArtworkAsDatabase(itemId, 480, 480);
+			final byte[] art = session.getLibrary().getAlbumArtworkAsDatabase(itemId, 480, 480);
 
-			BufferedImage image = ImageIO.read(new ByteArrayInputStream(art));
+			final BufferedImage image = ImageIO.read(new ByteArrayInputStream(art));
 
 			// Debugging ...
 			try
 			{
-				JFrame frame = new JFrame("Image loaded from ImageInputStream");
-				JLabel label = new JLabel(new ImageIcon(image));
+				final JFrame frame = new JFrame("Image loaded from ImageInputStream");
+				final JLabel label = new JLabel(new ImageIcon(image));
 				frame.getContentPane().add(label, BorderLayout.CENTER);
 				frame.pack();
 				frame.setVisible(true);
 			}
-			catch(Exception e)
+			catch(final Exception e)
 			{
 				e.printStackTrace();
 			}

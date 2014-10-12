@@ -243,8 +243,7 @@ public class Session
 
 		// For now, the BasePlayList is sufficient
 		final ListingItem item = allPlaylists.getListing().getSingleListingItemContainingClass(BaseContainer.class);
-
-		final Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), item.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue(), item.getSpecificChunk(ItemId.class).getUnsignedValue());
+		final Container playlist = new Container(item.getSpecificChunk(ItemName.class).getValue(), item.getSpecificChunk(PersistentId.class).getUnsignedValue().longValue(), item.getSpecificChunk(ItemId.class).getUnsignedValue(), item.getSpecificChunk(BaseContainer.class).getValue());
 		return new Database(databaseName, itemId, persistentId, playlist);
 	}
 

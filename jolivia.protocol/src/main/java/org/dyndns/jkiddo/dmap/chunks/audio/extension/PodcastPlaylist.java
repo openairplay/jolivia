@@ -32,10 +32,10 @@ import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
 /**
  * @since iTunes 5.0
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.aePP)
+@DMAPAnnotation(type=DmapChunkDefinition.aePP)
 public class PodcastPlaylist extends BooleanChunk
 {
 

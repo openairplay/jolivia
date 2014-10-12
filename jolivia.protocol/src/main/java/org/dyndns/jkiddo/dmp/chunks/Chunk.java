@@ -27,6 +27,8 @@
 
 package org.dyndns.jkiddo.dmp.chunks;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapTypeDefinition;
+
 /**
  * A Chuck is a tagged value (key/value pair). Chunks can either contain other Chunks or data of various types.
  * 
@@ -38,62 +40,62 @@ public interface Chunk
 	// Note this is technically a char as known
 	// from C. An 8 bit unsigned value.
 	/** Type for unsigned byte Chunks */
-	public static final int U_BYTE_TYPE = 1;
+	public static final int U_BYTE_TYPE = DmapTypeDefinition.U_BYTE_TYPE.getType();
 
 	/** Type for signed byte Chunks */
-	public static final int BYTE_TYPE = 2;
+	public static final int BYTE_TYPE = DmapTypeDefinition.BYTE_TYPE.getType();
 
 	/** Length of byte Chunks */
-	public static final int BYTE_LENGTH = 1;
+	public static final int BYTE_LENGTH = DmapTypeDefinition.BYTE_TYPE.getLength();
 
 	/** Type for unsigned short Chunks */
-	public static final int U_SHORT_TYPE = 3;
+	public static final int U_SHORT_TYPE = DmapTypeDefinition.U_SHORT_TYPE.getType();
 
 	/** Type for signed short Chunks */
-	public static final int SHORT_TYPE = 4;
+	public static final int SHORT_TYPE = DmapTypeDefinition.SHORT_TYPE.getType();
 
 	/** Length of short chunks */
-	public static final int SHORT_LENGTH = 2;
+	public static final int SHORT_LENGTH = DmapTypeDefinition.SHORT_TYPE.getLength();
 
 	/** Type for unsigned int Chunks */
-	public static final int U_INT_TYPE = 5;
+	public static final int U_INT_TYPE = DmapTypeDefinition.U_INT_TYPE.getType();
 
 	/** Type for signed int Chunks */
-	public static final int INT_TYPE = 6;
+	public static final int INT_TYPE = DmapTypeDefinition.INT_TYPE.getType();
 
 	/** Length of int chunks */
-	public static final int INT_LENGTH = 4;
+	public static final int INT_LENGTH = DmapTypeDefinition.INT_TYPE.getLength();
 
 	/** Type for unsigned long Chunks */
-	public static final int U_LONG_TYPE = 7;
+	public static final int U_LONG_TYPE = DmapTypeDefinition.U_LONG_TYPE.getType();
 
 	/** Type for long Chunks */
-	public static final int LONG_TYPE = 8;
+	public static final int LONG_TYPE = DmapTypeDefinition.LONG_TYPE.getType();
 
 	/** Length of long chunks */
-	public static final int LONG_LENGTH = 8;
+	public static final int LONG_LENGTH = DmapTypeDefinition.LONG_TYPE.getLength();
 
 	/** Type for String Chunks (encoded as UTF-8) */
-	public static final int STRING_TYPE = 9;
+	public static final int STRING_TYPE = DmapTypeDefinition.STRING_TYPE.getType();
 
 	/** Type for Date Chunks (Time in <u>seconds</u> since 1970) */
-	public static final int DATE_TYPE = 10;
+	public static final int DATE_TYPE = DmapTypeDefinition.DATE_TYPE.getType();
 
 	/** Length of date chunks */
-	public static final int DATE_LENGTH = 4;
+	public static final int DATE_LENGTH = DmapTypeDefinition.DATE_TYPE.getLength();
 
 	/**
 	 * Type for Version Chunks (an int value split up into major, minor and patch level)
 	 */
-	public static final int VERSION_TYPE = 11;
+	public static final int VERSION_TYPE = DmapTypeDefinition.VERSION_TYPE.getType();
 
 	/** Length of version chunks */
-	public static final int VERSION_LENGTH = 4;
+	public static final int VERSION_LENGTH = DmapTypeDefinition.VERSION_TYPE.getLength();
 
 	/** Type for Container Chunks. Chunks that contain other Chunks */
-	public static final int CONTAINER_TYPE = 12;
+	public static final int CONTAINER_TYPE = DmapTypeDefinition.CONTAINER_TYPE.getType();
 
-	public static final int RAW_TYPE = 13;
+	public static final int RAW_TYPE = DmapTypeDefinition.RAW_TYPE.getType();
 
 	/** */
 	public int getContentCode();

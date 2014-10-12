@@ -49,7 +49,7 @@ public class Database
 	public Database()
 	{}
 
-	public Database(String databaseName, String type, Library library)
+	public Database(final String databaseName, final String type, final Library library)
 	{
 		this.name = databaseName;
 		this.type = type;
@@ -57,15 +57,18 @@ public class Database
 		this.containers = Sets.newHashSet();
 	}
 
-	public Database(String databaseName, int itemId, long persistentId, Container playlist)
+	public Database(final String databaseName, final int itemId, final long persistentId, final Container playlist)
 	{
-		throw new RuntimeException("Not implemented");
+		this(databaseName, itemId, persistentId);
+		this.containers = Sets.newHashSet();
+		this.containers.add(playlist);
 	}
 
-	public Database(String databaseName, int itemId, long persistentId)
+	public Database(final String databaseName, final int itemId, final long persistentId)
 	{
 		this.name = databaseName;
 		this.itemId = itemId;
+		this.containers = Sets.newHashSet();
 	}
 
 	@DatabaseField(generatedId = true)
@@ -86,7 +89,7 @@ public class Database
 	@ForeignCollectionField()
 	private Collection<MediaItem> mediaItems;
 
-	public Container getContainer(long containerId)
+	public Container getContainer(final long containerId)
 	{
 		throw new RuntimeException("Not implemented");
 	}
@@ -118,7 +121,7 @@ public class Database
 		return FluentIterable.from(containers).firstMatch(new Predicate<Container>() {
 
 			@Override
-			public boolean apply(Container input)
+			public boolean apply(final Container input)
 			{
 				return input.getAudioBasePlayList() == 1 ? true : false;
 			}

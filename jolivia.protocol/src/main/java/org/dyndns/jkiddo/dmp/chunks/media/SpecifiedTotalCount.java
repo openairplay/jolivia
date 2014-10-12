@@ -35,10 +35,10 @@ import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
  * @see ReturnedCount
  * @author Roger Kapsi
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.mtco)
+@DMAPAnnotation(type=DmapChunkDefinition.mtco)
 public class SpecifiedTotalCount extends UIntChunk
 {
 

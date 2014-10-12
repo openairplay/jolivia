@@ -35,10 +35,10 @@ import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
  * @see Listing
  * @author Roger Kapsi
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.mudl)
+@DMAPAnnotation(type=DmapChunkDefinition.mudl)
 public class DeletedIdListing extends ContainerChunk
 {
 

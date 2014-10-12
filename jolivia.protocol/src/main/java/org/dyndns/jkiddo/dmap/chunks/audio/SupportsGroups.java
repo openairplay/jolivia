@@ -2,10 +2,10 @@ package org.dyndns.jkiddo.dmap.chunks.audio;
 
 import org.dyndns.jkiddo.dmp.chunks.UShortChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.asgr)
+@DMAPAnnotation(type=DmapChunkDefinition.asgr)
 public class SupportsGroups extends UShortChunk
 {
 	public SupportsGroups()

@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty</artifactId>
-			<version>3.6.6.Final</version>
+			<version>3.9.4.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-server</artifactId>
-			<version>8.1.13.v20130916</version>
+			<version>8.1.16.v20140903</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>

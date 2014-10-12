@@ -34,10 +34,10 @@ import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
  * 
  * @author Roger Kapsi
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapProtocolDefinition;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
-@DMAPAnnotation(type=DmapProtocolDefinition.aeNV)
+@DMAPAnnotation(type=DmapChunkDefinition.aeNV)
 public class NormVolume extends UIntChunk
 {
 
