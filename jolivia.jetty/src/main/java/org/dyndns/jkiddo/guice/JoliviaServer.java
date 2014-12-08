@@ -89,6 +89,7 @@ public class JoliviaServer extends GuiceServletContextListener
 	{
 		super();
 		System.setProperty("java.net.preferIPv4Stack", "true");
+		System.setProperty("java.net.preferIPv6Addresses", "false");
 		h2server = Server.createWebServer(new String[] { "-webPort", "9123", "-webAllowOthers" });
 		h2server.start();
 		logger.info("h2 web server started on port http://" + InetAddress.getLocalHost().getHostName() + ":9123/");

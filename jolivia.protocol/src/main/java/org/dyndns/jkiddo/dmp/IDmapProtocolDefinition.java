@@ -321,7 +321,8 @@ public interface IDmapProtocolDefinition
 		cass("cass","unknown.ss",DmapTypeDefinition.U_BYTE_TYPE),
 		casc("casc","unknown.ss",DmapTypeDefinition.U_BYTE_TYPE),
 		cmsv("cmsv","unknown.sv",DmapTypeDefinition.U_BYTE_TYPE),
-		ceSX("ceSX","unknown.sx",DmapTypeDefinition.U_LONG_TYPE);
+		ceSX("ceSX","unknown.sx",DmapTypeDefinition.U_LONG_TYPE),
+		aeAK("aeAK","unknown",DmapTypeDefinition.STRING_TYPE);
 
 		private final String shortname;
 		private final String longname;

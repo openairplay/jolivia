@@ -84,7 +84,7 @@ public class Jolivia
 			// new
 			// Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new
 			// DeskImageStoreReader()).build();
-			final Jolivia j = new Jolivia.JoliviaBuilder().port(8770).security(PasswordMethod.USERNAME_AND_PASSWORD, SecurityScheme.BASIC).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new DeskImageStoreReader("C:\\Users\\JensKristian\\Desktop\\test")).build();
+			final Jolivia j = new Jolivia.JoliviaBuilder().port(8770).security(PasswordMethod.PASSWORD, SecurityScheme.BASIC).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new DeskImageStoreReader("C:\\Users\\JensKristian\\Desktop\\test")).build();
 		}
 		catch(final Exception e)
 		{
@@ -312,8 +312,8 @@ public class Jolivia
 		if(builder.security == PasswordMethod.PASSWORD)
 			username = DmapUtil.DEFAULT_USER;
 		else
-			username = "whatever";
-		final String password = "admin";
+			username = "user";
+		final String password = "password";
 
 		if(builder.scheme == SecurityScheme.BASIC)
 			sch.setSecurityHandler(getSecurityHandler(username, password, DmapUtil.DAAP_REALM, new BasicAuthenticator()));

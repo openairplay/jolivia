@@ -243,7 +243,8 @@ public class Noop
 
 			try
 			{
-				final Chunk chunk = chunkFactory.newChunk(stringReadAsInt(shortName));
+				//final Chunk chunk = chunkFactory.newChunk(stringReadAsInt(shortName));
+				final Chunk chunk = chunkFactory.getChunkClass(stringReadAsInt(shortName)).newInstance();
 				System.out.println(shortName + " : " + type + " : " + longName + " : " + chunk.getClass().getSimpleName());
 				if(chunk.getType() != type)
 				{

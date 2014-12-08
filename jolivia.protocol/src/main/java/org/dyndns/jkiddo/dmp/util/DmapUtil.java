@@ -117,7 +117,7 @@ public final class DmapUtil
 	/** Default DAAP realm */
 	public static final String DAAP_REALM = "daap";
 	
-	public static final String DEFAULT_USER = "iTunes_11.3.1";
+	public static final String DEFAULT_USER = "iTunes_12.0.1";
 
 	private DmapUtil()
 	{}
