@@ -245,5 +245,4 @@ public class Util
 		else
 			return false;
 	}
-
 }

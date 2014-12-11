@@ -38,6 +38,12 @@ public abstract class MDNSResource implements NetworkTopologyListener
 	{
 		this.mDNS = mDNS;
 		this.port = port;
+		
+//		for( final InetAddress i : this.mDNS.getInterfaces())
+//		{
+//			interfaces.put(JmDNSImpl.create(i), i);
+//		}
+		
 	}
 
 	// http://www.dns-sd.org/ServiceTypes.html
@@ -55,9 +61,9 @@ public abstract class MDNSResource implements NetworkTopologyListener
 		serviceInfo = getServiceInfoToRegister();
 		//serviceInfo.setText(props);x
 		mDNS.registerService(serviceInfo);
-//		for(JmDNS mdns : interfaces.keySet())
+//		for(final JmDNS mdns : interfaces.keySet())
 //		{
-//			mdns.registerService(serviceInfo);
+//				mdns.registerService(serviceInfo);
 //		}
 		this.mDNS.addNetworkTopologyListener(this);
 	}
@@ -67,24 +73,30 @@ public abstract class MDNSResource implements NetworkTopologyListener
 	{
 		final JmDNS mdns = event.getDNS();
 		final InetAddress address = event.getInetAddress();
-		try
-		{
-			logger.info("Registering service: " + serviceInfo.getQualifiedName());
-			mdns.registerService(serviceInfo);
-		}
-		catch(final IOException e)
-		{
-			logger.error(e.getMessage(), e);
-		}
-		interfaces.put(mdns, address);
+//		if(address instanceof Inet4Address)
+//		{
+			try
+			{
+				logger.info("Registering service: " + serviceInfo.getQualifiedName());
+				mdns.registerService(serviceInfo);
+			}
+			catch(final IOException e)
+			{
+				logger.error(e.getMessage(), e);
+			}
+			interfaces.put(mdns, address);
+//		}
 	}
 
 	@Override
 	public synchronized void inetAddressRemoved(final NetworkTopologyEvent event)
 	{
 		final JmDNS mdns = event.getDNS();
-		mdns.unregisterService(serviceInfo);
-		mdns.unregisterAllServices();
-		interfaces.remove(mdns);
+//		if(mdns.getInterface() instanceof Inet4Address)
+//		{
+			mdns.unregisterService(serviceInfo);
+			mdns.unregisterAllServices();
+			interfaces.remove(mdns);
+//		}
 	}
 }

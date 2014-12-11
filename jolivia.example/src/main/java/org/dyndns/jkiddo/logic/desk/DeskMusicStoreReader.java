@@ -53,17 +53,17 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	 */
 	private static final Logger logger = LoggerFactory.getLogger(DeskMusicStoreReader.class);
 	private Collection<MediaItem> mapOfSongToFile;
-	private File path;
-	private Parser parser;
+	private final File path;
+	private final Parser parser;
 
-	public DeskMusicStoreReader(String path)
+	public DeskMusicStoreReader(final String path)
 	{
 		parser = new AutoDetectParser();
 		this.mapOfSongToFile = Lists.newArrayList();
 		this.path = new File(path);
-	}
+	} 
 
-	public DeskMusicStoreReader(File path)
+	public DeskMusicStoreReader(final File path)
 	{
 		parser = new AutoDetectParser();
 		this.mapOfSongToFile = Lists.newArrayList();
@@ -83,23 +83,22 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		{
 			traverseRootPathRecursively(path);
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			logger.info(e.getMessage(), e);
 		}
 		return mapOfSongToFile;
 	}
 
-	protected void traverseRootPathRecursively(File f) throws FileNotFoundException, IOException, InterruptedException, SAXException, TikaException
+	protected void traverseRootPathRecursively(final File f) throws FileNotFoundException, IOException, InterruptedException, SAXException, TikaException
 	{
 		if(f.isDirectory())
 		{
-			File[] contents = f.listFiles();
+			final File[] contents = f.listFiles();
 			if(contents != null)
 			{
-				for(int i = 0; i < contents.length; i++)
-				{
-					traverseRootPathRecursively(contents[i]);
+				for (final File content : contents) {
+					traverseRootPathRecursively(content);
 				}
 			}
 			else
@@ -111,14 +110,14 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 	}
 
-	private MediaItem populateSong(File file) throws IOException, SAXException, TikaException
+	private MediaItem populateSong(final File file) throws IOException, SAXException, TikaException
 	{
-		BodyContentHandler handler = new BodyContentHandler();
-		Metadata metadata = new Metadata();
-		InputStream content = new FileInputStream(file);
+		final BodyContentHandler handler = new BodyContentHandler();
+		final Metadata metadata = new Metadata();
+		final InputStream content = new FileInputStream(file);
 		parser.parse(content, handler, metadata, new ParseContext());
 
-		MediaItem song = new MediaItem();
+		final MediaItem song = new MediaItem();
 		song.setItemName(metadata.get(TikaCoreProperties.TITLE));
 		if(Strings.isNullOrEmpty(metadata.get(TikaCoreProperties.TITLE)))
 		{
@@ -129,7 +128,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		{
 			// song.setTrackNumber(metadata.getInt(XMPDM.TRACK_NUMBER));
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			logger.debug(e.getMessage(), e);
 		}
@@ -141,24 +140,24 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		{
 			song.setSongTime((int) Double.parseDouble(metadata.get(XMPDM.DURATION)));
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			logger.debug(e.getMessage(), e);
 		}
 		try
 		{
-			Calendar c = Calendar.getInstance();
+			final Calendar c = Calendar.getInstance();
 			c.setTime(metadata.getDate(XMPDM.SHOT_DATE));
 			// song.setYear(c.get(Calendar.YEAR));
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			logger.debug(e.getMessage(), e);
 		}
 		song.setExternalIdentifer(file.getAbsolutePath());
 		return song;
 	}
-	private static boolean isMusic(File f)
+	private static boolean isMusic(final File f)
 	{
 		if(f.getPath().endsWith(".mp3") || f.getPath().endsWith(".wav"))
 			return true;
@@ -166,7 +165,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	}
 
 	@Override
-	public URI getTune(String tune) throws Exception
+	public URI getTune(final String tune) throws Exception
 	{
 		return new File(tune).toURI();
 	}
@@ -188,16 +187,16 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	 */
 
 	@Override
-	public void readTunesMemoryOptimized(Listing listing, Map<Long, String> map) throws Exception
+	public void readTunesMemoryOptimized(final Listing listing, final Map<Long, String> map) throws Exception
 	{
 		
-		Collection<MediaItem> songs = readTunes();
+		final Collection<MediaItem> songs = readTunes();
 		System.gc();
-		AtomicLong id = new AtomicLong(1);
+		final AtomicLong id = new AtomicLong(1);
 
-		for(MediaItem song : songs)
+		for(final MediaItem song : songs)
 		{
-			ListingItem item = new ListingItem();
+			final ListingItem item = new ListingItem();
 			item.add(new ItemKind(ItemKind.AUDIO));
 			item.add(new ItemId(id.get()));
 			item.add(new SongAlbum(song.getSongAlbum()));
