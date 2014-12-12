@@ -1,10 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright (c) 2013 Jens Kristian Villadsen. All rights reserved. This 
 	program and the accompanying materials are made available under the terms 
 	of the GNU Public License v3.0 which accompanies this distribution, and is 
 	available at http://www.gnu.org/licenses/gpl.html Contributors: Jens Kristian 
-	Villadsen - Lead developer, owner and creator -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	Villadsen - Lead developer, owner and creator --><project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -85,5 +84,6 @@
 		<module>jolivia.jetty</module>
 		<module>jolivia.example</module>
 		<!--  <module>jolivia.ws.example</module>-->
-	</modules>
+    <module>jolivia.apache</module>
+  </modules>
 </project>

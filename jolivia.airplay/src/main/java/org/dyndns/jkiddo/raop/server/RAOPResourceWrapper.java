@@ -9,13 +9,12 @@ import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.jmdns.JmmDNS;
-import javax.jmdns.ServiceInfo;
 
 import org.dyndns.jkiddo.raop.ISpeakerListener;
 import org.dyndns.jkiddo.raop.server.airreceiver.RaopRtspPipelineFactory;
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.dyndns.jkiddo.service.dmap.Util;
+import org.dyndns.jkiddo.zeroconf.IZeroconfManager;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelStateEvent;
@@ -46,7 +45,7 @@ public class RAOPResourceWrapper extends MDNSResource
 	private final ServerBootstrap airTunesRtspBootstrap;
 
 	@Inject
-	public RAOPResourceWrapper(final JmmDNS mDNS, @Named(RAOP_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, final IPlayingInformation iPlayingInformation) throws IOException
+	public RAOPResourceWrapper(final IZeroconfManager mDNS, @Named(RAOP_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, final IPlayingInformation iPlayingInformation) throws IOException
 	{
 		super(mDNS, port);
 		this.playingInformation = iPlayingInformation;
@@ -73,7 +72,7 @@ public class RAOPResourceWrapper extends MDNSResource
 	// http://nto.github.io/AirPlay.html
 	// http://cocoadev.com/wiki/AirTunesRendezvous
 	@Override
-	protected ServiceInfo getServiceInfoToRegister()
+	protected IZeroconfManager.ServiceInfo getServiceInfoToRegister()
 	{
 		final Map<String, String> map = Maps.newHashMap();
 
@@ -113,7 +112,7 @@ public class RAOPResourceWrapper extends MDNSResource
 		// map.put("cn", "0,1");
 		// map.put("vn", "3");
 
-		return ServiceInfo.create(ISpeakerListener.RAOP_TYPE, hardwareAddressString + "@" + name, this.port, 0, 0, map);
+		return new IZeroconfManager.ServiceInfo(ISpeakerListener.RAOP_TYPE, hardwareAddressString + "@" + name, this.port, map);
 	}
 
 	@Override

@@ -10,8 +10,6 @@ import java.util.StringTokenizer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.jmdns.JmmDNS;
-import javax.jmdns.ServiceInfo;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -60,6 +58,7 @@ import org.dyndns.jkiddo.dpap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.Util;
+import org.dyndns.jkiddo.zeroconf.IZeroconfManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,7 +91,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	private final String serviceGuid;
 
 	@Inject
-	public DAAPResource(final JmmDNS mDNS, @Named(DAAP_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, @Named(DAAPResource.DAAP_RESOURCE) final IItemManager itemManager) throws IOException
+	public DAAPResource(final IZeroconfManager mDNS, @Named(DAAP_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, @Named(DAAPResource.DAAP_RESOURCE) final IItemManager itemManager) throws IOException
 	{
 		super(mDNS, port, itemManager);
 		this.name = applicationName;
@@ -102,7 +101,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	}
 
 	@Override
-	protected ServiceInfo getServiceInfoToRegister()
+	protected IZeroconfManager.ServiceInfo getServiceInfoToRegister()
 	{
 		final String hexedHostname;
 		try
@@ -128,10 +127,10 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		if(PasswordMethod.NO_PASSWORD == itemManager.getAuthenticationMethod())
 		{
 			records.put(PASSWORD_KEY, "0");
-			return ServiceInfo.create(DAAP_SERVICE_TYPE, name, port, 0, 0, records);
+			return new IZeroconfManager.ServiceInfo(DAAP_SERVICE_TYPE, name, port, records);
 		}
 		records.put(PASSWORD_KEY, "1");
-		return ServiceInfo.create(DAAP_SERVICE_TYPE, name + "_PW", port, 0, 0, records);
+		return new IZeroconfManager.ServiceInfo(DAAP_SERVICE_TYPE, name + "_PW", port, records);
 	}
 
 	@Override

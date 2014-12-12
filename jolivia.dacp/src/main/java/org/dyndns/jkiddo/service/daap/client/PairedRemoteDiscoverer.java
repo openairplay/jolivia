@@ -15,7 +15,6 @@ import java.net.InetAddress;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.jmdns.JmDNS;
-import javax.jmdns.JmmDNS;
 import javax.jmdns.NetworkTopologyEvent;
 import javax.jmdns.ServiceEvent;
 
@@ -23,6 +22,7 @@ import org.dyndns.jkiddo.IDiscoverer;
 import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
 import org.dyndns.jkiddo.service.dacp.client.ITouchRemoteResource;
 import org.dyndns.jkiddo.service.dacp.server.ITouchAbleServerResource;
+import org.dyndns.jkiddo.zeroconf.IZeroconfManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,30 +32,30 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 {
 	public static final Logger logger = LoggerFactory.getLogger(PairedRemoteDiscoverer.class);
 
-	private JmmDNS mDNS;
-	private IPairingDatabase database;
-	private IClientSessionListener clientSessionListener;
+	private final IZeroconfManager mDNS;
+	private final IPairingDatabase database;
+	private final IClientSessionListener clientSessionListener;
 
 	@Inject
-	public PairedRemoteDiscoverer(JmmDNS mDNS, IPairingDatabase database, IClientSessionListener clientSessionListener)
+	public PairedRemoteDiscoverer(final IZeroconfManager mDNS, final IPairingDatabase database, final IClientSessionListener clientSessionListener)
 	{
 		this.mDNS = mDNS;
 		this.database = database;
 		this.clientSessionListener = clientSessionListener;
-		this.mDNS.addServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
-		this.mDNS.addServiceListener(ITouchAbleServerResource.DACP_TYPE, this);
-		this.mDNS.addServiceListener(ITouchRemoteResource.TOUCH_REMOTE_CLIENT, this);
-		this.mDNS.addNetworkTopologyListener(this);
+//		this.mDNS.addServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
+//		this.mDNS.addServiceListener(ITouchAbleServerResource.DACP_TYPE, this);
+//		this.mDNS.addServiceListener(ITouchRemoteResource.TOUCH_REMOTE_CLIENT, this);
+//		this.mDNS.addNetworkTopologyListener(this);
 	}
 
 	@Override
-	public void serviceAdded(ServiceEvent event)
+	public void serviceAdded(final ServiceEvent event)
 	{
 		logger.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
 	}
 
 	@Override
-	public void serviceRemoved(ServiceEvent event)
+	public void serviceRemoved(final ServiceEvent event)
 	{
 		logger.info("REMOVE: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
 		final String code = database.findCode(event.getInfo().getName());
@@ -67,7 +67,7 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 	}
 
 	@Override
-	public void serviceResolved(ServiceEvent event)
+	public void serviceResolved(final ServiceEvent event)
 	{
 		logger.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
 
@@ -86,7 +86,7 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 
 				this.clientSessionListener.registerNewSession(new Session(host, event.getInfo().getPort(), code));
 			}
-			catch(Exception e)
+			catch(final Exception e)
 			{
 				logger.warn("Could not establish session with client", e);
 				database.updateCode(event.getInfo().getName(), null);
@@ -99,10 +99,10 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 	}
 
 	@Override
-	public void inetAddressAdded(NetworkTopologyEvent event)
+	public void inetAddressAdded(final NetworkTopologyEvent event)
 	{
-		JmDNS mdns = event.getDNS();
-		InetAddress address = event.getInetAddress();
+		final JmDNS mdns = event.getDNS();
+		final InetAddress address = event.getInetAddress();
 		logger.info("Registered PairedRemoteDiscoverer @ " + address.getHostAddress());
 		mdns.addServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
 		mdns.addServiceListener(ITouchAbleServerResource.DACP_TYPE, this);
@@ -110,9 +110,9 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 	}
 
 	@Override
-	public void inetAddressRemoved(NetworkTopologyEvent event)
+	public void inetAddressRemoved(final NetworkTopologyEvent event)
 	{
-		JmDNS mdns = event.getDNS();
+		final JmDNS mdns = event.getDNS();
 		mdns.removeServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
 		mdns.removeServiceListener(ITouchAbleServerResource.DACP_TYPE, this);
 		mdns.removeServiceListener(ITouchRemoteResource.TOUCH_REMOTE_CLIENT, this);

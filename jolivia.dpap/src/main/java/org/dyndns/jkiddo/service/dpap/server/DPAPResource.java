@@ -7,8 +7,6 @@ import java.util.HashMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.jmdns.JmmDNS;
-import javax.jmdns.ServiceInfo;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -37,6 +35,7 @@ import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.dyndns.jkiddo.dpap.chunks.picture.PictureProtocolVersion;
 import org.dyndns.jkiddo.service.dmap.DMAPResource;
 import org.dyndns.jkiddo.service.dmap.Util;
+import org.dyndns.jkiddo.zeroconf.IZeroconfManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +59,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	private static final String PASSWORD_KEY = "Password";
 
 	@Inject
-	public DPAPResource(final JmmDNS mDNS, @Named(DPAP_SERVER_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, @Named(DPAP_RESOURCE) final ImageItemManager itemManager) throws IOException
+	public DPAPResource(final IZeroconfManager mDNS, @Named(DPAP_SERVER_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, @Named(DPAP_RESOURCE) final ImageItemManager itemManager) throws IOException
 	{
 		super(mDNS, port, itemManager);
 		this.name = applicationName;
@@ -87,7 +86,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	}
 
 	@Override
-	protected ServiceInfo getServiceInfoToRegister()
+	protected IZeroconfManager.ServiceInfo getServiceInfoToRegister()
 	{
 		String hash = Integer.toHexString(hostname.hashCode()).toUpperCase();
 		hash = (hash + hash).substring(0, 13);
@@ -98,7 +97,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 		records.put(MACHINE_ID_KEY, hash);
 		records.put(PASSWORD_KEY, "0");
 
-		return ServiceInfo.create(DPAP_SERVICE_TYPE, name, port, 0, 0, records);
+		return new IZeroconfManager.ServiceInfo(DPAP_SERVICE_TYPE, name, port, records);
 	}
 
 	@Override

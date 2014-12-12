@@ -5,11 +5,10 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.jmdns.JmmDNS;
-import javax.jmdns.ServiceInfo;
 
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.dyndns.jkiddo.service.dmap.Util;
+import org.dyndns.jkiddo.zeroconf.IZeroconfManager;
 
 import com.google.common.collect.Maps;
 
@@ -22,7 +21,7 @@ public class AirTunesResourceWrapper extends MDNSResource
 	private final String name;
 
 	@Inject
-	public AirTunesResourceWrapper(JmmDNS mDNS, @Named(AIRPLAY_PORT_NAME) Integer port, @Named(Util.APPLICATION_NAME) String applicationName) throws IOException
+	public AirTunesResourceWrapper(final IZeroconfManager mDNS, @Named(AIRPLAY_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName) throws IOException
 	{
 		super(mDNS, port);
 		this.name = applicationName;
@@ -34,9 +33,9 @@ public class AirTunesResourceWrapper extends MDNSResource
 	// http://nto.github.io/AirPlay.html
 	// http://redragger.wordpress.com/2011/02/09/using-java-to-mimic-an-airplay-server/
 	@Override
-	protected ServiceInfo getServiceInfoToRegister()
+	protected IZeroconfManager.ServiceInfo getServiceInfoToRegister()
 	{
-		Map<String, String> map = Maps.newHashMap();
+		final Map<String, String> map = Maps.newHashMap();
 		map.put("deviceid", Util.toMacString(Util.getHardwareAddress()));
 		map.put("features", "0x77");
 		map.put("model", "Jolivia,1");
@@ -44,6 +43,6 @@ public class AirTunesResourceWrapper extends MDNSResource
 		map.put("rhd", "1.9.0");
 		map.put("vv", "1");
 
-		return ServiceInfo.create(AIRPLAY, name, this.port, 0, 0, map);
+		return new IZeroconfManager.ServiceInfo(AIRPLAY, name, this.port, map);
 	}
 }

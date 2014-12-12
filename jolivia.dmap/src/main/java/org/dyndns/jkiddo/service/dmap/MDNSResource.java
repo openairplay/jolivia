@@ -12,91 +12,37 @@ package org.dyndns.jkiddo.service.dmap;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.HashMap;
-import java.util.Map;
 
-import javax.jmdns.JmDNS;
-import javax.jmdns.JmmDNS;
-import javax.jmdns.NetworkTopologyEvent;
-import javax.jmdns.NetworkTopologyListener;
-import javax.jmdns.ServiceInfo;
-
+import org.dyndns.jkiddo.zeroconf.IZeroconfManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class MDNSResource implements NetworkTopologyListener
+public abstract class MDNSResource
 {
-	private final JmmDNS mDNS;
+	private final IZeroconfManager mDNS;
 	protected Integer port;
 
 	static final Logger logger = LoggerFactory.getLogger(MDNSResource.class);
-	private final Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
-	protected final String hostname = InetAddress.getLocalHost().getHostName();
-	private ServiceInfo serviceInfo;
+	public final String hostname = InetAddress.getLocalHost().getHostName();
+	private IZeroconfManager.ServiceInfo serviceInfo;
 
-	public MDNSResource(final JmmDNS mDNS, final Integer port) throws IOException
+	public MDNSResource(final IZeroconfManager mDNS, final Integer port) throws IOException
 	{
 		this.mDNS = mDNS;
 		this.port = port;
-		
-//		for( final InetAddress i : this.mDNS.getInterfaces())
-//		{
-//			interfaces.put(JmDNSImpl.create(i), i);
-//		}
-		
 	}
 
 	// http://www.dns-sd.org/ServiceTypes.html
-	abstract protected ServiceInfo getServiceInfoToRegister();
+	abstract protected IZeroconfManager.ServiceInfo getServiceInfoToRegister();
 
-	//protected void cleanup()
 	public void deRegister()
 	{
 		this.mDNS.unregisterService(serviceInfo);
 	}
 
-	//protected synchronized void signUp() throws IOException
 	public synchronized void register() throws IOException
 	{
 		serviceInfo = getServiceInfoToRegister();
-		//serviceInfo.setText(props);x
 		mDNS.registerService(serviceInfo);
-//		for(final JmDNS mdns : interfaces.keySet())
-//		{
-//				mdns.registerService(serviceInfo);
-//		}
-		this.mDNS.addNetworkTopologyListener(this);
-	}
-
-	@Override
-	public synchronized void inetAddressAdded(final NetworkTopologyEvent event)
-	{
-		final JmDNS mdns = event.getDNS();
-		final InetAddress address = event.getInetAddress();
-//		if(address instanceof Inet4Address)
-//		{
-			try
-			{
-				logger.info("Registering service: " + serviceInfo.getQualifiedName());
-				mdns.registerService(serviceInfo);
-			}
-			catch(final IOException e)
-			{
-				logger.error(e.getMessage(), e);
-			}
-			interfaces.put(mdns, address);
-//		}
-	}
-
-	@Override
-	public synchronized void inetAddressRemoved(final NetworkTopologyEvent event)
-	{
-		final JmDNS mdns = event.getDNS();
-//		if(mdns.getInterface() instanceof Inet4Address)
-//		{
-			mdns.unregisterService(serviceInfo);
-			mdns.unregisterAllServices();
-			interfaces.remove(mdns);
-//		}
 	}
 }

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import javax.jmdns.JmmDNS;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -28,6 +27,7 @@ import org.dyndns.jkiddo.dmp.chunks.media.Status;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateResponse;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
+import org.dyndns.jkiddo.zeroconf.IZeroconfManager;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -39,7 +39,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	final protected T itemManager;
 	protected String name;
 
-	public DMAPResource(JmmDNS mDNS, Integer port, T itemManager) throws IOException
+	public DMAPResource(final IZeroconfManager mDNS, final Integer port, final T itemManager) throws IOException
 	{
 		super(mDNS, port);
 		this.itemManager = itemManager;
@@ -48,10 +48,10 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("login")
 	@GET
-	public Response login(@QueryParam("pairing-guid") String guid, @QueryParam("hasFP") int value, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response login(@QueryParam("pairing-guid") final String guid, @QueryParam("hasFP") final int value, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
-		String s = Thread.currentThread().getId() + "";
-		LoginResponse loginResponse = new LoginResponse();
+		final String s = Thread.currentThread().getId() + "";
+		final LoginResponse loginResponse = new LoginResponse();
 		loginResponse.add(new Status(200));
 		loginResponse.add(new SessionId(itemManager.getSessionId(s)));
 		return Util.buildResponse(loginResponse, getDMAPKey(), name);
@@ -60,14 +60,14 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("update")
 	@GET
-	public Response update(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("daap-no-disconnect") int daapNoDisconnect, @QueryParam("hsgid") String hsgid) throws IOException
+	public Response update(@QueryParam("session-id") final long sessionId, @QueryParam("revision-number") final long revisionNumber, @QueryParam("delta") final long delta, @QueryParam("daap-no-disconnect") final int daapNoDisconnect, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
-		String s = Thread.currentThread().getId() + "";
+		final String s = Thread.currentThread().getId() + "";
 		if(revisionNumber == delta || revisionNumber == itemManager.getRevision(s, sessionId))
 		{
 			itemManager.waitForUpdate();
 		}
-		UpdateResponse updateResponse = new UpdateResponse();
+		final UpdateResponse updateResponse = new UpdateResponse();
 		updateResponse.add(new Status(200));
 		updateResponse.add(new ServerRevision(itemManager.getRevision(s, sessionId)));
 		return Util.buildResponse(updateResponse, getDMAPKey(), name);
@@ -76,13 +76,13 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("databases")
 	@GET
-	public Response databases(@QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("hsgid") String hsgid) throws IOException, SQLException
+	public Response databases(@QueryParam("session-id") final long sessionId, @QueryParam("revision-number") final long revisionNumber, @QueryParam("delta") final long delta, @QueryParam("hsgid") final String hsgid) throws IOException, SQLException
 	{
-		ServerDatabases serverDatabases = new ServerDatabases();
+		final ServerDatabases serverDatabases = new ServerDatabases();
 		serverDatabases.add(new Status(200));
 		serverDatabases.add(new UpdateType(0));
 		
-		Listing listing = itemManager.getDatabases();
+		final Listing listing = itemManager.getDatabases();
 		
 		serverDatabases.add(new SpecifiedTotalCount(Iterables.size(listing.getListingItems())));
 		serverDatabases.add(new ReturnedCount(Iterables.size(listing.getListingItems())));
@@ -106,7 +106,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("databases/{databaseId}/containers")
 	@GET
-	public Response containers(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("hsgid") String hsgid) throws IOException, SQLException
+	public Response containers(@PathParam("databaseId") final long databaseId, @QueryParam("session-id") final long sessionId, @QueryParam("revision-number") final long revisionNumber, @QueryParam("delta") final long delta, @QueryParam("meta") final String meta, @QueryParam("hsgid") final String hsgid) throws IOException, SQLException
 	{
 		//Collection<Container> containers = itemManager.getDatabase(databaseId).getContainers();
 		Collection<String> parameters = DmapUtil.parseMeta(meta);
@@ -116,9 +116,9 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		{
 			parameters = Lists.newArrayList("dmap.itemkind", "dmap.itemid", "dmap.itemname", "daap.baseplaylist", "dmap.itemcount");
 		}
-		Listing listing = itemManager.getContainers(databaseId, parameters);
+		final Listing listing = itemManager.getContainers(databaseId, parameters);
 
-		DatabaseContainerns databaseContainers = new DatabaseContainerns();
+		final DatabaseContainerns databaseContainers = new DatabaseContainerns();
 
 		databaseContainers.add(new Status(200));
 		databaseContainers.add(new UpdateType(0));
@@ -169,7 +169,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("databases/{databaseId}/containers/{containerId}/items")
 	@GET
-	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index, @QueryParam("hsgid") String hsgid) throws IOException, SQLException
+	public Response containerItems(@PathParam("containerId") final long containerId, @PathParam("databaseId") final long databaseId, @QueryParam("session-id") final long sessionId, @QueryParam("revision-number") final long revisionNumber, @QueryParam("delta") final long delta, @QueryParam("meta") final String meta, @QueryParam("type") final String type, @QueryParam("group-type") final String group_type, @QueryParam("sort") final String sort, @QueryParam("include-sort-headers") final String include_sort_headers, @QueryParam("query") final String query, @QueryParam("index") final String index, @QueryParam("hsgid") final String hsgid) throws IOException, SQLException
 	{
 		// switch on type - for DPAP type is 'photo'
 		// dpap:
@@ -177,13 +177,13 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		//Container container = itemManager.getDatabase(databaseId).getContainer(containerId);
 		// throw new NotImplementedException();
 		// /databases/0/containers/1/items?session-id=1570434761&revision-number=2&delta=0&type=music&meta=dmap.itemkind,dmap.itemid,dmap.containeritemid
-		Iterable<String> parameters = DmapUtil.parseMeta(meta);
-		ItemsContainer itemsContainer = new ItemsContainer();
+		final Iterable<String> parameters = DmapUtil.parseMeta(meta);
+		final ItemsContainer itemsContainer = new ItemsContainer();
 
 		itemsContainer.add(new Status(200));
 		itemsContainer.add(new UpdateType(0));
 		
-		Listing listing = itemManager.getMediaItems(databaseId, containerId, parameters);
+		final Listing listing = itemManager.getMediaItems(databaseId, containerId, parameters);
 		/*
 		Listing listing = new Listing();
 		for(MediaItem item : container.getMediaItems())
@@ -248,7 +248,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@Override
 	@Path("logout")
 	@GET
-	public Response logout(@QueryParam("session-id") long sessionId)
+	public Response logout(@QueryParam("session-id") final long sessionId)
 	{
 		return Util.buildEmptyResponse(getDMAPKey(), name);
 	}

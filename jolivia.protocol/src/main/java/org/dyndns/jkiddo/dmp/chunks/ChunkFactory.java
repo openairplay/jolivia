@@ -27,8 +27,6 @@
 
 package org.dyndns.jkiddo.dmp.chunks;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;

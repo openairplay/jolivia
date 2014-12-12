@@ -22,10 +22,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.jmdns.JmDNS;
-import javax.jmdns.JmmDNS;
 import javax.jmdns.NetworkTopologyEvent;
 import javax.jmdns.ServiceEvent;
-import javax.jmdns.ServiceInfo;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -44,6 +42,7 @@ import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.dyndns.jkiddo.service.dacp.server.ITouchAbleServerResource;
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.dyndns.jkiddo.service.dmap.Util;
+import org.dyndns.jkiddo.zeroconf.IZeroconfManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +59,7 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 	private final IPairingDatabase database;
 	private final Integer actualCode;
 	private final String name;
-	private final JmmDNS mDNS;
+	private final IZeroconfManager mDNS;
 
 	private static MessageDigest md5;
 
@@ -70,14 +69,14 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 		{
 			md5 = MessageDigest.getInstance("MD5");
 		}
-		catch(NoSuchAlgorithmException e)
+		catch(final NoSuchAlgorithmException e)
 		{
 			logger.error(e.getMessage(), e);
 		}
 	}
 
 	@Inject
-	public TouchRemoteResource(JmmDNS mDNS, @Named(DACP_CLIENT_PORT_NAME) Integer port, IPairingDatabase database, @Named(DACP_CLIENT_PAIRING_CODE) Integer code, @Named(Util.APPLICATION_NAME) String applicationName) throws IOException
+	public TouchRemoteResource(final IZeroconfManager mDNS, @Named(DACP_CLIENT_PORT_NAME) final Integer port, final IPairingDatabase database, @Named(DACP_CLIENT_PAIRING_CODE) final Integer code, @Named(Util.APPLICATION_NAME) final String applicationName) throws IOException
 	{
 		super(mDNS, port);
 		this.mDNS = mDNS;
@@ -92,16 +91,16 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 	@Override
 	@GET
 	@Path("pair")
-	public Response pair(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("pairingcode") String pairingcode, @QueryParam("servicename") String servicename) throws IOException
+	public Response pair(@Context final HttpServletRequest httpServletRequest, @Context final HttpServletResponse httpServletResponse, @QueryParam("pairingcode") final String pairingcode, @QueryParam("servicename") final String servicename) throws IOException
 	{
-		byte[] code = new byte[] { 0, 0, 0, 0, 0, 0, 0, 1 };
+		final byte[] code = new byte[] { 0, 0, 0, 0, 0, 0, 0, 1 };
 
-		String match = expectedPairingCode(actualCode, database.getPairCode());
+		final String match = expectedPairingCode(actualCode, database.getPairCode());
 		if(match.equals(pairingcode))
 		{
 			database.updateCode(servicename, Util.toHex(code));
 
-			PairingContainer pc = new PairingContainer();
+			final PairingContainer pc = new PairingContainer();
 			pc.add(new PairingGuid(code));
 			pc.add(new DeviceName("Jolivia’s iPhone"));
 			pc.add(new DeviceType("iPhone"));
@@ -114,7 +113,7 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 	}
 
 	@Override
-	protected ServiceInfo getServiceInfoToRegister()
+	protected IZeroconfManager.ServiceInfo getServiceInfoToRegister()
 	{
 		final Map<String, String> values = new HashMap<String, String>();
 		values.put("DvNm", "Use " + actualCode + " as code for " + name);
@@ -124,15 +123,15 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 		values.put("txtvers", "1");
 		values.put("Pair", database.getPairCode());
 
-		return ServiceInfo.create(TOUCH_REMOTE_CLIENT, Util.toHex("JoliviaRemote"), this.port, 0, 0, values);
+		return new IZeroconfManager.ServiceInfo(TOUCH_REMOTE_CLIENT, Util.toHex("JoliviaRemote"), this.port, values);
 	}
 
-	public static String expectedPairingCode(Integer actualCode, String databaseCode) throws IOException
+	public static String expectedPairingCode(final Integer actualCode, final String databaseCode) throws IOException
 	{
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
 		os.write(databaseCode.getBytes("UTF-8"));
 
-		byte codeAsBytes[] = String.format("%04d", actualCode).getBytes("UTF-8");
+		final byte codeAsBytes[] = String.format("%04d", actualCode).getBytes("UTF-8");
 		for(int c = 0; c < codeAsBytes.length; c++)
 		{
 			os.write(codeAsBytes[c]);
@@ -143,11 +142,11 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 	}
 
 	@Override
-	public void serviceAdded(ServiceEvent event)
+	public void serviceAdded(final ServiceEvent event)
 	{}
 
 	@Override
-	public void serviceRemoved(ServiceEvent event)
+	public void serviceRemoved(final ServiceEvent event)
 	{
 		logger.info("REMOVE: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
 		try
@@ -160,29 +159,29 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 				this.register();
 			}
 		}
-		catch(IOException e)
+		catch(final IOException e)
 		{
 			logger.debug(e.getMessage(), e);
 		}
 	}
 
 	@Override
-	public void serviceResolved(ServiceEvent event)
+	public void serviceResolved(final ServiceEvent event)
 	{}
 
 	@Override
-	public void inetAddressAdded(NetworkTopologyEvent event)
+	public void inetAddressAdded(final NetworkTopologyEvent event)
 	{
-		JmDNS mdns = event.getDNS();
-		InetAddress address = event.getInetAddress();
+		final JmDNS mdns = event.getDNS();
+		final InetAddress address = event.getInetAddress();
 		logger.info("Registered PairedRemoteDiscoverer @ " + address.getHostAddress());
 		mdns.addServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
 	}
 
 	@Override
-	public void inetAddressRemoved(NetworkTopologyEvent event)
+	public void inetAddressRemoved(final NetworkTopologyEvent event)
 	{
-		JmDNS mdns = event.getDNS();
+		final JmDNS mdns = event.getDNS();
 		mdns.removeServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
 		mdns.unregisterAllServices();
 	}

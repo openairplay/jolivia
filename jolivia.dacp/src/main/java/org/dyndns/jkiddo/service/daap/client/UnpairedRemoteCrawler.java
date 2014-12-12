@@ -10,7 +10,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.jmdns.JmDNS;
-import javax.jmdns.JmmDNS;
 import javax.jmdns.NetworkTopologyEvent;
 import javax.jmdns.ServiceEvent;
 import javax.jmdns.impl.JmDNSImpl;
@@ -20,6 +19,7 @@ import org.dyndns.jkiddo.dmcp.chunks.media.PairingContainer;
 import org.dyndns.jkiddo.service.dacp.client.ITouchRemoteResource;
 import org.dyndns.jkiddo.service.dacp.client.TouchRemoteResource;
 import org.dyndns.jkiddo.service.dmap.Util;
+import org.dyndns.jkiddo.zeroconf.IZeroconfManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,17 +29,17 @@ public class UnpairedRemoteCrawler implements IDiscoverer {
 
 	public static final String SERVICE_PORT_NAME = "SERVICE_PORT_NAME";
 
-	private final JmmDNS mDNS;
+	private final IZeroconfManager mDNS;
 	private final Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
 
-	private Integer port;
+	private final Integer port;
 
-	private String serviceGuid;
+	private final String serviceGuid;
 
 	@Inject
-	public UnpairedRemoteCrawler(JmmDNS mDNS,
-			IClientSessionListener clientSessionListener,
-			@Named(SERVICE_PORT_NAME) Integer port, @Named(Util.APPLICATION_NAME) String name) {
+	public UnpairedRemoteCrawler(final IZeroconfManager mDNS,
+			final IClientSessionListener clientSessionListener,
+			@Named(SERVICE_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String name) {
 		this.mDNS = mDNS;
 		this.port = port;
 		this.serviceGuid = Util.toServiceGuid(name);
@@ -50,19 +50,19 @@ public class UnpairedRemoteCrawler implements IDiscoverer {
 	}
 
 	@Override
-	public void serviceAdded(ServiceEvent event) {
+	public void serviceAdded(final ServiceEvent event) {
 		logger.info("ADD: "
 				+ event.getDNS().getServiceInfo(event.getType(),
 						event.getName()));
 	}
 
 	@Override
-	public void serviceRemoved(ServiceEvent event) {
+	public void serviceRemoved(final ServiceEvent event) {
 		logger.debug("REMOVE: " + event.getName());
 	}
 
 	@Override
-	public void serviceResolved(ServiceEvent event) {
+	public void serviceResolved(final ServiceEvent event) {
 		logger.info("ADD: "
 				+ event.getDNS().getServiceInfo(event.getType(),
 						event.getName()));
@@ -73,33 +73,33 @@ public class UnpairedRemoteCrawler implements IDiscoverer {
 
 				for (int i = 0; i < 10000; i++) {
 					try {
-						String path = event.getInfo().getURLs("http")[0]
+						final String path = event.getInfo().getURLs("http")[0]
 								+ "/pair?pairingcode="
 								+ TouchRemoteResource.expectedPairingCode(
 										i,
 										event.getInfo().getPropertyString(
 												"Pair")) + "&servicename="
 								+ serviceGuid;
-						PairingContainer o = RequestHelper.requestParsed(path, false);
+						final PairingContainer o = RequestHelper.requestParsed(path, false);
 						break;
-					} catch (ConnectException e) {
+					} catch (final ConnectException e) {
 						break;
-					} catch (SocketTimeoutException e) {
+					} catch (final SocketTimeoutException e) {
 						break;
-					} catch (Exception e) {
+					} catch (final Exception e) {
 						e.printStackTrace();
 					}
 				}
 
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void inetAddressAdded(NetworkTopologyEvent event) {
-		JmDNS mdns = event.getDNS();
-		InetAddress address = event.getInetAddress();
+	public void inetAddressAdded(final NetworkTopologyEvent event) {
+		final JmDNS mdns = event.getDNS();
+		final InetAddress address = event.getInetAddress();
 		logger.info("Registered PairedRemoteDiscoverer @ "
 				+ address.getHostAddress());
 		mdns.addServiceListener(ITouchRemoteResource.TOUCH_REMOTE_CLIENT, this);
@@ -107,8 +107,8 @@ public class UnpairedRemoteCrawler implements IDiscoverer {
 	}
 
 	@Override
-	public void inetAddressRemoved(NetworkTopologyEvent event) {
-		JmDNS mdns = event.getDNS();
+	public void inetAddressRemoved(final NetworkTopologyEvent event) {
+		final JmDNS mdns = event.getDNS();
 		mdns.removeServiceListener(ITouchRemoteResource.TOUCH_REMOTE_CLIENT,
 				this);
 		mdns.unregisterAllServices();

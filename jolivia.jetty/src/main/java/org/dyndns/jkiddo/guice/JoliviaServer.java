@@ -15,7 +15,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
 
-import javax.jmdns.JmmDNS;
 import javax.servlet.ServletContextEvent;
 
 import org.dyndns.jkiddo.dmp.chunks.AbstractChunk;
@@ -48,6 +47,8 @@ import org.dyndns.jkiddo.service.dmap.Util;
 import org.dyndns.jkiddo.service.dpap.server.DPAPResource;
 import org.dyndns.jkiddo.service.dpap.server.IImageLibrary;
 import org.dyndns.jkiddo.service.dpap.server.ImageItemManager;
+import org.dyndns.jkiddo.zeroconf.IZeroconfManager;
+import org.dyndns.jkiddo.zeroconf.ZeroconfManagerImpl;
 import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,7 +136,7 @@ public class JoliviaServer extends GuiceServletContextListener
 			@Override
 			protected void configure()
 			{
-				bind(JmmDNS.class).toInstance(JmmDNS.Factory.getInstance());
+				bind(IZeroconfManager.class).toInstance(new ZeroconfManagerImpl());
 				bind(JoliviaExceptionMapper.class);
 				bind(DMAPInterface.class).asEagerSingleton();
 				bind(String.class).annotatedWith(Names.named(Util.APPLICATION_NAME)).toInstance(name);
@@ -230,10 +231,10 @@ public class JoliviaServer extends GuiceServletContextListener
 		{
 			r.deRegister();
 		}
-		injector.getInstance(JmmDNS.class).unregisterAllServices();
+		injector.getInstance(IZeroconfManager.class).unregisterAllServices();
 		try
 		{
-			injector.getInstance(JmmDNS.class).close();
+			injector.getInstance(IZeroconfManager.class).close();
 		}
 		catch(final IOException e)
 		{

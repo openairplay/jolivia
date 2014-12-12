@@ -17,8 +17,6 @@ import java.util.HashMap;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import javax.jmdns.JmmDNS;
-import javax.jmdns.ServiceInfo;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
@@ -76,6 +74,7 @@ import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.dyndns.jkiddo.service.dmap.Util;
+import org.dyndns.jkiddo.zeroconf.IZeroconfManager;
 
 @Singleton
 public class TouchAbleServerResource extends MDNSResource implements ITouchAbleServerResource
@@ -85,7 +84,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	private final String serviceGuid;
 
 	@Inject
-	public TouchAbleServerResource(final JmmDNS mDNS, @Named(DACP_SERVER_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, final IPairingDatabase pairingDatabase) throws IOException
+	public TouchAbleServerResource(final IZeroconfManager mDNS, @Named(DACP_SERVER_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, final IPairingDatabase pairingDatabase) throws IOException
 	{
 		super(mDNS, port);
 		this.name = applicationName;
@@ -282,7 +281,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	}
 
 	@Override
-	protected ServiceInfo getServiceInfoToRegister()
+	protected IZeroconfManager.ServiceInfo getServiceInfoToRegister()
 	{
 		String hexedHostname = null;
 		try
@@ -306,7 +305,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 		records.put("iCSV", "65539");
 		records.put("DvSv", "2850");
 
-		return ServiceInfo.create(TOUCH_ABLE_SERVER, serviceGuid, port, 0, 0, records);
+		return new IZeroconfManager.ServiceInfo(TOUCH_ABLE_SERVER, serviceGuid, port, records);
 	}
 
 	@Override
