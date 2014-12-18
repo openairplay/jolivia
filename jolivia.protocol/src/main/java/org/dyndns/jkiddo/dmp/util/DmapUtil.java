@@ -78,8 +78,8 @@ public final class DmapUtil
 	/** Music Sharing Version 2.0.1 */
 	//public static final int MUSIC_SHARING_VERSION_309 = 0x00020000;
 	
-	/** Music Sharing Version 3.0.12 */
-	public static final int MUSIC_SHARING_VERSION_3012 = 0x0003000C;
+	/** Music Sharing Version 3.0.11 */
+	public static final int MUSIC_SHARING_VERSION_3011 = 0x0003000B;
 	
 	/** Music Sharing Version 3.0.10 */
 	public static final int MUSIC_SHARING_VERSION_3010 = 0x0003000A;
