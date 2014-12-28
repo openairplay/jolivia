@@ -42,16 +42,17 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 		this.mDNS = mDNS;
 		this.database = database;
 		this.clientSessionListener = clientSessionListener;
-//		this.mDNS.addServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
-//		this.mDNS.addServiceListener(ITouchAbleServerResource.DACP_TYPE, this);
-//		this.mDNS.addServiceListener(ITouchRemoteResource.TOUCH_REMOTE_CLIENT, this);
-//		this.mDNS.addNetworkTopologyListener(this);
+		this.mDNS.addServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
+		this.mDNS.addServiceListener(ITouchAbleServerResource.DACP_TYPE, this);
+		this.mDNS.addServiceListener(ITouchRemoteResource.TOUCH_REMOTE_CLIENT, this);
+		this.mDNS.addNetworkTopologyListener(this);
 	}
 
 	@Override
 	public void serviceAdded(final ServiceEvent event)
 	{
 		logger.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
+		serviceResolved(event);
 	}
 
 	@Override
@@ -89,7 +90,7 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 			catch(final Exception e)
 			{
 				logger.warn("Could not establish session with client", e);
-				database.updateCode(event.getInfo().getName(), null);
+//				database.updateCode(event.getInfo().getName(), null);
 			}
 		}
 		else

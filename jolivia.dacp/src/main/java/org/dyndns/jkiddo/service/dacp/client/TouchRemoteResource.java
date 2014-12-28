@@ -79,6 +79,8 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 	public TouchRemoteResource(final IZeroconfManager mDNS, @Named(DACP_CLIENT_PORT_NAME) final Integer port, final IPairingDatabase database, @Named(DACP_CLIENT_PAIRING_CODE) final Integer code, @Named(Util.APPLICATION_NAME) final String applicationName) throws IOException
 	{
 		super(mDNS, port);
+		if(code < 0 || code > 9999)
+			throw new RuntimeException("Pairing code is not within required interval");
 		this.mDNS = mDNS;
 		this.actualCode = code;
 		this.database = database;
@@ -132,9 +134,8 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 		os.write(databaseCode.getBytes("UTF-8"));
 
 		final byte codeAsBytes[] = String.format("%04d", actualCode).getBytes("UTF-8");
-		for(int c = 0; c < codeAsBytes.length; c++)
-		{
-			os.write(codeAsBytes[c]);
+		for (final byte codeAsByte : codeAsBytes) {
+			os.write(codeAsByte);
 			os.write(0);
 		}
 

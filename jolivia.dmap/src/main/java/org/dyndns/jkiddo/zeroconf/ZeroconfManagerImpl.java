@@ -78,5 +78,4 @@ public class ZeroconfManagerImpl implements IZeroconfManager, NetworkTopologyLis
 	{
 		this.mdns.close();
 	}
-
 }
