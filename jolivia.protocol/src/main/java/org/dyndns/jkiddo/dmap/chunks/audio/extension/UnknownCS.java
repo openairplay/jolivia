@@ -1,11 +1,10 @@
 package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
-import org.dyndns.jkiddo.dmp.DMAPAnnotation;
-
-@DMAPAnnotation(type=DmapChunkDefinition.aeCs)
+@DMAPAnnotation(type=DmapChunkDefinition.aeCS)
 public class UnknownCS extends UIntChunk
 {
 
@@ -14,8 +13,8 @@ public class UnknownCS extends UIntChunk
 		this(0);
 	}
 
-	public UnknownCS(int i)
+	public UnknownCS(final int i)
 	{
-		super("aeCS", "com.apple.itunes.unknown-CS", i);
+		super("aeCS", "com.apple.itunes.artworkchecksum", i);
 	}
 }

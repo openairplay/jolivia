@@ -170,7 +170,7 @@ public class MusicItemManager implements IItemManager
 			listingItem.add(new ItemId(database.getItemId()));
 			listingItem.add(new PersistentId(database.getPersistentId()));
 			listingItem.add(new ItemName(database.getName()));
-			listingItem.add(new ItemCount(database.getMediaItems().size()));
+			listingItem.add(new ItemCount(database.getMasterContainer().getMediaItems().size()));
 			listingItem.add(new ContainerCount(database.getContainers().size()));
 			listing.add(listingItem);
 		}

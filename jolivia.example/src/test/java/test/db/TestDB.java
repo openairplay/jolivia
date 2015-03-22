@@ -25,8 +25,6 @@ import com.j256.ormlite.table.TableUtils;
 
 public class TestDB
 {
-	public static final String someST = "ldksjfldskjfl";
-
 	// http://cleancodedevelopment-qualityseal.blogspot.dk/2013/06/how-to-use-ormlite-save-complex-objects.html
 	private Dao<Library, Integer> libraryDao;
 	private Dao<Database, Integer> databaseDao;
@@ -37,7 +35,7 @@ public class TestDB
 	@Before
 	public void before() throws SQLException
 	{
-		String databaseUrl = "jdbc:h2:mem:test";
+		final String databaseUrl = "jdbc:h2:mem:test";
 		connectionSource = new JdbcConnectionSource(databaseUrl);
 
 		databaseDao = DaoManager.createDao(connectionSource, Database.class);
@@ -60,13 +58,13 @@ public class TestDB
 	//@Test
 	public void libraryTest() throws SQLException
 	{
-		Server h2server = Server.createWebServer(new String[] { "-webPort", "9123", "-webAllowOthers" });
+		final Server h2server = Server.createWebServer(new String[] { "-webPort", "9123", "-webAllowOthers" });
 		h2server.start();
 
-		String applicationName = "Tommy";
-		Library library = new Library(applicationName);
-		Database database = new Database("Yadee", "music", library);
-		Container container = new Container("MasterPlaylist", -1, -1, database, 1);
+		final String applicationName = "Tommy";
+		final Library library = new Library(applicationName);
+		final Database database = new Database("Yadee", "music", library);
+		final Container container = new Container("MasterPlaylist", -1, -1, database, 1);
 		
 		libraryDao.createIfNotExists(library);
 		databaseDao.createIfNotExists(database);
@@ -75,7 +73,7 @@ public class TestDB
 		libraryDao.refresh(library);
 		databaseDao.refresh(database);
 		
-		MediaItem mi = new MediaItem(database);
+		final MediaItem mi = new MediaItem(database);
 		container.addMediaItem(mi);
 		mediaItemDao.createOrUpdate(mi);
 		//Container csc = libraryDao.queryForAll().iterator().next().getDatabases().iterator().next().getMasterContainer();
@@ -85,9 +83,9 @@ public class TestDB
 	//@Test
 	public void testMap()
 	{
-		Table<Integer, String, Class<? extends AbstractChunk>> table = ChunkFactory.getCalculatedMap();
-		DmapChunkDefinition def = IDmapProtocolDefinition.DmapChunkDefinition.abcp;
-		Class<? extends AbstractChunk> clazz = table.get(DmapUtil.toContentCodeNumber(def.getShortname()), def.getLongname());
+		final Table<String, String, Class<? extends AbstractChunk>> table = ChunkFactory.getCalculatedMap();
+		final DmapChunkDefinition def = IDmapProtocolDefinition.DmapChunkDefinition.abcp;
+		final Class<? extends AbstractChunk> clazz = table.get(DmapUtil.toContentCodeNumber(def.getShortname()), def.getLongname());
 		System.out.println(clazz);
 	}
 

@@ -46,7 +46,7 @@ public class Container
 	private Database database;
 
 	@DatabaseField(generatedId = true, columnName = "dmap.itemid")
-	private int itemId;
+	private long itemId;
 
 	@DatabaseField(columnName = "daap.baseplaylist")
 	private int audioBasePlayList;
@@ -77,6 +77,7 @@ public class Container
 	public Container(final String itemName, final long persistentId, final long itemId)
 	{
 		this.itemName = itemName;
+		this.itemId = itemId;
 		this.mediaItems = Sets.newHashSet();
 	}
 
@@ -94,7 +95,7 @@ public class Container
 	{
 		return ImmutableList.copyOf(mediaItems);
 	}
-	public int getItemId()
+	public long getItemId()
 	{
 		return itemId;
 	}

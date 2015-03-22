@@ -57,11 +57,12 @@ public class Database
 		this.containers = Sets.newHashSet();
 	}
 
-	public Database(final String databaseName, final int itemId, final long persistentId, final Container playlist)
+	public Database(final String databaseName, final int itemId, final long persistentId, final Container masterPlaylist)
 	{
 		this(databaseName, itemId, persistentId);
 		this.containers = Sets.newHashSet();
-		this.containers.add(playlist);
+		this.containers.add(masterPlaylist);
+		this.mediaItems = masterPlaylist.getMediaItems();
 	}
 
 	public Database(final String databaseName, final int itemId, final long persistentId)
@@ -71,7 +72,7 @@ public class Database
 		this.containers = Sets.newHashSet();
 	}
 
-	@DatabaseField(generatedId = true)
+	@DatabaseField(id = true)
 	private int itemId;
 
 	@DatabaseField(foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true)

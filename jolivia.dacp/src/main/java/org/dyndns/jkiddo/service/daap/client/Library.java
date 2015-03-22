@@ -52,7 +52,7 @@ public class Library
 
 	final Session session;
 
-	Library(Session session)
+	Library(final Session session)
 	{
 		this.session = session;
 	}
@@ -72,7 +72,7 @@ public class Library
 	 * @return the count of records returned or -1 if nothing found
 	 * @throws Exception
 	 */
-	public ItemsContainer readSearch(String search, long start, long items) throws Exception
+	public ItemsContainer readSearch(final String search, final long start, final long items) throws Exception
 	{
 		final String encodedSearch = RequestHelper.escapeUrlString(search);
 		//return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,dmap.persistentid,daap.songartist,daap.songalbum,daap.songtime,daap.songuserrating,daap.songtracknumber&type=music&sort=name&include-sort-headers=1&query=(('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:4','com.apple.itunes.mediakind:8')+('dmap.itemname:*%s*','daap.songartist:*%s*','daap.songalbum:*%s*'))&index=%d-%d", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId(), encodedSearch, encodedSearch, encodedSearch, start, items), false);
@@ -86,7 +86,7 @@ public class Library
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/browse/artists?session-id=%s&include-sort-headers=1", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId()), false, true);
 	}
 
-	public AlbumSearchContainer getAlbums(String artist) throws Exception
+	public AlbumSearchContainer getAlbums(final String artist) throws Exception
 	{
 		final String encodedArtist = RequestHelper.escapeUrlString(artist);
 		// make albums request for this artist
@@ -109,19 +109,20 @@ public class Library
 
 	public ItemsContainer getAllTracks() throws Exception
 	{
+		
 		// make tracks list request
 		// http://192.168.254.128:3689/databases/36/containers/113/items?session-id=1301749047&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songtracknumber&type=music&sort=album&query='daap.songalbumid:11624070975347817354'
-		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songuserrating,daap.songtracknumber&type=music&sort=album", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId()), false);
+		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songtime,dmap.containeritemid,com.apple.tunes.has-video,com.apple.itunes.can-be-genius-seed&type=music&sort=name&include-sort-headers=1&query=('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:32')", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId()), false);
 	}
 
-	public ItemsContainer getTracks(String albumid) throws Exception
+	public ItemsContainer getTracks(final String albumid) throws Exception
 	{
 		// make tracks list request
 		// http://192.168.254.128:3689/databases/36/containers/113/items?session-id=1301749047&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songtracknumber&type=music&sort=album&query='daap.songalbumid:11624070975347817354'
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songuserrating,daap.songtracknumber&type=music&sort=album&query='daap.songalbumid:%s'", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId(), albumid), false);
 	}
 
-	public ItemsContainer getAllTracks(String artist) throws Exception
+	public ItemsContainer getAllTracks(final String artist) throws Exception
 	{
 		final String encodedArtist = RequestHelper.escapeUrlString(artist);
 
@@ -130,13 +131,13 @@ public class Library
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songuserrating,daap.songtracknumber&type=music&sort=album&query='daap.songartist:%s'", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId(), encodedArtist), false);
 	}
 
-	public ItemsContainer getPlaylistSongs(String playlistid) throws Exception
+	public ItemsContainer getPlaylistSongs(final String playlistid) throws Exception
 	{
 		// http://192.168.254.128:3689/databases/36/containers/1234/items?session-id=2025037772&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,dmap.containeritemid,com.apple.tunes.has-video
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%s/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songartst,daap.songalbum,daap.songtime,dmap.containeritemid,com.apple.tunes.has-video", session.getRequestBase(), session.getDatabase().getItemId(), playlistid, session.getSessionId()), false);
 	}
 
-	public ItemsContainer getRadioPlaylist(String playlistid) throws Exception
+	public ItemsContainer getRadioPlaylist(final String playlistid) throws Exception
 	{
 		// GET /databases/24691/containers/24699/items?
 		// meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,
@@ -146,7 +147,7 @@ public class Library
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%s/items?" + "meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum," + "dmap.containeritemid,com.apple.itunes.has-video,daap.songdisabled," + "com.apple.itunes.mediakind,daap.songdescription" + "&type=music&session-id=%s", session.getRequestBase(), session.getRadioDatabase().getItemId(), playlistid, session.getSessionId()), false);
 	}
 
-	public SongUserRating getTrackRating(long trackId) throws Exception
+	public SongUserRating getTrackRating(final long trackId) throws Exception
 	{
 		// MonkeyTunes style would be with PlaylistSongs instead of DatabaseSongs
 		final DatabaseItems databaseSongs = RequestHelper.requestParsed(String.format("%s/databases/%d/items?session-id=%s&meta=daap.songuserrating&type=music&query='dmap.itemid:%d'", session.getRequestBase(), session.getDatabase().getItemId(), session.getSessionId(), trackId));
@@ -159,22 +160,22 @@ public class Library
 		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%s/items?meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbumartist,daap.songalbum,com.apple.itunes.cloud-id,dmap.containeritemid,com.apple.itunes.has-video,com.apple.itunes.itms-songid,com.apple.itunes.extended-media-kind,dmap.downloadstatus,daap.songdisabled&type=music&sort=name&include-sort-headers=1&query=('com.apple.itunes.extended-media-kind:1','com.apple.itunes.extended-media-kind:32')&session-id=%s", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId()), false);
 	}
 
-	public byte[] getAlbumArtworkAsDatabase(long itemId, int imageWidth, int imageHeight) throws Exception
+	public byte[] getAlbumArtworkAsDatabase(final long itemId, final int imageWidth, final int imageHeight) throws Exception
 	{
 		return RequestHelper.requestBitmap(String.format("%s/databases/%d/items/%d/extra_data/artwork?session-id=%s&mw=" + imageWidth + "&mh=" + imageHeight + "&group-type=albums", session.getRequestBase(), session.getDatabase().getItemId(), itemId, session.getSessionId()));
 	}
 
-	public byte[] getAlbumArtworkAsRemote(long itemId, int imageWidth, int imageHeight) throws Exception
+	public byte[] getAlbumArtworkAsRemote(final long itemId, final int imageWidth, final int imageHeight) throws Exception
 	{
 		return getAlbumArtworkAsRemote(itemId, imageWidth, imageHeight, null);
 	}
 
-	public byte[] getAlbumArtworkAsRemote(long itemId, int imageWidth, int imageHeight, String hsgid) throws Exception
+	public byte[] getAlbumArtworkAsRemote(final long itemId, final int imageWidth, final int imageHeight, final String hsgid) throws Exception
 	{
 		return RequestHelper.requestBitmap(String.format("%s/databases/%d/groups/%d/extra_data/artwork?session-id=%s&mw=" + imageWidth + "&mh=" + imageHeight + "&group-type=albums", session.getRequestBase(), session.getDatabase().getItemId(), itemId, session.getSessionId()));
 	}
 
-	public DatabaseItems getTestCode(String stuff) throws Exception
+	public DatabaseItems getTestCode(final String stuff) throws Exception
 	{
 //		return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songextradata,com.apple.itunes.artworkchecksum,daap.songartworkcount,com.apple.itunes.mediakind,daap.songartist,com.apple.itunes.jukebox-vote,com.apple.itunes.jukebox-client-vote,com.apple.itunes.jukebox-score,com.apple.itunes.jukebox-current,com.apple.itunes.extended-media-kind,com.apple.itunes.adam-ids-array&type=music&sort=name&include-sort-headers=1&query=('"+stuff+")", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId()), false);
 		//return RequestHelper.requestParsed(String.format("%s/databases/%d/containers/%d/items?session-id=%s&meta=all&query=('"+stuff+")", session.getRequestBase(), session.getDatabase().getItemId(), session.getDatabase().getMasterContainer().getItemId(), session.getSessionId()), false);

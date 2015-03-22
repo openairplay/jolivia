@@ -1,3 +1,4 @@
+package org.dyndns.jkiddo.raop.server.AirReceiver;
 /*
  * This file is part of AirReceiver.
  *
@@ -15,7 +16,7 @@
  * along with AirReceiver.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.dyndns.jkiddo.raop.server.AirReceiver;
+
 
 import org.dyndns.jkiddo.raop.server.audio.JavaSoundSink;
 import org.dyndns.jkiddo.raop.server.audio.SampleBuffer;

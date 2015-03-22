@@ -69,22 +69,19 @@ public class Jolivia
 
 	public static void main(final String[] args)
 	{
-
+		SLF4JBridgeHandler.removeHandlersForRootLogger();
+		SLF4JBridgeHandler.install();
 		// return ServiceInfo.create("_mobileiphoto._udp.local.",
 		// "00pYaGq1A..SPACE", port, "");
 		try
 		{
-			IMusicStoreReader reader = null;
+			//IMusicStoreReader reader = new GoogleStoreReader(args[0], args[1]);
+			IMusicStoreReader reader = new DeskMusicStoreReader();
 			/*
 			 * if(args.length == 2) { reader = new GoogleStoreReader(args[0], args[1]); new GReporter(args[0]); } else {
 			 */
 			reader = new DeskMusicStoreReader();
-			// new GReporter("local version");
-			// }
-			// new
-			// Jolivia.JoliviaBuilder().port(4000).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new
-			// DeskImageStoreReader()).build();
-			final Jolivia j = new Jolivia.JoliviaBuilder().port(8770).security(PasswordMethod.PASSWORD, SecurityScheme.BASIC).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new DeskImageStoreReader("C:\\Users\\JensKristian\\Desktop\\test")).build();
+			new Jolivia.JoliviaBuilder().port(8770)/*.security(PasswordMethod.PASSWORD, SecurityScheme.BASIC)*/.pairingCode(1337).musicStoreReader(reader).imageStoreReader(new DeskImageStoreReader("C:\\Users\\JensKristian\\Desktop\\test")).build();
 		}
 		catch(final Exception e)
 		{
@@ -168,19 +165,20 @@ public class Jolivia
 
 		public Jolivia build() throws Exception
 		{
-			SLF4JBridgeHandler.removeHandlersForRootLogger();
-			SLF4JBridgeHandler.install();
 			return new Jolivia(this);
 		}
 
 		class DefaultClientSessionListener implements IClientSessionListener
 		{
+			public DefaultClientSessionListener()  {
+			}
+			
 			private Session session;
 
 			@Override
 			public void registerNewSession(final Session session) throws Exception
 			{
-				this.session = session;
+			 	this.session = session;
 			}
 
 			@Override

@@ -66,13 +66,13 @@ public class DmapInputStream extends BufferedInputStream
 		return contentLength;
 	}
 
-	public DmapInputStream(InputStream in)
+	public DmapInputStream(final InputStream in)
 	{
 		super(in);
 		this.specialCaseProtocolViolation = false;
 	}
 
-	public DmapInputStream(InputStream in, boolean specialCaseProtocolViolation)
+	public DmapInputStream(final InputStream in, final boolean specialCaseProtocolViolation)
 	{
 		super(in);
 		this.specialCaseProtocolViolation = specialCaseProtocolViolation;
@@ -81,7 +81,7 @@ public class DmapInputStream extends BufferedInputStream
 	@Override
 	public int read() throws IOException
 	{
-		int b = super.read();
+		final int b = super.read();
 		if(b < 0)
 		{
 			throw new EOFException();
@@ -93,20 +93,20 @@ public class DmapInputStream extends BufferedInputStream
 	 * Re: skip(length-Chunk.XYZ_LENGTH); iTunes states in Content-Codes responses that Chunk X is of type Y and has hence the length Z. A Byte has for example the length 1. But in some cases iTunes uses a different length for Bytes! It's probably a bug in iTunes...
 	 */
 
-	private int readByte(int length) throws IOException
+	private int readByte(final int length) throws IOException
 	{
 		skip(length - Chunk.BYTE_LENGTH);
 		return read();
 	}
 
-	private int readShort(int length) throws IOException
+	private int readShort(final int length) throws IOException
 	{
 		skip(length - Chunk.SHORT_LENGTH);
 		return (read() << 8) | read();
 	}
 	
 
-	private long readDate(int length) throws IOException
+	private long readDate(final int length) throws IOException
 	{
 		skip(length - Chunk.INT_LENGTH);
 		long v = read();
@@ -119,13 +119,13 @@ public class DmapInputStream extends BufferedInputStream
 		return  v;
 	}
 
-	private int readInt(int length) throws IOException
+	private int readInt(final int length) throws IOException
 	{
 		skip(length - Chunk.INT_LENGTH);
 		return (read() << 24) | (read() << 16) | (read() << 8) | read();
 	}
 
-	private long readLong(int length) throws IOException
+	private long readLong(final int length) throws IOException
 	{
 		skip(length - Chunk.LONG_LENGTH);
 		return (read() << 54l) | (read() << 48l) | (read() << 40l)
@@ -133,21 +133,26 @@ public class DmapInputStream extends BufferedInputStream
                 | (read() << 8l) | read();
 	}
 
-	private String readString(int length) throws IOException
+	private String readString(final int length) throws IOException
 	{
 		if(length == 0)
 		{
 			return null;
 		}
 
-		byte[] b = new byte[length];
+		final byte[] b = new byte[length];
 		read(b, 0, b.length);
 		return new String(b, DmapUtil.UTF_8);
 	}
 
-	private int readContentCode() throws IOException
+	/*private int readContentCode() throws IOException
 	{
 		return readInt(Chunk.INT_LENGTH);
+	}*/
+
+	private String readContentCode() throws IOException
+	{
+		return readString(Chunk.INT_LENGTH);
 	}
 
 	private int readLength() throws IOException
@@ -156,14 +161,14 @@ public class DmapInputStream extends BufferedInputStream
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T getChunk(Class<T> clazz) throws IOException, ProtocolViolationException
+	public <T> T getChunk(final Class<T> clazz) throws IOException, ProtocolViolationException
 	{
 		return (T) getChunk();
 	}
 
 	public Chunk getChunk() throws IOException, ProtocolViolationException
 	{
-		int contentCode = readContentCode();
+		final String contentCode = readContentCode();
 		contentLength = readLength();
 
 		if(factory == null)
@@ -218,15 +223,15 @@ public class DmapInputStream extends BufferedInputStream
 			}
 			else if(chunk instanceof RawChunk)
 			{
-				byte[] b = new byte[contentLength];
+				final byte[] b = new byte[contentLength];
 				read(b, 0, b.length);
 				((RawChunk) chunk).setValue(b);
 			}
 			else if(chunk instanceof ContainerChunk)
 			{
-				byte[] b = new byte[contentLength];
+				final byte[] b = new byte[contentLength];
 				read(b, 0, b.length);
-				DmapInputStream in = new DmapInputStream(new ByteArrayInputStream(b), this.specialCaseProtocolViolation);
+				final DmapInputStream in = new DmapInputStream(new ByteArrayInputStream(b), this.specialCaseProtocolViolation);
 				while(in.available() > 0)
 				{
 
@@ -234,7 +239,7 @@ public class DmapInputStream extends BufferedInputStream
 					{
 						((ContainerChunk) chunk).add(in.getChunk());
 					}
-					catch(ProtocolViolationException pve)
+					catch(final ProtocolViolationException pve)
 					{
 						logger.warn(pve.getMessage(), pve);
 						in.skip(in.getChunkContentLength());
@@ -258,7 +263,7 @@ public class DmapInputStream extends BufferedInputStream
 	/**
 	 * Throws an IOE if expected differs from length
 	 */
-	private static void checkLength(Chunk chunk, int expected, int length)
+	private static void checkLength(final Chunk chunk, final int expected, final int length)
 	{
 		if(expected != length)
 		{

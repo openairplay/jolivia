@@ -29,22 +29,22 @@ package org.dyndns.jkiddo.dmp.chunks.unknown;
 
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
-import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
+import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
 
 /**
  * @since iTunes 5.0
  */
 
-@DMAPAnnotation(type=DmapChunkDefinition.mccr, hash = 0x668D6368)
-public class HasChildContainers extends BooleanChunk
+@DMAPAnnotation(type=DmapChunkDefinition.fch, hash = 0x668D6368)
+public class HasChildContainers extends UIntChunk
 {
 
 	public HasChildContainers()
 	{
-		this(false);
+		this(0);
 	}
 
-	public HasChildContainers(boolean hasChilds)
+	public HasChildContainers(final int hasChilds)
 	{
 		// f�ch
 		super(0x668D6368, "dmap.haschildcontainers", hasChilds);

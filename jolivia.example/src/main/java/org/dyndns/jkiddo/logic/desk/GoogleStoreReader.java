@@ -1,4 +1,4 @@
-/*package org.dyndns.jkiddo.logic.desk;
+package org.dyndns.jkiddo.logic.desk;
 
 import gmusic.api.comm.ApacheConnector;
 import gmusic.api.comm.JSON;
@@ -31,22 +31,23 @@ import com.google.common.collect.Collections2;
 public class GoogleStoreReader implements IMusicStoreReader
 {
 	
-	private GoogleMusicAPI gm;
+	private final GoogleMusicAPI gm;
 
-	public GoogleStoreReader(String username, String password) throws IOException, URISyntaxException, InvalidCredentialsException
+	public GoogleStoreReader(final String username, final String password) throws IOException, URISyntaxException, InvalidCredentialsException
 	{
 		gm = new GoogleMusicAPI(new ApacheConnector(), new JSON(), new File("."));
 		gm.login(username, password);
 	}
 
+	@Override
 	public Collection<MediaItem> readTunes() throws Exception
 	{
 		return Collections2.transform(gm.getAllSongs(), new Function<Song, MediaItem>() {
 
 			@Override
-			public MediaItem apply(Song song)
+			public MediaItem apply(final Song song)
 			{
-				MediaItem mi = new MediaItem();
+				final MediaItem mi = new MediaItem();
 				mi.setSongArtist(song.getArtist());
 				mi.setSongAlbum(song.getAlbum());
 				mi.setItemName(song.getName());
@@ -56,23 +57,24 @@ public class GoogleStoreReader implements IMusicStoreReader
 			}
 		});
 	}
-	public URI getTune(String tune) throws Exception
+	@Override
+	public URI getTune(final String tune) throws Exception
 	{
-		Song song = new Song();
+		final Song song = new Song();
 		song.setId(tune);
 		return gm.getSongURL(song);
 	}
 
 	@Override
-	public void readTunesMemoryOptimized(Listing listing, Map<Long, String> map) throws Exception
+	public void readTunesMemoryOptimized(final Listing listing, final Map<Long, String> map) throws Exception
 	{
-		Collection<Song> songs = gm.getAllSongs();
+		final Collection<Song> songs = gm.getAllSongs();
 		System.gc();
-		AtomicLong id = new AtomicLong();
+		final AtomicLong id = new AtomicLong();
 
-		for(Song song : songs)
+		for(final Song song : songs)
 		{
-			ListingItem item = new ListingItem();
+			final ListingItem item = new ListingItem();
 			item.add(new ItemKind(ItemKind.AUDIO));
 			item.add(new ItemId(id.get()));
 			item.add(new SongAlbum(song.getAlbum()));
@@ -86,4 +88,4 @@ public class GoogleStoreReader implements IMusicStoreReader
 		}
 		songs.clear();
 	}
-}*/
+}

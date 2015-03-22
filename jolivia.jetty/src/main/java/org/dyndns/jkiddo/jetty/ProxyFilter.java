@@ -33,30 +33,31 @@ public class ProxyFilter implements Filter
 	//http://simplapi.wordpress.com/2013/01/24/jersey-jax-rs-implements-a-http-basic-auth-decoder/
 		
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException
+	public void init(final FilterConfig filterConfig) throws ServletException
 	{
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
+	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException
 	{
-		HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+		final HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 		String queryString = httpServletRequest.getQueryString();
 		if(queryString == null)
 			queryString = "";
 		else
 			queryString = "?" + queryString;
 
-		Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
+		final Enumeration<String> headerNames = httpServletRequest.getHeaderNames();
 		while(headerNames.hasMoreElements())
 		{
-			String headerName = headerNames.nextElement();
+			final String headerName = headerNames.nextElement();
 			logger.info((headerName + ": " + httpServletRequest.getHeader(headerName)));
 		}
 
 		logger.info(httpServletRequest.getRequestURI() + queryString);
+		logger.info("");
 		chain.doFilter(request, response);
 	}
 

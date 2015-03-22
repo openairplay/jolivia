@@ -52,7 +52,7 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 	public void serviceAdded(final ServiceEvent event)
 	{
 		logger.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
-		serviceResolved(event);
+		//serviceResolved(event);
 	}
 
 	@Override
@@ -89,8 +89,8 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 			}
 			catch(final Exception e)
 			{
-				logger.warn("Could not establish session with client", e);
-//				database.updateCode(event.getInfo().getName(), null);
+				logger.warn("Could not establish session with client - erasing previously submitted code", e);
+				database.updateCode(event.getInfo().getName(), null);
 			}
 		}
 		else

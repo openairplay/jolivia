@@ -3,9 +3,7 @@ package test;
 import java.awt.BorderLayout;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.nio.ByteBuffer;
 import java.util.Collection;
-import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -22,18 +20,10 @@ import org.dyndns.jkiddo.dmap.chunks.audio.SongTime;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongTrackNumber;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongUserRating;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum;
-import org.dyndns.jkiddo.dmp.chunks.Chunk;
-import org.dyndns.jkiddo.dmp.chunks.ChunkFactory;
-import org.dyndns.jkiddo.dmp.chunks.media.ContentCodesName;
-import org.dyndns.jkiddo.dmp.chunks.media.ContentCodesNumber;
-import org.dyndns.jkiddo.dmp.chunks.media.ContentCodesType;
-import org.dyndns.jkiddo.dmp.chunks.media.Dictionary;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
-import org.dyndns.jkiddo.dmp.chunks.media.UpdateResponse;
-import org.dyndns.jkiddo.dmp.model.Container;
 import org.dyndns.jkiddo.dmp.model.Database;
 import org.dyndns.jkiddo.dpap.chunks.picture.FileData;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
@@ -85,7 +75,7 @@ public class Noop
 		System.out.println("");
 	}
 	
-	//@Test
+	@Test
 	public void remoteClientTest() throws Exception
 	{
 		doShowCase(new TestSession("localhost", 3689));
@@ -96,15 +86,13 @@ public class Noop
 		// Showcase on some actions you can do on a session ...
 		// ////////////////////////////////////////
 
-		// getUpdateBlocking blocks until an event happens in iTunes -
-		// eg. pressing play, pause, etc. ...
-		final UpdateResponse response = session.getUpdateBlocking();
+		
+		// Do something - e.g doubleclick a track in iTunes
+		session.getUpdateBlocking();
 
 		final Database itunesDatabase = session.getDatabase();
 
-		// Get all playlists. For now the playlists only contains the
-		// master playlist. This is to be expanded
-		final Collection<Container> playlists = itunesDatabase.getContainers();
+		itunesDatabase.getContainers();
 
 		// Traverse the library for eg. all tracks
 		for(final SongArtist artist : session.getLibrary().getAllArtists().getBrowseArtistListing().getSongArtists())
@@ -117,20 +105,27 @@ public class Noop
 		// Extract information from a generic listing
 		for(final ListingItem item : session.getLibrary().getAllTracks().getListing().getListingItems())
 		{
-			System.out.println(item.getSpecificChunk(SongAlbum.class).getValue());
-			System.out.println(item.getSpecificChunk(SongArtist.class).getValue());
-			System.out.println(item.getSpecificChunk(SongTime.class).getValue());
-			System.out.println(item.getSpecificChunk(SongTrackNumber.class).getValue());
-			System.out.println(item.getSpecificChunk(SongUserRating.class).getValue());
-			System.out.println(item.getSpecificChunk(ItemName.class).getValue());
-			System.out.println(item.getSpecificChunk(ItemKind.class).getValue());
-			System.out.println(item.getSpecificChunk(ItemId.class).getValue());
-			itemId = item.getSpecificChunk(ItemId.class).getValue();
-			
-			if(item.getSpecificChunk(SongExtraData.class).getValue() > 0)
+			try
 			{
-				item.getSpecificChunk(ArtworkChecksum.class).getValue();
-				item.getSpecificChunk(SongArtworkCount.class).getValue();
+				itemId = item.getSpecificChunk(ItemId.class).getValue();
+				System.out.println(item.getSpecificChunk(SongAlbum.class).getValue());
+				System.out.println(item.getSpecificChunk(SongArtist.class).getValue());
+				System.out.println(item.getSpecificChunk(SongTime.class).getValue());
+				System.out.println(item.getSpecificChunk(SongTrackNumber.class).getValue());
+				System.out.println(item.getSpecificChunk(SongUserRating.class).getValue());
+				System.out.println(item.getSpecificChunk(ItemName.class).getValue());
+				System.out.println(item.getSpecificChunk(ItemKind.class).getValue());
+				System.out.println(item.getSpecificChunk(ItemId.class).getValue());
+				
+				if(item.getSpecificChunk(SongExtraData.class).getValue() > 0)
+				{
+					item.getSpecificChunk(ArtworkChecksum.class).getValue();
+					item.getSpecificChunk(SongArtworkCount.class).getValue();
+				}
+			}
+			catch(final Exception e)
+			{
+				e.printStackTrace();
 			}
 		}
 		session.getRemoteControl().playQueue(50);
@@ -223,57 +218,5 @@ public class Noop
 			e.printStackTrace();
 		}
 
-	}
-
-	@Test
-	public void verifyModel() throws Exception
-	{
-		final TestSession session = new TestSession("localhost", 3689);
-		final Iterator<Dictionary> contentCodes = session.getContentCodes().getDictionaries().iterator();
-
-		final ChunkFactory chunkFactory = new ChunkFactory();
-		System.out.println("Listing codes ...");
-
-		while(contentCodes.hasNext())
-		{
-			final Dictionary c = contentCodes.next();
-			final String shortName = c.getSpecificChunk(ContentCodesNumber.class).getValueContentCode();
-			final Integer type = +c.getSpecificChunk(ContentCodesType.class).getValue();
-			final String longName = c.getSpecificChunk(ContentCodesName.class).getValue();
-
-			try
-			{
-				//final Chunk chunk = chunkFactory.newChunk(stringReadAsInt(shortName));
-				final Chunk chunk = chunkFactory.getChunkClass(stringReadAsInt(shortName)).newInstance();
-				System.out.println(shortName + " : " + type + " : " + longName + " : " + chunk.getClass().getSimpleName());
-				if(chunk.getType() != type)
-				{
-					System.out.println("	Type mismatch! Type was " + chunk.getType() + ". Expected " + type);
-				}
-				if(!longName.equals(chunk.getName()))
-				{
-					System.out.println("		Longname mismatch! Longname was " + chunk.getName() + ". Expected " + longName);
-				}
-				if(!shortName.equals(chunk.getContentCodeString()))
-				{
-					System.out.println("			Shortname mismatch! Shortname was " + chunk.getContentCodeString() + ". Expected " + shortName + ". Code was " + c.getSpecificChunk(ContentCodesNumber.class).getValue());
-				}
-			}
-			catch(final Exception e)
-			{
-				System.out.println(shortName + " : " + type + " : " + longName + " : ");
-				System.out.println("					Chunck could not be identified, having " + stringReadAsInt(shortName));
-			}
-		}
-	}
-	private static int stringReadAsInt(final String s)
-	{
-		final ByteBuffer buffer = ByteBuffer.allocate(s.length());
-		for(int i = 0; i < s.length(); i++)
-		{
-			buffer.put((byte) s.charAt(i));
-		}
-		buffer.position(0);
-		return buffer.getInt();
 	}
 }

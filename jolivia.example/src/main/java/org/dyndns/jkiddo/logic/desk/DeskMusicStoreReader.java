@@ -32,6 +32,7 @@ import org.apache.tika.sax.BodyContentHandler;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongFormat;
+import org.dyndns.jkiddo.dmp.chunks.media.ContainerItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
@@ -192,13 +193,14 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		
 		final Collection<MediaItem> songs = readTunes();
 		System.gc();
-		final AtomicLong id = new AtomicLong(1);
+		final AtomicLong id = new AtomicLong(13);
 
 		for(final MediaItem song : songs)
 		{
 			final ListingItem item = new ListingItem();
 			item.add(new ItemKind(ItemKind.AUDIO));
 			item.add(new ItemId(id.get()));
+			item.add(new ContainerItemId(id.get() + 100));
 			item.add(new SongAlbum(song.getSongAlbum()));
 			item.add(new SongArtist(song.getSongArtist()));
 			item.add(new ItemName(song.getItemName()));

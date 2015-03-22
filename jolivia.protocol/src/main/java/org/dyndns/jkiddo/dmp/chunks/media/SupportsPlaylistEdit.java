@@ -6,14 +6,14 @@ import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
 @DMAPAnnotation(type=DmapChunkDefinition.msed)
-public class Unknowned extends BooleanChunk
+public class SupportsPlaylistEdit extends BooleanChunk
 {
-	public Unknowned()
+	public SupportsPlaylistEdit()
 	{
 		this(false);
 	}
 
-	public Unknowned(boolean i)
+	public SupportsPlaylistEdit(boolean i)
 	{
 		super("msed", "com.apple.itunes.unknown-ed", i);
 	}

@@ -81,6 +81,7 @@ public class JoliviaServer extends GuiceServletContextListener
 	final private IMusicStoreReader musicStoreReader;
 	final private IPlayingInformation iplayingInformation;
 	final private PasswordMethod passwordMethod;
+	final String databaseUrl = "jdbc:h2:mem:test";
 
 	private Injector injector;
 
@@ -95,7 +96,7 @@ public class JoliviaServer extends GuiceServletContextListener
 		h2server.start();
 		logger.info("h2 web server started on port http://" + InetAddress.getLocalHost().getHostName() + ":9123/");
 		logger.info("log in with empty username and password");
-		logger.info("jdbc:h2:mem:test");
+		logger.info(databaseUrl);
 
 		this.hostingPort = port;
 		this.pairingCode = pairingCode;
@@ -169,7 +170,7 @@ public class JoliviaServer extends GuiceServletContextListener
 					throw new RuntimeException(e);
 				}
 
-				bind(new TypeLiteral<Table<Integer, String, Class<? extends AbstractChunk>>>() {}).toInstance(ChunkFactory.getCalculatedMap());
+				bind(new TypeLiteral<Table<String, String, Class<? extends AbstractChunk>>>() {}).toInstance(ChunkFactory.getCalculatedMap());
 				// bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(MusicItemManager.class);
 				bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(InMemoryMusicManager.class);
 				bind(IMusicStoreReader.class).toInstance(musicStoreReader);

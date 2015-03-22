@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -25,12 +24,14 @@ import org.dyndns.jkiddo.dmap.chunks.audio.ArtistSearchContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.AudioProtocolVersion;
 import org.dyndns.jkiddo.dmap.chunks.audio.DatabaseItems;
 import org.dyndns.jkiddo.dmap.chunks.audio.SupportsExtraData;
-import org.dyndns.jkiddo.dmap.chunks.audio.SupportsGroups;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.MusicSharingVersion;
+import org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownMQ;
+import org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownSL;
+import org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownSR;
+import org.dyndns.jkiddo.dmap.chunks.audio.extension.UnknownTr;
 import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
-import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationSchemes;
 import org.dyndns.jkiddo.dmp.chunks.media.DatabaseCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
@@ -38,7 +39,6 @@ import org.dyndns.jkiddo.dmp.chunks.media.LoginRequired;
 import org.dyndns.jkiddo.dmp.chunks.media.MediaProtocolVersion;
 import org.dyndns.jkiddo.dmp.chunks.media.ReturnedCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ServerInfoResponse;
-import org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderListing;
 import org.dyndns.jkiddo.dmp.chunks.media.SpecifiedTotalCount;
 import org.dyndns.jkiddo.dmp.chunks.media.Status;
 import org.dyndns.jkiddo.dmp.chunks.media.SupportsAutoLogout;
@@ -46,12 +46,10 @@ import org.dyndns.jkiddo.dmp.chunks.media.SupportsBrowse;
 import org.dyndns.jkiddo.dmp.chunks.media.SupportsExtensions;
 import org.dyndns.jkiddo.dmp.chunks.media.SupportsIndex;
 import org.dyndns.jkiddo.dmp.chunks.media.SupportsPersistentIds;
+import org.dyndns.jkiddo.dmp.chunks.media.SupportsPlaylistEdit;
 import org.dyndns.jkiddo.dmp.chunks.media.SupportsQuery;
-import org.dyndns.jkiddo.dmp.chunks.media.SupportsResolve;
 import org.dyndns.jkiddo.dmp.chunks.media.SupportsUpdate;
 import org.dyndns.jkiddo.dmp.chunks.media.TimeoutInterval;
-import org.dyndns.jkiddo.dmp.chunks.media.UTCTime;
-import org.dyndns.jkiddo.dmp.chunks.media.UTCTimeOffset;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.dyndns.jkiddo.dpap.chunks.picture.PictureProtocolVersion;
@@ -116,7 +114,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		records.put(MACHINE_NAME_KEY, name);
 		records.put("OSsi", "0x4E8DAC");
 
-		records.put("Media Kinds Shared", "9");
+		records.put("Media Kinds Shared", "1");
 		records.put(TXT_VERSION_KEY, TXT_VERSION);
 		records.put(MACHINE_ID_KEY, hexedHostname);
 		records.put(VERSION_KEY, audioProtocolVersion.getValue() + "");
@@ -141,25 +139,31 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		final ServerInfoResponse serverInfoResponse = new ServerInfoResponse();
 
 		serverInfoResponse.add(new Status(200));
+		serverInfoResponse.add(mediaProtocolVersion);
 		serverInfoResponse.add(new ItemName(name));
 		serverInfoResponse.add(audioProtocolVersion);
 		serverInfoResponse.add(musicSharingVersion);
+		serverInfoResponse.add(new SupportsExtraData(7));
+		
 		serverInfoResponse.add(pictureProtocolVersion);
-		serverInfoResponse.add(mediaProtocolVersion);
 
-		serverInfoResponse.add(new SupportsExtraData(3));
-		serverInfoResponse.add(new SupportsExtensions(true));
-		serverInfoResponse.add(new SupportsGroups(3));
+//		serverInfoResponse.add(new SupportsGroups(SupportsGroups.SUPPORTS_ARTISTS_AND_ALBUM_GROUPS));
+		//serverInfoResponse.add(new SupportsGroups(SupportsGroups.SUPPORTS_ARTISTS_AND_ALBUM_GROUPS));
+//		serverInfoResponse.add(new SupportsGroups(SupportsGroups.SUPPORTS_ALBUM_GROUPS));
+//		serverInfoResponse.add(new SupportsGroups(SupportsGroups.SUPPORTS_ARTISTS_GROUPS));
+		
+		
+		 serverInfoResponse.add(new UnknownMQ(true));
+		 serverInfoResponse.add(new UnknownTr(true));
+		 serverInfoResponse.add(new UnknownSL(true));
+		 serverInfoResponse.add(new UnknownSR(true));
+		 serverInfoResponse.add(new SupportsPlaylistEdit(false));
+		
 		
 		// serverInfoResponse.add(new UnknownSE(0x80000));
-		// serverInfoResponse.add(new UnknownMQ(true));
 		// serverInfoResponse.add(new UnknownFR(0x64));
-		// serverInfoResponse.add(new UnknownTr(true));
-		// serverInfoResponse.add(new UnknownSL(true));
-		// serverInfoResponse.add(new UnknownSR(true));
 		// serverInfoResponse.add(new SupportsFairPlay(SupportsFairPlay.UNKNOWN_VALUE));//iTunes 11.0.2.26 says 2. If inserted, DAAP dies
 		// serverInfoResponse.add(new UnknownSX(111));
-		// serverInfoResponse.add(new Unknowned(true));
 		// Unknownml msml = new Unknownml();
 		// msml.add(new UnknownMA(0xBF940AB92600L)); //iTunes 11.0.2.26 - Totally unknown
 		// serverInfoResponse.add(msml);
@@ -179,7 +183,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 				serverInfoResponse.add(new AuthenticationMethod(PasswordMethod.USERNAME_AND_PASSWORD));
 			}
 
-			serverInfoResponse.add(new AuthenticationSchemes(AuthenticationSchemes.BASIC_SCHEME | AuthenticationSchemes.DIGEST_SCHEME));
+//			serverInfoResponse.add(new AuthenticationSchemes(AuthenticationSchemes.BASIC_SCHEME | AuthenticationSchemes.DIGEST_SCHEME));
 		}
 		else
 		{
@@ -191,10 +195,10 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		serverInfoResponse.add(new SupportsBrowse(true));
 		serverInfoResponse.add(new SupportsQuery(true));
 		serverInfoResponse.add(new SupportsIndex(true));
-		serverInfoResponse.add(new SupportsResolve(true));
+//		serverInfoResponse.add(new SupportsResolve(true));
 		serverInfoResponse.add(new DatabaseCount(itemManager.getDatabases().size()));
-		serverInfoResponse.add(new UTCTime(Calendar.getInstance().getTimeInMillis() / 1000));
-		serverInfoResponse.add(new UTCTimeOffset(7200));
+//		serverInfoResponse.add(new UTCTime(Calendar.getInstance().getTimeInMillis() / 1000));
+//		serverInfoResponse.add(new UTCTimeOffset(7200));
 
 		return Util.buildResponse(serverInfoResponse, getDMAPKey(), name);
 	}
@@ -294,19 +298,22 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	@Override
 	@Path("databases/{databaseId}/groups")
 	@GET
-	public Response groups(@PathParam("databaseId") final long databaseId, @QueryParam("meta") final String meta, @QueryParam("type") final String type, @QueryParam("group-type") final String groupType, @QueryParam("sort") final String sort, @QueryParam("include-sort-headers") final long includeSortHeaders, @QueryParam("query") final String query, @QueryParam("session-id") final long sessionId, @QueryParam("hsgid") final String hsgid) throws IOException
+	public Response groups(@PathParam("databaseId") final long databaseId, @QueryParam("meta") final String meta, @QueryParam("type") final String type, @QueryParam("group-type") final String groupType, @QueryParam("sort") final String sort, @QueryParam("include-sort-headers") final long includeSortHeaders, @QueryParam("query") final String query, @QueryParam("session-id") final long sessionId, @QueryParam("hsgid") final String hsgid) throws IOException, SQLException
 	{
-
+		final Iterable<String> parameters = DmapUtil.parseMeta(meta);
 		if("artists".equalsIgnoreCase(groupType))
 		{
 			final ArtistSearchContainer response = new ArtistSearchContainer();
 			response.add(new Status(200));
 			response.add(new UpdateType(0));
-			response.add(new SpecifiedTotalCount(0));//
-			response.add(new ReturnedCount(0));//
+			//response.add(new SpecifiedTotalCount(0));//
+			//response.add(new ReturnedCount(0));//
 
-			final Listing listing = new Listing();
-			listing.add(new SortingHeaderListing());//
+			//final Listing listing = new Listing();
+			final Listing listing = itemManager.getMediaItems(databaseId, parameters);
+			response.add(new SpecifiedTotalCount(Iterables.size(listing.getListingItems())));
+			response.add(new ReturnedCount(Iterables.size(listing.getListingItems())));
+//			listing.add(new SortingHeaderListing());//
 			response.add(listing);
 
 			return Util.buildResponse(response, getDMAPKey(), name);
@@ -316,10 +323,12 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 			final AlbumSearchContainer response = new AlbumSearchContainer();
 			response.add(new Status(200));
 			response.add(new UpdateType(0));
-			response.add(new SpecifiedTotalCount(0));//
-			response.add(new ReturnedCount(0));//
+			
+			final Listing listing = itemManager.getMediaItems(databaseId, parameters);
+		 	response.add(new SpecifiedTotalCount(Iterables.size(listing.getListingItems())));
+			response.add(new ReturnedCount(Iterables.size(listing.getListingItems())));
 
-			final Listing listing = new Listing();
+			//final Listing listing = new Listing();
 			response.add(listing);
 
 			return Util.buildResponse(response, getDMAPKey(), name);

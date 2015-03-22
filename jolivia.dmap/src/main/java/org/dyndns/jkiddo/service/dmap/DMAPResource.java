@@ -184,6 +184,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 		itemsContainer.add(new UpdateType(0));
 		
 		final Listing listing = itemManager.getMediaItems(databaseId, containerId, parameters);
+		
 		/*
 		Listing listing = new Listing();
 		for(MediaItem item : container.getMediaItems())

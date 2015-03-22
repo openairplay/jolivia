@@ -11,6 +11,7 @@
 package org.dyndns.jkiddo.service.daap.server;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
@@ -31,7 +32,7 @@ public interface IMusicLibrary extends ILibraryResource
 
 	@Path("databases/{databaseId}/groups")
 	@GET
-	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String groupType, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") long includeSortHeaders, @QueryParam("query") String query, @QueryParam("session-id") long sessionId, @QueryParam("hsgid") String hsgid) throws IOException;
+	public Response groups(@PathParam("databaseId") long databaseId, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String groupType, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") long includeSortHeaders, @QueryParam("query") String query, @QueryParam("session-id") long sessionId, @QueryParam("hsgid") String hsgid) throws IOException, SQLException;
 
 	// @Path("databases/{databaseId}/groups/{groupdId}/extra_data/artwork")
 	@Path("databases/{databaseId}/items/{groupdId}/extra_data/artwork")

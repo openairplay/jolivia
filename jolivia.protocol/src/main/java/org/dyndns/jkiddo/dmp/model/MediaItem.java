@@ -36,16 +36,18 @@ public class MediaItem
 	public MediaItem()
 	{}
 
-	public MediaItem(Database database)
+	public MediaItem(final Database database)
 	{
 		setDatabase(database);
 	}
 	
-	public void setDatabase(Database database)
+	public void setDatabase(final Database database)
 	{
 		this.database = database;
-		container = this.database.getMasterContainer();
 	}
+	
+	@DatabaseField(foreignAutoRefresh = true, foreign = true)
+	private Container container;
 	
 	@DatabaseField(canBeNull = false)
 	private String externalIdentifer;
@@ -55,7 +57,7 @@ public class MediaItem
 		return externalIdentifer;
 	}
 
-	public void setExternalIdentifer(String externalIdentifer)
+	public void setExternalIdentifer(final String externalIdentifer)
 	{
 		this.externalIdentifer = externalIdentifer;
 	}
@@ -87,40 +89,37 @@ public class MediaItem
 	@DatabaseField(foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true, canBeNull = false)
 	private Database database;
 
-	@DatabaseField(/*columnName="dmap.containeritemid",*/ foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true)
-	private Container container;
-
-	public void setItemKind(int value)
+	public void setItemKind(final int value)
 	{
 		this.itemKind = value;
 	}
 
-	public void setSongAlbum(String value)
+	public void setSongAlbum(final String value)
 	{
 		this.songAlbum = value;
 	}
 
-	public void setSongArtist(String value)
+	public void setSongArtist(final String value)
 	{
 		this.songArtist = value;
 	}
 
-	public void setItemName(String value)
+	public void setItemName(final String value)
 	{
 		this.itemName = value;
 	}
 
-	public void setMediaFormat(String value)
+	public void setMediaFormat(final String value)
 	{
 		this.mediaFormat = value;
 	}
 
-	public void setSongSampleRate(int value)
+	public void setSongSampleRate(final int value)
 	{
 		this.songSampleRate = value;
 	}
 
-	public void setSongTime(int value)
+	public void setSongTime(final int value)
 	{
 		this.songTime = value;
 	}
