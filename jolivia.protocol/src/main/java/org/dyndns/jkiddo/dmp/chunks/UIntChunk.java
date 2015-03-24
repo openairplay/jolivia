@@ -27,6 +27,7 @@
 
 package org.dyndns.jkiddo.dmp.chunks;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapTypeDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,25 +44,25 @@ public abstract class UIntChunk extends AbstractChunk implements IntChunk
 
 	protected int value = 0;
 
-	public UIntChunk(int type, String name, long value)
+	public UIntChunk(final int type, final String name, final long value)
 	{
 		super(type, name);
 		setValue(value);
 	}
 
-	public UIntChunk(String type, String name, long value)
+	public UIntChunk(final String type, final String name, final long value)
 	{
 		super(type, name);
 		setValue(value);
 	}
 
 	@Override
-	public void setValue(int value)
+	public void setValue(final int value)
 	{
 		this.value = value;
 	}
 
-	public void setValue(long value)
+	public void setValue(final long value)
 	{
 		setValue((int) checkUIntRange(value));
 	}
@@ -80,7 +81,7 @@ public abstract class UIntChunk extends AbstractChunk implements IntChunk
 	/**
 	 * Checks if #MIN_VALUE <= value <= #MAX_VALUE and if not an IllegalArgumentException is thrown.
 	 */
-	public static long checkUIntRange(long value) throws IllegalArgumentException
+	public static long checkUIntRange(final long value) throws IllegalArgumentException
 	{
 		if(value < MIN_VALUE || value > MAX_VALUE)
 		{
@@ -93,19 +94,19 @@ public abstract class UIntChunk extends AbstractChunk implements IntChunk
 	 * Returns {@see #U_INT_TYPE}
 	 */
 	@Override
-	public int getType()
+	public DmapTypeDefinition getType()
 	{
-		return Chunk.U_INT_TYPE;
+		return DmapTypeDefinition.U_INT_TYPE;
 	}
 
 	@Override
-	public String toString(int indent)
+	public String toString(final int indent)
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; uint)=" + getUnsignedValue();
 	}
 	
 	@Override
-	public void setObjectValue(Object object)
+	public void setObjectValue(final Object object)
 	{
 		setValue((Integer) object);
 	}

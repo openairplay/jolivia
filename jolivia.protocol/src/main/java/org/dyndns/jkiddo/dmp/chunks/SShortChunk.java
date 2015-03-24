@@ -27,6 +27,7 @@
 
 package org.dyndns.jkiddo.dmp.chunks;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapTypeDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,13 +44,13 @@ public abstract class SShortChunk extends AbstractChunk implements ShortChunk
 
 	protected int value = 0;
 
-	public SShortChunk(int type, String name, int value)
+	public SShortChunk(final int type, final String name, final int value)
 	{
 		super(type, name);
 		setValue(value);
 	}
 
-	public SShortChunk(String type, String name, int value)
+	public SShortChunk(final String type, final String name, final int value)
 	{
 		super(type, name);
 		setValue(value);
@@ -62,7 +63,7 @@ public abstract class SShortChunk extends AbstractChunk implements ShortChunk
 	}
 
 	@Override
-	public void setValue(int value)
+	public void setValue(final int value)
 	{
 		this.value = checkSShortRange(value);
 	}
@@ -70,7 +71,7 @@ public abstract class SShortChunk extends AbstractChunk implements ShortChunk
 	/**
 	 * Checks if #MIN_VALUE <= value <= #MAX_VALUE and if not an IllegalArgumentException is thrown.
 	 */
-	public static int checkSShortRange(int value) throws IllegalArgumentException
+	public static int checkSShortRange(final int value) throws IllegalArgumentException
 	{
 		if(value < MIN_VALUE || value > MAX_VALUE)
 		{
@@ -86,19 +87,19 @@ public abstract class SShortChunk extends AbstractChunk implements ShortChunk
 	 * Returns {@see #SHORT_TYPE}
 	 */
 	@Override
-	public int getType()
+	public DmapTypeDefinition getType()
 	{
-		return Chunk.SHORT_TYPE;
+		return DmapTypeDefinition.SHORT_TYPE;
 	}
 
 	@Override
-	public String toString(int indent)
+	public String toString(final int indent)
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; short)=" + getValue();
 	}
 	
 	@Override
-	public void setObjectValue(Object object)
+	public void setObjectValue(final Object object)
 	{
 		setValue((Integer) object);
 	}

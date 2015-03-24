@@ -27,6 +27,7 @@
 
 package org.dyndns.jkiddo.dmp.chunks;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapTypeDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,20 +44,20 @@ public abstract class SByteChunk extends AbstractChunk implements ByteChunk
 
 	protected int value = 0;
 
-	public SByteChunk(int type, String name, int value)
+	public SByteChunk(final int type, final String name, final int value)
 	{
 		super(type, name);
 		setValue(value);
 	}
 
-	public SByteChunk(String type, String name, int value)
+	public SByteChunk(final String type, final String name, final int value)
 	{
 		super(type, name);
 		setValue(value);
 	}
 
 	@Override
-	public void setValue(int value)
+	public void setValue(final int value)
 	{
 		this.value = checkSByteRange(value);
 	}
@@ -70,7 +71,7 @@ public abstract class SByteChunk extends AbstractChunk implements ByteChunk
 	/**
 	 * Checks if #MIN_VALUE <= value <= #MAX_VALUE and if not an IllegalArgumentException is thrown.
 	 */
-	public static int checkSByteRange(int value) throws IllegalArgumentException
+	public static int checkSByteRange(final int value) throws IllegalArgumentException
 	{
 		if(value < MIN_VALUE || value > MAX_VALUE)
 		{
@@ -86,19 +87,19 @@ public abstract class SByteChunk extends AbstractChunk implements ByteChunk
 	 * Returns {@see #BYTE_TYPE}
 	 */
 	@Override
-	public int getType()
+	public DmapTypeDefinition getType()
 	{
-		return Chunk.BYTE_TYPE;
+		return DmapTypeDefinition.BYTE_TYPE;
 	}
 
 	@Override
-	public String toString(int indent)
+	public String toString(final int indent)
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; byte)=" + getValue();
 	}
 	
 	@Override
-	public void setObjectValue(Object object)
+	public void setObjectValue(final Object object)
 	{
 		setValue((Integer) object);
 	}

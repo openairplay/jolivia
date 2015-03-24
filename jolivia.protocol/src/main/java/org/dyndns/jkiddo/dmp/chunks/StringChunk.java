@@ -29,6 +29,7 @@ package org.dyndns.jkiddo.dmp.chunks;
 
 import java.io.UnsupportedEncodingException;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapTypeDefinition;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
 
 /**
@@ -41,13 +42,13 @@ public abstract class StringChunk extends AbstractChunk
 
 	protected String value;
 
-	public StringChunk(int type, String name, String value)
+	public StringChunk(final int type, final String name, final String value)
 	{
 		super(type, name);
 		setValue(value);
 	}
 
-	public StringChunk(String type, String name, String value)
+	public StringChunk(final String type, final String name, final String value)
 	{
 		super(type, name);
 		setValue(value);
@@ -58,14 +59,14 @@ public abstract class StringChunk extends AbstractChunk
 		return value;
 	}
 
-	public void setValue(String value)
+	public void setValue(final String value)
 	{
 		this.value = value;
 	}
 
 	public byte[] getBytes()
 	{
-		String value = this.value;
+		final String value = this.value;
 
 		if(value == null || value.length() == 0)
 		{
@@ -75,7 +76,7 @@ public abstract class StringChunk extends AbstractChunk
 		{
 			return value.getBytes(DmapUtil.UTF_8);
 		}
-		catch(UnsupportedEncodingException err)
+		catch(final UnsupportedEncodingException err)
 		{
 			// Should never happen
 			throw new RuntimeException(err);
@@ -86,19 +87,19 @@ public abstract class StringChunk extends AbstractChunk
 	 * Returns {@see #STRING_TYPE}
 	 */
 	@Override
-	public int getType()
+	public DmapTypeDefinition getType()
 	{
-		return Chunk.STRING_TYPE;
+		return DmapTypeDefinition.STRING_TYPE;
 	}
 
 	@Override
-	public String toString(int indent)
+	public String toString(final int indent)
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; string)=" + getValue();
 	}
 	
 	@Override
-	public void setObjectValue(Object object)
+	public void setObjectValue(final Object object)
 	{
 		setValue((String) object);
 	}

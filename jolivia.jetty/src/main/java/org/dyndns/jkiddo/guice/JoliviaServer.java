@@ -17,8 +17,6 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletContextEvent;
 
-import org.dyndns.jkiddo.dmp.chunks.AbstractChunk;
-import org.dyndns.jkiddo.dmp.chunks.ChunkFactory;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.jetty.JoliviaExceptionMapper;
 import org.dyndns.jkiddo.jetty.ProxyFilter;
@@ -54,11 +52,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Table;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.TypeLiteral;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -170,7 +166,7 @@ public class JoliviaServer extends GuiceServletContextListener
 					throw new RuntimeException(e);
 				}
 
-				bind(new TypeLiteral<Table<String, String, Class<? extends AbstractChunk>>>() {}).toInstance(ChunkFactory.getCalculatedMap());
+//				bind(new TypeLiteral<Table<String, String, Class<? extends AbstractChunk>>>() {}).toInstance(ChunkFactory.getCalculatedMap());
 				// bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(MusicItemManager.class);
 				bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(InMemoryMusicManager.class);
 				bind(IMusicStoreReader.class).toInstance(musicStoreReader);

@@ -27,6 +27,7 @@
 
 package org.dyndns.jkiddo.dmp.chunks;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapTypeDefinition;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,24 +47,24 @@ public abstract class VersionChunk extends AbstractChunk
 
 	protected int version = 0;
 
-	public VersionChunk(int type, String name, long value)
+	public VersionChunk(final int type, final String name, final long value)
 	{
 		super(type, name);
 		setValue(value);
 	}
 
-	public VersionChunk(String type, String name, long value)
+	public VersionChunk(final String type, final String name, final long value)
 	{
 		super(type, name);
 		setValue(value);
 	}
 
-	protected VersionChunk(String type, String name, int majorVersion, int minorVersion, int microVersion)
+	protected VersionChunk(final String type, final String name, final int majorVersion, final int minorVersion, final int microVersion)
 	{
 		this(type, name, DmapUtil.toVersion(majorVersion, minorVersion, microVersion));
 	}
 
-	public void setValue(long version)
+	public void setValue(final long version)
 	{
 		this.version = (int) checkVersionRange(version);
 	}
@@ -73,21 +74,21 @@ public abstract class VersionChunk extends AbstractChunk
 		return version & MAX_VALUE;
 	}
 
-	public void setMajorVersion(int majorVersion)
+	public void setMajorVersion(final int majorVersion)
 	{
 		long version = getValue() & 0x0000FFFFl;
 		version |= (majorVersion & 0xFFFF) << 16;
 		setValue(version);
 	}
 
-	public void setMinorVersion(int minorVersion)
+	public void setMinorVersion(final int minorVersion)
 	{
 		long version = getValue() & 0xFFFF00FFl;
 		version |= (minorVersion & 0xFF) << 8;
 		setValue(version);
 	}
 
-	public void setMicroVersion(int microVersion)
+	public void setMicroVersion(final int microVersion)
 	{
 		long version = getValue() & 0xFFFFFF00l;
 		version |= (microVersion & 0xFF);
@@ -112,7 +113,7 @@ public abstract class VersionChunk extends AbstractChunk
 	/**
 	 * Checks if #MIN_VALUE <= value <= #MAX_VALUE and if not an IllegalArgumentException is thrown.
 	 */
-	public static long checkVersionRange(long value) throws IllegalArgumentException
+	public static long checkVersionRange(final long value) throws IllegalArgumentException
 	{
 		if(value < MIN_VALUE || value > MAX_VALUE)
 		{
@@ -128,34 +129,34 @@ public abstract class VersionChunk extends AbstractChunk
 	 * Returns {@see #VERSION_TYPE}
 	 */
 	@Override
-	public int getType()
+	public DmapTypeDefinition getType()
 	{
-		return Chunk.VERSION_TYPE;
+		return DmapTypeDefinition.VERSION_TYPE;
 	}
 
 	@Override
-	public String toString(int indent)
+	public String toString(final int indent)
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; version)=" + getMajorVersion() + "." + getMinorVersion() + "." + getMicroVersion();
 	}
 
-	public static final int getMajorVersion(int version)
+	public static final int getMajorVersion(final int version)
 	{
 		return (version & 0xFFFF0000) >> 16;
 	}
 
-	public static final int getMinorVersion(int version)
+	public static final int getMinorVersion(final int version)
 	{
 		return (version & 0xFF00) >> 8;
 	}
 
-	public static final int getMicroVersion(int version)
+	public static final int getMicroVersion(final int version)
 	{
 		return version & 0xFF;
 	}
 	
 	@Override
-	public void setObjectValue(Object object)
+	public void setObjectValue(final Object object)
 	{
 		setValue((Long) object);
 	}

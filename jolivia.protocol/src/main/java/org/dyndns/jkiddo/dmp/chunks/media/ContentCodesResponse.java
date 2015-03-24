@@ -29,16 +29,15 @@ package org.dyndns.jkiddo.dmp.chunks.media;
 
 import java.util.Collection;
 
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
 import org.dyndns.jkiddo.dmp.chunks.ContainerChunk;
-
 /**
  * The ContentCodesResponse is a list of ContentCodes-Numbers, Names and Types. It is needed to build a list of capabilities of the Server which is send to the client...
  * 
  * @author Roger Kapsi
  */
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
-import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 
 @DMAPAnnotation(type=DmapChunkDefinition.mccr)
 public class ContentCodesResponse extends ContainerChunk
