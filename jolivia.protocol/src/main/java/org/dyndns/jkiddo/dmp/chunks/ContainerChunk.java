@@ -33,6 +33,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapTypeDefinition;
+
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterables;
 
@@ -49,7 +51,7 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 	/**
 	 * Creates a new ContainerChunk with an <tt>ArrayList</tt> as the underlying collection.
 	 */
-	protected ContainerChunk(String type, String name)
+	protected ContainerChunk(final String type, final String name)
 	{
 		this(type, name, new ArrayList<Chunk>());
 	}
@@ -57,7 +59,7 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 	/**
 	 * Note: you should use always a List as the underlying collection.
 	 */
-	protected ContainerChunk(String type, String name, Collection<Chunk> collection)
+	protected ContainerChunk(final String type, final String name, final Collection<Chunk> collection)
 	{
 		super(type, name);
 		this.collection = collection;
@@ -66,7 +68,7 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 	/**
 	 * Adds <tt>chunk</tt> to this container
 	 */
-	public void add(Chunk chunk)
+	public void add(final Chunk chunk)
 	{
 		if(chunk == null)
 		{
@@ -75,7 +77,7 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 		collection.add(chunk);
 	}
 
-	public void addAll(Collection<Chunk> chunk)
+	public void addAll(final Collection<Chunk> chunk)
 	{
 		if(chunk == null)
 		{
@@ -102,23 +104,23 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 	 * Returns {@see Chunk.CONTAINER_TYPE}
 	 */
 	@Override
-	public int getType()
+	public DmapTypeDefinition getType()
 	{
-		return Chunk.CONTAINER_TYPE;
+		return DmapTypeDefinition.CONTAINER_TYPE;
 	}
 
 	@Override
-	public String toString(int indent)
+	public String toString(final int indent)
 	{
-		StringBuilder buffer = new StringBuilder(indent(indent));
+		final StringBuilder buffer = new StringBuilder(indent(indent));
 		buffer.append(name).append("(").append(getContentCodeString()).append("; container)\n");
 
 		if(collection != null)
 		{
-			Iterator<Chunk> it = iterator();
+			final Iterator<Chunk> it = iterator();
 			while(it.hasNext())
 			{
-				Chunk chunk = it.next();
+				final Chunk chunk = it.next();
 				buffer./* append(i).append(": "). */append(indent(indent + 4) + chunk.toString());
 				if(it.hasNext())
 				{
@@ -130,9 +132,9 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T extends Chunk> T getSingleChunk(Class<T> clazz)
+	protected <T extends Chunk> T getSingleChunk(final Class<T> clazz)
 	{
-		Iterable<Chunk> iterables = Iterables.filter(this.collection, Predicates.instanceOf(clazz));
+		final Iterable<Chunk> iterables = Iterables.filter(this.collection, Predicates.instanceOf(clazz));
 		if(Iterables.size(iterables) == 1)
 		{
 			return (T) iterables.iterator().next();
@@ -144,7 +146,7 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 		throw new NoSuchElementException("Multiple chunks of type " + clazz + " was found");
 	}
 
-	protected <T extends Chunk> Iterable<T> getMultipleChunks(Class<T> clazz)
+	protected <T extends Chunk> Iterable<T> getMultipleChunks(final Class<T> clazz)
 	{
 		return Iterables.filter(collection, clazz);
 		/*Iterable<T> iterables = Iterables.filter(collection, clazz);
@@ -156,7 +158,7 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 	}
 
 	@Override
-	public void setObjectValue(Object object)
+	public void setObjectValue(final Object object)
 	{
 		System.out.println("setObjectValue(Object object) does not apply for ContainerChunks");
 	}

@@ -27,6 +27,8 @@
 
 package org.dyndns.jkiddo.dmp.chunks;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapTypeDefinition;
+
 /**
  * A signed long
  */
@@ -38,13 +40,13 @@ public abstract class SLongChunk extends AbstractChunk implements LongChunk
 
 	protected long value = 0;
 
-	public SLongChunk(int type, String name, long value)
+	public SLongChunk(final int type, final String name, final long value)
 	{
 		super(type, name);
 		setValue(value);
 	}
 
-	public SLongChunk(String type, String name, long value)
+	public SLongChunk(final String type, final String name, final long value)
 	{
 		super(type, name);
 		setValue(value);
@@ -57,7 +59,7 @@ public abstract class SLongChunk extends AbstractChunk implements LongChunk
 	}
 
 	@Override
-	public void setValue(long value)
+	public void setValue(final long value)
 	{
 		this.value = value;
 	}
@@ -66,19 +68,19 @@ public abstract class SLongChunk extends AbstractChunk implements LongChunk
 	 * Returns {@see #LONG_TYPE}
 	 */
 	@Override
-	public int getType()
+	public DmapTypeDefinition getType()
 	{
-		return Chunk.LONG_TYPE;
+		return DmapTypeDefinition.LONG_TYPE;
 	}
 
 	@Override
-	public String toString(int indent)
+	public String toString(final int indent)
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; long)=" + getValue();
 	}
 
 	@Override
-	public void setObjectValue(Object object)
+	public void setObjectValue(final Object object)
 	{
 		setValue((Long) object);
 	}

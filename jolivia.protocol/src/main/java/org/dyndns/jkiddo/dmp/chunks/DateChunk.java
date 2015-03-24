@@ -29,6 +29,7 @@ package org.dyndns.jkiddo.dmp.chunks;
 
 import java.util.Date;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapTypeDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,13 +48,13 @@ public abstract class DateChunk extends AbstractChunk
 
 	protected long date;
 
-	public DateChunk(int type, String name, long value)
+	public DateChunk(final int type, final String name, final long value)
 	{
 		super(type, name);
 		setValue(value);
 	}
 
-	public DateChunk(String type, String name, long date)
+	public DateChunk(final String type, final String name, final long date)
 	{
 		super(type, name);
 		setValue(date);
@@ -69,7 +70,7 @@ public abstract class DateChunk extends AbstractChunk
 		return new Date(getValue() * 1000);
 	}
 
-	public void setValue(long date)
+	public void setValue(final long date)
 	{
 		this.date = checkDateRange(date);
 	}
@@ -77,7 +78,7 @@ public abstract class DateChunk extends AbstractChunk
 	/**
 	 * Checks if #MIN_VALUE <= value <= #MAX_VALUE and if not an IllegalArgumentException is thrown.
 	 */
-	public static long checkDateRange(long value) throws IllegalArgumentException
+	public static long checkDateRange(final long value) throws IllegalArgumentException
 	{
 		if(value < MIN_VALUE || value > MAX_VALUE)
 		{
@@ -93,19 +94,19 @@ public abstract class DateChunk extends AbstractChunk
 	 * Returns {@see #DATE_TYPE}
 	 */
 	@Override
-	public int getType()
+	public DmapTypeDefinition getType()
 	{
-		return Chunk.DATE_TYPE;
+		return DmapTypeDefinition.DATE_TYPE;
 	}
 
 	@Override
-	public String toString(int indent)
+	public String toString(final int indent)
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; date)=" + getValue();
 	}
 	
 	@Override
-	public void setObjectValue(Object object)
+	public void setObjectValue(final Object object)
 	{
 		setValue((Long) object);
 	}

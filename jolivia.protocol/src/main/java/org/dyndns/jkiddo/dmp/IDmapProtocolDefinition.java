@@ -38,6 +38,16 @@ public interface IDmapProtocolDefinition
 		{
 			return length;
 		}
+		
+		public static DmapTypeDefinition fromInteger(final int i)
+		{
+			for(final DmapTypeDefinition v : DmapTypeDefinition.values())
+			{
+				if(v.getType() == i)
+					return v;
+			}
+			throw new RuntimeException(i + " could not be mapped to a type");
+		}
 	} 
 	public static enum DmapChunkDefinition implements IDmapProtocolDefinition
 	{
@@ -362,6 +372,11 @@ public interface IDmapProtocolDefinition
 
 		public Class<? extends AbstractChunk> getClazz() {
 			return clazz;
+		}
+		
+		@Override
+		public String toString() {
+			return "DmapTypeDefinition [longname=" + longname + ", shortname=" + shortname + ", type=" + type + ", clazz=" + clazz+ "]";
 		}
 		
 	}

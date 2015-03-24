@@ -3,21 +3,15 @@ package test.db;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition;
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
-import org.dyndns.jkiddo.dmp.chunks.AbstractChunk;
-import org.dyndns.jkiddo.dmp.chunks.ChunkFactory;
 import org.dyndns.jkiddo.dmp.model.Container;
 import org.dyndns.jkiddo.dmp.model.Database;
 import org.dyndns.jkiddo.dmp.model.Library;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
-import org.dyndns.jkiddo.dmp.util.DmapUtil;
 import org.h2.tools.Server;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.common.collect.Table;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
@@ -80,15 +74,6 @@ public class TestDB
 		System.out.println();
 	}
 	
-	//@Test
-	public void testMap()
-	{
-		final Table<String, String, Class<? extends AbstractChunk>> table = ChunkFactory.getCalculatedMap();
-		final DmapChunkDefinition def = IDmapProtocolDefinition.DmapChunkDefinition.abcp;
-		final Class<? extends AbstractChunk> clazz = table.get(DmapUtil.toContentCodeNumber(def.getShortname()), def.getLongname());
-		System.out.println(clazz);
-	}
-
 	protected String randomString()
 	{
 		return UUID.randomUUID().toString();

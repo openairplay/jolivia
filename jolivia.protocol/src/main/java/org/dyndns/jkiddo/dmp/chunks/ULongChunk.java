@@ -29,6 +29,8 @@ package org.dyndns.jkiddo.dmp.chunks;
 
 import java.math.BigInteger;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapTypeDefinition;
+
 /**
  * An unsigned long
  */
@@ -40,20 +42,20 @@ public abstract class ULongChunk extends AbstractChunk implements LongChunk
 
 	protected long value = 0;
 
-	public ULongChunk(int type, String name, long value)
+	public ULongChunk(final int type, final String name, final long value)
 	{
 		super(type, name);
 		setValue(value);
 	}
 
-	public ULongChunk(String type, String name, long value)
+	public ULongChunk(final String type, final String name, final long value)
 	{
 		super(type, name);
 		setValue(value);
 	}
 
 	@Override
-	public void setValue(long value)
+	public void setValue(final long value)
 	{
 		this.value = value;
 	}
@@ -66,8 +68,8 @@ public abstract class ULongChunk extends AbstractChunk implements LongChunk
 
 	public BigInteger getUnsignedValue()
 	{
-		long l = getValue();
-		byte[] b = new byte[8 + 1];
+		final long l = getValue();
+		final byte[] b = new byte[8 + 1];
 
 		b[0] = 0;
 		b[1] = (byte) ((l >> 56l) & 0xFF);
@@ -86,19 +88,19 @@ public abstract class ULongChunk extends AbstractChunk implements LongChunk
 	 * Returns {@see #U_LONG_TYPE}
 	 */
 	@Override
-	public int getType()
+	public DmapTypeDefinition getType()
 	{
-		return Chunk.U_LONG_TYPE;
+		return DmapTypeDefinition.U_LONG_TYPE;
 	}
 
 	@Override
-	public String toString(int indent)
+	public String toString(final int indent)
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; ulong)=" + getUnsignedValue();
 	}
 	
 	@Override
-	public void setObjectValue(Object object)
+	public void setObjectValue(final Object object)
 	{
 		setValue((Long) object);
 	}

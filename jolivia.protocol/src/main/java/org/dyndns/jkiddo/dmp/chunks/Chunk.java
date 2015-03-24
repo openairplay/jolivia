@@ -109,5 +109,5 @@ public interface Chunk
 	/**
 	 * Returns the type of this Chunk. For example {@see #BOOLEAN_TYPE}.
 	 */
-	public int getType();
+	public DmapTypeDefinition getType();
 }

@@ -5,7 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.ByteBuffer;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
@@ -55,13 +54,12 @@ public class TestOfChunkFactory
 		{
 			final Dictionary c = contentCodes.next();
 			final String shortName = c.getSpecificChunk(ContentCodesNumber.class).getValueContentCode();
-			final Integer type = c.getSpecificChunk(ContentCodesType.class).getValue();
+			final DmapTypeDefinition type = DmapTypeDefinition.fromInteger(c.getSpecificChunk(ContentCodesType.class).getValue());
 			final String longName = c.getSpecificChunk(ContentCodesName.class).getValue();
 
 			try
 			{
-				//final Chunk chunk = chunkFactory.newChunk(stringReadAsInt(shortName));
-				final Chunk chunk = chunkFactory.getChunkClass(shortName).newInstance();
+				final Chunk chunk = chunkFactory.newChunk(shortName);
 				System.out.println(shortName + " : " + type + " : " + longName + " : " + chunk.getClass().getSimpleName());
 				if(chunk.getType() != type)
 				{
@@ -79,21 +77,11 @@ public class TestOfChunkFactory
 			catch(final Exception e)
 			{
 				System.out.println("- " + shortName + " : " + type + " : " + longName + " : ");
-				System.out.println("					Chunk could not be identified, having " + stringReadAsInt(shortName));
+				System.out.println("					Chunk could not be identified, having " + ChunkFactory.stringReadAsInt(shortName));
 			}
 		}
 		
 		dis.close();
-	}
-	private static int stringReadAsInt(final String s)
-	{
-		final ByteBuffer buffer = ByteBuffer.allocate(s.length());
-		for(int i = 0; i < s.length(); i++)
-		{
-			buffer.put((byte) s.charAt(i));
-		}
-		buffer.position(0);
-		return buffer.getInt();
 	}
 	
 	private static byte[] request(final String remoteUrl) throws Exception

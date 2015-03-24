@@ -27,6 +27,7 @@
 
 package org.dyndns.jkiddo.dmp.chunks;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapTypeDefinition;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
 
 /**
@@ -43,7 +44,7 @@ public abstract class AbstractChunk implements Chunk
 	/**
 *
 */
-	protected AbstractChunk(String contentCode, String name)
+	protected AbstractChunk(final String contentCode, final String name)
 	{
 		if(contentCode.length() != 4)
 		{
@@ -57,7 +58,7 @@ public abstract class AbstractChunk implements Chunk
 	/**
 *
 */
-	protected AbstractChunk(int contentCode, String name)
+	protected AbstractChunk(final int contentCode, final String name)
 	{
 		this.contentCode = contentCode;
 		this.name = name;
@@ -91,7 +92,7 @@ public abstract class AbstractChunk implements Chunk
 	 * Returns the type of this Chunk.
 	 */
 	@Override
-	public abstract int getType();
+	public abstract DmapTypeDefinition getType();
 
 	@Override
 	public String toString()
@@ -99,14 +100,14 @@ public abstract class AbstractChunk implements Chunk
 		return toString(0);
 	}
 
-	public String toString(int indent)
+	public String toString(final int indent)
 	{
 		return indent(indent) + name + "('" + getContentCodeString() + "')";
 	}
 
-	protected static String indent(int indent)
+	protected static String indent(final int indent)
 	{
-		StringBuffer buffer = new StringBuffer(indent);
+		final StringBuffer buffer = new StringBuffer(indent);
 		for(int i = 0; i < indent; i++)
 		{
 			buffer.append(' ');

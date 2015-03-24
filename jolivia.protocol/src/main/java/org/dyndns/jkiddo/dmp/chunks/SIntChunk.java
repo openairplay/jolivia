@@ -27,6 +27,8 @@
 
 package org.dyndns.jkiddo.dmp.chunks;
 
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapTypeDefinition;
+
 /**
  * A signed int
  */
@@ -38,13 +40,13 @@ public abstract class SIntChunk extends AbstractChunk implements IntChunk
 
 	protected int value = 0;
 
-	public SIntChunk(int type, String name, int value)
+	public SIntChunk(final int type, final String name, final int value)
 	{
 		super(type, name);
 		setValue(value);
 	}
 
-	public SIntChunk(String type, String name, int value)
+	public SIntChunk(final String type, final String name, final int value)
 	{
 		super(type, name);
 		setValue(value);
@@ -57,7 +59,7 @@ public abstract class SIntChunk extends AbstractChunk implements IntChunk
 	}
 
 	@Override
-	public void setValue(int value)
+	public void setValue(final int value)
 	{
 		this.value = value;
 	}
@@ -66,19 +68,19 @@ public abstract class SIntChunk extends AbstractChunk implements IntChunk
 	 * Returns {@see #INT_TYPE}
 	 */
 	@Override
-	public int getType()
+	public DmapTypeDefinition getType()
 	{
-		return Chunk.INT_TYPE;
+		return DmapTypeDefinition.INT_TYPE;
 	}
 
 	@Override
-	public String toString(int indent)
+	public String toString(final int indent)
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; int)=" + getValue();
 	}
 	
 	@Override
-	public void setObjectValue(Object object)
+	public void setObjectValue(final Object object)
 	{
 		setValue((Integer) object);
 	}
