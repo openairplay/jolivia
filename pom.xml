@@ -84,6 +84,6 @@
 		<module>jolivia.jetty</module>
 		<module>jolivia.example</module>
 		<!--  <module>jolivia.ws.example</module>-->
-    <module>jolivia.apache</module>
+    <!-- <module>jolivia.apache</module>-->
   </modules>
 </project>

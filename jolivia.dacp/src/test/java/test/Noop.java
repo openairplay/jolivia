@@ -66,6 +66,10 @@ public class Noop
 			try
 			{
 				itemId = item.getSpecificChunk(ItemId.class).getValue();
+				
+				final String name = item.getSpecificChunk(ItemName.class).getValue();
+				if("africa002".equals(name))
+					System.out.println();
 				System.out.println(item.getSpecificChunk(SongAlbum.class).getValue());
 				System.out.println(item.getSpecificChunk(SongArtist.class).getValue());
 				System.out.println(item.getSpecificChunk(SongTime.class).getValue());

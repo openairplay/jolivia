@@ -44,11 +44,6 @@ public abstract class SByteChunk extends AbstractChunk implements ByteChunk
 
 	protected int value = 0;
 
-	public SByteChunk(final int type, final String name, final int value)
-	{
-		super(type, name);
-		setValue(value);
-	}
 
 	public SByteChunk(final String type, final String name, final int value)
 	{

@@ -40,12 +40,6 @@ public abstract class SLongChunk extends AbstractChunk implements LongChunk
 
 	protected long value = 0;
 
-	public SLongChunk(final int type, final String name, final long value)
-	{
-		super(type, name);
-		setValue(value);
-	}
-
 	public SLongChunk(final String type, final String name, final long value)
 	{
 		super(type, name);

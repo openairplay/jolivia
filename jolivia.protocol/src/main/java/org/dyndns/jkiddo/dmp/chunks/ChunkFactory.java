@@ -54,10 +54,10 @@ public final class ChunkFactory
 				throw new RuntimeException("No matching annotation found for class: '" + enumDefinitions.getClazz() + "'");
 			}
 
-			Integer shortNameAsInt = dmapAnnotation.hash();
+			int shortNameAsInt = dmapAnnotation.hash();
 			if(shortNameAsInt == -1)
 				shortNameAsInt = DmapUtil.toContentCodeNumber(dmapAnnotation.type().getShortname());
-				
+
 			table.put(shortNameAsInt, dmapAnnotation);
 			
 		}
@@ -72,11 +72,11 @@ public final class ChunkFactory
 		return calculatedMap;
 	}
 	
-	private Class<? extends Chunk> getChunkClass(final Integer contentCode) throws ProtocolViolationException
+	private Class<? extends Chunk> getChunkClass(final int contentCode) throws ProtocolViolationException
 	{
 		try
 		{
-			return calculatedMap.get(contentCode).type().getClazz();
+			return calculatedMap.get(new Integer(contentCode)).type().getClazz();
 		}
 		catch(final Exception err)
 		{
@@ -84,11 +84,12 @@ public final class ChunkFactory
 		}
 	}
 	
-	public Chunk newChunk(final String contentCode) throws ProtocolViolationException
+	@SuppressWarnings("unchecked")
+	public <T extends Chunk> T newChunk(final String contentCode) throws ProtocolViolationException
 	{
 		final Class<? extends Chunk> clazz = getChunkClass(stringReadAsInt(contentCode));
 		try {
-			return clazz.newInstance();
+			return (T) clazz.newInstance();
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
 		}

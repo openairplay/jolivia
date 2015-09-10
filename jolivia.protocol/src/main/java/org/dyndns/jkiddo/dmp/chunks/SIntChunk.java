@@ -40,11 +40,7 @@ public abstract class SIntChunk extends AbstractChunk implements IntChunk
 
 	protected int value = 0;
 
-	public SIntChunk(final int type, final String name, final int value)
-	{
-		super(type, name);
-		setValue(value);
-	}
+	
 
 	public SIntChunk(final String type, final String name, final int value)
 	{

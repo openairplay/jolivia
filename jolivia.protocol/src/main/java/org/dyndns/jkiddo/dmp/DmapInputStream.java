@@ -68,8 +68,9 @@ public class DmapInputStream extends BufferedInputStream
 
 	public DmapInputStream(final InputStream in)
 	{
-		super(in);
-		this.specialCaseProtocolViolation = false;
+		//super(in);
+		this(in, false);
+		//this.specialCaseProtocolViolation = false;
 	}
 
 	public DmapInputStream(final InputStream in, final boolean specialCaseProtocolViolation)
@@ -166,7 +167,8 @@ public class DmapInputStream extends BufferedInputStream
 		return (T) getChunk();
 	}
 
-	public Chunk getChunk() throws IOException, ProtocolViolationException
+	@SuppressWarnings("unchecked")
+	public <T extends Chunk> T getChunk() throws IOException, ProtocolViolationException
 	{
 		final String contentCode = readContentCode();
 		contentLength = readLength();
@@ -175,13 +177,13 @@ public class DmapInputStream extends BufferedInputStream
 		{
 			factory = new ChunkFactory();
 		}
-		Chunk chunk = factory.newChunk(contentCode);
+		T chunk = factory.newChunk(contentCode);
 
 		if(specialCaseProtocolViolation)
 		{
 			if(chunk.getClass().equals(ListingItem.class))
 			{
-				chunk = new SongArtist();
+				chunk = (T) new SongArtist();
 			}
 		}
 

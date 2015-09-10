@@ -48,12 +48,6 @@ public abstract class DateChunk extends AbstractChunk
 
 	protected long date;
 
-	public DateChunk(final int type, final String name, final long value)
-	{
-		super(type, name);
-		setValue(value);
-	}
-
 	public DateChunk(final String type, final String name, final long date)
 	{
 		super(type, name);

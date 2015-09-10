@@ -47,12 +47,6 @@ public abstract class VersionChunk extends AbstractChunk
 
 	protected int version = 0;
 
-	public VersionChunk(final int type, final String name, final long value)
-	{
-		super(type, name);
-		setValue(value);
-	}
-
 	public VersionChunk(final String type, final String name, final long value)
 	{
 		super(type, name);

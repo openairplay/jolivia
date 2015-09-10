@@ -44,12 +44,6 @@ public abstract class UShortChunk extends AbstractChunk implements ShortChunk
 
 	protected int value = 0;
 
-	public UShortChunk(final int type, final String name, final int value)
-	{
-		super(type, name);
-		setValue(value);
-	}
-
 	public UShortChunk(final String type, final String name, final int value)
 	{
 		super(type, name);

@@ -22,9 +22,12 @@
 			<artifactId>tika-parsers</artifactId>
 			<version>1.4</version>
 		</dependency>
-		<!-- <dependency> <groupId>googlemusic.api</groupId> <artifactId>googlemusic.api</artifactId> 
-			<version>1.0.0</version> </dependency> -->
 		<dependency>
+			<groupId>googlemusic.api</groupId>
+			<artifactId>googlemusic.api</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+	<dependency>
 			<groupId>com.google.gdata</groupId>
 			<artifactId>core</artifactId>
 			<version>1.47.1</version>

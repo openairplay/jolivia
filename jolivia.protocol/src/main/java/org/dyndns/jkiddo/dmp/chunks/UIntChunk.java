@@ -44,13 +44,13 @@ public abstract class UIntChunk extends AbstractChunk implements IntChunk
 
 	protected int value = 0;
 
-	public UIntChunk(final int type, final String name, final long value)
+	public UIntChunk(final String type, final String name, final long value)
 	{
 		super(type, name);
 		setValue(value);
 	}
 
-	public UIntChunk(final String type, final String name, final long value)
+	public UIntChunk(final int type, final String name, final int hasChilds)
 	{
 		super(type, name);
 		setValue(value);

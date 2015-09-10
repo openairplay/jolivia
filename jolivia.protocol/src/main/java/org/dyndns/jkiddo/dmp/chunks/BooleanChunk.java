@@ -35,12 +35,7 @@ package org.dyndns.jkiddo.dmp.chunks;
 public abstract class BooleanChunk extends UByteChunk
 {
 
-	public BooleanChunk(int type, String name, boolean value)
-	{
-		super(type, name, (value ? 1 : 0));
-	}
-
-	public BooleanChunk(String type, String name, boolean value)
+	public BooleanChunk(final String type, final String name, final boolean value)
 	{
 		super(type, name, (value ? 1 : 0));
 	}
@@ -50,20 +45,20 @@ public abstract class BooleanChunk extends UByteChunk
 		return getValue() != 0;
 	}
 
-	public void setValue(boolean value)
+	public void setValue(final boolean value)
 	{
 		super.setValue(value ? 1 : 0);
 	}
 
 	@Override
-	public void setValue(int value)
+	public void setValue(final int value)
 	{
 		// normalize to 1 and 0 for easier debugging
 		super.setValue((value != 0) ? 1 : 0);
 	}
 
 	@Override
-	public String toString(int indent)
+	public String toString(final int indent)
 	{
 		return indent(indent) + name + "(" + getContentCodeString() + "; boolean)=" + getBooleanValue();
 	}

@@ -42,12 +42,6 @@ public abstract class StringChunk extends AbstractChunk
 
 	protected String value;
 
-	public StringChunk(final int type, final String name, final String value)
-	{
-		super(type, name);
-		setValue(value);
-	}
-
 	public StringChunk(final String type, final String name, final String value)
 	{
 		super(type, name);

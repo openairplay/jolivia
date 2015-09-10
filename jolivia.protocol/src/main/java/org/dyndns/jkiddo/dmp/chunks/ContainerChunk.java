@@ -53,16 +53,8 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 	 */
 	protected ContainerChunk(final String type, final String name)
 	{
-		this(type, name, new ArrayList<Chunk>());
-	}
-
-	/**
-	 * Note: you should use always a List as the underlying collection.
-	 */
-	protected ContainerChunk(final String type, final String name, final Collection<Chunk> collection)
-	{
 		super(type, name);
-		this.collection = collection;
+		this.collection = new ArrayList<Chunk>();
 	}
 
 	/**
