@@ -29,6 +29,7 @@ import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
 import org.dyndns.jkiddo.service.daap.client.PairedRemoteDiscoverer;
 import org.dyndns.jkiddo.service.daap.client.UnpairedRemoteCrawler;
 import org.dyndns.jkiddo.service.daap.server.DAAPResource;
+import org.dyndns.jkiddo.service.daap.server.HomeSharingResource;
 import org.dyndns.jkiddo.service.daap.server.IMusicLibrary;
 import org.dyndns.jkiddo.service.daap.server.InMemoryMusicManager;
 import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
@@ -155,7 +156,8 @@ public class JoliviaServer extends GuiceServletContextListener
 			protected void configure()
 			{
 				bind(Integer.class).annotatedWith(Names.named(DAAPResource.DAAP_PORT_NAME)).toInstance(hostingPort);
-				bind(IMusicLibrary.class).to(DAAPResource.class).asEagerSingleton();
+//				bind(IMusicLibrary.class).to(DAAPResource.class).asEagerSingleton();
+				bind(IMusicLibrary.class).to(HomeSharingResource.class).asEagerSingleton();
 				bind(PasswordMethod.class).toInstance(passwordMethod);
 				try
 				{

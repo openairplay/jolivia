@@ -27,7 +27,7 @@
 
 package org.dyndns.jkiddo.dmp.chunks;
 
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapTypeDefinition;
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 import org.dyndns.jkiddo.dmp.util.DmapUtil;
 
 /**
@@ -40,6 +40,7 @@ public abstract class AbstractChunk implements Chunk
 
 	protected final int contentCode;
 	protected final String name;
+	private final DMAPAnnotation annotation = this.getClass().getAnnotation(DMAPAnnotation.class);
 
 	/**
 *
@@ -63,6 +64,19 @@ public abstract class AbstractChunk implements Chunk
 		this.contentCode = contentCode;
 		this.name = name;
 	}
+	
+	protected AbstractChunk()
+	{
+		name = annotation.type().getLongname();
+		if(annotation.type().hashCode() == -1)
+		{
+			contentCode = DmapUtil.toContentCodeNumber(annotation.type().getShortname());
+		}
+		else
+		{
+			contentCode = DmapUtil.toContentCodeNumber(annotation.type().getShortname());
+		}
+	}
 
 	@Override
 	public int getContentCode()
@@ -76,7 +90,8 @@ public abstract class AbstractChunk implements Chunk
 	@Override
 	public String getContentCodeString()
 	{
-		return DmapUtil.toContentCodeString(contentCode);
+		return annotation.type().getShortname();
+//		return DmapUtil.toContentCodeString(contentCode);
 	}
 
 	/**
@@ -85,14 +100,9 @@ public abstract class AbstractChunk implements Chunk
 	@Override
 	public String getName()
 	{
-		return name;
+		return annotation.type().getLongname();
+//		return name;
 	}
-
-	/**
-	 * Returns the type of this Chunk.
-	 */
-	@Override
-	public abstract DmapTypeDefinition getType();
 
 	@Override
 	public String toString()

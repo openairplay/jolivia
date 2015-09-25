@@ -22,7 +22,12 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.FloatControl;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
 
 /**
  * Audio output queue. Serves an an {@link AudioClock} and allows samples to be queued for playback at a specific time.
@@ -364,7 +369,6 @@ public class AudioOutputQueue implements AudioClock
 		{
 			throw new LineUnavailableException("Audio encoding " + audioFormat.getEncoding() + " is not supported");
 		}
-
 		/* Audio format-dependent stuff */
 		m_packetSizeFrames = streamInfoProvider.getFramesPerPacket();
 		m_bytesPerFrame = m_format.getChannels() * m_format.getSampleSizeInBits() / 8;

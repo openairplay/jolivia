@@ -27,8 +27,7 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio.extension;
 
-import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
-
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 /**
  * Unknown purpose.
  * 
@@ -36,10 +35,10 @@ import org.dyndns.jkiddo.dmp.chunks.UIntChunk;
  * @since iTunes 4.5
  */
 import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
-import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+import org.dyndns.jkiddo.dmp.chunks.ULongChunk;
 
 @DMAPAnnotation(type=DmapChunkDefinition.aeSI)
-public class ITMSSongId extends UIntChunk
+public class ITMSSongId extends ULongChunk
 {
 
 	/** Creates a new instance of ITMSSongId */
@@ -48,7 +47,7 @@ public class ITMSSongId extends UIntChunk
 		this(0);
 	}
 
-	public ITMSSongId(long songId)
+	public ITMSSongId(final long songId)
 	{
 		super("aeSI", "com.apple.itunes.itms-songid", songId);
 	}

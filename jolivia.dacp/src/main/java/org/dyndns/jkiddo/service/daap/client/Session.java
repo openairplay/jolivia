@@ -60,6 +60,8 @@ import org.dyndns.jkiddo.service.dmap.Util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.dd.plist.NSDictionary;
+import com.dd.plist.NSString;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 
@@ -119,18 +121,20 @@ public class Session
 		final ServerInfoResponse serverInfoRespone = getServerInfo();
 
 		logger.debug(String.format("trying login for host=%s", host));
-		final String gid = RequestHelper.requestPList(username, password);
-		homeSharingGid = "&hsgid=" + gid;
-		final LoginResponse loginResponse = doLoginWithHomeSharingGid(gid);
+		final NSDictionary nsDic = RequestHelper.requestPList(username, password);
+		homeSharingGid = "&hsgid=" + ((NSString) nsDic.get("sgid")).getContent();
+		final LoginResponse loginResponse = doLoginWithHomeSharingGid(((NSString) nsDic.get("sgid")).getContent());
 
 		sessionId = loginResponse.getSessionId().getValue();
 
 		final DataControlInt ctrl_int = getControlInt();
-		/*
-		 * fp_setup_first(); fp_setup_second();
-		 */
+		
+		
+		  fp_setup_first(); 
+		  fp_setup_second();
+		 
 
-		// final String hspid = "609dfd84-ae92-4492-8a2d-cc26b8c18cdc";
+		 //final String hspid = ((NSString) nsDic.get("spid")).getContent();
 		final String hspid = "0";
 
 		verifyHomeShare(hspid);
@@ -340,17 +344,19 @@ public class Session
 	private void fp_setup_first() throws Exception
 	{
 
-		final byte[] value = new byte[] { 2, 0, 0, (byte) 187 };
+		final byte[] value = new byte[] { 2, 0, 2, (byte) 187 };
 		final byte[] nr = { 1 };
 		final ArrayList<byte[]> bytes = Lists.newArrayList("FPLYd".getBytes(), new byte[] { 1 }, nr, new byte[] { 0, 0, 0, 0 }, new byte[] { (byte) value.length }, value);
-		final byte[] cert = RequestHelper.requestPost(String.format("%s/fp-setup?session-id=%s" + homeSharingGid, this.getRequestBase(), this.sessionId), concatenateByteArrays(bytes));
+		cert = RequestHelper.requestPost(String.format("%s/fp-setup?session-id=%s" + homeSharingGid, this.getRequestBase(), this.sessionId), concatenateByteArrays(bytes));
 		System.out.println(Util.toHex(cert));
 		return;
 	}
+	
+	byte[] cert;
 
-	private void fp_setup_second()
+	private void fp_setup_second() throws Exception
 	{
-		// TODO Auto-generated method stub
+		RequestHelper.requestPost(String.format("%s/fp-setup?session-id=%s" + homeSharingGid, this.getRequestBase(), this.sessionId), cert);
 
 	}
 

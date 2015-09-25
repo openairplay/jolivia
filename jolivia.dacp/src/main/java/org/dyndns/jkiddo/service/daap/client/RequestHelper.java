@@ -265,7 +265,7 @@ public class RequestHelper
 		return encoded;
 	}
 
-	public static String requestPList(final String username, final String password) throws Exception
+	public static NSDictionary requestPList(final String username, final String password) throws Exception
 	{
 		final HttpURLConnection connection = (HttpURLConnection) new URL("https://homesharing.itunes.apple.com" + "/WebObjects/MZHomeSharing.woa/wa/getShareIdentifiers").openConnection();
 		connection.setAllowUserInteraction(false);
@@ -323,6 +323,7 @@ public class RequestHelper
 		final NSString o4 = (NSString) dictionary.get("sgid");
 		if(o1 == null && o3 == null && o4 == null && o2.intValue() == 5505)
 			throw new Exception("bad password");
-		return o4.getContent();
+		//return o4.getContent();
+		return dictionary;
 	}
 }

@@ -10,15 +10,14 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dpap.chunks.picture;
 
-import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
-
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 /**
  * DPAP.ProtocolVersion Represents the protocol version of the current implemented DPAP 'standard'.
  * 
  * @author Charles Ikeson
  */
 import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
-import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+import org.dyndns.jkiddo.dmp.chunks.VersionChunk;
 
 @DMAPAnnotation(type=DmapChunkDefinition.ppro)
 public class PictureProtocolVersion extends VersionChunk
@@ -28,12 +27,12 @@ public class PictureProtocolVersion extends VersionChunk
 		this(0);
 	}
 
-	public PictureProtocolVersion(int version)
+	public PictureProtocolVersion(final int version)
 	{
 		super("ppro", "dpap.protocolversion", version);
 	}
 
-	public PictureProtocolVersion(int major, int minor, int patch)
+	public PictureProtocolVersion(final int major, final int minor, final int patch)
 	{
 		super("ppro", "dpap.protocolversion", major, minor, patch);
 	}

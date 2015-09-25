@@ -72,21 +72,22 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
 	public static final String DAAP_RESOURCE = "DAAP_IMPLEMENTATION";
 
-	private static final String TXT_VERSION = "1";
-	private static final String TXT_VERSION_KEY = "txtvers";
-	private static final String DATABASE_ID_KEY = "Database ID";
-	private static final String MACHINE_ID_KEY = "Machine ID";
-	private static final String MACHINE_NAME_KEY = "Machine Name";
-	private static final String ITSH_VERSION_KEY = "iTSh Version";
-	private static final String VERSION_KEY = "Version";
-	private static final String PASSWORD_KEY = "Password";
+	static final String TXT_VERSION = "1";
+	static final String TXT_VERSION_KEY = "txtvers";
+	static final String DATABASE_ID_KEY = "Database ID";
+	static final String MACHINE_ID_KEY = "Machine ID";
+	static final String MACHINE_NAME_KEY = "Machine Name";
+	static final String MEDIA_KINDS_SHARED_KEY = "Media Kinds Shared";
+	static final String ITSH_VERSION_KEY = "iTSh Version";
+	static final String VERSION_KEY = "Version";
+	static final String PASSWORD_KEY = "Password";
 
 	private static final VersionChunk pictureProtocolVersion = new PictureProtocolVersion(DmapUtil.PPRO_VERSION_201);
 	private static final VersionChunk audioProtocolVersion = new AudioProtocolVersion(DmapUtil.APRO_VERSION_3012);
 	private static final VersionChunk mediaProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_2010);
 	private static final MusicSharingVersion musicSharingVersion = new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_3011);
 
-	private final String serviceGuid;
+	protected final String serviceGuid;
 
 	@Inject
 	public DAAPResource(final IZeroconfManager mDNS, @Named(DAAP_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, @Named(DAAPResource.DAAP_RESOURCE) final IItemManager itemManager) throws IOException
@@ -114,7 +115,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 		records.put(MACHINE_NAME_KEY, name);
 		records.put("OSsi", "0x4E8DAC");
 
-		records.put("Media Kinds Shared", "1");
+		records.put(MEDIA_KINDS_SHARED_KEY, "1");
 		records.put(TXT_VERSION_KEY, TXT_VERSION);
 		records.put(MACHINE_ID_KEY, hexedHostname);
 		records.put(VERSION_KEY, audioProtocolVersion.getValue() + "");

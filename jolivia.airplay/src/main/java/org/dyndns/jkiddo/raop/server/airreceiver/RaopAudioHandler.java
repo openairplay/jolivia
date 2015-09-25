@@ -228,7 +228,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	 * @param rtpExecutorService
 	 * @param channelExecutionHandler
 	 */
-	public RaopAudioHandler(final ExecutorService rtpExecutorService, ExecutionHandler channelExecutionHandler, IPlayingInformation playingInformation)
+	public RaopAudioHandler(final ExecutorService rtpExecutorService, final ExecutionHandler channelExecutionHandler, final IPlayingInformation playingInformation)
 	{
 		m_rtpExecutorService = rtpExecutorService;
 		this.channelExecutionHandler = channelExecutionHandler;
@@ -665,7 +665,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 			{
 				playingInformation.notify(ImageIO.read(new ByteArrayInputStream(req.getContent().array())));
 			}
-			catch(IOException e)
+			catch(final IOException e)
 			{
 				logger.debug(e.getMessage(), e);
 			}
@@ -674,15 +674,15 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 		{
 			try
 			{
-				DmapInputStream stream = new DmapInputStream(new ByteArrayInputStream(req.getContent().array()));
+				final DmapInputStream stream = new DmapInputStream(new ByteArrayInputStream(req.getContent().array()));
 				playingInformation.notify((ListingItem)stream.getChunk());
 				stream.close();
 			}
-			catch(IOException e)
+			catch(final IOException e)
 			{
 				e.printStackTrace();
 			}
-			catch(ProtocolViolationException e)
+			catch(final ProtocolViolationException e)
 			{
 				e.printStackTrace();
 			}

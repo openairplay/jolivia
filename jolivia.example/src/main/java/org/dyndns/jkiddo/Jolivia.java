@@ -12,7 +12,9 @@ package org.dyndns.jkiddo;
 
 import java.awt.BorderLayout;
 import java.awt.image.BufferedImage;
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Scanner;
@@ -67,8 +69,9 @@ public class Jolivia
 {
 	static Logger logger = LoggerFactory.getLogger(Jolivia.class);
 
-	public static void main(final String[] args)
+	public static void main(final String[] args) throws UnknownHostException
 	{
+		System.out.println(InetAddress.getLocalHost().getHostName());
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
 		// return ServiceInfo.create("_mobileiphoto._udp.local.",
@@ -81,7 +84,7 @@ public class Jolivia
 			 * if(args.length == 2) { reader = new GoogleStoreReader(args[0], args[1]); new GReporter(args[0]); } else {
 			 */
 			reader = new DeskMusicStoreReader();
-			new Jolivia.JoliviaBuilder().port(8770)/*.security(PasswordMethod.PASSWORD, SecurityScheme.BASIC)*/.pairingCode(1337).musicStoreReader(reader).imageStoreReader(new DeskImageStoreReader("C:\\Users\\JensKristian\\Desktop\\test")).build();
+			new Jolivia.JoliviaBuilder().name("JensKristian’s Library").port(3700)/*.security(PasswordMethod.PASSWORD, SecurityScheme.BASIC)*/.pairingCode(1337).musicStoreReader(reader).imageStoreReader(new DeskImageStoreReader("C:\\Users\\JensKristian\\Desktop\\test")).build();
 		}
 		catch(final Exception e)
 		{
