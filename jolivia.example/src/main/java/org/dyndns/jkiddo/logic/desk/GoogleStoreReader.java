@@ -1,5 +1,5 @@
 package org.dyndns.jkiddo.logic.desk;
-
+/*
 import gmusic.api.comm.ApacheConnector;
 import gmusic.api.comm.JSON;
 import gmusic.api.impl.GoogleMusicAPI;
@@ -88,4 +88,4 @@ public class GoogleStoreReader implements IMusicStoreReader
 		}
 		songs.clear();
 	}
-}
+}*/

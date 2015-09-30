@@ -74,7 +74,15 @@ public interface ITouchAbleServerResource
 	@Path("databases/{databaseId}/containers/{containerId}/items")
 	@GET
 	public Response containerItems(@PathParam("containerId") long containerId, @PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("revision-number") long revisionNumber, @QueryParam("delta") long delta, @QueryParam("meta") String meta, @QueryParam("type") String type, @QueryParam("group-type") String group_type, @QueryParam("sort") String sort, @QueryParam("include-sort-headers") String include_sort_headers, @QueryParam("query") String query, @QueryParam("index") String index, @QueryParam("hsgid") String hsgid) throws IOException, SQLException;
+	
+	@Path("databases/{databaseId}/groups/{groupdId}/extra_data/artwork")
+	@GET
+	public Response artwork(@PathParam("databaseId") long databaseId, @QueryParam("mw") String mw, @QueryParam("mh") String mh, @QueryParam("session-id") long sessionId, @QueryParam("group-type") String groupType, @QueryParam("hsgid") String hsgid);
 
+	@Path("databases/{databaseId}/browse/artists")
+	@GET
+	public Response artists(@PathParam("databaseId") long databaseId, @QueryParam("session-id") long sessionId, @QueryParam("include-sort-headers") long includeSortHeaders, @QueryParam("filter") String filter);
+	
 	@GET
 	@Path("ctrl-int")
 	public Response ctrlInt(@Context HttpServletRequest httpServletRequest, @Context HttpServletResponse httpServletResponse, @QueryParam("hsgid") String hsgid) throws IOException;

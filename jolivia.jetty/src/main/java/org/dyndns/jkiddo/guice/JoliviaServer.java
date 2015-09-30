@@ -12,8 +12,6 @@ package org.dyndns.jkiddo.guice;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.sql.SQLException;
 
 import javax.servlet.ServletContextEvent;
 
@@ -26,40 +24,29 @@ import org.dyndns.jkiddo.raop.ISpeakerListener;
 import org.dyndns.jkiddo.raop.server.IPlayingInformation;
 import org.dyndns.jkiddo.raop.server.RAOPResourceWrapper;
 import org.dyndns.jkiddo.service.daap.client.IClientSessionListener;
-import org.dyndns.jkiddo.service.daap.client.PairedRemoteDiscoverer;
-import org.dyndns.jkiddo.service.daap.client.UnpairedRemoteCrawler;
-import org.dyndns.jkiddo.service.daap.server.DAAPResource;
 import org.dyndns.jkiddo.service.daap.server.HomeSharingResource;
 import org.dyndns.jkiddo.service.daap.server.IMusicLibrary;
-import org.dyndns.jkiddo.service.daap.server.InMemoryMusicManager;
-import org.dyndns.jkiddo.service.dacp.client.IPairingDatabase;
 import org.dyndns.jkiddo.service.dacp.client.ITouchRemoteResource;
-import org.dyndns.jkiddo.service.dacp.client.PairingDatabase;
-import org.dyndns.jkiddo.service.dacp.client.TouchRemoteResource;
 import org.dyndns.jkiddo.service.dacp.server.ITouchAbleServerResource;
-import org.dyndns.jkiddo.service.dacp.server.TouchAbleServerResource;
 import org.dyndns.jkiddo.service.dmap.CustomByteArrayProvider;
 import org.dyndns.jkiddo.service.dmap.DMAPInterface;
-import org.dyndns.jkiddo.service.dmap.IItemManager;
 import org.dyndns.jkiddo.service.dmap.MDNSResource;
 import org.dyndns.jkiddo.service.dmap.Util;
-import org.dyndns.jkiddo.service.dpap.server.DPAPResource;
 import org.dyndns.jkiddo.service.dpap.server.IImageLibrary;
-import org.dyndns.jkiddo.service.dpap.server.ImageItemManager;
 import org.dyndns.jkiddo.zeroconf.IZeroconfManager;
 import org.dyndns.jkiddo.zeroconf.ZeroconfManagerImpl;
 import org.h2.tools.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSet.Builder;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.name.Names;
 import com.google.inject.servlet.GuiceServletContextListener;
-import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.support.ConnectionSource;
 import com.sun.jersey.guice.JerseyServletModule;
 import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
@@ -84,7 +71,11 @@ public class JoliviaServer extends GuiceServletContextListener
 
 	private final Server h2server;
 
-	public JoliviaServer(final Integer port, final Integer airplayPort, final Integer pairingCode, final String name, final IClientSessionListener clientSessionListener, final ISpeakerListener speakerListener, final IImageStoreReader imageStoreReader, final IMusicStoreReader musicStoreReader, final IPlayingInformation iplayingInformation, final PasswordMethod security) throws SQLException, UnknownHostException
+	private final ZeroconfManagerImpl iZeroconfManager;
+
+	private final HomeSharingResource homeSharing;
+
+	public JoliviaServer(final Integer port, final Integer airplayPort, final Integer pairingCode, final String name, final IClientSessionListener clientSessionListener, final ISpeakerListener speakerListener, final IImageStoreReader imageStoreReader, final IMusicStoreReader musicStoreReader, final IPlayingInformation iplayingInformation, final PasswordMethod security, final String appleUsername, final String applePassword) throws Exception
 	{
 		super();
 		System.setProperty("java.net.preferIPv4Stack", "true");
@@ -105,11 +96,21 @@ public class JoliviaServer extends GuiceServletContextListener
 		this.musicStoreReader = musicStoreReader;
 		this.imageStoreReader = imageStoreReader;
 		this.iplayingInformation = iplayingInformation;
+		this.iZeroconfManager = new ZeroconfManagerImpl();
+		if(!(Strings.isNullOrEmpty(appleUsername) && Strings.isNullOrEmpty(applePassword)))
+			this.homeSharing = new HomeSharingResource(iZeroconfManager, this.hostingPort, this.name, appleUsername, applePassword);
+		else
+			this.homeSharing = null;
+		
 	}
 
 	private ImmutableSet<MDNSResource> getMDNSResources()
 	{
-		return ImmutableSet.<MDNSResource> builder().add((MDNSResource) injector.getInstance(IImageLibrary.class)).add((MDNSResource) injector.getInstance(IMusicLibrary.class)).add((MDNSResource) injector.getInstance(ITouchRemoteResource.class)).add((MDNSResource) injector.getInstance(ITouchAbleServerResource.class)).add((injector.getInstance(RAOPResourceWrapper.class))).build();
+		final Builder<MDNSResource> set = ImmutableSet.<MDNSResource> builder().add((MDNSResource) injector.getInstance(IImageLibrary.class)).add((MDNSResource) injector.getInstance(IMusicLibrary.class)).add((MDNSResource) injector.getInstance(ITouchRemoteResource.class)).add((MDNSResource) injector.getInstance(ITouchAbleServerResource.class)).add((injector.getInstance(RAOPResourceWrapper.class)));
+		if(homeSharing != null)
+			return set.add(homeSharing).build();
+		else
+			return set.build();
 	}
 	public void reRegister()
 	{
@@ -134,64 +135,17 @@ public class JoliviaServer extends GuiceServletContextListener
 			@Override
 			protected void configure()
 			{
-				bind(IZeroconfManager.class).toInstance(new ZeroconfManagerImpl());
+				bind(IZeroconfManager.class).toInstance(iZeroconfManager);
 				bind(JoliviaExceptionMapper.class);
 				bind(DMAPInterface.class).asEagerSingleton();
 				bind(String.class).annotatedWith(Names.named(Util.APPLICATION_NAME)).toInstance(name);
 			}
 
-		}, new AbstractModule() {
-
-			@Override
-			protected void configure()
-			{
-				bind(Integer.class).annotatedWith(Names.named(DPAPResource.DPAP_SERVER_PORT_NAME)).toInstance(hostingPort);
-				bind(IImageLibrary.class).to(DPAPResource.class).asEagerSingleton();
-				bind(ImageItemManager.class).annotatedWith(Names.named(DPAPResource.DPAP_RESOURCE)).to(ImageItemManager.class);
-				bind(IImageStoreReader.class).toInstance(imageStoreReader);
-			}
-		}, new AbstractModule() {
-
-			@Override
-			protected void configure()
-			{
-				bind(Integer.class).annotatedWith(Names.named(DAAPResource.DAAP_PORT_NAME)).toInstance(hostingPort);
-//				bind(IMusicLibrary.class).to(DAAPResource.class).asEagerSingleton();
-				bind(IMusicLibrary.class).to(HomeSharingResource.class).asEagerSingleton();
-				bind(PasswordMethod.class).toInstance(passwordMethod);
-				try
-				{
-					bind(ConnectionSource.class).toInstance(new JdbcConnectionSource("jdbc:h2:mem:test"));
-				}
-				catch(final SQLException e)
-				{
-					throw new RuntimeException(e);
-				}
-
-//				bind(new TypeLiteral<Table<String, String, Class<? extends AbstractChunk>>>() {}).toInstance(ChunkFactory.getCalculatedMap());
-				// bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(MusicItemManager.class);
-				bind(IItemManager.class).annotatedWith(Names.named(DAAPResource.DAAP_RESOURCE)).to(InMemoryMusicManager.class);
-				bind(IMusicStoreReader.class).toInstance(musicStoreReader);
-			}
-		}, new AbstractModule() {
-
-			@Override
-			protected void configure()
-			{
-				bind(Integer.class).annotatedWith(Names.named(TouchRemoteResource.DACP_CLIENT_PAIRING_CODE)).toInstance(pairingCode);
-				bind(Integer.class).annotatedWith(Names.named(TouchRemoteResource.DACP_CLIENT_PORT_NAME)).toInstance(hostingPort);
-				bind(Integer.class).annotatedWith(Names.named(TouchAbleServerResource.DACP_SERVER_PORT_NAME)).toInstance(hostingPort);
-				bind(Integer.class).annotatedWith(Names.named(UnpairedRemoteCrawler.SERVICE_PORT_NAME)).toInstance(hostingPort);
-
-				bind(String.class).annotatedWith(Names.named(PairingDatabase.NAME_OF_DB)).toInstance(DB_NAME);
-				bind(IPairingDatabase.class).to(PairingDatabase.class).asEagerSingleton();
-				bind(PairedRemoteDiscoverer.class).asEagerSingleton();
-				bind(UnpairedRemoteCrawler.class).asEagerSingleton();
-				bind(ITouchRemoteResource.class).to(TouchRemoteResource.class);
-				bind(ITouchAbleServerResource.class).to(TouchAbleServerResource.class);
-				bind(IClientSessionListener.class).toInstance(clientSessionListener);
-			}
-		}, new AbstractModule() {
+		},
+		new DPAPModule(hostingPort, imageStoreReader), 
+		new DAAPModule(passwordMethod, musicStoreReader, hostingPort),
+		new DACPModule(pairingCode, hostingPort, DB_NAME, clientSessionListener), 
+		new AbstractModule() {
 
 			@Override
 			protected void configure()
@@ -199,18 +153,9 @@ public class JoliviaServer extends GuiceServletContextListener
 				// bind(RemoteSpeakerDiscoverer.class).asEagerSingleton();
 				// bind(ISpeakerListener.class).toInstance(speakerListener);
 			}
-		}, new AbstractModule() {
-
-			@Override
-			protected void configure()
-			{
-				bind(IPlayingInformation.class).toInstance(iplayingInformation);
-				bind(Integer.class).annotatedWith(Names.named(RAOPResourceWrapper.RAOP_PORT_NAME)).toInstance(airplayPort);
-				bind(RAOPResourceWrapper.class).asEagerSingleton();
-			}
-		}
-
-		, new JerseyServletModule() {
+		}, 
+		new RAOPModule(iplayingInformation, airplayPort), 
+		new JerseyServletModule() {
 
 			@Override
 			protected void configureServlets()

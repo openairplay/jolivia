@@ -23,7 +23,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -58,6 +57,15 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	private static final String DAAP_HEADER_NAME = "Client-DAAP-Version";
 	private static final String DPAP_HEADER_NAME = "Client-DPAP-Version";
 
+	@Inject
+	public DMAPInterface(final ITouchAbleServerResource remoteControlResource, final ITouchRemoteResource pairingResource, final IMusicLibrary musicLibraryResource, final IImageLibrary imageLibraryResource)
+	{
+		this.remoteControlResource = remoteControlResource;
+		this.pairingResource = pairingResource;
+		this.musicLibraryResource = musicLibraryResource;
+		this.imageLibraryResource = imageLibraryResource;
+	}
+
 	private static boolean isDaapRequest(final HttpServletRequest httpServletRequest)
 	{
 		if(Strings.isNullOrEmpty(httpServletRequest.getHeader(DAAP_HEADER_NAME)))
@@ -74,21 +82,14 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 
 	private static boolean isRemoteControlRequest(final HttpServletRequest httpServletRequest)
 	{
-		if(Strings.isNullOrEmpty(httpServletRequest.getHeader(CONTROLLER_HEADER_NAME)))
+		return false;
+		/*if(Strings.isNullOrEmpty(httpServletRequest.getHeader(CONTROLLER_HEADER_NAME)))
 			return false;
 		if(!httpServletRequest.getHeader(HttpHeaders.USER_AGENT).startsWith(CONTROLLER_USER_AGENT))
 			return false;
-		return true;
+		return true;*/
 	}
 
-	@Inject
-	public DMAPInterface(final ITouchAbleServerResource remoteControlResource, final ITouchRemoteResource pairingResource, final IMusicLibrary musicLibraryResource, final IImageLibrary imageLibraryResource)
-	{
-		this.remoteControlResource = remoteControlResource;
-		this.pairingResource = pairingResource;
-		this.musicLibraryResource = musicLibraryResource;
-		this.imageLibraryResource = imageLibraryResource;
-	}
 
 	@Path("favicon.ico")
 	@GET
@@ -431,6 +432,19 @@ public class DMAPInterface implements ITouchAbleServerResource, ITouchRemoteReso
 	@Path("resolve")
 	public Response resolve() throws IOException
 	{
+		return null;
+	}
+
+	@Override
+	public Response artwork(final long databaseId, final String mw, final String mh,
+			final long sessionId, final String groupType, final String hsgid) {
+		return null;
+	}
+
+	@Override
+	public Response artists(final long databaseId, final long sessionId,
+			final long includeSortHeaders, final String filter) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 }

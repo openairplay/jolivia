@@ -1,7 +1,6 @@
 package org.dyndns.jkiddo.service.daap.server;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -72,14 +71,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
 	public static final String DAAP_RESOURCE = "DAAP_IMPLEMENTATION";
 
-	static final String TXT_VERSION = "1";
-	static final String TXT_VERSION_KEY = "txtvers";
-	static final String DATABASE_ID_KEY = "Database ID";
-	static final String MACHINE_ID_KEY = "Machine ID";
-	static final String MACHINE_NAME_KEY = "Machine Name";
 	static final String MEDIA_KINDS_SHARED_KEY = "Media Kinds Shared";
-	static final String ITSH_VERSION_KEY = "iTSh Version";
-	static final String VERSION_KEY = "Version";
 	static final String PASSWORD_KEY = "Password";
 
 	private static final VersionChunk pictureProtocolVersion = new PictureProtocolVersion(DmapUtil.PPRO_VERSION_201);
@@ -102,27 +94,18 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 	@Override
 	protected IZeroconfManager.ServiceInfo getServiceInfoToRegister()
 	{
-		final String hexedHostname;
-		try
-		{
-			hexedHostname = Util.toHex(hostname.getBytes("UTF-8"));
-		}
-		catch(final UnsupportedEncodingException e)
-		{
-			throw new RuntimeException(e);
-		}
 		final HashMap<String, String> records = new HashMap<String, String>();
 		records.put(MACHINE_NAME_KEY, name);
-		records.put("OSsi", "0x4E8DAC");
+		records.put("OSsi", "0x15F");
 
 		records.put(MEDIA_KINDS_SHARED_KEY, "1");
 		records.put(TXT_VERSION_KEY, TXT_VERSION);
-		records.put(MACHINE_ID_KEY, hexedHostname);
+		records.put(MACHINE_ID_KEY, MACHINE_ID);
 		records.put(VERSION_KEY, audioProtocolVersion.getValue() + "");
 		records.put(ITSH_VERSION_KEY, musicSharingVersion.getValue() + "");
-		records.put("MID", "0x" + serviceGuid);
+		records.put("MID", MID_0X);
 		records.put("dmv", mediaProtocolVersion.getValue() + "");
-		records.put(DATABASE_ID_KEY, hexedHostname);
+		records.put(DATABASE_ID_KEY, DATABASE_ID);
 		if(PasswordMethod.NO_PASSWORD == itemManager.getAuthenticationMethod())
 		{
 			records.put(PASSWORD_KEY, "0");

@@ -84,7 +84,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	private final String serviceGuid;
 
 	@Inject
-	public TouchAbleServerResource(final IZeroconfManager mDNS, @Named(DACP_SERVER_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, final IPairingDatabase pairingDatabase) throws IOException
+	public TouchAbleServerResource(final IZeroconfManager mDNS, @Named(DACP_SERVER_PORT_NAME) final Integer port, @Named(Util.APPLICATION_NAME) final String applicationName, final IPairingDatabase pairingDatabase ) throws IOException
 	{
 		super(mDNS, port);
 		this.name = applicationName;
@@ -283,10 +283,9 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	protected IZeroconfManager.ServiceInfo getServiceInfoToRegister()
 	{
-		String hexedHostname = null;
 		try
 		{
-			hexedHostname = Util.toHex(hostname.getBytes("UTF-8"));
+			Util.toHex(hostname.getBytes("UTF-8"));
 		}
 		catch(final UnsupportedEncodingException e)
 		{
@@ -297,15 +296,17 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 		final HashMap<String, String> records = new HashMap<String, String>();
 		records.put("Ver", DmapUtil.CONTROL_VERSION_205 +"");
 		records.put("CtlN", name);
-		records.put("OSsi", "0x4E8DAC");
-		records.put("iV", "196618");
-		records.put("DbId", hexedHostname);
+		records.put("OSsi", "0x1F5");
+		records.put("iV", "196620");
+//		records.put("DbId", hexedHostname);
+		records.put("DbId", DB_ID);
 		records.put("DvTy", "iTunes");
 		records.put("txtvers", "1");
-		records.put("iCSV", "65539");
-		records.put("DvSv", "2850");
+		records.put("iCSV", "65540");
+		records.put("DvSv", "3120");
 
-		return new IZeroconfManager.ServiceInfo(TOUCH_ABLE_SERVER, serviceGuid, port, records);
+//		return new IZeroconfManager.ServiceInfo(TOUCH_ABLE_SERVER, serviceGuid, port, records);
+		return new IZeroconfManager.ServiceInfo(TOUCH_ABLE_SERVER, MID, port, records);
 	}
 
 	@Override
@@ -430,6 +431,20 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@GET
 	public Response groups(@PathParam("databaseId") final long databaseId, @QueryParam("meta") final String meta, @QueryParam("type") final String type, @QueryParam("group-type") final String groupType, @QueryParam("sort") final String sort, @QueryParam("include-sort-headers") final long includeSortHeaders, @QueryParam("query") final String query, @QueryParam("session-id") final long sessionId, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response artwork(final long databaseId, final String mw, final String mh,
+			final long sessionId, final String groupType, final String hsgid) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Response artists(final long databaseId, final long sessionId,
+			final long includeSortHeaders, final String filter) {
 		// TODO Auto-generated method stub
 		return null;
 	}

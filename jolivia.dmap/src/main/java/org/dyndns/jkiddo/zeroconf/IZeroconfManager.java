@@ -52,5 +52,4 @@ public interface IZeroconfManager
 			return props;
 		}
 	}
-
 }

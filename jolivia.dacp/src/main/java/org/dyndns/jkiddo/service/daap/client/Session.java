@@ -118,16 +118,16 @@ public class Session
 		this.host = host;
 		this.port = port;
 
-		final ServerInfoResponse serverInfoRespone = getServerInfo();
+		getServerInfo();
 
 		logger.debug(String.format("trying login for host=%s", host));
-		final NSDictionary nsDic = RequestHelper.requestPList(username, password);
+		final NSDictionary nsDic = Util.requestPList(username, password);
 		homeSharingGid = "&hsgid=" + ((NSString) nsDic.get("sgid")).getContent();
 		final LoginResponse loginResponse = doLoginWithHomeSharingGid(((NSString) nsDic.get("sgid")).getContent());
 
 		sessionId = loginResponse.getSessionId().getValue();
 
-		final DataControlInt ctrl_int = getControlInt();
+		getControlInt();
 		
 		
 		  fp_setup_first(); 
@@ -160,7 +160,7 @@ public class Session
 		this.host = host;
 		this.port = port;
 
-		final ServerInfoResponse serverInfo = getServerInfo();
+		getServerInfo();
 
 		// http://192.168.254.128:3689/login?pairing-guid=0x0000000000000001
 		logger.debug(String.format("trying login for host=%s and guid=%s", host, pairingGuid));
@@ -242,7 +242,7 @@ public class Session
 
 		for(final ListingItem container : allPlaylists.getListing().getListingItems())
 		{
-			final ItemsContainer containerDetails = getContainerDetails(itemId, container.getSpecificChunk(ItemId.class).getValue());
+			getContainerDetails(itemId, container.getSpecificChunk(ItemId.class).getValue());
 		}
 
 		// For now, the BasePlayList is sufficient

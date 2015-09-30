@@ -24,6 +24,25 @@ public abstract class MDNSResource
 
 	static final Logger logger = LoggerFactory.getLogger(MDNSResource.class);
 	public final String hostname = InetAddress.getLocalHost().getHostName();
+	
+	public static final String MACHINE_ID_KEY = "Machine ID";
+	public static final String DATABASE_ID_KEY = "Database ID";
+	public static final String TXT_VERSION_KEY = "txtvers";
+	public static final String TXT_VERSION = "1";
+	public static final String ITSH_VERSION_KEY = "iTSh Version";
+	public static final String VERSION_KEY = "Version";
+	public static final String MACHINE_NAME_KEY = "Machine Name";
+	
+	public static final String DB_ID;
+//	public static final String MACHINE_ID = "920C68E36298";
+//	public static final String DATABASE_ID = DB_ID = "3B787C7DD4D136BB";
+//	public static final String MID = "FAE42441153E483B";
+	
+	public static final String MACHINE_ID = "920C68E362AA";
+	public static final String DATABASE_ID = DB_ID = "3B787C7DD4D136AA";
+	public static final String MID = "FAE42441153E48AA";
+	public static final String MID_0X = "0x" + MID;
+	
 	private IZeroconfManager.ServiceInfo serviceInfo;
 
 	public MDNSResource(final IZeroconfManager mDNS, final Integer port) throws IOException

@@ -12,7 +12,6 @@ package org.dyndns.jkiddo;
 
 import java.awt.BorderLayout;
 import java.awt.image.BufferedImage;
-import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.util.EnumSet;
@@ -71,7 +70,6 @@ public class Jolivia
 
 	public static void main(final String[] args) throws UnknownHostException
 	{
-		System.out.println(InetAddress.getLocalHost().getHostName());
 		SLF4JBridgeHandler.removeHandlersForRootLogger();
 		SLF4JBridgeHandler.install();
 		// return ServiceInfo.create("_mobileiphoto._udp.local.",
@@ -84,7 +82,7 @@ public class Jolivia
 			 * if(args.length == 2) { reader = new GoogleStoreReader(args[0], args[1]); new GReporter(args[0]); } else {
 			 */
 			reader = new DeskMusicStoreReader();
-			new Jolivia.JoliviaBuilder().name("JensKristian’s Library").port(3700)/*.security(PasswordMethod.PASSWORD, SecurityScheme.BASIC)*/.pairingCode(1337).musicStoreReader(reader).imageStoreReader(new DeskImageStoreReader("C:\\Users\\JensKristian\\Desktop\\test")).build();
+			new Jolivia.JoliviaBuilder().name("Kiddo's’s Library")/*.homeSharing("whatever@somewhere","thisisSomePas5")*/.port(6000).security(PasswordMethod.PASSWORD, SecurityScheme.BASIC).pairingCode(1337).musicStoreReader(reader).imageStoreReader(new DeskImageStoreReader("C:\\Users\\JensKristian\\Desktop\\test")).build();
 		}
 		catch(final Exception e)
 		{
@@ -105,10 +103,18 @@ public class Jolivia
 		private IPlayingInformation iplayingInformation = new DefaultIPlayingInformation();
 		private PasswordMethod security = PasswordMethod.NO_PASSWORD;
 		private SecurityScheme scheme = null;
+		private String appleUsername;
+		private String applePassword;
 
 		public JoliviaBuilder port(final int port)
 		{
 			this.port = port;
+			return this;
+		}
+
+		public JoliviaBuilder homeSharing(final String appleUsername, final String applePassword) {
+			this.appleUsername = appleUsername;
+			this.applePassword = applePassword;
 			return this;
 		}
 
@@ -305,7 +311,7 @@ public class Jolivia
 
 		// Guice
 		final ServletContextHandler sch = new ServletContextHandler(server, "/");
-		joliviaServer = new JoliviaServer(builder.port, builder.airplayPort, builder.pairingCode, builder.name, builder.clientSessionListener, builder.speakerListener, builder.imageStoreReader, builder.musicStoreReader, builder.iplayingInformation, builder.security);
+		joliviaServer = new JoliviaServer(builder.port, builder.airplayPort, builder.pairingCode, builder.name, builder.clientSessionListener, builder.speakerListener, builder.imageStoreReader, builder.musicStoreReader, builder.iplayingInformation, builder.security, builder.appleUsername, builder.applePassword);
 		sch.addEventListener(joliviaServer);
 		sch.addFilter(GuiceFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 
@@ -325,6 +331,7 @@ public class Jolivia
 		server.start();
 		logger.info(builder.name + " started");
 		new Scanner(System.in).nextLine();
+		joliviaServer.contextDestroyed(null);
 		server.stop();
 	}
 

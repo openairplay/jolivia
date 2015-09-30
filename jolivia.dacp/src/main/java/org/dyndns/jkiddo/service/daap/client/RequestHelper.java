@@ -35,12 +35,9 @@
 
 package org.dyndns.jkiddo.service.daap.client;
 
-import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -54,10 +51,6 @@ import org.dyndns.jkiddo.dmp.chunks.Chunk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.dd.plist.NSDictionary;
-import com.dd.plist.NSNumber;
-import com.dd.plist.NSString;
-import com.dd.plist.PropertyListParser;
 import com.google.common.io.Closeables;
 
 public class RequestHelper
@@ -263,67 +256,5 @@ public class RequestHelper
 			logger.warn("escapeUrlString Exception:" + e.getMessage());
 		}
 		return encoded;
-	}
-
-	public static NSDictionary requestPList(final String username, final String password) throws Exception
-	{
-		final HttpURLConnection connection = (HttpURLConnection) new URL("https://homesharing.itunes.apple.com" + "/WebObjects/MZHomeSharing.woa/wa/getShareIdentifiers").openConnection();
-		connection.setAllowUserInteraction(false);
-		connection.setDoInput(true);
-		connection.setDoOutput(true);
-		
-		connection.setRequestProperty("Viewer-Only-Client", "1");
-		connection.setRequestProperty("User-Agent", "Remote/2.0");
-		connection.setRequestProperty("Accept-Encoding", "gzip");
-		connection.setRequestProperty("Connection", "keep-alive");
-		connection.setRequestProperty("Content-Type", "text/xml");
-		connection.setReadTimeout(READ_TIMEOUT);
-		
-		final NSDictionary root = new NSDictionary();
-		root.put("appleId", username);
-		root.put("guid", "empty");
-		root.put("password", password);
-		final String xml = root.toXMLPropertyList();
-		connection.connect();
-		
-		final OutputStream os = connection.getOutputStream();
-		final BufferedWriter writer = new BufferedWriter(
-		        new OutputStreamWriter(os, "UTF-8"));
-		writer.write(xml);
-		writer.flush();
-		writer.close();
-		os.close();
-
-
-		if(connection.getResponseCode() >= HttpURLConnection.HTTP_UNAUTHORIZED)
-			throw new Exception("HTTP Error Response Code: " + connection.getResponseCode());
-
-		// obtain the encoding returned by the server
-		final String encoding = connection.getContentEncoding();
-
-		final InputStream inputStream;
-
-		// create the appropriate stream wrapper based on the encoding type
-		if(encoding != null && encoding.equalsIgnoreCase("gzip"))
-		{
-			inputStream = new GZIPInputStream(connection.getInputStream());
-		}
-		else if(encoding != null && encoding.equalsIgnoreCase("deflate"))
-		{
-			inputStream = new InflaterInputStream(connection.getInputStream(), new Inflater(true));
-		}
-		else
-		{
-			inputStream = connection.getInputStream();
-		}
-		final NSDictionary dictionary = (NSDictionary) PropertyListParser.parse(inputStream);
-		final NSString o1 = (NSString) dictionary.get("spid");
-		final NSNumber o2 = (NSNumber) dictionary.get("status");
-		final NSNumber o3 = (NSNumber) dictionary.get("dsid");
-		final NSString o4 = (NSString) dictionary.get("sgid");
-		if(o1 == null && o3 == null && o4 == null && o2.intValue() == 5505)
-			throw new Exception("bad password");
-		//return o4.getContent();
-		return dictionary;
 	}
 }
