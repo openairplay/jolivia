@@ -372,10 +372,10 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	public synchronized void announceReceived(final ChannelHandlerContext ctx, final HttpRequest req) throws Exception
 	{
 		/* ANNOUNCE must contain stream information in SDP format */
-		if(!req.containsHeader(HttpHeaders.CONTENT_TYPE))
+		if(!req.headers().contains(HttpHeaders.CONTENT_TYPE))
 			throw new ProtocolException("No Content-Type header");
-		if(!"application/sdp".equals(req.getHeader(HttpHeaders.CONTENT_TYPE)))
-			throw new ProtocolException("Invalid Content-Type header, expected application/sdp but got " + req.getHeader("Content-Type"));
+		if(!"application/sdp".equals(req.headers().get(HttpHeaders.CONTENT_TYPE)))
+			throw new ProtocolException("Invalid Content-Type header, expected application/sdp but got " + req.headers().get("Content-Type"));
 
 		reset();
 
@@ -519,11 +519,11 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	public synchronized void setupReceived(final ChannelHandlerContext ctx, final HttpRequest req) throws ProtocolException
 	{
 		/* Request must contain a Transport header */
-		if(!req.containsHeader(HeaderTransport))
+		if(!req.headers().contains(HeaderTransport))
 			throw new ProtocolException("No Transport header");
 
 		/* Split Transport header into individual options and prepare reponse options list */
-		final Deque<String> requestOptions = new java.util.LinkedList<String>(Arrays.asList(req.getHeader(HeaderTransport).split(";")));
+		final Deque<String> requestOptions = new java.util.LinkedList<String>(Arrays.asList(req.headers().get(HeaderTransport).split(";")));
 		final List<String> responseOptions = new java.util.LinkedList<String>();
 
 		/* Transport header. Protocol must be RTP/AVP/UDP */
@@ -595,8 +595,8 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 
 		/* Send response */
 		final HttpResponse response = new DefaultHttpResponse(RtspVersions.RTSP_1_0, RtspResponseStatuses.OK);
-		response.addHeader(HeaderTransport, transportResponseBuilder.toString());
-		response.addHeader(HeaderSession, "DEADBEEEF");
+		response.headers().add(HeaderTransport, transportResponseBuilder.toString());
+		response.headers().add(HeaderSession, "DEADBEEEF");
 		ctx.getChannel().write(response);
 	}
 
@@ -659,7 +659,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	{
 		/* Body in ASCII encoding with unix newlines */
 
-		if(req.getHeader(HttpHeaders.CONTENT_TYPE) != null && req.getHeader(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase("image/jpeg"))
+		if(req.headers().get(HttpHeaders.CONTENT_TYPE) != null && req.headers().get(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase("image/jpeg"))
 		{
 			try
 			{
@@ -670,7 +670,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 				logger.debug(e.getMessage(), e);
 			}
 		}
-		else if(req.getHeader(HttpHeaders.CONTENT_TYPE) != null && req.getHeader(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase(Util.APPLICATION_X_DMAP_TAGGED))
+		else if(req.headers().get(HttpHeaders.CONTENT_TYPE) != null && req.headers().get(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase(Util.APPLICATION_X_DMAP_TAGGED))
 		{
 			try
 			{
@@ -687,7 +687,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 				e.printStackTrace();
 			}
 		}
-		else if(req.getHeader(HttpHeaders.CONTENT_TYPE) != null && req.getHeader(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase("text/parameters"))
+		else if(req.headers().get(HttpHeaders.CONTENT_TYPE) != null && req.headers().get(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase("text/parameters"))
 		{
 			final String body = req.getContent().toString(Charset.forName("ASCII")).replace("\r", "");
 
@@ -718,13 +718,13 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 				}
 			}
 		}
-		else if(req.getHeader(HttpHeaders.CONTENT_TYPE) != null && req.getHeader(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase("image/none"))
+		else if(req.headers().get(HttpHeaders.CONTENT_TYPE) != null && req.headers().get(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase("image/none"))
 		{
 
 		}
 		else
 		{
-			logger.warn("Unknown content type: " + req.getHeader(HttpHeaders.CONTENT_TYPE));
+			logger.warn("Unknown content type: " + req.headers().get(HttpHeaders.CONTENT_TYPE));
 		}
 		final HttpResponse response = new DefaultHttpResponse(RtspVersions.RTSP_1_0, RtspResponseStatuses.OK);
 		ctx.getChannel().write(response);

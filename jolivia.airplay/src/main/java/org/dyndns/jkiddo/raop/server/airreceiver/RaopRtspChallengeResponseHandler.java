@@ -17,13 +17,17 @@
 
 package org.dyndns.jkiddo.raop.server.airreceiver;
 
-import java.net.*;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 
-import javax.crypto.*;
+import javax.crypto.Cipher;
 
-import org.jboss.netty.channel.*;
-import org.jboss.netty.handler.codec.http.*;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.MessageEvent;
+import org.jboss.netty.channel.SimpleChannelHandler;
+import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpResponse;
 
 /**
  * Adds an {@code Apple-Response} header to a response if the request contain an {@code Apple-Request} header.
@@ -55,10 +59,10 @@ public class RaopRtspChallengeResponseHandler extends SimpleChannelHandler
 
 			synchronized(this)
 			{
-				if(req.containsHeader(HeaderChallenge))
+				if(req.headers().contains(HeaderChallenge))
 				{
 					/* The challenge is sent without padding! */
-					final byte[] challenge = Base64.decodeUnpadded(req.getHeader(HeaderChallenge));
+					final byte[] challenge = Base64.decodeUnpadded(req.headers().get(HeaderChallenge));
 
 					/* Verify that we got 16 bytes */
 					if(challenge.length != 16)
@@ -98,7 +102,7 @@ public class RaopRtspChallengeResponseHandler extends SimpleChannelHandler
 					 */
 					final String sig = Base64.encodePadded(getSignature());
 
-					resp.setHeader(HeaderSignature, sig);
+					resp.headers().set(HeaderSignature, sig);
 				}
 				finally
 				{

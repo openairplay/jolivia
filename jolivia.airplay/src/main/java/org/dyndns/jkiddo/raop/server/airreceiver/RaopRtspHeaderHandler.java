@@ -17,8 +17,11 @@
 
 package org.dyndns.jkiddo.raop.server.airreceiver;
 
-import org.jboss.netty.channel.*;
-import org.jboss.netty.handler.codec.http.*;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.MessageEvent;
+import org.jboss.netty.channel.SimpleChannelHandler;
+import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpResponse;
 
 /**
  * Adds a few default headers to every RTSP response
@@ -43,9 +46,9 @@ public class RaopRtspHeaderHandler extends SimpleChannelHandler
 
 		synchronized(this)
 		{
-			if(req.containsHeader(HeaderCSeq))
+			if(req.headers().contains(HeaderCSeq))
 			{
-				m_cseq = req.getHeader(HeaderCSeq);
+				m_cseq = req.headers().get(HeaderCSeq);
 			}
 			else
 			{
@@ -64,9 +67,9 @@ public class RaopRtspHeaderHandler extends SimpleChannelHandler
 		synchronized(this)
 		{
 			if(m_cseq != null)
-				resp.setHeader(HeaderCSeq, m_cseq);
+				resp.headers().set(HeaderCSeq, m_cseq);
 
-			resp.setHeader(HeaderAudioJackStatus, HeaderAudioJackStatusDefault);
+			resp.headers().set(HeaderAudioJackStatus, HeaderAudioJackStatusDefault);
 			// resp.setHeader(HeaderAudioLatency, Long.toString(HeaderAudioLatencyFrames));
 		}
 

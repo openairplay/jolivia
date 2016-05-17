@@ -22,8 +22,12 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jboss.netty.channel.*;
-import org.jboss.netty.handler.codec.http.*;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.ChannelStateEvent;
+import org.jboss.netty.channel.MessageEvent;
+import org.jboss.netty.channel.SimpleChannelHandler;
+import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpResponse;
 
 /**
  * Logs RTSP requests and responses.
@@ -56,7 +60,7 @@ public class RtspLoggingHandler extends SimpleChannelHandler
 				s.append(" ");
 				s.append(req.getUri());
 				s.append("\n");
-				for(final Map.Entry<String, String> header : req.getHeaders())
+				for(final Map.Entry<String, String> header : req.headers())
 				{
 					s.append("  ");
 					s.append(header.getKey());
@@ -68,7 +72,7 @@ public class RtspLoggingHandler extends SimpleChannelHandler
 				s_logger.log(Level.FINE, s.toString());
 			}
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -90,7 +94,7 @@ public class RtspLoggingHandler extends SimpleChannelHandler
 			s.append(" ");
 			s.append(resp.getStatus().getReasonPhrase());
 			s.append("\n");
-			for(final Map.Entry<String, String> header : resp.getHeaders())
+			for(final Map.Entry<String, String> header : resp.headers())
 			{
 				s.append("  ");
 				s.append(header.getKey());

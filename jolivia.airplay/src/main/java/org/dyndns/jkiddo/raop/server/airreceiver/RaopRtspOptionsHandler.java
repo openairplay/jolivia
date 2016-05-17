@@ -17,9 +17,16 @@
 
 package org.dyndns.jkiddo.raop.server.airreceiver;
 
-import org.jboss.netty.channel.*;
-import org.jboss.netty.handler.codec.http.*;
-import org.jboss.netty.handler.codec.rtsp.*;
+import org.jboss.netty.channel.ChannelHandlerContext;
+import org.jboss.netty.channel.MessageEvent;
+import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
+import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
+import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpResponse;
+import org.jboss.netty.handler.codec.rtsp.RtspHeaders;
+import org.jboss.netty.handler.codec.rtsp.RtspMethods;
+import org.jboss.netty.handler.codec.rtsp.RtspResponseStatuses;
+import org.jboss.netty.handler.codec.rtsp.RtspVersions;
 
 /**
  * Handles RTSP OPTIONS requests.
@@ -38,7 +45,7 @@ public class RaopRtspOptionsHandler extends SimpleChannelUpstreamHandler
 		if(RtspMethods.OPTIONS.equals(req.getMethod()))
 		{
 			final HttpResponse response = new DefaultHttpResponse(RtspVersions.RTSP_1_0, RtspResponseStatuses.OK);
-			response.setHeader(RtspHeaders.Names.PUBLIC, Options);
+			response.headers().set(RtspHeaders.Names.PUBLIC, Options);
 			ctx.getChannel().write(response);
 		}
 		else
