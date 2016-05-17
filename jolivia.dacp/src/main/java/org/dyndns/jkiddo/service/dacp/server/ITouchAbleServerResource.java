@@ -11,6 +11,7 @@
 package org.dyndns.jkiddo.service.dacp.server;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +50,7 @@ public interface ITouchAbleServerResource
 
 	@GET
 	@Path("fp-setup")
-	public Response fpSetup(@QueryParam("session-id") long session_id, @QueryParam("hsgid") String hsgid);
+	public Response fpSetup(@QueryParam("session-id") long session_id, @QueryParam("hsgid") String hsgid, InputStream inputStream) throws IOException;
 	
 	@GET
 	@Path("home-share-verify")

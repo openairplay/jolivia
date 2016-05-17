@@ -48,7 +48,7 @@ import org.dyndns.jkiddo.dmcp.chunks.media.audio.SpeakerList;
 import org.dyndns.jkiddo.dmcp.chunks.media.audio.UnknownVD;
 import org.dyndns.jkiddo.dmp.chunks.media.Dictionary;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
-import org.dyndns.jkiddo.dmp.chunks.media.SpeakerMacAddress;
+import org.dyndns.jkiddo.dmp.chunks.media.MachineAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +64,7 @@ public class RemoteControl
 
 	private final Session session;
 
-	RemoteControl(Session session) throws Exception
+	RemoteControl(final Session session) throws Exception
 	{
 		this.session = session;
 	}
@@ -93,7 +93,7 @@ public class RemoteControl
 		return RequestHelper.requestParsed(String.format("%s/ctrl-int/1/playstatusupdate?revision-number=%d&session-id=%s", session.getRequestBase(), 1, session.getSessionId()));
 	}
 
-	public byte[] fetchCover(int imageWidth, int imageHeight) throws Exception
+	public byte[] fetchCover(final int imageWidth, final int imageHeight) throws Exception
 	{
 		// http://192.168.254.128:3689/ctrl-int/1/nowplayingartwork?mw=320&mh=320&session-id=1940361390
 		return RequestHelper.requestBitmap(String.format("%s/ctrl-int/1/nowplayingartwork?mw=" + imageWidth + "&mh=" + imageHeight + "&session-id=%s", session.getRequestBase(), session.getSessionId()));
@@ -101,7 +101,7 @@ public class RemoteControl
 
 	public long getMasterVolume() throws Exception
 	{
-		PropertyResponse unknown = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/getproperty?properties=dmcp.volume&session-id=%s", session.getRequestBase(), session.getSessionId()));
+		final PropertyResponse unknown = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/getproperty?properties=dmcp.volume&session-id=%s", session.getRequestBase(), session.getSessionId()));
 		return unknown.getMasterVolume().getUnsignedValue();
 	}
 
@@ -113,21 +113,20 @@ public class RemoteControl
 	 */
 	public Collection<Speaker> getSpeakers() throws Exception
 	{
-		List<Speaker> speakers = Lists.newArrayList();
+		final List<Speaker> speakers = Lists.newArrayList();
 
-		SpeakerList speakerList = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/getspeakers?session-id=%s", session.getRequestBase(), session.getSessionId()));
-		for(Dictionary dictonary : speakerList.getDictionaries())
+		final SpeakerList speakerList = RequestHelper.requestParsed(String.format("%s/ctrl-int/1/getspeakers?session-id=%s", session.getRequestBase(), session.getSessionId()));
+		for(final Dictionary dictonary : speakerList.getDictionaries())
 		{
-			Speaker speaker = new Speaker();
-			String name = dictonary.getSpecificChunk(ItemName.class).getValue();
-			long speakerId = dictonary.getSpecificChunk(SpeakerMacAddress.class).getValue();
-			int relativeVolume = dictonary.getSpecificChunk(RelativeVolume.class).getValue();
+			final Speaker speaker = new Speaker();
+			final String name = dictonary.getSpecificChunk(ItemName.class).getValue();
+			final byte[] speakerId = dictonary.getSpecificChunk(MachineAddress.class).getValue();
+			final int relativeVolume = dictonary.getSpecificChunk(RelativeVolume.class).getValue();
 
-			SpeakerActive isActive = dictonary.getSpecificChunk(SpeakerActive.class);
+			final SpeakerActive isActive = dictonary.getSpecificChunk(SpeakerActive.class);
 			if(dictonary.getSpecificChunk(UnknownVD.class) != null)
 			{
-				@SuppressWarnings("unused")
-				int vd = dictonary.getSpecificChunk(UnknownVD.class).getValue();
+				dictonary.getSpecificChunk(UnknownVD.class).getValue();
 			}
 
 			speaker.setActive(isActive != null ? isActive.getBooleanValue() : false);
@@ -147,13 +146,13 @@ public class RemoteControl
 	 *            all speakers to read the active flag from
 	 * @throws Exception
 	 */
-	public void setSpeakers(Collection<Speaker> speakers) throws Exception
+	public void setSpeakers(final Collection<Speaker> speakers) throws Exception
 	{
 		String idsString = "";
 		boolean first = true;
 		// The list of speakers to activate is a comma-separated string with
 		// the hex versions of the speakers' IDs
-		for(Speaker speaker : speakers)
+		for(final Speaker speaker : speakers)
 		{
 			if(speaker.isActive())
 			{
@@ -189,7 +188,7 @@ public class RemoteControl
 	 *            the current master volume
 	 * @throws Exception
 	 */
-	public void setSpeakerVolume(long speakerId, int newVolume, int formerVolume, int speakersMaxVolume, int secondMaxVolume, long masterVolume) throws Exception
+	public void setSpeakerVolume(final byte[] speakerId, final int newVolume, final int formerVolume, final int speakersMaxVolume, final int secondMaxVolume, final long masterVolume) throws Exception
 	{
 		/*************************************************************
 		 * If this speaker will become or is currently the loudest or is the only activated speaker, it will be controlled via the master volume.
@@ -201,7 +200,7 @@ public class RemoteControl
 				// First equalize the volume of this speaker with the second
 				// loudest
 				setAbsoluteVolume(speakerId, secondMaxVolume);
-				int relativeVolume = newVolume * 100 / secondMaxVolume;
+				final int relativeVolume = newVolume * 100 / secondMaxVolume;
 				// then go on by decreasing the relative volume of this speaker
 				setRelativeVolume(speakerId, relativeVolume);
 			}
@@ -217,7 +216,7 @@ public class RemoteControl
 		 *************************************************************/
 		else
 		{
-			int relativeVolume = newVolume * 100 / (int) masterVolume;
+			final int relativeVolume = newVolume * 100 / (int) masterVolume;
 			setRelativeVolume(speakerId, relativeVolume);
 		}
 	}
@@ -231,7 +230,7 @@ public class RemoteControl
 	 *            the volume to set absolutely
 	 * @throws Exception
 	 */
-	private void setAbsoluteVolume(long speakerId, int absoluteVolume) throws Exception
+	private void setAbsoluteVolume(final byte[] speakerId, final int absoluteVolume) throws Exception
 	{
 		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dmcp.volume=%d&include-speaker-id=%s" + "&session-id=%s", session.getRequestBase(), absoluteVolume, speakerId, session.getSessionId()));
 	}
@@ -245,19 +244,19 @@ public class RemoteControl
 	 *            the relative volume to set
 	 * @throws Exception
 	 */
-	private void setRelativeVolume(long speakerId, int relativeVolume) throws Exception
+	private void setRelativeVolume(final byte[] speakerId, final int relativeVolume) throws Exception
 	{
 		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?speaker-id=%s&dmcp.volume=%d" + "&session-id=%s", session.getRequestBase(), speakerId, relativeVolume, session.getSessionId()));
 	}
 
-	public PlayingStatus getNowPlaying(String albumid) throws Exception
+	public PlayingStatus getNowPlaying(final String albumid) throws Exception
 	{
 		// Try Wilco (Alex W)'s nowplaying extension /ctrl-int/1/items
 		try
 		{
 			return RequestHelper.requestParsed(String.format("%s/ctrl-int/1/items?session-id=%s&meta=dmap.itemname,dmap.itemid,daap.songartist,daap.songalbum,daap.songalbum,daap.songtime,daap.songuserrating,daap.songtracknumber&type=music&sort=album&query='daap.songalbumid:%s'", session.getRequestBase(), session.getSessionId(), albumid), false);
 		}
-		catch(IOException e)
+		catch(final IOException e)
 		{
 			logger.debug(e.getMessage(), e);
 			return getNowPlaying();
@@ -296,7 +295,7 @@ public class RemoteControl
 		RequestHelper.dispatch(String.format("%s/ctrl-int/1/previtem?session-id=%s", session.getRequestBase(), session.getSessionId()));
 	}
 
-	public void setVolume(long volume) throws Exception
+	public void setVolume(final long volume) throws Exception
 	{
 		if(volume > 100 || volume < 0)
 		{
@@ -306,19 +305,19 @@ public class RemoteControl
 		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dmcp.volume=%s&session-id=%s", session.getRequestBase(), volume, session.getSessionId()));
 	}
 
-	public void setProgress(int progressSeconds) throws Exception
+	public void setProgress(final int progressSeconds) throws Exception
 	{
 		// http://192.168.254.128:3689/ctrl-int/1/setproperty?dacp.playingtime=82784&session-id=130883770
 		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dacp.playingtime=%d&session-id=%s", session.getRequestBase(), progressSeconds * 1000, session.getSessionId()));
 	}
 
-	public void setShuffle(int shuffleMode) throws Exception
+	public void setShuffle(final int shuffleMode) throws Exception
 	{
 		// /ctrl-int/1/setproperty?dacp.shufflestate=1&session-id=1873217009
 		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dacp.shufflestate=%d&session-id=%s", session.getRequestBase(), shuffleMode, session.getSessionId()));
 	}
 
-	public void setRepeat(int repeatMode) throws Exception
+	public void setRepeat(final int repeatMode) throws Exception
 	{
 		// /ctrl-int/1/setproperty?dacp.repeatstate=2&session-id=1873217009
 		// HTTP/1.1
@@ -371,7 +370,7 @@ public class RemoteControl
 		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=add&query='daap.songalbumid:%s'&session-id=%s", session.getRequestBase(), albumId, session.getSessionId()));
 	}
 
-	public void playArtist(String artist, int index) throws Exception
+	public void playArtist(final String artist, final int index) throws Exception
 	{
 		// http://192.168.254.128:3689/ctrl-int/1/cue?command=clear&session-id=130883770
 		// /ctrl-int/1/cue?command=play&query=(('com.apple.itunes.mediakind:1','com.apple.itunes.mediakind:32')+'daap.songartist:Family%20Force%205')&index=0&sort=album&session-id=130883770
@@ -384,7 +383,7 @@ public class RemoteControl
 		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=play&query='daap.songartist:%s'&index=%d&sort=album&session-id=%s", session.getRequestBase(), encodedArtist, encodedIndex, session.getSessionId()));
 	}
 
-	public void queueArtist(String artist) throws Exception
+	public void queueArtist(final String artist) throws Exception
 	{
 		final String encodedArtist = RequestHelper.escapeUrlString(artist);
 		RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=add&query='daap.songartist:%s'&session-id=%s", session.getRequestBase(), encodedArtist, session.getSessionId()));
@@ -422,7 +421,7 @@ public class RemoteControl
 			RequestHelper.dispatch(String.format("%s/ctrl-int/1/cue?command=play&index=%d&sort=album&session-id=%s", session.getRequestBase(), tracknum, session.getSessionId()));
 			// on iTunes this generates a 501 Not Implemented response
 		}
-		catch(Exception e)
+		catch(final Exception e)
 		{
 			if(albumid != null && albumid.length() > 0)
 			{

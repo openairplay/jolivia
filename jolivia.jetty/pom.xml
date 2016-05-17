@@ -8,10 +8,11 @@
 	</parent>
 	<artifactId>jolivia.jetty</artifactId>
 	<dependencies>
+		<!-- http://mvnrepository.com/artifact/org.eclipse.jetty/jetty-servlet -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-servlet</artifactId>
-			<version>8.1.16.v20140903</version>
+			<version>9.3.9.M1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey.contribs</groupId>

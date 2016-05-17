@@ -137,7 +137,7 @@ public class MusicItemManager implements IItemManager
 	@Override
 	public long getSessionId(final String remoteHost)
 	{
-		return 42;
+		return 496020286;
 	}
 
 	@Override

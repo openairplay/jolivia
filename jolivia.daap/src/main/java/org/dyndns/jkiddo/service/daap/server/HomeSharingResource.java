@@ -19,7 +19,7 @@ public class HomeSharingResource extends MDNSResource
 	
 	final static AudioProtocolVersion audioProtocolVersion = new AudioProtocolVersion(DmapUtil.APRO_VERSION_3012);
 	final static MediaProtocolVersion mediaProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_2010);
-	final static MusicSharingVersion musicSharingVersion = new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_3011);
+	final static MusicSharingVersion musicSharingVersion = new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_3012);
 
 	private final String applicationName;
 	private final String hsGid;
@@ -52,7 +52,7 @@ public class HomeSharingResource extends MDNSResource
 		records.put(TXT_VERSION_KEY, TXT_VERSION);
 		records.put(ITSH_VERSION_KEY, musicSharingVersion.getValue() + "");
 		records.put(VERSION_KEY, audioProtocolVersion.getValue() + "");
-		records.put("hG", hsGid); //sgid
+		records.put("hG", hsGid);
 		records.put("iCSV", "65540");
 		records.put(MACHINE_NAME_KEY, applicationName);
 		records.put("DvSv", "3120");

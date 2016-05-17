@@ -10,13 +10,11 @@ import javax.inject.Named;
 
 import org.dyndns.jkiddo.dmap.chunks.audio.BaseContainer;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.ArtworkChecksum;
-import org.dyndns.jkiddo.dmap.chunks.audio.extension.ExtendedMediaKind;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.SmartPlaylist;
 import org.dyndns.jkiddo.dmap.chunks.audio.extension.SpecialPlaylist;
 import org.dyndns.jkiddo.dmp.chunks.media.AuthenticationMethod.PasswordMethod;
 import org.dyndns.jkiddo.dmp.chunks.media.ContainerCount;
 import org.dyndns.jkiddo.dmp.chunks.media.DatabaseShareType;
-import org.dyndns.jkiddo.dmp.chunks.media.EditCommandSupported;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemCount;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
@@ -48,7 +46,7 @@ public class InMemoryMusicManager implements IItemManager
 	@Override
 	public long getSessionId(final String remoteHost)
 	{
-		return 42;
+		return 1681801861;
 	}
 
 	@Override
@@ -176,8 +174,7 @@ public class InMemoryMusicManager implements IItemManager
 		databaselistingItem.add(new ItemName(applicationName));
 		databaselistingItem.add(new ItemCount(2));
 		databaselistingItem.add(new ContainerCount(2));
-		databaselistingItem.add(new ExtendedMediaKind(ExtendedMediaKind.UNKNOWN_ONE));
-		databaselistingItem.add(new EditCommandSupported(3));
+//		databaselistingItem.add(new ExtendedMediaKind(ExtendedMediaKind.UNKNOWN_ONE));
 		databaselisting.add(databaselistingItem);
 		databasesResponse = databaselisting;
 
@@ -185,24 +182,25 @@ public class InMemoryMusicManager implements IItemManager
 		//Base container
 		{
 			final ListingItem containerlistingItem = new ListingItem();
-			containerlistingItem.add(new ItemId(2));
-			containerlistingItem.add(new PersistentId(2));
+			containerlistingItem.add(new ItemId(1));
 			containerlistingItem.add(new ItemName(applicationName + "'s library"));
-			containerlistingItem.add(new BaseContainer(1));
-			containerlistingItem.add(new ParentContainerId(0));
+			containerlistingItem.add(new PersistentId(1));
 			containerlistingItem.add(new ItemCount(map.size()));
+			containerlistingItem.add(new ParentContainerId(0));
+			containerlistingItem.add(new BaseContainer(1));
+//			containerlistingItem.add(new EditCommandSupported(3));
 			containerlisting.add(containerlistingItem);
 		}
 		
 		{
 			final ListingItem containerlistingItem = new ListingItem();
-			containerlistingItem.add(new ItemId(3));
-			containerlistingItem.add(new PersistentId(3));
+			containerlistingItem.add(new ItemId(2));
 			containerlistingItem.add(new ItemName("Music"));
+			containerlistingItem.add(new PersistentId(2));
 			containerlistingItem.add(new SmartPlaylist(true));
-			containerlistingItem.add(new ParentContainerId(0));
 			containerlistingItem.add(new SpecialPlaylist(SpecialPlaylist.MUSIC_LIBRARY));
 			containerlistingItem.add(new ItemCount(map.size()));
+			containerlistingItem.add(new ParentContainerId(0));
 			containerlisting.add(containerlistingItem);
 		}
 

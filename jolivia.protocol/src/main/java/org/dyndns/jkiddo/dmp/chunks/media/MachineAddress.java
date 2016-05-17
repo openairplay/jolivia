@@ -10,22 +10,21 @@
  ******************************************************************************/
 package org.dyndns.jkiddo.dmp.chunks.media;
 
-import org.dyndns.jkiddo.dmp.chunks.ULongChunk;
-
-import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
 import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
+import org.dyndns.jkiddo.dmp.chunks.RawChunk;
 
 @DMAPAnnotation(type=DmapChunkDefinition.msma)
-public class SpeakerMacAddress extends ULongChunk
+public class MachineAddress extends RawChunk
 {
-	public SpeakerMacAddress()
+	public MachineAddress()
 	{
-		this(0);
+		this(null);
 	}
 
-	public SpeakerMacAddress(long value)
+	public MachineAddress(final byte[] value)
 	{
-		super("msma", "com.apple.itunes.unknown-ma", value);
+		super("msma", "dmap.machineaddress", value);
 	}
 
 }

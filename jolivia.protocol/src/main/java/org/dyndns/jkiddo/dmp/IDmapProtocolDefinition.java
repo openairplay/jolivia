@@ -1,6 +1,8 @@
 package org.dyndns.jkiddo.dmp;
 
 import org.dyndns.jkiddo.dmp.chunks.AbstractChunk;
+import org.dyndns.jkiddo.dmp.chunks.unknown.Unknownal;
+import org.dyndns.jkiddo.dmp.chunks.unknown.UnknowncA;
 
 public interface IDmapProtocolDefinition
 {
@@ -292,7 +294,7 @@ public interface IDmapProtocolDefinition
 		mshi("mshi","dmap.sortingheaderindex",DmapTypeDefinition.U_INT_TYPE,org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderIndex.class),
 		mshl("mshl","dmap.sortingheaderlisting",DmapTypeDefinition.CONTAINER_TYPE,org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderListing.class),
 		mshn("mshn","dmap.sortingheadernumber",DmapTypeDefinition.U_INT_TYPE,org.dyndns.jkiddo.dmp.chunks.media.SortingHeaderNumber.class),
-		msma("msma","com.apple.itunes.unknown-ma",DmapTypeDefinition.U_LONG_TYPE,org.dyndns.jkiddo.dmp.chunks.media.SpeakerMacAddress.class),
+		msma("msma","dmap.machineaddress",DmapTypeDefinition.U_LONG_TYPE,org.dyndns.jkiddo.dmp.chunks.media.MachineAddress.class),
 		mtco("mtco","dmap.specifiedtotalcount",DmapTypeDefinition.U_INT_TYPE,org.dyndns.jkiddo.dmp.chunks.media.SpecifiedTotalCount.class),
 		mstt("mstt","dmap.status",DmapTypeDefinition.U_INT_TYPE,org.dyndns.jkiddo.dmp.chunks.media.Status.class),
 		msts("msts","dmap.statusstring",DmapTypeDefinition.STRING_TYPE,org.dyndns.jkiddo.dmp.chunks.media.StatusString.class),
@@ -306,7 +308,7 @@ public interface IDmapProtocolDefinition
 		msrs("msrs","dmap.supportsresolve",DmapTypeDefinition.U_BYTE_TYPE,org.dyndns.jkiddo.dmp.chunks.media.SupportsResolve.class),
 		msup("msup","dmap.supportsupdate",DmapTypeDefinition.U_BYTE_TYPE,org.dyndns.jkiddo.dmp.chunks.media.SupportsUpdate.class),
 		mstm("mstm","dmap.timeoutinterval",DmapTypeDefinition.U_INT_TYPE,org.dyndns.jkiddo.dmp.chunks.media.TimeoutInterval.class),
-		msml("msml","com.apple.itunes.unknown-ml",DmapTypeDefinition.CONTAINER_TYPE,org.dyndns.jkiddo.dmp.chunks.media.Unknownml.class),
+		msml("msml","dmap.speakermachinelist",DmapTypeDefinition.CONTAINER_TYPE,org.dyndns.jkiddo.dmp.chunks.media.SpeakerMachineList.class),
 		mupd("mupd","dmap.updateresponse",DmapTypeDefinition.CONTAINER_TYPE,org.dyndns.jkiddo.dmp.chunks.media.UpdateResponse.class),
 		muty("muty","dmap.updatetype",DmapTypeDefinition.U_BYTE_TYPE,org.dyndns.jkiddo.dmp.chunks.media.UpdateType.class),
 		mstc("mstc","dmap.utctime",DmapTypeDefinition.DATE_TYPE,org.dyndns.jkiddo.dmp.chunks.media.UTCTime.class),
@@ -336,8 +338,9 @@ public interface IDmapProtocolDefinition
 		ipsa("ipsa","dpap.iphotoslideshowadvancedoptions",DmapTypeDefinition.CONTAINER_TYPE,org.dyndns.jkiddo.dpap.chunks.picture.SlideShowAdvancedOptions.class),
 		ipsl("ipsl","dpap.iphotoslideshowoptions",DmapTypeDefinition.CONTAINER_TYPE,org.dyndns.jkiddo.dpap.chunks.picture.SlideShowOptions.class),
 		aeFA("aeFA", "com.apple.itunes.drm-family-id",DmapTypeDefinition.U_LONG_TYPE, org.dyndns.jkiddo.dmap.chunks.audio.extension.DRMFamilyId.class),
-		aeDL("aeDL", "com.apple.itunes.drm-downloader-user-id",DmapTypeDefinition.U_LONG_TYPE, org.dyndns.jkiddo.dmap.chunks.audio.extension.DRMDownloaderUserId.class);
-
+		aeDL("aeDL", "com.apple.itunes.drm-downloader-user-id",DmapTypeDefinition.U_LONG_TYPE, org.dyndns.jkiddo.dmap.chunks.audio.extension.DRMDownloaderUserId.class),
+		ajcA("ajcA","com.apple.itunes.unknown-cA",DmapTypeDefinition.BYTE_TYPE, UnknowncA.class),
+		ajal("ajal","com.apple.itunes.unknown-al",DmapTypeDefinition.BYTE_TYPE, Unknownal.class);
 
 		private final String shortname;
 		private final String longname;

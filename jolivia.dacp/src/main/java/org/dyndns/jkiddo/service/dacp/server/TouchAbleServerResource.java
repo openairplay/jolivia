@@ -11,6 +11,7 @@
 package org.dyndns.jkiddo.service.dacp.server;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
@@ -65,8 +66,8 @@ import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
+import org.dyndns.jkiddo.dmp.chunks.media.MachineAddress;
 import org.dyndns.jkiddo.dmp.chunks.media.ReturnedCount;
-import org.dyndns.jkiddo.dmp.chunks.media.SpeakerMacAddress;
 import org.dyndns.jkiddo.dmp.chunks.media.SpecifiedTotalCount;
 import org.dyndns.jkiddo.dmp.chunks.media.Status;
 import org.dyndns.jkiddo.dmp.chunks.media.UpdateType;
@@ -233,7 +234,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 		dictionary.add(new ItemName("My Compounter"));
 		dictionary.add(new RelativeVolume(100));
 		dictionary.add(new UnknownVD(true));
-		dictionary.add(new SpeakerMacAddress(0));
+		dictionary.add(new MachineAddress(new byte[]{0}));
 		dictionary.add(new SpeakerActive(true));
 
 		response.add(dictionary);
@@ -320,7 +321,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 	@Override
 	@GET
 	@Path("fp-setup")
-	public Response fpSetup(@QueryParam("session-id") final long session_id, @QueryParam("hsgid") final String hsgid)
+	public Response fpSetup(@QueryParam("session-id") final long session_id, @QueryParam("hsgid") final String hsgid, final InputStream is)
 	{
 		throw new NotImplementedException();
 	}

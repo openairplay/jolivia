@@ -35,6 +35,8 @@
  */
 package org.dyndns.jkiddo.service.daap.client;
 
+import org.dyndns.jkiddo.service.dmap.Util;
+
 /**
  * Representation of a speaker as can be constructed from the response of the <code>getspeakers</code> DACP call
  * 
@@ -46,7 +48,7 @@ public class Speaker
 	/**
 	 * ID of the speaker, the computer speaker typically has ID 0. Tag in DACP response: <code>msma</code>
 	 */
-	private long id;
+	private byte[] id;
 	/**
 	 * Name of the speaker. Tag in DACP response: <code>minm</code>
 	 */
@@ -65,7 +67,7 @@ public class Speaker
 		return absoluteVolume;
 	}
 
-	public void setAbsoluteVolume(int absoluteVolume)
+	public void setAbsoluteVolume(final int absoluteVolume)
 	{
 		this.absoluteVolume = absoluteVolume;
 	}
@@ -77,10 +79,10 @@ public class Speaker
 
 	public boolean isLocalSpeaker()
 	{
-		return id == 0;
+		return (id.length == 0);
 	}
 
-	public long getId()
+	public byte[] getId()
 	{
 		return id;
 	}
@@ -90,15 +92,16 @@ public class Speaker
 	 */
 	public String getIdAsHex()
 	{
-		return "0x" + Long.toHexString(id);
+		
+		return "0x" + Util.toHex(id);
 	}
 
-	public void setId(long id)
+	public void setId(final byte[] speakerId)
 	{
-		this.id = id;
+		this.id = speakerId;
 	}
 
-	public void setActive(boolean active)
+	public void setActive(final boolean active)
 	{
 		this.active = active;
 	}
@@ -108,7 +111,7 @@ public class Speaker
 		return name;
 	}
 
-	public void setName(String name)
+	public void setName(final String name)
 	{
 		this.name = name;
 	}

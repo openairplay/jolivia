@@ -73,22 +73,17 @@ public final class DmapUtil
 	/** "\r\n" <b>DON'T TOUCH!</b> */
 	static final byte[] CRLF = { (byte) '\r', (byte) '\n' };
 
-	private final static SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z", Locale.US);
+	private final static SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z", Locale.getDefault());
 
-	/** Music Sharing Version 2.0.1 */
-	//public static final int MUSIC_SHARING_VERSION_309 = 0x00020000;
+	public static final int MUSIC_SHARING_VERSION_3012 = 0x0003000C;
 	
-	/** Music Sharing Version 3.0.11 */
-	public static final int MUSIC_SHARING_VERSION_3011 = 0x0003000C;
-	
-	/** Music Sharing Version 3.0.10 */
-	public static final int MUSIC_SHARING_VERSION_3010 = 0x0003000A;
+	public static final int MUSIC_SHARING_VERSION_2001 = 131073;
 	/**
 	 * NEWEST BELOW
 	 */
 
 	/** MPRO Version 2.0.10 (iTunes 11.1.5.5) */
-	public static final int MPRO_VERSION_2010 = 0x0002000D;
+	public static final int MPRO_VERSION_2010 = 0x0002000A;
 
 	
 	public static final int CONTROL_VERSION_205 = 0x00020005;
@@ -96,17 +91,10 @@ public final class DmapUtil
 	/** PPRO Version 2.0.1 (iTunes 11.1.5.5) */
 	public static final int PPRO_VERSION_201 = 0x00020001;
 
+	public static final int APRO_VERSION_3002 = 196610;
+	
 	/** APRO Version 3.0.12 (iTunes 11.1.5.5) */
-	public static final int APRO_VERSION_3012 = 0x0003000D;
-
-	/** MPRO Version 2.0.9 (iTunes 11.0.1.12) */
-	// public static final int MPRO_VERSION_209 = 0x00020009;
-
-	/** PPRO Version 2.0.0 (iTunes 11.0.1.12) */
-	// public static final int PPRO_VERSION_200 = 0x00020000;
-
-	/** APRO Version 3.0.11 (iTunes 11.0.1.12) */
-	// public static final int APRO_VERSION_3011 = 0x0003000B;
+	public static final int APRO_VERSION_3012 = 0x0003000C;
 
 	/** PPRO Version 1.0.1 (iPhoto 9.4.3) */
 	public static final int PPRO_VERSION_101 = 0x00010001;

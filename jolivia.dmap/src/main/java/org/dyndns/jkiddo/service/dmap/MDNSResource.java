@@ -38,9 +38,9 @@ public abstract class MDNSResource
 //	public static final String DATABASE_ID = DB_ID = "3B787C7DD4D136BB";
 //	public static final String MID = "FAE42441153E483B";
 	
-	public static final String MACHINE_ID = "920C68E362AA";
-	public static final String DATABASE_ID = DB_ID = "3B787C7DD4D136AA";
-	public static final String MID = "FAE42441153E48AA";
+	public static final String MACHINE_ID = "920C68E36298";
+	public static final String DATABASE_ID = DB_ID = "3B787C7DD4D136BB";
+	public static final String MID = "FAE42441153E483B";
 	public static final String MID_0X = "0x" + MID;
 	
 	private IZeroconfManager.ServiceInfo serviceInfo;

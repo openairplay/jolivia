@@ -27,20 +27,22 @@
 
 package org.dyndns.jkiddo.dmap.chunks.audio;
 
-import org.dyndns.jkiddo.dmp.chunks.UByteChunk;
-
+import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 /**
  * This class describes if a song is either a Radio stream or DAAP stream. Radio streams have a different icon and and the data is usually streamed from an URL ({@see SongDataUrl}).
  * 
  * @author Roger Kapsi
  */
 import org.dyndns.jkiddo.dmp.IDmapProtocolDefinition.DmapChunkDefinition;
-import org.dyndns.jkiddo.dmp.DMAPAnnotation;
+import org.dyndns.jkiddo.dmp.chunks.UByteChunk;
 
 @DMAPAnnotation(type=DmapChunkDefinition.asdk)
 public class SongDataKind extends UByteChunk
 {
 
+	/** Radio stream */
+	public static final int UNKNOWN = 0;
+	
 	/** Radio stream */
 	public static final int RADIO_STREAM = 1;
 
@@ -55,7 +57,7 @@ public class SongDataKind extends UByteChunk
 		this(DAAP_STREAM);
 	}
 
-	public SongDataKind(int kind)
+	public SongDataKind(final int kind)
 	{
 		super("asdk", "daap.songdatakind", kind);
 	}

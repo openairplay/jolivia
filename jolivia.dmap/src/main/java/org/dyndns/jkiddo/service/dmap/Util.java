@@ -76,6 +76,16 @@ public class Util
 		response.entity(buffer);
 		return response.build();
 	}
+	
+	public static Response buildBinaryResponse(final byte[] buffer, final String dmapKey, final String dmapServiceName)
+	{
+		
+		final ResponseBuilder response = new ResponseBuilderImpl().header(HttpHeaders.DATE, DmapUtil.now()).header(dmapKey, dmapServiceName).header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_OCTET_STREAM).header(HttpHeaders.CONTENT_ENCODING, "gzip");
+		response.status(Response.Status.OK);
+		response.entity(buffer);
+		response.header(HttpHeaders.CONTENT_LENGTH, Long.toString(buffer.length));
+		return response.build();
+	}
 
 	private static ResponseBuilder buildResponse(final String dmapKey, final String dmapServiceName)
 	{
