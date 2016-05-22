@@ -18,16 +18,16 @@ public class DeviceResponse
 
 	public DeviceResponse(String headers, String content)
 	{
-		String headerSplit[] = headers.split("\n");
+		String[] headerSplit = headers.split("\n");
 
 		String rawResponseValue = headerSplit[0];
-		String responseSplit[] = rawResponseValue.split(" ");
+		String[] responseSplit = rawResponseValue.split(" ");
 		responseCode = Integer.parseInt(responseSplit[1]);
 		responseMessage = responseSplit[2];
 
 		for(int i = 1; i < headerSplit.length; i++)
 		{
-			String headerValueSplit[] = headerSplit[i].split(":");
+			String[] headerValueSplit = headerSplit[i].split(":");
 			headerMap.put(headerValueSplit[0], headerValueSplit[1].trim());
 		}
 
@@ -39,7 +39,7 @@ public class DeviceResponse
 			{
 				for(String paramLine : content.split("\n"))
 				{
-					String paramSplit[] = paramLine.split(":");
+					String[] paramSplit = paramLine.split(":");
 					contentParameterMap.put(paramSplit[0], paramSplit[1].trim());
 				}
 			}

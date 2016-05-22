@@ -133,7 +133,7 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 		final ByteArrayOutputStream os = new ByteArrayOutputStream();
 		os.write(databaseCode.getBytes("UTF-8"));
 
-		final byte codeAsBytes[] = String.format("%04d", actualCode).getBytes("UTF-8");
+		final byte[] codeAsBytes = String.format("%04d", actualCode).getBytes("UTF-8");
 		for (final byte codeAsByte : codeAsBytes) {
 			os.write(codeAsByte);
 			os.write(0);
