@@ -84,7 +84,7 @@ public class DeviceConnection
 			if(contentLength > 0)
 			{
 				content = new StringBuffer(contentLength);
-				char buffer[] = new char[1024];
+				char[] buffer = new char[1024];
 				int read, totalRead = 0;
 				do
 				{

@@ -20,8 +20,8 @@ package org.dyndns.jkiddo.raop.server.airreceiver;
 public class RunningWeightedAverage
 {
 	public final int m_length;
-	public final double m_values[];
-	public final double m_weights[];
+	public final double[] m_values;
+	public final double[] m_weights;
 	public boolean m_empty = true;
 	public int m_index = 0;
 	public double m_average = Double.NaN;

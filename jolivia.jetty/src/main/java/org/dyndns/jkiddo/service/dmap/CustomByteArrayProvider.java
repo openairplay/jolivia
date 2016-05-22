@@ -32,7 +32,7 @@ public class CustomByteArrayProvider extends AbstractMessageReaderWriterProvider
 		return type == byte[].class;
 	}
 
-	public byte[] readFrom(Class<byte[]> type, Type genericType, Annotation annotations[], MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException
+	public byte[] readFrom(Class<byte[]> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> httpHeaders, InputStream entityStream) throws IOException
 	{
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		writeTo(entityStream, out);
@@ -44,7 +44,7 @@ public class CustomByteArrayProvider extends AbstractMessageReaderWriterProvider
 		return type == byte[].class;
 	}
 
-	public void writeTo(byte[] t, Class<?> type, Type genericType, Annotation annotations[], MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException
+	public void writeTo(byte[] t, Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, Object> httpHeaders, OutputStream entityStream) throws IOException
 	{
 		entityStream.write(t);
 	}

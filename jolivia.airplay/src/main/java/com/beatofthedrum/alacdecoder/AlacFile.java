@@ -13,7 +13,7 @@ package com.beatofthedrum.alacdecoder;
 public class AlacFile
 {
 
-	byte input_buffer[];
+	byte[] input_buffer;
 	int ibIdx = 0;
 	int input_buffer_bitaccumulator = 0; /*
 										 * used so we can do arbitary bit reads
@@ -27,14 +27,14 @@ public class AlacFile
 
 	private int buffer_size = 16384;
 	/* buffers */
-	int predicterror_buffer_a[] = new int[buffer_size];
-	int predicterror_buffer_b[] = new int[buffer_size];
+	int[] predicterror_buffer_a = new int[buffer_size];
+	int[] predicterror_buffer_b = new int[buffer_size];
 
-	int outputsamples_buffer_a[] = new int[buffer_size];
-	int outputsamples_buffer_b[] = new int[buffer_size];
+	int[] outputsamples_buffer_a = new int[buffer_size];
+	int[] outputsamples_buffer_b = new int[buffer_size];
 
-	int uncompressed_bytes_buffer_a[] = new int[buffer_size];
-	int uncompressed_bytes_buffer_b[] = new int[buffer_size];
+	int[] uncompressed_bytes_buffer_a = new int[buffer_size];
+	int[] uncompressed_bytes_buffer_b = new int[buffer_size];
 
 	/* stuff from setinfo */
 	public int setinfo_max_samples_per_frame = 0; // 0x1000 = 4096
