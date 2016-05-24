@@ -84,7 +84,7 @@ public class PacketAnalyzer
 	{
 		try
 		{
-			File file = null;
+			File file;
 
 			if(args.length == 0)
 			{

@@ -97,7 +97,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 		public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent evt) throws Exception
 		{
 			/* Get audio channel from the enclosing RaopAudioHandler */
-			Channel audioChannel = null;
+			Channel audioChannel;
 			synchronized(RaopAudioHandler.this)
 			{
 				audioChannel = m_audioChannel;
@@ -121,8 +121,8 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 			final RaopRtpPacket packet = (RaopRtpPacket) evt.getMessage();
 
 			/* Get control and timing channel from the enclosing RaopAudioHandler */
-			Channel controlChannel = null;
-			Channel timingChannel = null;
+			Channel controlChannel;
+			Channel timingChannel;
 			synchronized(RaopAudioHandler.this)
 			{
 				controlChannel = m_controlChannel;
