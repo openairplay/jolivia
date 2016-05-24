@@ -214,7 +214,7 @@ public class Window
 					{
 						try
 						{
-							IMusicStoreReader reader = null;
+							IMusicStoreReader reader;
 							/*if(chckbxUseGoogleMusic.isSelected())
 							{
 								reader = new GoogleStoreReader(txtUsername.getText(), new String(pwdPassword.getPassword()));

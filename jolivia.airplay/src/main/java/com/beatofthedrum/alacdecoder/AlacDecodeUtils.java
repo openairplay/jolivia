@@ -53,11 +53,11 @@ public class AlacDecodeUtils
 	/* supports reading 1 to 16 bits, in big endian format */
 	static int readbits_16(AlacFile alac, int bits)
 	{
-		int result = 0;
-		int new_accumulator = 0;
-		int part1 = 0;
-		int part2 = 0;
-		int part3 = 0;
+		int result;
+		int new_accumulator;
+		int part1;
+		int part2;
+		int part3;
 
 		part1 = (alac.input_buffer[alac.ibIdx] & 0xff);
 		part2 = (alac.input_buffer[alac.ibIdx + 1] & 0xff);
@@ -108,11 +108,9 @@ public class AlacDecodeUtils
 	/* reads a single bit */
 	static int readbit(AlacFile alac)
 	{
-		int result = 0;
-		int new_accumulator = 0;
-		int part1 = 0;
-
-		part1 = (alac.input_buffer[alac.ibIdx] & 0xff);
+		int result;
+		int new_accumulator;
+		int part1 = (alac.input_buffer[alac.ibIdx] & 0xff);
 
 		result = part1;
 
@@ -185,9 +183,8 @@ public class AlacDecodeUtils
 	static int count_leading_zeros(int input, LeadingZeros lz)
 	{
 		int output = 0;
-		int curbyte = 0;
+		int curbyte = input >> 24;
 
-		curbyte = input >> 24;
 		if(curbyte != 0)
 		{
 			count_leading_zeros_extra(curbyte, output, lz);
@@ -246,9 +243,7 @@ public class AlacDecodeUtils
 		if(x > Defines.RICE_THRESHOLD)
 		{
 			// read the number from the bit stream (raw value)
-			int value = 0;
-
-			value = readbits(alac, readSampleSize);
+			int value = readbits(alac, readSampleSize);
 
 			// mask value
 			value &= ((0xffffffff) >> (32 - readSampleSize));
@@ -281,11 +276,9 @@ public class AlacDecodeUtils
 
 		while(outputCount < outputSize)
 		{
-			int decodedValue = 0;
-			int finalValue = 0;
-			int k = 0;
-
-			k = 31 - rice_kmodifier - count_leading_zeros((history >> 9) + 3, alac.lz);
+			int decodedValue;
+			int finalValue;
+			int k =  31 - rice_kmodifier - count_leading_zeros((history >> 9) + 3, alac.lz);;
 
 			if(k < 0)
 				k += rice_kmodifier;
@@ -313,7 +306,7 @@ public class AlacDecodeUtils
 			// special case, for compressed blocks of 0
 			if((history < 128) && (outputCount + 1 < outputSize))
 			{
-				int blockSize = 0;
+				int blockSize;
 
 				signModifier = 1;
 
@@ -325,8 +318,8 @@ public class AlacDecodeUtils
 				// got blockSize 0s
 				if(blockSize > 0)
 				{
-					int countSize = 0;
-					countSize = blockSize;
+					int countSize = blockSize;
+
 					for(int j = 0; j < countSize; j++)
 					{
 						outputBuffer[outputCount + 1 + j] = 0;
@@ -346,9 +339,9 @@ public class AlacDecodeUtils
 
 	static int[] predictor_decompress_fir_adapt(int[] error_buffer, int output_size, int readsamplesize, int[] predictor_coef_table, int predictor_coef_num, int predictor_quantitization)
 	{
-		int buffer_out_idx = 0;
+		int buffer_out_idx;
 		int[] buffer_out;
-		int bitsmove = 0;
+		int bitsmove;
 
 		/* first sample always copies */
 		buffer_out = error_buffer;
@@ -357,8 +350,7 @@ public class AlacDecodeUtils
 		{
 			if(output_size <= 1)
 				return(buffer_out);
-			int sizeToCopy = 0;
-			sizeToCopy = (output_size - 1) * 4;
+			int sizeToCopy = (output_size - 1) * 4;
 			System.arraycopy(error_buffer, 1, buffer_out, 1, sizeToCopy);
 			return(buffer_out);
 		}
@@ -373,11 +365,8 @@ public class AlacDecodeUtils
 
 			for(int i = 0; i < (output_size - 1); i++)
 			{
-				int prev_value = 0;
-				int error_value = 0;
-
-				prev_value = buffer_out[i];
-				error_value = error_buffer[i + 1];
+				int prev_value = buffer_out[i];
+				int error_value = error_buffer[i + 1];;
 
 				bitsmove = 32 - readsamplesize;
 				buffer_out[i + 1] = (((prev_value + error_value) << bitsmove) >> bitsmove);
@@ -390,9 +379,7 @@ public class AlacDecodeUtils
 		{
 			for(int i = 0; i < predictor_coef_num; i++)
 			{
-				int val = 0;
-
-				val = buffer_out[i] + error_buffer[i + 1];
+				int val = buffer_out[i] + error_buffer[i + 1];
 
 				bitsmove = 32 - readsamplesize;
 
@@ -481,10 +468,10 @@ public class AlacDecodeUtils
 		{
 			for(int i = 0; i < numsamples; i++)
 			{
-				int difference = 0;
-				int midright = 0;
-				int left = 0;
-				int right = 0;
+				int difference;
+				int midright;
+				int left;
+				int right;
 
 				midright = buffer_a[i];
 				difference = buffer_b[i];
@@ -504,8 +491,8 @@ public class AlacDecodeUtils
 		/* otherwise basic interlacing took place */
 		for(int i = 0; i < numsamples; i++)
 		{
-			int left = 0;
-			int right = 0;
+			int left;
+			int right;
 
 			left = buffer_a[i];
 			right = buffer_b[i];
@@ -527,10 +514,10 @@ public class AlacDecodeUtils
 		{
 			for(int i = 0; i < numsamples; i++)
 			{
-				int difference = 0;
-				int midright = 0;
-				int left = 0;
-				int right = 0;
+				int difference;
+				int midright;
+				int left;
+				int right;
 
 				midright = buffer_a[i];
 				difference = buffer_b[i];
@@ -563,8 +550,8 @@ public class AlacDecodeUtils
 		/* otherwise basic interlacing took place */
 		for(int i = 0; i < numsamples; i++)
 		{
-			int left = 0;
-			int right = 0;
+			int left;
+			int right;
 
 			left = buffer_a[i];
 			right = buffer_b[i];
@@ -614,7 +601,7 @@ public class AlacDecodeUtils
 			int uncompressed_bytes;
 			int ricemodifier;
 
-			int tempPred = 0;
+			int tempPred;
 
 			/*
 			 * 2^result = something to do with output waiting. perhaps matters if we read > 1 frame in a pass?
@@ -702,7 +689,7 @@ public class AlacDecodeUtils
 			{ // not compressed, easy case
 				if(alac.setinfo_sample_size <= 16)
 				{
-					int bitsmove = 0;
+					int bitsmove;
 					for(int i = 0; i < outputsamples; i++)
 					{
 						int audiobits = readbits(alac, alac.setinfo_sample_size);
@@ -762,7 +749,7 @@ public class AlacDecodeUtils
 
 						if(uncompressed_bytes != 0)
 						{
-							int mask = 0;
+							int mask;
 							sample = sample << (uncompressed_bytes * 8);
 							mask = ~(0xFFFFFFFF << (uncompressed_bytes * 8));
 							sample = sample | (alac.uncompressed_bytes_buffer_a[i] & mask);
@@ -839,7 +826,7 @@ public class AlacDecodeUtils
 				int prediction_quantitization_b;
 				int ricemodifier_b;
 
-				int tempPred = 0;
+				int tempPred;
 
 				interlacing_shift = readbits(alac, 8);
 				interlacing_leftweight = readbits(alac, 8);
