@@ -83,6 +83,7 @@ public class DmapParser extends HttpParser{
 
 	    private int _length;
 	    private final StringBuilder _string=new StringBuilder();
+		private final static CharState[] __charState;
 
 	    static
 	    {
@@ -132,12 +133,6 @@ public class DmapParser extends HttpParser{
 	        CACHE.put(new HttpField(HttpHeader.IF_NONE_MATCH,(String)null));
 	        CACHE.put(new HttpField(HttpHeader.AUTHORIZATION,(String)null));
 	        CACHE.put(new HttpField(HttpHeader.COOKIE,(String)null));
-	    }
-
-	    private static HttpCompliance compliance()
-	    {
-	        final Boolean strict = Boolean.getBoolean(__STRICT);
-	        return strict?HttpCompliance.LEGACY:HttpCompliance.RFC7230;
 	    }
 
 	    /* ------------------------------------------------------------------------------- */
@@ -208,7 +203,12 @@ public class DmapParser extends HttpParser{
 	        _complianceHandler=(ComplianceHandler)(handler instanceof ComplianceHandler?handler:null);
 	    }
 
-	    /* ------------------------------------------------------------------------------- */
+		private static HttpCompliance compliance() {
+			final Boolean strict = Boolean.getBoolean(__STRICT);
+			return strict ? HttpCompliance.LEGACY : HttpCompliance.RFC7230;
+		}
+
+		/* ------------------------------------------------------------------------------- */
 	    /** Check RFC compliance violation
 	     * @param compliance The compliance level violated
 	     * @param reason The reason for the violation
@@ -337,7 +337,6 @@ public class DmapParser extends HttpParser{
 
 	    /* ------------------------------------------------------------------------------- */
 	    enum CharState { ILLEGAL, CR, LF, LEGAL }
-	    private final static CharState[] __charState;
 	    static
 	    {
 	        // token          = 1*tchar

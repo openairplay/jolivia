@@ -62,16 +62,11 @@ public class Container
 		this(itemName, persistentId, itemId);
 		this.database = database;
 	}
-	
+
 	public Container(String itemName, long persistentId, long itemId, Database database, int audioBasePlaylist)
 	{
 		this(itemName, persistentId, itemId, database);
 		this.audioBasePlayList = audioBasePlaylist;
-	}
-
-	public int getAudioBasePlayList()
-	{
-		return audioBasePlayList;
 	}
 
 	public Container(String itemName, long persistentId, long itemId)
@@ -80,6 +75,10 @@ public class Container
 		this.mediaItems = Sets.newHashSet();
 	}
 
+	public int getAudioBasePlayList()
+	{
+		return audioBasePlayList;
+	}
 	public void addMediaItem(MediaItem mediaItem)
 	{
 		mediaItems.add(mediaItem);

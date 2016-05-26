@@ -20,34 +20,10 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "mediaitems")
 public class MediaItem
 {
-	public MediaItem()
-	{}
+	private static final String name = IDmapProtocolDefinition.DmapProtocolDefinition.miid.longname;
 
-	public MediaItem(Database database)
-	{
-		setDatabase(database);
-	}
-	
-	public void setDatabase(Database database)
-	{
-		this.database = database;
-		container = this.database.getMasterContainer();
-	}
-	
 	@DatabaseField(canBeNull = false)
 	private String externalIdentifer;
-
-	public String getExternalIdentifer()
-	{
-		return externalIdentifer;
-	}
-
-	public void setExternalIdentifer(String externalIdentifer)
-	{
-		this.externalIdentifer = externalIdentifer;
-	}
-	
-	private static final String name =IDmapProtocolDefinition.DmapProtocolDefinition.miid.longname;
 
 	@DatabaseField(generatedId = true, columnName = "dmap.itemid")
 	private int itemId;
@@ -78,6 +54,30 @@ public class MediaItem
 
 	@DatabaseField(/*columnName="dmap.containeritemid",*/ foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true)
 	private IContainer container;
+
+	public MediaItem()
+	{}
+
+	public MediaItem(Database database)
+	{
+		setDatabase(database);
+	}
+
+	public String getExternalIdentifer()
+	{
+		return externalIdentifer;
+	}
+
+	public void setExternalIdentifer(String externalIdentifer)
+	{
+		this.externalIdentifer = externalIdentifer;
+	}
+
+	public void setDatabase(Database database)
+	{
+		this.database = database;
+		container = this.database.getMasterContainer();
+	}
 
 	public void setItemKind(int value)
 	{

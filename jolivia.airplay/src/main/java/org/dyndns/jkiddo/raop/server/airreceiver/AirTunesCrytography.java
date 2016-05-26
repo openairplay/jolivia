@@ -32,14 +32,6 @@ import javax.crypto.CipherSpi;
 
 public final class AirTunesCrytography
 {
-	/**
-	 * Class is not meant to be instantiated
-	 */
-	private AirTunesCrytography()
-	{
-		throw new RuntimeException();
-	}
-
 	private static final Logger s_logger = Logger.getLogger(AirTunesCrytography.class.getName());
 
 	/**
@@ -64,6 +56,15 @@ public final class AirTunesCrytography
 	 * @param transformation
 	 *            the transformation to find an implementation for
 	 */
+
+	/**
+	 * Class is not meant to be instantiated
+	 */
+	private AirTunesCrytography()
+	{
+		throw new RuntimeException();
+	}
+
 	public static Cipher getCipher(final String transformation)
 	{
 		try

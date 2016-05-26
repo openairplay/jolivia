@@ -32,6 +32,15 @@ public class PairingDatabase implements IPairingDatabase
 	private final String serviceguid = Util.toHex(new StringBuilder("Jolivia!").reverse().toString().getBytes("UTF-8"));
 	private final String randomPairCode = Util.toHex("Jolivia!".getBytes("UTF-8"));
 
+	private final DBI dbi;
+	private final PairingDatabaseCommands dbHandler;
+
+	private final static String TABLE_PAIR = "pairing";
+	private final static String FIELD_PAIR_SERVICENAME = "servicename";
+	private final static String FIELD_PAIR_GUID = "guid";
+	private final static String KEY_PAIRING_CODE = "pair";
+	private final static String KEY_SERVICE_GUID = "serviceguid";
+
 	@Inject
 	public PairingDatabase(@Named(NAME_OF_DB) String name) throws UnsupportedEncodingException, ClassNotFoundException
 	{
@@ -48,15 +57,6 @@ public class PairingDatabase implements IPairingDatabase
 		Preconditions.checkState(serviceguid.length() == 16, "Service GUID did not match expected length");
 		dbHandler.updateEntry(KEY_SERVICE_GUID, serviceguid);
 	}
-
-	private final DBI dbi;
-	private final PairingDatabaseCommands dbHandler;
-
-	private final static String TABLE_PAIR = "pairing";
-	private final static String FIELD_PAIR_SERVICENAME = "servicename";
-	private final static String FIELD_PAIR_GUID = "guid";
-	private final static String KEY_PAIRING_CODE = "pair";
-	private final static String KEY_SERVICE_GUID = "serviceguid";
 
 	private interface PairingDatabaseCommands
 	{

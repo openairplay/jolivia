@@ -23,6 +23,17 @@ public class NowPlaying extends RawChunk
 	private long containerItemId;
 	private long trackId;
 
+	public NowPlaying()
+	{
+		this(new byte[] {});
+	}
+
+	public NowPlaying(byte[] value)
+	{
+		super("canp", "dacp.nowplayingids", value);
+
+	}
+
 	public final long getDatabaseId()
 	{
 		return databaseId;
@@ -41,17 +52,6 @@ public class NowPlaying extends RawChunk
 	public final long getTrackId()
 	{
 		return trackId;
-	}
-
-	public NowPlaying()
-	{
-		this(new byte[] {});
-	}
-
-	public NowPlaying(byte[] value)
-	{
-		super("canp", "dacp.nowplayingids", value);
-
 	}
 
 	@Override

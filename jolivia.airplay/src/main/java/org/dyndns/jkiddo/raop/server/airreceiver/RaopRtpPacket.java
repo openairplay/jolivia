@@ -24,6 +24,22 @@ import org.jboss.netty.buffer.ChannelBuffer;
  */
 public abstract class RaopRtpPacket extends RtpPacket
 {
+	protected RaopRtpPacket(final int length)
+	{
+		super(length);
+		setVersion((byte) 2);
+	}
+
+	protected RaopRtpPacket(final ChannelBuffer buffer, final int minimumSize) throws ProtocolException
+	{
+		super(buffer, minimumSize);
+	}
+
+	protected RaopRtpPacket(final ChannelBuffer buffer)
+	{
+		super(buffer);
+	}
+
 	/**
 	 * Reads an 32-bit unsigned integer from a channel buffer
 	 * 
@@ -692,19 +708,4 @@ public abstract class RaopRtpPacket extends RtpPacket
 		}
 	}
 
-	protected RaopRtpPacket(final int length)
-	{
-		super(length);
-		setVersion((byte) 2);
-	}
-
-	protected RaopRtpPacket(final ChannelBuffer buffer, final int minimumSize) throws ProtocolException
-	{
-		super(buffer, minimumSize);
-	}
-
-	protected RaopRtpPacket(final ChannelBuffer buffer)
-	{
-		super(buffer);
-	}
 }

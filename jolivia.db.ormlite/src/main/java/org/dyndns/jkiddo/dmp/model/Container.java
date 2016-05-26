@@ -55,15 +55,15 @@ public class Container implements IContainer
 		this.audioBasePlayList = audioBasePlaylist;
 	}
 
-	public int getAudioBasePlayList()
-	{
-		return audioBasePlayList;
-	}
-
 	public Container(String itemName, long persistentId, long itemId)
 	{
 		this.itemName = itemName;
 		this.mediaItems = Sets.newHashSet();
+	}
+
+	public int getAudioBasePlayList()
+	{
+		return audioBasePlayList;
 	}
 
 	public void addMediaItem(MediaItem mediaItem)

@@ -41,10 +41,23 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "databases")
 public class Database
 {
-	public int getItemId()
-	{
-		return itemId;
-	}
+	@DatabaseField(id = true)
+	private int itemId;
+
+	@DatabaseField(foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true)
+	private Library library;
+
+	@DatabaseField(columnName = "dmap.itemname")
+	private String name;
+
+	@DatabaseField
+	private String type;
+
+	@ForeignCollectionField(eager = true)
+	private Collection<Container> containers;
+
+	@ForeignCollectionField()
+	private Collection<MediaItem> mediaItems;
 
 	public Database()
 	{}
@@ -72,23 +85,10 @@ public class Database
 		this.containers = Sets.newHashSet();
 	}
 
-	@DatabaseField(id = true)
-	private int itemId;
-
-	@DatabaseField(foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true)
-	private Library library;
-
-	@DatabaseField(columnName = "dmap.itemname")
-	private String name;
-
-	@DatabaseField
-	private String type;
-
-	@ForeignCollectionField(eager = true)
-	private Collection<Container> containers;
-
-	@ForeignCollectionField()
-	private Collection<MediaItem> mediaItems;
+	public int getItemId()
+	{
+		return itemId;
+	}
 
 	public Container getContainer(final long containerId)
 	{

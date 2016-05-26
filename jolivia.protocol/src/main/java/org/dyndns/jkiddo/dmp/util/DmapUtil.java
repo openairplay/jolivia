@@ -54,6 +54,8 @@ import com.google.common.io.Resources;
  */
 public final class DmapUtil
 {
+	private static final char[] HEXADECIMAL = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
 	/**
 	 * NULL value (Zero) is a forbidden value (in some cases) in DAAP and means that a value is not initialized (basically <code>null</code> for primitive types).
 	 */
@@ -551,7 +553,7 @@ public final class DmapUtil
 
 		return new String(buffer);
 	}
-	private static final char[] HEXADECIMAL = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
 	//
 	// public static byte[] toMD5(String s)
 	// {

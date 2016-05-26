@@ -33,34 +33,11 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "mediaitems")
 public class MediaItem
 {
-	public MediaItem()
-	{}
-
-	public MediaItem(final Database database)
-	{
-		setDatabase(database);
-	}
-	
-	public void setDatabase(final Database database)
-	{
-		this.database = database;
-	}
-	
 	@DatabaseField(foreignAutoRefresh = true, foreign = true)
 	private Container container;
 	
 	@DatabaseField(canBeNull = false)
 	private String externalIdentifer;
-
-	public String getExternalIdentifer()
-	{
-		return externalIdentifer;
-	}
-
-	public void setExternalIdentifer(final String externalIdentifer)
-	{
-		this.externalIdentifer = externalIdentifer;
-	}
 
 	@DatabaseField(generatedId = true, columnName = "dmap.itemid")
 	private int itemId;
@@ -88,6 +65,29 @@ public class MediaItem
 
 	@DatabaseField(foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true, canBeNull = false)
 	private Database database;
+
+	public MediaItem()
+	{}
+
+	public MediaItem(final Database database)
+	{
+		setDatabase(database);
+	}
+
+	public String getExternalIdentifer()
+	{
+		return externalIdentifer;
+	}
+
+	public void setExternalIdentifer(final String externalIdentifer)
+	{
+		this.externalIdentifer = externalIdentifer;
+	}
+
+	public void setDatabase(final Database database)
+	{
+		this.database = database;
+	}
 
 	public void setItemKind(final int value)
 	{

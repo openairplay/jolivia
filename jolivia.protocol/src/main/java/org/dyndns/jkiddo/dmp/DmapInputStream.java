@@ -61,11 +61,6 @@ public class DmapInputStream extends BufferedInputStream
 
 	private int contentLength;
 
-	private int getChunkContentLength()
-	{
-		return contentLength;
-	}
-
 	public DmapInputStream(final InputStream in)
 	{
 		//super(in);
@@ -77,6 +72,11 @@ public class DmapInputStream extends BufferedInputStream
 	{
 		super(in);
 		this.specialCaseProtocolViolation = specialCaseProtocolViolation;
+	}
+
+	private int getChunkContentLength()
+	{
+		return contentLength;
 	}
 
 	@Override

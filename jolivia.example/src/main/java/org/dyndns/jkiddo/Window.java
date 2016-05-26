@@ -43,6 +43,17 @@ import com.google.gdata.util.ServiceException;
 public class Window
 {
 
+	private final String AboutMessage = "   * Jolivia *\n" + "\n" + "Copyright (c) 2013 Jens Kristian Villadsen\n" +
+			"\n" + "Jolivia is free software: you can redistribute it and/or modify\n" +
+			"it under the terms of the GNU General Public License as published by\n" +
+			"the Free Software Foundation, either version 3 of the License, or\n" +
+			"(at your option) any later version.\n" + "\n" + "didms is distributed" +
+			" in the hope that it will be useful,\n" + "but WITHOUT ANY WARRANTY; without " +
+			"even the implied warranty of\n" + "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. " +
+			"See the\n" + "GNU General Public License for more details.\n" + "\n" + "You should have received " +
+			"a copy of the GNU General Public License\n"
+			+ "along with didms.  If not, see <http://www.gnu.org/licenses/>." + "\n\n";
+
 	static Logger logger = LoggerFactory.getLogger(Window.class);
 
 	final private JFrame mainFormJolivia;
@@ -56,41 +67,6 @@ public class Window
 	private JCheckBox chckbxUseGoogleMusic;
 	private ExecutorService executor;
 	private Jolivia jolivia;
-
-	/**
-	 * Launch the application.
-	 * 
-	 * @throws ServiceException
-	 * @throws IOException
-	 */
-	public static void main(final String[] args) throws IOException, ServiceException
-	{
-		SLF4JBridgeHandler.removeHandlersForRootLogger();
-		SLF4JBridgeHandler.install();
-		
-		EventQueue.invokeLater(new Runnable() {
-			public void run()
-			{
-				try
-				{
-					for(LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
-					{
-						if("Nimbus".equals(info.getName()))
-						{
-							UIManager.setLookAndFeel(info.getClassName());
-							break;
-						}
-					}
-					new Window(args);
-				}
-				catch(Exception e)
-				{
-					logger.error(e.getMessage(), e);
-				}
-			}
-		});
-
-	}
 
 	/**
 	 * Create the application.
@@ -248,6 +224,41 @@ public class Window
 		setupGui();
 	}
 
+	/**
+	 * Launch the application.
+	 *
+	 * @throws ServiceException
+	 * @throws IOException
+	 */
+	public static void main(final String[] args) throws IOException, ServiceException
+	{
+		SLF4JBridgeHandler.removeHandlersForRootLogger();
+		SLF4JBridgeHandler.install();
+
+		EventQueue.invokeLater(new Runnable() {
+			public void run()
+			{
+				try
+				{
+					for(LookAndFeelInfo info : UIManager.getInstalledLookAndFeels())
+					{
+						if("Nimbus".equals(info.getName()))
+						{
+							UIManager.setLookAndFeel(info.getClassName());
+							break;
+						}
+					}
+					new Window(args);
+				}
+				catch(Exception e)
+				{
+					logger.error(e.getMessage(), e);
+				}
+			}
+		});
+
+	}
+
 	private void resetGuiState()
 	{
 		btnNewButton_1.setText("AWESOMENESS!");
@@ -360,5 +371,4 @@ public class Window
 		System.exit(0);
 	}
 
-	private final String AboutMessage = "   * Jolivia *\n" + "\n" + "Copyright (c) 2013 Jens Kristian Villadsen\n" + "\n" + "Jolivia is free software: you can redistribute it and/or modify\n" + "it under the terms of the GNU General Public License as published by\n" + "the Free Software Foundation, either version 3 of the License, or\n" + "(at your option) any later version.\n" + "\n" + "didms is distributed in the hope that it will be useful,\n" + "but WITHOUT ANY WARRANTY; without even the implied warranty of\n" + "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the\n" + "GNU General Public License for more details.\n" + "\n" + "You should have received a copy of the GNU General Public License\n" + "along with didms.  If not, see <http://www.gnu.org/licenses/>." + "\n\n";
 }
