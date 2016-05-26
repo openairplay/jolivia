@@ -67,6 +67,15 @@ public class MusicItemManager implements IItemManager
 	private final Dao<MediaItem, Integer> mediaItemDao;
 	private final ConnectionSource connectionSource;
 
+	private final ImmutableMap<Class<?>, Map<DmapChunkDefinition, Field>> definitionToFieldsMap;
+
+	private final ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> libraryAnnotations = findDbStructureFields(Library.class);
+	private final ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> databaseAnnotations = findDbStructureFields(Database.class);
+	private final ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> containerAnnotations = findDbStructureFields(Container.class);
+	private final ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> mediaItemAnnotations = findDbStructureFields(MediaItem.class);
+
+	private final ImmutableMap<Class<?>, ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition>> definitionsTable = new ImmutableMap.Builder<Class<?>, ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition>>().put(Library.class, libraryAnnotations).put(Database.class, databaseAnnotations).put(Container.class, containerAnnotations).put(MediaItem.class, mediaItemAnnotations).build();
+
 	private final Table<Integer, String, Class<? extends AbstractChunk>> annotatedtable;
 
 	@Inject
@@ -286,15 +295,6 @@ public class MusicItemManager implements IItemManager
 	{
 		return getMediaItems(databaseId, getLibrary().getDatabase(databaseId).getMasterContainer().getItemId(), parameters);
 	}
-
-	private final ImmutableMap<Class<?>, Map<DmapChunkDefinition, Field>> definitionToFieldsMap;
-
-	private final ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> libraryAnnotations = findDbStructureFields(Library.class);
-	private final ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> databaseAnnotations = findDbStructureFields(Database.class);
-	private final ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> containerAnnotations = findDbStructureFields(Container.class);
-	private final ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> mediaItemAnnotations = findDbStructureFields(MediaItem.class);
-
-	private final ImmutableMap<Class<?>, ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition>> definitionsTable = new ImmutableMap.Builder<Class<?>, ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition>>().put(Library.class, libraryAnnotations).put(Database.class, databaseAnnotations).put(Container.class, containerAnnotations).put(MediaItem.class, mediaItemAnnotations).build();
 
 	private ImmutableCollection<IDmapProtocolDefinition.DmapChunkDefinition> parameters2Definition(final Iterable<String> parameters, final Class<?> clazz)
 	{

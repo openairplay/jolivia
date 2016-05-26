@@ -67,6 +67,7 @@ import com.google.inject.servlet.GuiceFilter;
 public class Jolivia {
 
 	public static Logger logger = LoggerFactory.getLogger(Jolivia.class);
+	private static final String AboutMessage = "Use it only to be disruptive";
 
 	public static class JoliviaBuilder {
 		private Integer port = 3689;
@@ -182,10 +183,10 @@ public class Jolivia {
 		}
 
 		class DefaultClientSessionListener implements IClientSessionListener {
+			private Session session;
+
 			public DefaultClientSessionListener() {
 			}
-
-			private Session session;
 
 			@Override
 			public void registerNewSession(final Session session) throws Exception {
@@ -334,8 +335,6 @@ public class Jolivia {
 		constraintMapping.setPathSpec(pathSpec);
 		return constraintMapping;
 	}
-
-	private static final String AboutMessage = "Use it only to be disruptive";
 
 	private void buildUI() throws AWTException {
 

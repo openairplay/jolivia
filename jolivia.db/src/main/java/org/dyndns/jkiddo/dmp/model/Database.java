@@ -41,10 +41,23 @@ import com.j256.ormlite.table.DatabaseTable;
 @DatabaseTable(tableName = "databases")
 public class Database
 {
-	public int getItemId()
-	{
-		return itemId;
-	}
+	@DatabaseField(generatedId = true)
+	private int itemId;
+
+	@DatabaseField(foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true)
+	private Library library;
+
+	@DatabaseField(columnName = "dmap.itemname")
+	private String name;
+
+	@DatabaseField
+	private String type;
+
+	@ForeignCollectionField(eager = true)
+	private Collection<Container> containers;
+
+	@ForeignCollectionField()
+	private Collection<MediaItem> mediaItems;
 
 	public Database()
 	{}
@@ -68,27 +81,14 @@ public class Database
 		this.itemId = itemId;
 	}
 
-	@DatabaseField(generatedId = true)
-	private int itemId;
-
-	@DatabaseField(foreign = true, foreignAutoRefresh = true, foreignAutoCreate = true)
-	private Library library;
-
-	@DatabaseField(columnName = "dmap.itemname")
-	private String name;
-
-	@DatabaseField
-	private String type;
-
-	@ForeignCollectionField(eager = true)
-	private Collection<Container> containers;
-
-	@ForeignCollectionField()
-	private Collection<MediaItem> mediaItems;
-
 	public Container getContainer(long containerId)
 	{
 		throw new RuntimeException("Not implemented");
+	}
+
+	public int getItemId()
+	{
+		return itemId;
 	}
 
 	public String getName()

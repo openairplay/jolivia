@@ -16,6 +16,11 @@ import com.google.inject.name.Names;
 public class DACPModule extends AbstractModule
 {
 
+	private final Integer pairingCode;
+	private final Integer hostingPort;
+	private final String DB_NAME;
+	private final IClientSessionListener clientSessionListener;
+
 	public DACPModule(final Integer pairingCode, final Integer hostingPort, final String dB_NAME, final IClientSessionListener clientSessionListener)
 	{
 		super();
@@ -24,11 +29,6 @@ public class DACPModule extends AbstractModule
 		DB_NAME = dB_NAME;
 		this.clientSessionListener = clientSessionListener;
 	}
-
-	private final Integer pairingCode;
-	private final Integer hostingPort;
-	private final String DB_NAME;
-	private final IClientSessionListener clientSessionListener;
 
 	@Override
 	protected void configure()

@@ -82,35 +82,7 @@ public class Session
 
 	private final String homeSharingGid;
 
-	public long getRevision()
-	{
-		return revision;
-	}
-
-	public int getSessionId()
-	{
-		return sessionId;
-	}
-
-	public Database getDatabase()
-	{
-		return database;
-	}
-
-	public Database getRadioDatabase()
-	{
-		return radioDatabase;
-	}
-
-	public Library getLibrary()
-	{
-		return library;
-	}
-
-	public RemoteControl getRemoteControl()
-	{
-		return remoteControl;
-	}
+	byte[] cert;
 
 	public Session(final String host, final int port, final String username, final String password) throws Exception
 	{
@@ -128,13 +100,13 @@ public class Session
 		sessionId = loginResponse.getSessionId().getValue();
 
 		getControlInt();
-		
-		
-		  fp_setup_first(); 
-		  fp_setup_second();
-		 
 
-		 //final String hspid = ((NSString) nsDic.get("spid")).getContent();
+
+		fp_setup_first();
+		fp_setup_second();
+
+
+		//final String hspid = ((NSString) nsDic.get("spid")).getContent();
 		final String hspid = "0";
 
 		verifyHomeShare(hspid);
@@ -180,6 +152,36 @@ public class Session
 		final ServerDatabases serverDatabases = getServerDatabases();
 		database = getLocalDatabase(serverDatabases);
 		radioDatabase = getRadioDatabase(serverDatabases);
+	}
+
+	public long getRevision()
+	{
+		return revision;
+	}
+
+	public int getSessionId()
+	{
+		return sessionId;
+	}
+
+	public Database getDatabase()
+	{
+		return database;
+	}
+
+	public Database getRadioDatabase()
+	{
+		return radioDatabase;
+	}
+
+	public Library getLibrary()
+	{
+		return library;
+	}
+
+	public RemoteControl getRemoteControl()
+	{
+		return remoteControl;
 	}
 
 	protected Database getRadioDatabase(final ServerDatabases serverDatabases) throws Exception
@@ -351,8 +353,6 @@ public class Session
 		System.out.println(Util.toHex(cert));
 		return;
 	}
-	
-	byte[] cert;
 
 	private void fp_setup_second() throws Exception
 	{

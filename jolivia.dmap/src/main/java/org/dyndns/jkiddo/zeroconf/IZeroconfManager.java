@@ -17,11 +17,11 @@ public interface IZeroconfManager
 
 	class ServiceInfo
 	{
-		public static javax.jmdns.ServiceInfo toServiceInfo(final ServiceInfo serviceInfo)
-		{
-			return javax.jmdns.ServiceInfo.create(serviceInfo.getType(), serviceInfo.getName(), serviceInfo.getPort(), 0, 0, serviceInfo.getProps());
-		}
-		
+		private final String type;
+		private final String name;
+		private final int port;
+		private final Map<String, String> props;
+
 		public ServiceInfo(final String type, final String name, final int port, final Map<String, String> props)
 		{
 			super();
@@ -30,10 +30,11 @@ public interface IZeroconfManager
 			this.port = port;
 			this.props = props;
 		}
-		private final String type;
-		private final String name;
-		private final int port;
-		private final Map<String, String> props;
+
+		public static javax.jmdns.ServiceInfo toServiceInfo(final ServiceInfo serviceInfo)
+		{
+			return javax.jmdns.ServiceInfo.create(serviceInfo.getType(), serviceInfo.getName(), serviceInfo.getPort(), 0, 0, serviceInfo.getProps());
+		}
 
 		public String getType()
 		{

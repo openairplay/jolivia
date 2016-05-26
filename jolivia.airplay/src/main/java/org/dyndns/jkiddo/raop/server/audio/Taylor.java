@@ -2,6 +2,21 @@ package org.dyndns.jkiddo.raop.server.audio;
 
 public final class Taylor
 {
+	public static final Coefficients SincCoefficients = new Coefficients() {
+		@Override
+		public double coefficient(int power)
+		{
+			if((power % 2) != 0)
+				return 0.0;
+
+			double coeff = ((power / 2) % 2 == 0) ? 1.0 : -1.0;
+			for(int i = 1; i <= (power + 1); ++i)
+				coeff /= i;
+
+			return coeff;
+		}
+	};
+
 	public interface Coefficients
 	{
 		public double coefficient(int power);
@@ -26,21 +41,6 @@ public final class Taylor
 
 		return result;
 	}
-
-	public static final Coefficients SincCoefficients = new Coefficients() {
-		@Override
-		public double coefficient(int power)
-		{
-			if((power % 2) != 0)
-				return 0.0;
-
-			double coeff = ((power / 2) % 2 == 0) ? 1.0 : -1.0;
-			for(int i = 1; i <= (power + 1); ++i)
-				coeff /= i;
-
-			return coeff;
-		}
-	};
 
 	public static double sinc(double x)
 	{

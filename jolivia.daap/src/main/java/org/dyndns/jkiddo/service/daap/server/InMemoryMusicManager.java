@@ -37,81 +37,6 @@ public class InMemoryMusicManager implements IItemManager
 	private final Map<Long, String> map;
 	private final PasswordMethod passwordMethod;
 
-	@Override
-	public PasswordMethod getAuthenticationMethod()
-	{
-		return passwordMethod;
-	}
-
-	@Override
-	public long getSessionId(final String remoteHost)
-	{
-		return 1681801861;
-	}
-
-	@Override
-	public void waitForUpdate()
-	{
-		try
-		{
-			Thread.sleep(100000000);
-		}
-		catch(final InterruptedException ie)
-		{
-			ie.printStackTrace();
-		}
-	}
-
-	@Override
-	public long getRevision(final String remoteHost, final long sessionId)
-	{
-		return 42;
-	}
-
-	@Override
-	public Listing getContainers(final long databaseId, final Iterable<String> parameters) throws SQLException
-	{
-		return containersResponse;
-	}
-
-	@Override
-	public Listing getMediaItems(final long databaseId, final long containerId, final Iterable<String> parameters) throws SQLException
-	{
-		if(containerId == 1 || containerId == 2 || containerId == 3)
-			return mediaItemsResponse;
-		else
-		{
-			return new Listing();	
-		}
-	}
-
-	@Override
-	public Listing getMediaItems(final long databaseId, final Iterable<String> parameters) throws SQLException
-	{
-		return mediaItemsResponse;
-	}
-
-	@Override
-	public Listing getDatabases() throws SQLException
-	{
-		return databasesResponse;
-	}
-
-	@Override
-	public byte[] getItemAsByteArray(final long databaseId, final long itemId)
-	{
-		try
-		{
-			final String identifier = map.get(Long.valueOf(itemId));
-			final URI uri = storeReader.getTune(identifier);
-			return DmapUtil.uriTobuffer(uri);
-		}
-		catch(final Exception e)
-		{
-			throw new RuntimeException(e);
-		}
-	}
-
 	@Inject
 	public InMemoryMusicManager(@Named(Util.APPLICATION_NAME) final String applicationName, final IMusicStoreReader reader, final PasswordMethod pm) throws Exception
 	{
@@ -156,13 +81,13 @@ public class InMemoryMusicManager implements IItemManager
 				mediaItemslisting.add(coll.next());				
 			}
 		}*/
-		
+
 		mediaItemsResponse = new Listing();
 		map = new HashMap<Long,String>();
-		
+
 		reader.readTunesMemoryOptimized(mediaItemsResponse, map);
-		
-		
+
+
 
 		final Listing databaselisting = new Listing();
 		final ListingItem databaselistingItem = new ListingItem();
@@ -191,7 +116,7 @@ public class InMemoryMusicManager implements IItemManager
 //			containerlistingItem.add(new EditCommandSupported(3));
 			containerlisting.add(containerlistingItem);
 		}
-		
+
 		{
 			final ListingItem containerlistingItem = new ListingItem();
 			containerlistingItem.add(new ItemId(2));
@@ -219,4 +144,80 @@ public class InMemoryMusicManager implements IItemManager
 		}*/
 		containersResponse = containerlisting;
 	}
+
+	@Override
+	public PasswordMethod getAuthenticationMethod()
+	{
+		return passwordMethod;
+	}
+
+	@Override
+	public long getSessionId(final String remoteHost)
+	{
+		return 1681801861;
+	}
+
+	@Override
+	public void waitForUpdate()
+	{
+		try
+		{
+			Thread.sleep(100000000);
+		}
+		catch(final InterruptedException ie)
+		{
+			ie.printStackTrace();
+		}
+	}
+
+	@Override
+	public long getRevision(final String remoteHost, final long sessionId)
+	{
+		return 42;
+	}
+
+	@Override
+	public Listing getContainers(final long databaseId, final Iterable<String> parameters) throws SQLException
+	{
+		return containersResponse;
+	}
+
+	@Override
+	public Listing getMediaItems(final long databaseId, final long containerId, final Iterable<String> parameters) throws SQLException
+	{
+		if(containerId == 1 || containerId == 2 || containerId == 3)
+			return mediaItemsResponse;
+		else
+		{
+			return new Listing();
+		}
+	}
+
+	@Override
+	public Listing getMediaItems(final long databaseId, final Iterable<String> parameters) throws SQLException
+	{
+		return mediaItemsResponse;
+	}
+
+	@Override
+	public Listing getDatabases() throws SQLException
+	{
+		return databasesResponse;
+	}
+
+	@Override
+	public byte[] getItemAsByteArray(final long databaseId, final long itemId)
+	{
+		try
+		{
+			final String identifier = map.get(Long.valueOf(itemId));
+			final URI uri = storeReader.getTune(identifier);
+			return DmapUtil.uriTobuffer(uri);
+		}
+		catch(final Exception e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
+
 }

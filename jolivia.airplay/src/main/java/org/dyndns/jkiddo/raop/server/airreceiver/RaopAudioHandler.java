@@ -78,6 +78,66 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	private static Logger logger = LoggerFactory.getLogger(RaopAudioHandler.class.getName());
 
 	/**
+	 * {@code Transport} header option format. Format of a single option is <br>
+	 * {@code <name>=<value>} <br>
+	 * format of the {@code Transport} header is <br>
+	 * {@code <protocol>;<name1>=<value1>;<name2>=<value2>;...}
+	 * <p>
+	 * For RAOP/AirTunes, {@code <protocol>} is always {@code RTP/AVP/UDP}.
+	 */
+	private static Pattern s_pattern_transportOption = Pattern.compile("^([A-Za-z0-9_-]+)(=(.*))?$");
+
+	/**
+	 * SET_PARAMETER syntax. Format is <br>
+	 * {@code <parameter>: <value>}
+	 * <p>
+	 */
+	private static Pattern s_pattern_parameter = Pattern.compile("^([A-Za-z0-9_-]+): *(.*)$");
+
+	/**
+	 * SDP line. Format is <br>
+	 * {@code
+	 * <attribute>=<value>
+	 * }
+	 */
+	private static Pattern s_pattern_sdp_line = Pattern.compile("^([a-z])=(.*)$");
+
+	/**
+	 * SDP attribute {@code m}. Format is <br>
+	 * {@code
+	 * <media> <port> <transport> <formats>
+	 * }
+	 * <p>
+	 * RAOP/AirTunes always required {@code <media>=audio, <transport>=RTP/AVP} and only a single format is allowed. The port is ignored.
+	 */
+	private static Pattern s_pattern_sdp_m = Pattern.compile("^audio ([^ ]+) RTP/AVP ([0-9]+)$");
+
+	/**
+	 * SDP attribute {@code a}. Format is <br>
+	 * {@code <flag>} <br>
+	 * or <br>
+	 * {@code <attribute>:<value>}
+	 * <p>
+	 * RAOP/AirTunes uses only the second case, with the attributes
+	 * <ul>
+	 * <li> {@code <attribute>=rtpmap}
+	 * <li> {@code <attribute>=fmtp}
+	 * <li> {@code <attribute>=rsaaeskey}
+	 * <li> {@code <attribute>=aesiv}
+	 * </ul>
+	 */
+	// private static Pattern s_pattern_sdp_a = Pattern.compile("^([a-z]+):(.*)$");
+	// Added min-latency and max-latency tollerence
+	private static Pattern s_pattern_sdp_a = Pattern.compile("^([a-z]+.?[a-z]+):(.*)$");
+	/**
+	 * SDP {@code a} attribute {@code rtpmap}. Format is <br>
+	 * {@code <format> <encoding>} for RAOP/AirTunes instead of {@code <format> <encoding>/<clock rate>}.
+	 * <p>
+	 * RAOP/AirTunes always uses encoding {@code AppleLossless}
+	 */
+	private static Pattern s_pattern_sdp_a_rtpmap = Pattern.compile("^([0-9]+) (.*)$");
+
+	/**
 	 * The RTP channel type
 	 */
 	static enum RaopRtpChannelType
@@ -318,49 +378,6 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	}
 
 	/**
-	 * SDP line. Format is <br>
-	 * {@code
-	 * <attribute>=<value>
-	 * }
-	 */
-	private static Pattern s_pattern_sdp_line = Pattern.compile("^([a-z])=(.*)$");
-
-	/**
-	 * SDP attribute {@code m}. Format is <br>
-	 * {@code
-	 * <media> <port> <transport> <formats>
-	 * }
-	 * <p>
-	 * RAOP/AirTunes always required {@code <media>=audio, <transport>=RTP/AVP} and only a single format is allowed. The port is ignored.
-	 */
-	private static Pattern s_pattern_sdp_m = Pattern.compile("^audio ([^ ]+) RTP/AVP ([0-9]+)$");
-
-	/**
-	 * SDP attribute {@code a}. Format is <br>
-	 * {@code <flag>} <br>
-	 * or <br>
-	 * {@code <attribute>:<value>}
-	 * <p>
-	 * RAOP/AirTunes uses only the second case, with the attributes
-	 * <ul>
-	 * <li> {@code <attribute>=rtpmap}
-	 * <li> {@code <attribute>=fmtp}
-	 * <li> {@code <attribute>=rsaaeskey}
-	 * <li> {@code <attribute>=aesiv}
-	 * </ul>
-	 */
-	// private static Pattern s_pattern_sdp_a = Pattern.compile("^([a-z]+):(.*)$");
-	// Added min-latency and max-latency tollerence
-	private static Pattern s_pattern_sdp_a = Pattern.compile("^([a-z]+.?[a-z]+):(.*)$");
-	/**
-	 * SDP {@code a} attribute {@code rtpmap}. Format is <br>
-	 * {@code <format> <encoding>} for RAOP/AirTunes instead of {@code <format> <encoding>/<clock rate>}.
-	 * <p>
-	 * RAOP/AirTunes always uses encoding {@code AppleLossless}
-	 */
-	private static Pattern s_pattern_sdp_a_rtpmap = Pattern.compile("^([0-9]+) (.*)$");
-
-	/**
 	 * Handles ANNOUNCE requests and creates an {@link AudioOutputQueue} and the following handlers for RTP channels
 	 * <ul>
 	 * <li>{@link RaopRtpTimingHandler}
@@ -504,16 +521,6 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	}
 
 	/**
-	 * {@code Transport} header option format. Format of a single option is <br>
-	 * {@code <name>=<value>} <br>
-	 * format of the {@code Transport} header is <br>
-	 * {@code <protocol>;<name1>=<value1>;<name2>=<value2>;...}
-	 * <p>
-	 * For RAOP/AirTunes, {@code <protocol>} is always {@code RTP/AVP/UDP}.
-	 */
-	private static Pattern s_pattern_transportOption = Pattern.compile("^([A-Za-z0-9_-]+)(=(.*))?$");
-
-	/**
 	 * Handles SETUP requests and creates the audio, control and timing RTP channels
 	 */
 	public synchronized void setupReceived(final ChannelHandlerContext ctx, final HttpRequest req) throws ProtocolException
@@ -644,13 +651,6 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 			}
 		});
 	}
-
-	/**
-	 * SET_PARAMETER syntax. Format is <br>
-	 * {@code <parameter>: <value>}
-	 * <p>
-	 */
-	private static Pattern s_pattern_parameter = Pattern.compile("^([A-Za-z0-9_-]+): *(.*)$");
 
 	/**
 	 * Handle SET_PARAMETER request. Currently only {@code volume} is supported

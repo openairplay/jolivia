@@ -57,23 +57,6 @@ public class Container
 	public Container()
 	{}
 
-	public Container(final String itemName, final long persistentId, final long itemId, final Database database)
-	{
-		this(itemName, persistentId, itemId);
-		this.database = database;
-	}
-	
-	public Container(final String itemName, final long persistentId, final long itemId, final Database database, final int audioBasePlaylist)
-	{
-		this(itemName, persistentId, itemId, database);
-		this.audioBasePlayList = audioBasePlaylist;
-	}
-
-	public int getAudioBasePlayList()
-	{
-		return audioBasePlayList;
-	}
-
 	public Container(final String itemName, final long persistentId, final long itemId)
 	{
 		this.itemName = itemName;
@@ -85,6 +68,23 @@ public class Container
 	{
 		this(itemName, persistentId, itemId);
 		this.audioBasePlayList = audioBasePlaylist;
+	}
+
+	public Container(final String itemName, final long persistentId, final long itemId, final Database database)
+	{
+		this(itemName, persistentId, itemId);
+		this.database = database;
+	}
+
+	public Container(final String itemName, final long persistentId, final long itemId, final Database database, final int audioBasePlaylist)
+	{
+		this(itemName, persistentId, itemId, database);
+		this.audioBasePlayList = audioBasePlaylist;
+	}
+
+	public int getAudioBasePlayList()
+	{
+		return audioBasePlayList;
 	}
 
 	public void addMediaItem(final MediaItem mediaItem)
