@@ -12,9 +12,9 @@ public class DeviceResponse
 {
 	private int responseCode;
 	private String responseMessage;
-	private Map<String, String> headerMap = new HashMap<String, String>();
+	private Map<String, String> headerMap = new HashMap<>();
 	private String content;
-	private Map<String, String> contentParameterMap = new HashMap<String, String>();
+	private Map<String, String> contentParameterMap = new HashMap<>();
 
 	public DeviceResponse(String headers, String content)
 	{

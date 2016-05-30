@@ -117,7 +117,7 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 	@Override
 	protected IZeroconfManager.ServiceInfo getServiceInfoToRegister()
 	{
-		final Map<String, String> values = new HashMap<String, String>();
+		final Map<String, String> values = new HashMap<>();
 		values.put("DvNm", "Use " + actualCode + " as code for " + name);
 		values.put("RemV", "10000");
 		values.put("DvTy", "iPod");

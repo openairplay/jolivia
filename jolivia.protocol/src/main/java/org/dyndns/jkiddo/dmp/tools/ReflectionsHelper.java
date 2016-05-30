@@ -53,7 +53,7 @@ public class ReflectionsHelper
 	 */
 	private static List<Class<? extends Object>> getClasses(final String packageName) throws ClassNotFoundException, IOException
 	{
-		final ArrayList<Class<? extends Object>> classes = new ArrayList<Class<? extends Object>>();
+		final ArrayList<Class<? extends Object>> classes = new ArrayList<>();
 		final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 		assert classLoader != null;
 		final String path = packageName.replace('.', '/');
@@ -77,7 +77,7 @@ public class ReflectionsHelper
 
 	private static Collection<Class<? extends Object>> handleJar(final URL resource)
 	{
-		final Set<Class<? extends Object>> result = new HashSet<Class<? extends Object>>();
+		final Set<Class<? extends Object>> result = new HashSet<>();
 		final String fileName = resource.getFile();
 		final File file = new File(fileName.split("!")[0].replace("file:", ""));
 		if(file.exists())
@@ -137,7 +137,7 @@ public class ReflectionsHelper
 	 */
 	private static List<Class<? extends Object>> findClasses(final File directory, final String packageName) throws ClassNotFoundException
 	{
-		final List<Class<? extends Object>> classes = new ArrayList<Class<? extends Object>>();
+		final List<Class<? extends Object>> classes = new ArrayList<>();
 		if(!directory.exists())
 		{
 			return classes;

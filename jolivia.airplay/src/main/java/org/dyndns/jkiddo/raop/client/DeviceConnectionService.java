@@ -14,7 +14,7 @@ import org.dyndns.jkiddo.raop.client.model.DeviceConnection;
 
 public class DeviceConnectionService
 {
-	private static Map<String, DeviceConnection> deviceConnectionMap = new HashMap<String, DeviceConnection>();
+	private static Map<String, DeviceConnection> deviceConnectionMap = new HashMap<>();
 
 	public static DeviceConnection getConnection(Device device)
 	{

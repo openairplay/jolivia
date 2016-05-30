@@ -95,7 +95,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 
 	@Override
 	protected IZeroconfManager.ServiceInfo getServiceInfoToRegister() {
-		final HashMap<String, String> records = new HashMap<String, String>();
+		final HashMap<String, String> records = new HashMap<>();
 		records.put(MACHINE_NAME_KEY, name);
 		records.put("OSsi", "0x15F");
 

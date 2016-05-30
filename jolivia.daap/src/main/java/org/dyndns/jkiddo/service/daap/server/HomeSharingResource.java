@@ -38,7 +38,7 @@ public class HomeSharingResource extends MDNSResource
 	@Override
 	protected IZeroconfManager.ServiceInfo getServiceInfoToRegister()
 	{
-		final HashMap<String, String> records = new HashMap<String, String>();
+		final HashMap<String, String> records = new HashMap<>();
 		records.put("MID", MID_0X);
 		records.put("OSsi", "0x15F"); //OS specific
 		records.put(DATABASE_ID_KEY, DATABASE_ID);

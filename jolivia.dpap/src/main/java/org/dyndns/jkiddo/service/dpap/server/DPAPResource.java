@@ -90,7 +90,7 @@ public class DPAPResource extends DMAPResource<ImageItemManager> implements IIma
 	{
 		String hash = Integer.toHexString(hostname.hashCode()).toUpperCase();
 		hash = (hash + hash).substring(0, 13);
-		final HashMap<String, String> records = new HashMap<String, String>();
+		final HashMap<String, String> records = new HashMap<>();
 		records.put(TXT_VERSION_KEY, TXT_VERSION);
 		records.put(DPAP_VERSION_KEY, DmapUtil.PPRO_VERSION_201 + "");
 		records.put(IPSH_VERSION_KEY, DmapUtil.PPRO_VERSION_201 + "");

@@ -30,7 +30,7 @@ public class UnpairedRemoteCrawler implements IDiscoverer {
 	public static final String SERVICE_PORT_NAME = "SERVICE_PORT_NAME";
 
 	private final IZeroconfManager mDNS;
-	private final Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
+	private final Map<JmDNS, InetAddress> interfaces = new HashMap<>();
 
 	private final Integer port;
 

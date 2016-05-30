@@ -45,7 +45,7 @@ public final class ChunkFactory
 
 	static
 	{
-		final Builder<Integer, DMAPAnnotation> table = new ImmutableMap.Builder<Integer, DMAPAnnotation>();
+		final Builder<Integer, DMAPAnnotation> table = new ImmutableMap.Builder<>();
 		for( final DmapChunkDefinition enumDefinitions : IDmapProtocolDefinition.DmapChunkDefinition.values())
 		{
 			final DMAPAnnotation dmapAnnotation = enumDefinitions.getClazz().getAnnotation(DMAPAnnotation.class);

@@ -34,7 +34,7 @@ public class JettyCommandService extends AbstractHandler
 {
 	private static Logger logger = Logger.getLogger(JettyCommandService.class.getName());
 
-	private static Map<String, Device> deviceMap = new HashMap<String, Device>();
+	private static Map<String, Device> deviceMap = new HashMap<>();
 
 	public static void addDevice(Device device)
 	{
@@ -61,7 +61,7 @@ public class JettyCommandService extends AbstractHandler
 	{
 		response.setStatus(HttpServletResponse.SC_OK);
 		baseRequest.setHandled(true);
-		Map<String, Object> responseMap = new HashMap<String, Object>();
+		Map<String, Object> responseMap = new HashMap<>();
 		responseMap.put("responseCode", "OK");
 		response.getWriter().println(new Gson().toJson(responseMap));
 	}
@@ -70,7 +70,7 @@ public class JettyCommandService extends AbstractHandler
 	{
 		response.setStatus(statusCode);
 		baseRequest.setHandled(true);
-		Map<String, Object> responseMap = new HashMap<String, Object>();
+		Map<String, Object> responseMap = new HashMap<>();
 		responseMap.put("responseCode", "ERROR");
 		responseMap.put("errorMessage", errorMessage);
 		response.getWriter().println(new Gson().toJson(responseMap));
@@ -103,16 +103,16 @@ public class JettyCommandService extends AbstractHandler
 				response.setStatus(HttpServletResponse.SC_OK);
 				baseRequest.setHandled(true);
 
-				List<Map<String, Object>> deviceList = new ArrayList<Map<String, Object>>();
+				List<Map<String, Object>> deviceList = new ArrayList<>();
 				for(Device device : deviceMap.values())
 				{
-					Map<String, Object> responseMap = new HashMap<String, Object>();
+					Map<String, Object> responseMap = new HashMap<>();
 					responseMap.put("deviceId", device.getId());
 					responseMap.put("deviceName", device.getName());
 					deviceList.add(responseMap);
 				}
 
-				Map<String, Object> responseMap = new HashMap<String, Object>();
+				Map<String, Object> responseMap = new HashMap<>();
 				responseMap.put("responseCode", "OK");
 				responseMap.put("devices", deviceList);
 				response.getWriter().println(new Gson().toJson(responseMap));
@@ -178,7 +178,7 @@ public class JettyCommandService extends AbstractHandler
 				{
 					response.setStatus(HttpServletResponse.SC_OK);
 					baseRequest.setHandled(true);
-					Map<String, Object> responseMap = new HashMap<String, Object>();
+					Map<String, Object> responseMap = new HashMap<>();
 					responseMap.put("responseCode", "OK");
 					responseMap.put("duration", deviceResponse.getContentParameterMap().get("duration"));
 					responseMap.put("position", deviceResponse.getContentParameterMap().get("position"));
@@ -253,7 +253,7 @@ public class JettyCommandService extends AbstractHandler
 					{
 						response.setStatus(HttpServletResponse.SC_OK);
 						baseRequest.setHandled(true);
-						Map<String, Object> responseMap = new HashMap<String, Object>();
+						Map<String, Object> responseMap = new HashMap<>();
 						responseMap.put("responseCode", "OK");
 						responseMap.put("duration", deviceResponse.getContentParameterMap().get("duration"));
 						responseMap.put("position", deviceResponse.getContentParameterMap().get("position"));

@@ -530,8 +530,8 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 			throw new ProtocolException("No Transport header");
 
 		/* Split Transport header into individual options and prepare reponse options list */
-		final Deque<String> requestOptions = new java.util.LinkedList<String>(Arrays.asList(req.headers().get(HeaderTransport).split(";")));
-		final List<String> responseOptions = new java.util.LinkedList<String>();
+		final Deque<String> requestOptions = new java.util.LinkedList<>(Arrays.asList(req.headers().get(HeaderTransport).split(";")));
+		final List<String> responseOptions = new java.util.LinkedList<>();
 
 		/* Transport header. Protocol must be RTP/AVP/UDP */
 		final String requestProtocol = requestOptions.removeFirst();

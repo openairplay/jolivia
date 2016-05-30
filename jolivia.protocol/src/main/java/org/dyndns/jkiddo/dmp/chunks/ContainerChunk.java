@@ -54,7 +54,7 @@ public class ContainerChunk extends AbstractChunk implements Iterable<Chunk>
 	protected ContainerChunk(final String type, final String name)
 	{
 		super(type, name);
-		this.collection = new ArrayList<Chunk>();
+		this.collection = new ArrayList<>();
 	}
 
 	/**

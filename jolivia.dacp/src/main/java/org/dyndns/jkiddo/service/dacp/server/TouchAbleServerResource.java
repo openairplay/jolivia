@@ -294,7 +294,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 			e.printStackTrace();
 		}
 
-		final HashMap<String, String> records = new HashMap<String, String>();
+		final HashMap<String, String> records = new HashMap<>();
 		records.put("Ver", DmapUtil.CONTROL_VERSION_205 +"");
 		records.put("CtlN", name);
 		records.put("OSsi", "0x1F5");

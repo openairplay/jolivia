@@ -35,12 +35,12 @@ public class DeskImageStoreReader implements IImageStoreReader
 	public DeskImageStoreReader()
 	{
 		this(System.getProperty("user.dir") + System.getProperty("file.separator") + "etc");
-		this.mapOfImageToFile = new HashMap<IImageItem, File>();
+		this.mapOfImageToFile = new HashMap<>();
 	}
 
 	public DeskImageStoreReader(String path)
 	{
-		this.mapOfImageToFile = new HashMap<IImageItem, File>();
+		this.mapOfImageToFile = new HashMap<>();
 		this.path = path;
 	}
 
