@@ -82,7 +82,7 @@ public class Session
 
 	private final String homeSharingGid;
 
-	byte[] cert;
+	private byte[] cert;
 
 	public Session(final String host, final int port, final String username, final String password) throws Exception
 	{

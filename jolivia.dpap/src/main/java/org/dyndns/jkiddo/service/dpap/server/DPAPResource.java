@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 // @Produces(MediaType.WILDCARD)
 public class DPAPResource extends DMAPResource<ImageItemManager> implements IImageLibrary
 {
-	static final Logger logger = LoggerFactory.getLogger(DPAPResource.class);
+	private static final Logger logger = LoggerFactory.getLogger(DPAPResource.class);
 
 	public static final String DPAP_SERVER_PORT_NAME = "DPAP_SERVER_PORT_NAME";
 	public static final String DPAP_RESOURCE = "DPAP_IMPLEMENTATION";

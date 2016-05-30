@@ -17,9 +17,9 @@ public class HomeSharingResource extends MDNSResource
 {
 	public static String HOME_SHARING_SERVICE_TYPE = "_home-sharing._tcp.local.";
 	
-	final static AudioProtocolVersion audioProtocolVersion = new AudioProtocolVersion(DmapUtil.APRO_VERSION_3012);
-	final static MediaProtocolVersion mediaProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_2010);
-	final static MusicSharingVersion musicSharingVersion = new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_3012);
+	private final static AudioProtocolVersion audioProtocolVersion = new AudioProtocolVersion(DmapUtil.APRO_VERSION_3012);
+	private final static MediaProtocolVersion mediaProtocolVersion = new MediaProtocolVersion(DmapUtil.MPRO_VERSION_2010);
+	private final static MusicSharingVersion musicSharingVersion = new MusicSharingVersion(DmapUtil.MUSIC_SHARING_VERSION_3012);
 
 	private final String applicationName;
 	private final String hsGid;

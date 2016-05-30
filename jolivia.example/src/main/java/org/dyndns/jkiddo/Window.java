@@ -54,7 +54,7 @@ public class Window
 			"a copy of the GNU General Public License\n"
 			+ "along with didms.  If not, see <http://www.gnu.org/licenses/>." + "\n\n";
 
-	static Logger logger = LoggerFactory.getLogger(Window.class);
+	private static Logger logger = LoggerFactory.getLogger(Window.class);
 
 	final private JFrame mainFormJolivia;
 	final private JTextField txtUsername = new JTextField();

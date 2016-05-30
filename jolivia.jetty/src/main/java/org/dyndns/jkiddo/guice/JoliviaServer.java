@@ -52,20 +52,20 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 public class JoliviaServer extends GuiceServletContextListener
 {
-	static final Logger logger = LoggerFactory.getLogger(JoliviaServer.class);
+	private static final Logger logger = LoggerFactory.getLogger(JoliviaServer.class);
 
-	final private String DB_NAME = "db";
-	final private Integer hostingPort;
-	final private Integer pairingCode;
-	final private Integer airplayPort;
-	final private String name;
-	final private IClientSessionListener clientSessionListener;
+	private final String DB_NAME = "db";
+	private final Integer hostingPort;
+	private final Integer pairingCode;
+	private final Integer airplayPort;
+	private final String name;
+	private final IClientSessionListener clientSessionListener;
 	// final private ISpeakerListener speakerListener;
-	final private IImageStoreReader imageStoreReader;
-	final private IMusicStoreReader musicStoreReader;
-	final private IPlayingInformation iplayingInformation;
-	final private PasswordMethod passwordMethod;
-	final String databaseUrl = "jdbc:h2:mem:test";
+	private final IImageStoreReader imageStoreReader;
+	private final IMusicStoreReader musicStoreReader;
+	private final IPlayingInformation iplayingInformation;
+	private final PasswordMethod passwordMethod;
+	private final String databaseUrl = "jdbc:h2:mem:test";
 
 	private Injector injector;
 

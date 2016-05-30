@@ -28,7 +28,7 @@ import java.util.logging.*;
  */
 public class LogFormatter extends Formatter
 {
-	static final DateFormat DateFormater = new SimpleDateFormat("yyyy.MM.dd HH:mm.ss.SSS");
+	private static final DateFormat DateFormater = new SimpleDateFormat("yyyy.MM.dd HH:mm.ss.SSS");
 
 	@Override
 	public String format(final LogRecord record)

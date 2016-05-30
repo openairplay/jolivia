@@ -64,17 +64,17 @@ public class JavaSoundSink implements SampleClock
 		/**
 		 * Latch used to pass the line start time to the outer class'es constructor.
 		 */
-		final Latch<Double> lineStartTimeLatch = new Latch<>(JavaSoundSink.this);
+		private final Latch<Double> lineStartTimeLatch = new Latch<>(JavaSoundSink.this);
 
 		/**
 		 * Latch used to signal that the outer class'es constructor has set the line start time. Uses the outer instance as monitor to make sure that we actually see the updated instance variable.
 		 */
-		final Latch<Void> startTimeSetLatch = new Latch<>(JavaSoundSink.this);
+		private final Latch<Void> startTimeSetLatch = new Latch<>(JavaSoundSink.this);
 
 		/**
 		 * Latch used to signal that the inner class'es run() method has initialized the line end time. Uses the inner instance as monitor to make sure that we actually see the updated instance variable.
 		 */
-		final Latch<Void> endTimeSetLatch = new Latch<>(JavaSoundSink.this);
+		private final Latch<Void> endTimeSetLatch = new Latch<>(JavaSoundSink.this);
 
 		public volatile boolean exit;
 
