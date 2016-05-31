@@ -139,7 +139,7 @@ public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandle
 	/**
 	 * List of in-flight retransmit requests
 	 */
-	private static final List<MissingPacket> m_missingPackets = new java.util.LinkedList<MissingPacket>();
+	private static final List<MissingPacket> m_missingPackets = new java.util.LinkedList<>();
 
 	/**
 	 * Header sequence number for retransmit requests

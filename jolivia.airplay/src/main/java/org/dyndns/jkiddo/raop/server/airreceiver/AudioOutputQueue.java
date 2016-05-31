@@ -83,7 +83,7 @@ public class AudioOutputQueue implements AudioClock
 	/**
 	 * Packet queue, indexed by playback time
 	 */
-	private final ConcurrentSkipListMap<Long, byte[]> m_queue = new ConcurrentSkipListMap<Long, byte[]>();
+	private final ConcurrentSkipListMap<Long, byte[]> m_queue = new ConcurrentSkipListMap<>();
 
 	/**
 	 * Enqueuer thread

@@ -233,7 +233,7 @@ public final class DmapUtil
 	private static List<String> createTokenList(final String meta)
 	{
 		final StringTokenizer tokens = new StringTokenizer(meta, ",");
-		final List<String> list = new ArrayList<String>(tokens.countTokens());
+		final List<String> list = new ArrayList<>(tokens.countTokens());
 
 		while(tokens.hasMoreTokens())
 		{

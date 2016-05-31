@@ -83,7 +83,7 @@ public class InMemoryMusicManager implements IItemManager
 		}*/
 
 		mediaItemsResponse = new Listing();
-		map = new HashMap<Long,String>();
+		map = new HashMap<>();
 
 		reader.readTunesMemoryOptimized(mediaItemsResponse, map);
 
