@@ -42,7 +42,7 @@ public abstract class UByteChunk extends AbstractChunk implements ByteChunk
 	public static final int MIN_VALUE = 0;
 	public static final int MAX_VALUE = 0xFF;
 
-	protected int value = 0;
+	protected int value;
 
 	public UByteChunk(final String type, final String name, final int value)
 	{

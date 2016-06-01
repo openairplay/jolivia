@@ -69,7 +69,7 @@ public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandle
 		/**
 		 * Number of retransmit requests already sent for the packet
 		 */
-		public int retransmitRequestCount = 0;
+		public int retransmitRequestCount;
 
 		/**
 		 * Packet expected to arrive until this seconds time. If not, a retransmit request is sent.
@@ -144,7 +144,7 @@ public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandle
 	/**
 	 * Header sequence number for retransmit requests
 	 */
-	private int m_retransmitRequestSequence = 0;
+	private int m_retransmitRequestSequence;
 
 	public RaopRtpRetransmitRequestHandler(final AudioStreamInformationProvider streamInfoProvider, final AudioClock audioClock)
 	{

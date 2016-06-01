@@ -42,7 +42,7 @@ public abstract class UIntChunk extends AbstractChunk implements IntChunk
 	public static final long MIN_VALUE = 0l;
 	public static final long MAX_VALUE = 0xFFFFFFFFl;
 
-	protected int value = 0;
+	protected int value;
 
 	public UIntChunk(final String type, final String name, final long value)
 	{

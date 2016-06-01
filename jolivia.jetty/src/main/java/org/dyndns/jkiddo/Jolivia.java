@@ -118,7 +118,7 @@ public class Jolivia {
 		};
 		private IPlayingInformation iplayingInformation = new DefaultIPlayingInformation();
 		private PasswordMethod security = PasswordMethod.NO_PASSWORD;
-		private SecurityScheme scheme = null;
+		private SecurityScheme scheme;
 		private String appleUsername;
 		private String applePassword;
 

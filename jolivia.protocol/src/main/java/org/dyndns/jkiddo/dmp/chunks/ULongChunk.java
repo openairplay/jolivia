@@ -40,7 +40,7 @@ public abstract class ULongChunk extends AbstractChunk implements LongChunk
 	public static final String MIN_VALUE = "0";
 	public static final String MAX_VALUE = "18446744073709551615";
 
-	protected long value = 0;
+	protected long value;
 
 	public ULongChunk(final String type, final String name, final long value)
 	{

@@ -13,6 +13,6 @@ package com.beatofthedrum.alacdecoder;
 
 class LeadingZeros
 {
-	public int curbyte = 0;
-	public int output = 0;
+	public int curbyte;
+	public int output;
 }

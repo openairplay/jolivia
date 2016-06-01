@@ -55,7 +55,7 @@ public class DmapInputStream extends BufferedInputStream
 
 	private static final Logger logger = LoggerFactory.getLogger(DmapInputStream.class);
 
-	private ChunkFactory factory = null;
+	private ChunkFactory factory;
 
 	private final boolean specialCaseProtocolViolation;
 

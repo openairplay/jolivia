@@ -45,7 +45,7 @@ public abstract class VersionChunk extends AbstractChunk
 	public static final long MIN_VALUE = 0l;
 	public static final long MAX_VALUE = 0xFFFFFFFFl;
 
-	protected int version = 0;
+	protected int version;
 
 	public VersionChunk(final String type, final String name, final long value)
 	{

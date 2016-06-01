@@ -23,7 +23,7 @@ public class RunningWeightedAverage
 	public final double[] m_values;
 	public final double[] m_weights;
 	public boolean m_empty = true;
-	public int m_index = 0;
+	public int m_index;
 	public double m_average = Double.NaN;
 
 	RunningWeightedAverage(final int windowLength)

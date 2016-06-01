@@ -42,7 +42,7 @@ public abstract class UShortChunk extends AbstractChunk implements ShortChunk
 	public static final int MIN_VALUE = 0;
 	public static final int MAX_VALUE = 0xFFFF;
 
-	protected int value = 0;
+	protected int value;
 
 	public UShortChunk(final String type, final String name, final int value)
 	{
