@@ -76,7 +76,7 @@ public class JavaSoundSink implements SampleClock
 		 */
 		final Latch<Void> endTimeSetLatch = new Latch<>(JavaSoundSink.this);
 
-		public volatile boolean exit = false;
+		public volatile boolean exit;
 
 		private volatile double m_lineEndTime;
 

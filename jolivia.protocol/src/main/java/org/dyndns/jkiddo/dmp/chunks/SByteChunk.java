@@ -42,7 +42,7 @@ public abstract class SByteChunk extends AbstractChunk implements ByteChunk
 	public static final int MIN_VALUE = Byte.MIN_VALUE;
 	public static final int MAX_VALUE = Byte.MAX_VALUE;
 
-	protected int value = 0;
+	protected int value;
 
 
 	public SByteChunk(final String type, final String name, final int value)

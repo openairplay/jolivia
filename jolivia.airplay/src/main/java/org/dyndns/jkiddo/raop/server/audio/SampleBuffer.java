@@ -27,7 +27,7 @@ public final class SampleBuffer implements SampleIndexedAccessor
 
 	private final SampleIndexer m_samplesIndexer;
 
-	private double m_timeStamp = 0.0;
+	private double m_timeStamp;
 
 	public SampleBuffer(final float[] buffer, final SampleDimensions bufferDimensions, SampleIndexer samplesIndexer)
 	{

@@ -38,7 +38,7 @@ public abstract class SIntChunk extends AbstractChunk implements IntChunk
 	public static final int MIN_VALUE = Integer.MIN_VALUE;
 	public static final int MAX_VALUE = Integer.MAX_VALUE;
 
-	protected int value = 0;
+	protected int value;
 
 	
 

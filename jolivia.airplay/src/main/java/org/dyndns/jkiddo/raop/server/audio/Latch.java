@@ -20,8 +20,8 @@ package org.dyndns.jkiddo.raop.server.audio;
 public final class Latch<T>
 {
 	private final Object m_monitor;
-	private boolean m_ready = false;
-	private T m_value = null;
+	private boolean m_ready;
+	private T m_value;
 
 	public Latch()
 	{

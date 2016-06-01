@@ -38,7 +38,7 @@ public abstract class SLongChunk extends AbstractChunk implements LongChunk
 	public static final long MIN_VALUE = Long.MIN_VALUE;
 	public static final long MAX_VALUE = Long.MAX_VALUE;
 
-	protected long value = 0;
+	protected long value;
 
 	public SLongChunk(final String type, final String name, final long value)
 	{

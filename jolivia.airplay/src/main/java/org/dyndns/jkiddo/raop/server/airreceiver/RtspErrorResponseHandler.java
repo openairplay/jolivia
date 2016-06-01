@@ -29,7 +29,7 @@ public class RtspErrorResponseHandler extends SimpleChannelHandler
 	/**
 	 * Prevents an infinite loop that otherwise occurs if write()ing the exception response itself triggers an exception (which we will then attempt to write(), triggering the same exception, ...) We avoid that loop by dropping all exception events after the first one.
 	 */
-	private boolean m_messageTriggeredException = false;
+	private boolean m_messageTriggeredException;
 
 	@Override
 	public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent evt) throws Exception

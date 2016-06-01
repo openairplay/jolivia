@@ -43,7 +43,7 @@ public class AudioOutputQueue implements AudioClock
 	/**
 	 * Signals that the queue is being closed. Never transitions from true to false!
 	 */
-	private volatile boolean m_closing = false;
+	private volatile boolean m_closing;
 
 	/**
 	 * The line's audio format
@@ -93,17 +93,17 @@ public class AudioOutputQueue implements AudioClock
 	/**
 	 * Number of frames appended to the line
 	 */
-	private long m_lineFramesWritten = 0;
+	private long m_lineFramesWritten;
 
 	/**
 	 * Largest frame time seen so far
 	 */
-	private long m_latestSeenFrameTime = 0;
+	private long m_latestSeenFrameTime;
 
 	/**
 	 * The frame time corresponding to line time zero
 	 */
-	private long m_frameTimeOffset = 0;
+	private long m_frameTimeOffset;
 
 	/**
 	 * The seconds time corresponding to line time zero
@@ -113,7 +113,7 @@ public class AudioOutputQueue implements AudioClock
 	/**
 	 * Requested line gain
 	 */
-	private float m_requestedGain = 0.0f;
+	private float m_requestedGain;
 
 	/**
 	 * Enqueuer thread
