@@ -66,13 +66,13 @@ import com.google.common.collect.Iterables;
 @Consumes(MediaType.WILDCARD)
 // @Produces(MediaType.WILDCARD)
 public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLibrary {
-	static final Logger logger = LoggerFactory.getLogger(DAAPResource.class);
+	private static final Logger logger = LoggerFactory.getLogger(DAAPResource.class);
 
 	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
 	public static final String DAAP_RESOURCE = "DAAP_IMPLEMENTATION";
 
-	static final String MEDIA_KINDS_SHARED_KEY = "Media Kinds Shared";
-	static final String PASSWORD_KEY = "Password";
+	private static final String MEDIA_KINDS_SHARED_KEY = "Media Kinds Shared";
+	private static final String PASSWORD_KEY = "Password";
 
 	private static final VersionChunk pictureProtocolVersion = new PictureProtocolVersion(DmapUtil.PPRO_VERSION_201);
 	private static final VersionChunk audioProtocolVersion = new AudioProtocolVersion(DmapUtil.APRO_VERSION_3012);

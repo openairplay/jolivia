@@ -73,7 +73,7 @@ public final class DmapUtil
 	public static final String UTF_8 = "UTF-8";
 
 	/** "\r\n" <b>DON'T TOUCH!</b> */
-	static final byte[] CRLF = { (byte) '\r', (byte) '\n' };
+	private static final byte[] CRLF = { (byte) '\r', (byte) '\n' };
 
 	private final static SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yyyy hh:mm:ss z", Locale.getDefault());
 

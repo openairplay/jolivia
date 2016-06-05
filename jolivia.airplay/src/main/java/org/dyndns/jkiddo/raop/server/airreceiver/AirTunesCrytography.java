@@ -49,7 +49,7 @@ public final class AirTunesCrytography
 	 */
 	public static final RSAPrivateKey PrivateKey = rsaPrivateKeyDecode(PrivateKeyData);
 
-	static final Pattern s_transformation_pattern = Pattern.compile("^([A-Za-z0-9_.-]+)(/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+))?");
+	private static final Pattern s_transformation_pattern = Pattern.compile("^([A-Za-z0-9_.-]+)(/([A-Za-z0-9_.-]+)/([A-Za-z0-9_.-]+))?");
 	/**
 	 * Replacement for JCA/JCE's {@link javax.crypto.Cipher#getInstance}. The original method only accepts JCE providers from signed jars, which prevents us from bundling our cryptography provider Bouncy Caster with the application.
 	 * 

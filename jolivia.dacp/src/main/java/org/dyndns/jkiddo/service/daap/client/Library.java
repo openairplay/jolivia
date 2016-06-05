@@ -50,7 +50,7 @@ public class Library
 
 	public final static Logger logger = LoggerFactory.getLogger(Library.class);
 
-	final Session session;
+	private final Session session;
 
 	Library(final Session session)
 	{

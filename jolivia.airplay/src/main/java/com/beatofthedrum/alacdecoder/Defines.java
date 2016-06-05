@@ -13,5 +13,5 @@ package com.beatofthedrum.alacdecoder;
 
 class Defines
 {
-	static int RICE_THRESHOLD = 8;
+	protected static int RICE_THRESHOLD = 8;
 }

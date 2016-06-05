@@ -13,28 +13,28 @@ package com.beatofthedrum.alacdecoder;
 public class AlacFile
 {
 
-	byte[] input_buffer;
-	int ibIdx;
-	int input_buffer_bitaccumulator; /*
+	protected byte[] input_buffer;
+	protected int ibIdx;
+	protected int input_buffer_bitaccumulator; /*
 										 * used so we can do arbitary bit reads
 										 */
 
-	int samplesize;
-	int numchannels;
-	int bytespersample;
+	protected int samplesize;
+	protected int numchannels;
+	protected int bytespersample;
 
-	LeadingZeros lz = new LeadingZeros();
+	protected LeadingZeros lz = new LeadingZeros();
 
 	private int buffer_size = 16384;
 	/* buffers */
-	int[] predicterror_buffer_a = new int[buffer_size];
-	int[] predicterror_buffer_b = new int[buffer_size];
+	protected int[] predicterror_buffer_a = new int[buffer_size];
+	protected int[] predicterror_buffer_b = new int[buffer_size];
 
-	int[] outputsamples_buffer_a = new int[buffer_size];
-	int[] outputsamples_buffer_b = new int[buffer_size];
+	protected int[] outputsamples_buffer_a = new int[buffer_size];
+	protected int[] outputsamples_buffer_b = new int[buffer_size];
 
-	int[] uncompressed_bytes_buffer_a = new int[buffer_size];
-	int[] uncompressed_bytes_buffer_b = new int[buffer_size];
+	protected int[] uncompressed_bytes_buffer_a = new int[buffer_size];
+	protected int[] uncompressed_bytes_buffer_b = new int[buffer_size];
 
 	/* stuff from setinfo */
 	public int setinfo_max_samples_per_frame; // 0x1000 = 4096

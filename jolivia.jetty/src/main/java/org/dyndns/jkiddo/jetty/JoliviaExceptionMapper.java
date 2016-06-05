@@ -25,7 +25,7 @@ import com.sun.jersey.core.spi.factory.ResponseBuilderImpl;
 @Singleton
 public class JoliviaExceptionMapper implements ExceptionMapper<Throwable>
 {
-	final static Logger logger = LoggerFactory.getLogger(JoliviaExceptionMapper.class);
+	private final static Logger logger = LoggerFactory.getLogger(JoliviaExceptionMapper.class);
 
 	@Override
 	public Response toResponse(Throwable exception)

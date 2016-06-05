@@ -22,7 +22,7 @@ public abstract class MDNSResource
 	private final IZeroconfManager mDNS;
 	protected Integer port;
 
-	static final Logger logger = LoggerFactory.getLogger(MDNSResource.class);
+	private static final Logger logger = LoggerFactory.getLogger(MDNSResource.class);
 	public final String hostname = InetAddress.getLocalHost().getHostName();
 	
 	public static final String MACHINE_ID_KEY = "Machine ID";
