@@ -704,13 +704,11 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 					final String name = m_parameter.group(1);
 					final String value = m_parameter.group(2);
 
-					if("volume".equals(name))
-					{
-						/* Set output gain */
-						if(m_audioOutputQueue != null)
-							m_audioOutputQueue.setGain(Float.parseFloat(value));
-
+					/* Set output gain */
+					if (m_audioOutputQueue != null && "volume".equals(name)) {
+						m_audioOutputQueue.setGain(Float.parseFloat(value));
 					}
+
 				}
 				catch(final Throwable e)
 				{

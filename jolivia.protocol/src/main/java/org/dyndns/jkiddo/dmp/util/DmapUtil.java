@@ -201,19 +201,16 @@ public final class DmapUtil
 	private static List<String> moveItemIdInSecond(final List<String> list)
 	{
 		final boolean noItemKind = moveItemKindInFirst(list);
-		if(list.contains("dmap.itemid"))
+		if (list.contains("dmap.itemid") && list.size() > 1)
 		{
-			if(list.size() > 1)
+			list.remove("dmap.itemid");
+			int index = 1;
+			if (noItemKind)
 			{
-				list.remove("dmap.itemid");
-				int index = 1;
-				if(noItemKind)
-				{
-					index = 0;
-				}
-
-				list.add(index, "dmap.itemid");
+				index = 0;
 			}
+
+			list.add(index, "dmap.itemid");
 		}
 		return list;
 	}

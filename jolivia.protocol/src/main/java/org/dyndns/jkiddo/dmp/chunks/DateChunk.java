@@ -74,12 +74,10 @@ public abstract class DateChunk extends AbstractChunk
 	 */
 	public static long checkDateRange(final long value) throws IllegalArgumentException
 	{
-		if(value < MIN_VALUE || value > MAX_VALUE)
+		if ((value < MIN_VALUE || value > MAX_VALUE) && LOG.isErrorEnabled())
+
 		{
-			if(LOG.isErrorEnabled())
-			{
-				LOG.error("Value is outside of Date range: " + value);
-			}
+			LOG.error("Value is outside of Date range: " + value);
 		}
 		return value;
 	}
