@@ -67,12 +67,9 @@ public abstract class UByteChunk extends AbstractChunk implements ByteChunk
 	 */
 	public static int checkUByteRange(final int value) throws IllegalArgumentException
 	{
-		if(value < MIN_VALUE || value > MAX_VALUE)
+		if ((value < MIN_VALUE || value > MAX_VALUE) && LOG.isErrorEnabled())
 		{
-			if(LOG.isErrorEnabled())
-			{
-				LOG.error("Value is outside of unsigned byte range: " + value);
-			}
+			LOG.error("Value is outside of unsigned byte range: " + value);
 		}
 		return value;
 	}

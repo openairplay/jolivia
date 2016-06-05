@@ -68,12 +68,9 @@ public abstract class SByteChunk extends AbstractChunk implements ByteChunk
 	 */
 	public static int checkSByteRange(final int value) throws IllegalArgumentException
 	{
-		if(value < MIN_VALUE || value > MAX_VALUE)
+		if ((value < MIN_VALUE || value > MAX_VALUE) && LOG.isErrorEnabled())
 		{
-			if(LOG.isErrorEnabled())
-			{
-				LOG.error("Value is outside of signed byte range: " + value);
-			}
+			LOG.error("Value is outside of signed byte range: " + value);
 		}
 		return value;
 	}

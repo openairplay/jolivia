@@ -362,12 +362,8 @@ public class MusicItemManager implements IItemManager
 			for(final Field f : clazz.getDeclaredFields())
 			{
 				final DatabaseField dbAnnotation = f.getAnnotation(DatabaseField.class);
-				if(dbAnnotation != null)
-				{
-					if(def.getLongname().equals(dbAnnotation.columnName()))
-					{
-						map.put(def, f);
-					}
+				if (dbAnnotation != null && def.getLongname().equals(dbAnnotation.columnName())) {
+					map.put(def, f);
 				}
 			}
 		}

@@ -179,12 +179,9 @@ public class DmapInputStream extends BufferedInputStream
 		}
 		T chunk = factory.newChunk(contentCode);
 
-		if(specialCaseProtocolViolation)
+		if (specialCaseProtocolViolation && chunk.getClass().equals(ListingItem.class))
 		{
-			if(chunk.getClass().equals(ListingItem.class))
-			{
-				chunk = (T) new SongArtist();
-			}
+			chunk = (T) new SongArtist();
 		}
 
 		if(contentLength > 0)
@@ -267,16 +264,13 @@ public class DmapInputStream extends BufferedInputStream
 	 */
 	private static void checkLength(final Chunk chunk, final int expected, final int length)
 	{
-		if(expected != length)
+		if (expected != length && logger.isWarnEnabled())
 		{
 			// throw new IOException("Expected a chunk with length " + expected
 			// + " but got " + length + " (" + chunk.getContentCodeString() +
 			// ")");
 
-			if(logger.isWarnEnabled())
-			{
-				logger.warn("Expected a chunk with length " + expected + " but got " + length + " (" + chunk.getContentCodeString() + ") " + chunk.getClass());
-			}
+			logger.warn("Expected a chunk with length " + expected + " but got " + length + " (" + chunk.getContentCodeString() + ") " + chunk.getClass());
 		}
 	}
 }

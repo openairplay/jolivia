@@ -1227,19 +1227,17 @@ public class DmapParser extends HttpParser{
 	                    return true;
 	            }
 
-	            // Request/response line
-	            if (_state.ordinal()>= State.START.ordinal() && _state.ordinal()<State.HEADER.ordinal())
-	            {
-	                if (parseLine(buffer))
-	                    return true;
-	            }
+				// Request/response line
+				if (_state.ordinal() >= State.START.ordinal() && _state.ordinal() < State.HEADER.ordinal() && parseLine(buffer))
+				{
+					return true;
+				}
 
 	            // parse headers
-	            if (_state.ordinal()>= State.HEADER.ordinal() && _state.ordinal()<State.CONTENT.ordinal())
-	            {
-	                if (parseHeaders(buffer))
-	                    return true;
-	            }
+				if (_state.ordinal() >= State.HEADER.ordinal() && _state.ordinal() < State.CONTENT.ordinal() && parseHeaders(buffer))
+				{
+					return true;
+				}
 
 	            // parse content
 	            if (_state.ordinal()>= State.CONTENT.ordinal() && _state.ordinal()<State.END.ordinal())

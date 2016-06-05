@@ -292,12 +292,10 @@ public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandle
 				retransmitRequest.setSequenceCount(retransmitRequest.getSequenceCount() + 1);
 			}
 		}
-		if(retransmitRequest != null)
-		{
-			/* Send the retransmit request we were building when the loop ended */
-			if(channel.isOpen() && channel.isWritable())
-				channel.write(retransmitRequest);
-		}
+
+		/* Send the retransmit request we were building when the loop ended */
+		if (retransmitRequest != null && channel.isOpen() && channel.isWritable())
+			channel.write(retransmitRequest);
 	}
 
 	@Override

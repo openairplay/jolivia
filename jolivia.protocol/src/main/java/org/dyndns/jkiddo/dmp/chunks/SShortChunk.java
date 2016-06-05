@@ -67,12 +67,9 @@ public abstract class SShortChunk extends AbstractChunk implements ShortChunk
 	 */
 	public static int checkSShortRange(final int value) throws IllegalArgumentException
 	{
-		if(value < MIN_VALUE || value > MAX_VALUE)
+		if ((value < MIN_VALUE || value > MAX_VALUE) && LOG.isErrorEnabled())
 		{
-			if(LOG.isErrorEnabled())
-			{
-				LOG.error("Value is outside of signed short range: " + value);
-			}
+			LOG.error("Value is outside of signed short range: " + value);
 		}
 		return value;
 	}
