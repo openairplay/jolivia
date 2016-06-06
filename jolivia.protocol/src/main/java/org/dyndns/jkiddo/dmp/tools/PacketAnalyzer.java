@@ -37,8 +37,12 @@ import org.dyndns.jkiddo.dmp.chunks.AbstractChunk;
 import org.dyndns.jkiddo.dmp.chunks.BooleanChunk;
 import org.dyndns.jkiddo.dmp.chunks.Chunk;
 
-public class PacketAnalyzer
+public final class PacketAnalyzer
 {
+
+	private PacketAnalyzer() throws InstantiationException {
+		throw new InstantiationException("This class is not created for instantiation");
+	}
 
 	private static Chunk newChunk(DmapInputStream in) throws Throwable
 	{
