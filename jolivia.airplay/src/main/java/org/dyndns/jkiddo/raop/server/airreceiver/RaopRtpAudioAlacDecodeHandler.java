@@ -79,12 +79,12 @@ public class RaopRtpAudioAlacDecodeHandler extends OneToOneDecoder implements Au
 		m_samplesPerFrame = Integer.valueOf(formatOptions[FormatOptionSamplesPerFrame]);
 
 		/* We support only 16-bit ALAC */
-		final int bitsPerSample = Integer.valueOf(formatOptions[FormatOptionBitsPerSample]);
+		final int bitsPerSample = Integer.parseInt(formatOptions[FormatOptionBitsPerSample]);
 		if(bitsPerSample != 16)
 			throw new ProtocolException("Sample size must be 16, but was " + bitsPerSample);
 
 		/* We support only 44100 kHz */
-		final int sampleRate = Integer.valueOf(formatOptions[FormatOption8a_rate]);
+		final int sampleRate = Integer.parseInt(formatOptions[FormatOption8a_rate]);
 		if(sampleRate != 44100)
 			throw new ProtocolException("Sample rate must be 44100, but was " + sampleRate);
 

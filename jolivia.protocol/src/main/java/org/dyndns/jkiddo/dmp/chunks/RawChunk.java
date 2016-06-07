@@ -50,9 +50,9 @@ public abstract class RawChunk extends AbstractChunk
 		String val  = "{";
 		for(int i = 0; i < value.length - 1; i++)
 		{
-			val += "" + (int)value[i] + ", ";
+			val += (int)value[i] + ", ";
 		}
-		val += "" + (int)value[value.length - 1] + "}";
+		val += (int)value[value.length - 1] + "}";
 		return indent(indent) + name + "(" + getContentCodeString() + "; raw)=" + val;
 	}
 	
