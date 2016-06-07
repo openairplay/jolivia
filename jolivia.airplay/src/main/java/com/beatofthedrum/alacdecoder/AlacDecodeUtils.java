@@ -10,8 +10,13 @@
  */
 package com.beatofthedrum.alacdecoder;
 
-public class AlacDecodeUtils
+public final class AlacDecodeUtils
 {
+
+	private AlacDecodeUtils() throws InstantiationException {
+		throw new InstantiationException("This class is not created for instantiation");
+	}
+
 	public static void alac_set_info(AlacFile alac, int[] inputbuffer)
 	{
 		int ptrIndex = 0;

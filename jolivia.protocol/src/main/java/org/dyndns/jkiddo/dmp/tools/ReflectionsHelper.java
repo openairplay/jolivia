@@ -20,8 +20,12 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.ImmutableSet;
 
-public class ReflectionsHelper
+public final class ReflectionsHelper
 {
+
+	private ReflectionsHelper() throws InstantiationException {
+		throw new InstantiationException("This class is not created for instantiation");
+	}
 
 	public static ImmutableSet<Class<? extends Object>> getClasses(final String packageName, final Class<? extends Annotation> annotation)
 	{

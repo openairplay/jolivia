@@ -34,4 +34,9 @@ public final class RaopRtspMethods
 	public static final HttpMethod SETUP = RtspMethods.SETUP;
 	public static final HttpMethod SET_PARAMETER = RtspMethods.SET_PARAMETER;
 	public static final HttpMethod TEARDOWN = RtspMethods.TEARDOWN;
+
+	private RaopRtspMethods() throws InstantiationException {
+		throw new InstantiationException("This class is not created for instantiation");
+	}
+
 }

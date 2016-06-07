@@ -20,8 +20,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 
-public class JoliviaMainer {
+public final class JoliviaMainer {
 	private static Logger logger = LoggerFactory.getLogger(JoliviaMainer.class);
+
+	private JoliviaMainer() throws InstantiationException {
+		throw new InstantiationException("This class is not created for instantiation");
+	}
 
 	public static void main(final String[] args) throws UnknownHostException {
 

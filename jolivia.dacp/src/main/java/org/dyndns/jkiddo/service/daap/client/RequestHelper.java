@@ -53,12 +53,16 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.io.Closeables;
 
-public class RequestHelper
+public final class RequestHelper
 {
 	private static final int CONNECT_TIMEOUT = 10000;
 	private static final int READ_TIMEOUT = 0; // Infinite
 
 	public final static Logger logger = LoggerFactory.getLogger(RequestHelper.class);
+
+	private RequestHelper() throws InstantiationException {
+		throw new InstantiationException("This class is not created for instantiation");
+	}
 
 	public static byte[] requestBitmap(final String remote) throws Exception
 	{

@@ -21,6 +21,11 @@ import java.io.IOException;
 
 public final class Base64
 {
+
+	private Base64() throws InstantiationException {
+		throw new InstantiationException("This class is not created for instantiation");
+	}
+
 	/**
 	 * Decodes Base64 data that is correctly padded with "="
 	 * 
