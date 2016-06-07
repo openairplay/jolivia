@@ -441,7 +441,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 						if(!a_rtpmap_matcher.matches())
 							throw new ProtocolException("Cannot parse SDP " + attribute + "'s rtpmap entry " + value);
 
-						final int formatIdx = Integer.valueOf(a_rtpmap_matcher.group(1));
+						final int formatIdx = Integer.parseInt(a_rtpmap_matcher.group(1));
 						final String format = a_rtpmap_matcher.group(2);
 						if("AppleLossless".equals(format))
 							alacFormatIndex = formatIdx;
@@ -566,7 +566,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 			else if("control_port".equals(key))
 			{
 				/* Port number of the client's control socket. Response includes port number of *our* control port */
-				final int clientControlPort = Integer.valueOf(value);
+				final int clientControlPort = Integer.parseInt(value);
 				m_controlChannel = createRtpChannel(substitutePort((InetSocketAddress) ctx.getChannel().getLocalAddress(), 0), substitutePort((InetSocketAddress) ctx.getChannel().getRemoteAddress(), clientControlPort), RaopRtpChannelType.Control);
 				logger.info("Launched RTP control service on " + m_controlChannel.getLocalAddress());
 				responseOptions.add("control_port=" + ((InetSocketAddress) m_controlChannel.getLocalAddress()).getPort());
@@ -574,7 +574,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 			else if("timing_port".equals(key))
 			{
 				/* Port number of the client's timing socket. Response includes port number of *our* timing port */
-				final int clientTimingPort = Integer.valueOf(value);
+				final int clientTimingPort = Integer.parseInt(value);
 				m_timingChannel = createRtpChannel(substitutePort((InetSocketAddress) ctx.getChannel().getLocalAddress(), 0), substitutePort((InetSocketAddress) ctx.getChannel().getRemoteAddress(), clientTimingPort), RaopRtpChannelType.Timing);
 				logger.info("Launched RTP timing service on " + m_timingChannel.getLocalAddress());
 				responseOptions.add("timing_port=" + ((InetSocketAddress) m_timingChannel.getLocalAddress()).getPort());

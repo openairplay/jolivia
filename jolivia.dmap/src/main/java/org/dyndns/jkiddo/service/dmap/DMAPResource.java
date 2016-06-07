@@ -50,7 +50,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@GET
 	public Response login(@QueryParam("pairing-guid") final String guid, @QueryParam("hasFP") final int value, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
-		final String s = Thread.currentThread().getId() + "";
+		final String s = String.valueOf(Thread.currentThread().getId());
 		final LoginResponse loginResponse = new LoginResponse();
 		loginResponse.add(new Status(200));
 		loginResponse.add(new SessionId(itemManager.getSessionId(s)));
@@ -62,7 +62,7 @@ public abstract class DMAPResource<T extends IItemManager> extends MDNSResource 
 	@GET
 	public Response update(@QueryParam("session-id") final long sessionId, @QueryParam("revision-number") final long revisionNumber, @QueryParam("delta") final long delta, @QueryParam("daap-no-disconnect") final int daapNoDisconnect, @QueryParam("hsgid") final String hsgid) throws IOException
 	{
-		final String s = Thread.currentThread().getId() + "";
+		final String s = String.valueOf(Thread.currentThread().getId());
 		if(revisionNumber == delta || revisionNumber == itemManager.getRevision(s, sessionId))
 		{
 			itemManager.waitForUpdate();

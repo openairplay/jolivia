@@ -55,7 +55,7 @@ public class Util
 	public static Response buildResponse(final Chunk chunk, final String dmapKey, final String dmapServiceName) throws IOException
 	{
 		final byte[] binaryChunk = DmapUtil.serialize(chunk, false);
-		return buildResponse(dmapKey, dmapServiceName).entity(binaryChunk).header(HttpHeaders.CONTENT_LENGTH, binaryChunk.length + "").build();// .header("Content-Encoding", "gzip").build();
+		return buildResponse(dmapKey, dmapServiceName).entity(binaryChunk).header(HttpHeaders.CONTENT_LENGTH, String.valueOf(binaryChunk.length)).build();// .header("Content-Encoding", "gzip").build();
 	}
 
 	public static Response buildAudioResponse(final byte[] buffer, final long position, final String dmapKey, final String dmapServiceName)
