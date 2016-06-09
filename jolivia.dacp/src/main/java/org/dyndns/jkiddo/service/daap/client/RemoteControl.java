@@ -148,7 +148,7 @@ public class RemoteControl
 	 */
 	public void setSpeakers(final Collection<Speaker> speakers) throws Exception
 	{
-		String idsString = "";
+		StringBuilder idsString = new StringBuilder();
 		boolean first = true;
 		// The list of speakers to activate is a comma-separated string with
 		// the hex versions of the speakers' IDs
@@ -158,13 +158,13 @@ public class RemoteControl
 			{
 				if(!first)
 				{
-					idsString += ",";
+					idsString.append(",");
 				}
 				else
 				{
 					first = false;
 				}
-				idsString += speaker.getIdAsHex();
+				idsString.append(speaker.getIdAsHex());
 			}
 		}
 
