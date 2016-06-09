@@ -47,12 +47,12 @@ public abstract class RawChunk extends AbstractChunk
 	@Override
 	public String toString(final int indent)
 	{
-		String val  = "{";
+		StringBuilder val  = new StringBuilder("{");
 		for(int i = 0; i < value.length - 1; i++)
 		{
-			val += (int)value[i] + ", ";
+			val.append((int)value[i]).append(", ");
 		}
-		val += (int)value[value.length - 1] + "}";
+		val.append((int)value[value.length - 1]).append("}");
 		return indent(indent) + name + "(" + getContentCodeString() + "; raw)=" + val;
 	}
 	

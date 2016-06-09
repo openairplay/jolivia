@@ -27,12 +27,14 @@ public abstract class DeviceCommand
 
 	protected String constructCommand(String commandName, String content)
 	{
-		String parameterValue = parameterMap.keySet().size() == 0 ? "" : "?";
-		for(String key : parameterMap.keySet())
+		StringBuilder parameterValue = new StringBuilder();
+		parameterValue.append(parameterMap.isEmpty() ? "" : "?");
+
+		for(Map.Entry<String, String> stringStringEntry : parameterMap.entrySet())
 		{
 			try
 			{
-				parameterValue += key + "=" + URLEncoder.encode(parameterMap.get(key), "utf-8");
+				parameterValue.append(stringStringEntry.getKey()).append("=").append(URLEncoder.encode(stringStringEntry.getValue(), "utf-8"));
 			}
 			catch(UnsupportedEncodingException e)
 			{
