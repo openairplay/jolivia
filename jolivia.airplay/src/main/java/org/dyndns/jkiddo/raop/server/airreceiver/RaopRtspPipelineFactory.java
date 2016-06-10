@@ -30,11 +30,11 @@ import org.jboss.netty.handler.execution.ExecutionHandler;
  */
 public class RaopRtspPipelineFactory implements ChannelPipelineFactory
 {
-	final private byte[] hardwareAddressBytes;
-	final private ExecutionHandler channelExecutionHandler;
-	final private ExecutorService executorService;
-	private SimpleChannelUpstreamHandler channel;
-	final private IPlayingInformation playingInformation;
+	private final byte[] hardwareAddressBytes;
+	private final ExecutionHandler channelExecutionHandler;
+	private final ExecutorService executorService;
+	private final SimpleChannelUpstreamHandler channel;
+	private final IPlayingInformation playingInformation;
 
 	public RaopRtspPipelineFactory(byte[] hardwareAddressBytes, ExecutionHandler channelExecutionHandler, ExecutorService executorService, SimpleChannelUpstreamHandler channel, IPlayingInformation playingInformation)
 	{

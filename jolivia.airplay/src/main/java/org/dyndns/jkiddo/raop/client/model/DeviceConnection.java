@@ -16,7 +16,7 @@ public class DeviceConnection
 {
 	private static Logger logger = Logger.getLogger(DeviceConnection.class.getName());
 
-	private Device device;
+	private final Device device;
 	private Socket socket;
 
 	public DeviceConnection(Device device)

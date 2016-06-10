@@ -12,9 +12,9 @@ import java.security.MessageDigest;
 public class Device
 {
 	private String id;
-	private String name;
-	private InetAddress inetAddress;
-	private int port;
+	private final String name;
+	private final InetAddress inetAddress;
+	private final int port;
 
 	public Device(String name, InetAddress inetAddress, int port)
 	{
