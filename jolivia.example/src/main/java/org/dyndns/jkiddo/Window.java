@@ -56,16 +56,16 @@ public class Window
 
 	private static Logger logger = LoggerFactory.getLogger(Window.class);
 
-	final private JFrame mainFormJolivia;
-	final private JTextField txtUsername = new JTextField();
-	final private JPasswordField pwdPassword = new JPasswordField();
-	final private JTextField textField;
-	final private JButton btnNewButton;
-	final private JFileChooser fc;
-	final private JButton btnNewButton_1;
+	private final JFrame mainFormJolivia;
+	private final JTextField txtUsername = new JTextField();
+	private final JPasswordField pwdPassword = new JPasswordField();
+	private final JTextField textField;
+	private final JButton btnNewButton;
+	private final JFileChooser fc;
+	private final JButton btnNewButton_1;
+	private final JCheckBox chckbxUseGoogleMusic;
+	private final ExecutorService executor;
 	private File path = new File(System.getProperty("user.home"));
-	private JCheckBox chckbxUseGoogleMusic;
-	private ExecutorService executor;
 	private Jolivia jolivia;
 
 	/**

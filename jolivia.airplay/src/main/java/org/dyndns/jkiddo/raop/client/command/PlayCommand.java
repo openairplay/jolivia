@@ -7,8 +7,8 @@ package org.dyndns.jkiddo.raop.client.command;
 
 public class PlayCommand extends DeviceCommand
 {
-	private String contentURL;
-	private double startPosition;
+	private final String contentURL;
+	private final double startPosition;
 
 	public PlayCommand(String contentURL, double startPosition)
 	{

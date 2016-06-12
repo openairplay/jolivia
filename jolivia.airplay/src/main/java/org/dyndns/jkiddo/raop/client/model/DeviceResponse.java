@@ -10,11 +10,11 @@ import java.util.Map;
 
 public class DeviceResponse
 {
-	private int responseCode;
-	private String responseMessage;
-	private Map<String, String> headerMap = new HashMap<>();
+	private final int responseCode;
+	private final String responseMessage;
+	private final Map<String, String> headerMap = new HashMap<>();
+	private final Map<String, String> contentParameterMap = new HashMap<>();
 	private String content;
-	private Map<String, String> contentParameterMap = new HashMap<>();
 
 	public DeviceResponse(String headers, String content)
 	{

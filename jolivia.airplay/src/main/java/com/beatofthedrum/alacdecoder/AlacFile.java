@@ -25,16 +25,16 @@ public class AlacFile
 
 	protected LeadingZeros lz = new LeadingZeros();
 
-	private int buffer_size = 16384;
+	private static final int BUFFER_SIZE = 16384;
 	/* buffers */
-	protected int[] predicterror_buffer_a = new int[buffer_size];
-	protected int[] predicterror_buffer_b = new int[buffer_size];
+	protected int[] predicterror_buffer_a = new int[BUFFER_SIZE];
+	protected int[] predicterror_buffer_b = new int[BUFFER_SIZE];
 
-	protected int[] outputsamples_buffer_a = new int[buffer_size];
-	protected int[] outputsamples_buffer_b = new int[buffer_size];
+	protected int[] outputsamples_buffer_a = new int[BUFFER_SIZE];
+	protected int[] outputsamples_buffer_b = new int[BUFFER_SIZE];
 
-	protected int[] uncompressed_bytes_buffer_a = new int[buffer_size];
-	protected int[] uncompressed_bytes_buffer_b = new int[buffer_size];
+	protected int[] uncompressed_bytes_buffer_a = new int[BUFFER_SIZE];
+	protected int[] uncompressed_bytes_buffer_b = new int[BUFFER_SIZE];
 
 	/* stuff from setinfo */
 	public int setinfo_max_samples_per_frame; // 0x1000 = 4096

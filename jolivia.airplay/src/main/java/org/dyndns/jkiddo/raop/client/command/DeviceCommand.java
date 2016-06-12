@@ -16,7 +16,7 @@ public abstract class DeviceCommand
 {
 	private static Logger logger = Logger.getLogger(DeviceCommand.class.getName());
 
-	private Map<String, String> parameterMap = new HashMap<>();
+	private final Map<String, String> parameterMap = new HashMap<>();
 
 	protected String requestType = "POST";
 
