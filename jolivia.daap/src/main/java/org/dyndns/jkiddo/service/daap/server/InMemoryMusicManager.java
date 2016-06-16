@@ -167,6 +167,7 @@ public class InMemoryMusicManager implements IItemManager
 		catch(final InterruptedException ie)
 		{
 			ie.printStackTrace();
+            Thread.currentThread().interrupt();
 		}
 	}
 
