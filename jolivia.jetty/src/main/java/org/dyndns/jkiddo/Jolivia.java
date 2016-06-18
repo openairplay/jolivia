@@ -381,7 +381,7 @@ public class Jolivia {
 		aboutDialog.pack();
 
 		/* Create tray icon */
-		final URL trayIconUrl = Jolivia.class.getClassLoader().getResource("Ceres.png");
+		final URL trayIconUrl = Thread.currentThread().getContextClassLoader().getResource("Ceres.png");
 		final TrayIcon trayIcon1 = new TrayIcon((new ImageIcon(trayIconUrl, "AirReceiver").getImage()));
 		trayIcon1.setToolTip("Jolivia");
 		trayIcon1.setImageAutoSize(true);
