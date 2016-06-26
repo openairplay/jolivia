@@ -346,6 +346,50 @@ public class AudioOutputQueue implements AudioClock
 				s_logger.finest("Audio output line end is now at " + getNextLineTime() + " after writing " + len / m_bytesPerFrame + " frames");
 			}
 		}
+
+        /**
+         * Returns the line's MASTER_GAIN control's value.
+         */
+        private float getLineGain()
+        {
+            if(m_line.isControlSupported(FloatControl.Type.MASTER_GAIN))
+            {
+			/* Bound gain value by min and max declared by the control */
+                final FloatControl gainControl = (FloatControl) m_line.getControl(FloatControl.Type.MASTER_GAIN);
+                return gainControl.getValue();
+            }
+            s_logger.severe("Audio output line doesn not support volume control");
+            return 0.0f;
+        }
+
+        private synchronized void applyGain()
+        {
+            setLineGain(m_requestedGain);
+        }
+
+        /**
+         * Sets the line's MASTER_GAIN control to the provided value, or complains to the log of the line does not support a MASTER_GAIN control
+         *
+         * @param gain
+         *            gain to set
+         */
+        private void setLineGain(final float gain)
+        {
+            if(m_line.isControlSupported(FloatControl.Type.MASTER_GAIN))
+            {
+			/* Bound gain value by min and max declared by the control */
+                final FloatControl gainControl = (FloatControl) m_line.getControl(FloatControl.Type.MASTER_GAIN);
+                if(gain < gainControl.getMinimum())
+                    gainControl.setValue(gainControl.getMinimum());
+                else if(gain > gainControl.getMaximum())
+                    gainControl.setValue(gainControl.getMaximum());
+                else
+                    gainControl.setValue(gain);
+            }
+            else
+                s_logger.severe("Audio output line doesn not support volume control");
+        }
+
 	}
 
 	AudioOutputQueue(final AudioStreamInformationProvider streamInfoProvider) throws LineUnavailableException
@@ -396,49 +440,6 @@ public class AudioOutputQueue implements AudioClock
 
 		/* Initialize the seconds time offset now that the line is running. */
 		m_secondsTimeOffset = 2208988800.0 + System.currentTimeMillis() * 1e-3;
-	}
-
-	/**
-	 * Sets the line's MASTER_GAIN control to the provided value, or complains to the log of the line does not support a MASTER_GAIN control
-	 * 
-	 * @param gain
-	 *            gain to set
-	 */
-	private void setLineGain(final float gain)
-	{
-		if(m_line.isControlSupported(FloatControl.Type.MASTER_GAIN))
-		{
-			/* Bound gain value by min and max declared by the control */
-			final FloatControl gainControl = (FloatControl) m_line.getControl(FloatControl.Type.MASTER_GAIN);
-			if(gain < gainControl.getMinimum())
-				gainControl.setValue(gainControl.getMinimum());
-			else if(gain > gainControl.getMaximum())
-				gainControl.setValue(gainControl.getMaximum());
-			else
-				gainControl.setValue(gain);
-		}
-		else
-			s_logger.severe("Audio output line doesn not support volume control");
-	}
-
-	/**
-	 * Returns the line's MASTER_GAIN control's value.
-	 */
-	private float getLineGain()
-	{
-		if(m_line.isControlSupported(FloatControl.Type.MASTER_GAIN))
-		{
-			/* Bound gain value by min and max declared by the control */
-			final FloatControl gainControl = (FloatControl) m_line.getControl(FloatControl.Type.MASTER_GAIN);
-			return gainControl.getValue();
-		}
-		s_logger.severe("Audio output line doesn not support volume control");
-		return 0.0f;
-	}
-
-	private synchronized void applyGain()
-	{
-		setLineGain(m_requestedGain);
 	}
 
 	/**
