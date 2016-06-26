@@ -327,7 +327,7 @@ public class Window
 			aboutDialog.pack();
 
 			/* Create tray icon */
-			final URL trayIconUrl = Jolivia.class.getClassLoader().getResource("icon_32.png");
+			final URL trayIconUrl = Thread.currentThread().getContextClassLoader().getResource("icon_32.png");
 			if(trayIconUrl == null)
 			{
 				throw new Exception("No image found");
