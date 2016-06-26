@@ -115,6 +115,7 @@ public class JavaSoundSink implements SampleClock
 								catch(InterruptedException e)
 								{
 									s_logger.log(Level.WARNING, "Java Sound line writer was interrupted during startup", e);
+                                    Thread.currentThread().interrupt();
 									throw new RuntimeException(e.getMessage(), e);
 								}
 
@@ -259,7 +260,7 @@ public class JavaSoundSink implements SampleClock
 			}
 			catch(InterruptedException e)
 			{
-				/* Done */
+                Thread.currentThread().interrupt();
 			}
 		}
 

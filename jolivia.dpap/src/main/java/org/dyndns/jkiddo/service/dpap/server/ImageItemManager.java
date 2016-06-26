@@ -89,6 +89,7 @@ public class ImageItemManager implements IItemManager
 		catch(InterruptedException ie)
 		{
 			ie.printStackTrace();
+            Thread.currentThread().interrupt();
 		}
 	}
 

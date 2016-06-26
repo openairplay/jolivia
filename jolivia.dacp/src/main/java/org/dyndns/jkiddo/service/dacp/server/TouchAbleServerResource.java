@@ -195,6 +195,7 @@ public class TouchAbleServerResource extends MDNSResource implements ITouchAbleS
 			{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+                Thread.currentThread().interrupt();
 			}
 		}
 		final PlayingStatus response = new PlayingStatus();
