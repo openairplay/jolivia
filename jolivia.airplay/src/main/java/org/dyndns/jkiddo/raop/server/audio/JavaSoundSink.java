@@ -312,6 +312,19 @@ public class JavaSoundSink implements SampleClock
 		{
 			return m_lineEndTime;
 		}
+
+        private synchronized void mute()
+        {
+            if(m_currentGain > Float.MIN_VALUE)
+                setJavaSoundLineGain(Float.MIN_VALUE);
+        }
+
+        private synchronized void unmute()
+        {
+            if(m_currentGain == Float.MIN_VALUE)
+                setJavaSoundLineGain(m_requestedGain);
+        }
+
 	}
 
 	public JavaSoundSink(final double sampleRate, int channels, SampleSource sampleSource) throws InterruptedException
@@ -426,15 +439,4 @@ public class JavaSoundSink implements SampleClock
 		m_currentGain = gain;
 	}
 
-	private synchronized void mute()
-	{
-		if(m_currentGain > Float.MIN_VALUE)
-			setJavaSoundLineGain(Float.MIN_VALUE);
-	}
-
-	private synchronized void unmute()
-	{
-		if(m_currentGain == Float.MIN_VALUE)
-			setJavaSoundLineGain(m_requestedGain);
-	}
 }
