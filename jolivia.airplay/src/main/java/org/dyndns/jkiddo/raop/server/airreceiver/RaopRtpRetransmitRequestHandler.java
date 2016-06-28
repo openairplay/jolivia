@@ -415,7 +415,7 @@ public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandle
 		final long d = sequenceDistance(a, b);
 		if(d < 0x8000)
 			return d;
-		return(d - 0x10000);
+		return d - 0x10000;
 	}
 
 	/**

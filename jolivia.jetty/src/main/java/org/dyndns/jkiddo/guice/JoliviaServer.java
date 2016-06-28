@@ -106,7 +106,7 @@ public class JoliviaServer extends GuiceServletContextListener
 
 	private ImmutableSet<MDNSResource> getMDNSResources()
 	{
-		final Builder<MDNSResource> set = ImmutableSet.<MDNSResource> builder().add((MDNSResource) injector.getInstance(IImageLibrary.class)).add((MDNSResource) injector.getInstance(IMusicLibrary.class)).add((MDNSResource) injector.getInstance(ITouchRemoteResource.class)).add((MDNSResource) injector.getInstance(ITouchAbleServerResource.class)).add((injector.getInstance(RAOPResourceWrapper.class)));
+		final Builder<MDNSResource> set = ImmutableSet.<MDNSResource> builder().add((MDNSResource) injector.getInstance(IImageLibrary.class)).add((MDNSResource) injector.getInstance(IMusicLibrary.class)).add((MDNSResource) injector.getInstance(ITouchRemoteResource.class)).add((MDNSResource) injector.getInstance(ITouchAbleServerResource.class)).add(injector.getInstance(RAOPResourceWrapper.class));
 		if(homeSharing != null)
 			return set.add(homeSharing).build();
 		else

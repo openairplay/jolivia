@@ -51,7 +51,7 @@ public abstract class RaopRtpPacket extends RtpPacket
 	 */
 	public static long getBeUInt(final ChannelBuffer buffer, final int index)
 	{
-		return(((buffer.getByte(index + 0) & 0xffL) << 24) | ((buffer.getByte(index + 1) & 0xffL) << 16) | ((buffer.getByte(index + 2) & 0xffL) << 8) | ((buffer.getByte(index + 3) & 0xffL) << 0));
+		return((buffer.getByte(index + 0) & 0xffL) << 24) | ((buffer.getByte(index + 1) & 0xffL) << 16) | ((buffer.getByte(index + 2) & 0xffL) << 8) | ((buffer.getByte(index + 3) & 0xffL) << 0);
 	}
 
 	/**

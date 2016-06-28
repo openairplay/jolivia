@@ -79,7 +79,7 @@ public class Speaker
 
 	public boolean isLocalSpeaker()
 	{
-		return (id.length == 0);
+		return id.length == 0;
 	}
 
 	public byte[] getId()

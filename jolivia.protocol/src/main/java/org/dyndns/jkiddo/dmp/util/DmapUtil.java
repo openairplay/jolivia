@@ -142,7 +142,7 @@ public final class DmapUtil
 			throw new IllegalArgumentException("content code must have 4 characters!");
 		}
 
-		return ((contentCode.charAt(0) & 0xFF) << 24) | ((contentCode.charAt(1) & 0xFF) << 16) | ((contentCode.charAt(2) & 0xFF) << 8) | ((contentCode.charAt(3) & 0xFF));
+		return ((contentCode.charAt(0) & 0xFF) << 24) | ((contentCode.charAt(1) & 0xFF) << 16) | ((contentCode.charAt(2) & 0xFF) << 8) | (contentCode.charAt(3) & 0xFF);
 	}
 
 	/**
