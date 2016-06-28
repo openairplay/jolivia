@@ -54,7 +54,7 @@ import com.j256.ormlite.table.TableUtils;
 
 public class MusicItemManager implements IItemManager
 {
-	private static final Logger logger = LoggerFactory.getLogger(MusicItemManager.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(MusicItemManager.class);
 
 	private final IMusicStoreReader reader;
 	// private final Map<MediaItem, IMusicItem> itemToIMusicItem;

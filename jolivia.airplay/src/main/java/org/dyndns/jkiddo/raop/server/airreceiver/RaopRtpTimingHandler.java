@@ -28,7 +28,7 @@ import org.jboss.netty.channel.*;
  */
 public class RaopRtpTimingHandler extends SimpleChannelHandler
 {
-	private static Logger s_logger = Logger.getLogger(RaopRtpTimingHandler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(RaopRtpTimingHandler.class.getName());
 
 	/**
 	 * Number of seconds between {@link TimingRequest}s.
@@ -102,7 +102,7 @@ public class RaopRtpTimingHandler extends SimpleChannelHandler
 			m_synchronizationThread.setDaemon(true);
 			m_synchronizationThread.setName("Time Synchronizer");
 			m_synchronizationThread.start();
-			s_logger.fine("Time synchronizer started");
+			LOGGER.fine("Time synchronizer started");
 		}
 
 		super.channelOpen(ctx, evt);
@@ -153,7 +153,7 @@ public class RaopRtpTimingHandler extends SimpleChannelHandler
 		m_remoteSecondsOffset.add(remoteSecondsOffset, weight);
 		final double secondsTimeAdjustment = m_remoteSecondsOffset.get() - remoteSecondsOffsetPrevious;
 
-		s_logger.finest("Timing response with weight " + weight + " indicated offset " + remoteSecondsOffset + " thereby adjusting the averaged offset by " + secondsTimeAdjustment + " leading to the new averaged offset " + m_remoteSecondsOffset.get());
+		LOGGER.finest("Timing response with weight " + weight + " indicated offset " + remoteSecondsOffset + " thereby adjusting the averaged offset by " + secondsTimeAdjustment + " leading to the new averaged offset " + m_remoteSecondsOffset.get());
 	}
 
 	private synchronized void syncReceived(final RaopRtpPacket.Sync syncPacket)
@@ -171,7 +171,7 @@ public class RaopRtpTimingHandler extends SimpleChannelHandler
 			 * If the times aren't yet synchronized, we simply assume the sync packet's transmission time is zero.
 			 */
 			m_audioClock.setFrameTime(syncPacket.getTimeStampMinusLatency(), 0.0);
-			s_logger.warning("Times synchronized, cannot correct latency of sync packet");
+			LOGGER.warning("Times synchronized, cannot correct latency of sync packet");
 		}
 	}
 

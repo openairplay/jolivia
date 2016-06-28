@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 public abstract class UIntChunk extends AbstractChunk implements IntChunk
 {
 
-	private static final Logger logger = LoggerFactory.getLogger(UIntChunk.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(UIntChunk.class);
 
 	public static final long MIN_VALUE = 0l;
 	public static final long MAX_VALUE = 0xFFFFFFFFl;
@@ -85,7 +85,7 @@ public abstract class UIntChunk extends AbstractChunk implements IntChunk
 	{
 		if(value < MIN_VALUE || value > MAX_VALUE)
 		{
-			logger.error("Value is outside of unsigned int range: " + value);
+			LOGGER.error("Value is outside of unsigned int range: " + value);
 		}
 		return value;
 	}

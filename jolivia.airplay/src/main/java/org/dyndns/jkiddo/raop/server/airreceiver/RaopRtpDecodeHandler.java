@@ -28,7 +28,7 @@ import org.jboss.netty.handler.codec.oneone.OneToOneDecoder;
  */
 public class RaopRtpDecodeHandler extends OneToOneDecoder
 {
-	private static final Logger s_logger = Logger.getLogger(RaopRtpDecodeHandler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(RaopRtpDecodeHandler.class.getName());
 
 	@Override
 	protected Object decode(final ChannelHandlerContext ctx, final Channel channel, final Object msg) throws Exception
@@ -43,7 +43,7 @@ public class RaopRtpDecodeHandler extends OneToOneDecoder
 			}
 			catch(final InvalidPacketException e1)
 			{
-				s_logger.warning(e1.getMessage());
+				LOGGER.warning(e1.getMessage());
 				return buffer;
 			}
 		}

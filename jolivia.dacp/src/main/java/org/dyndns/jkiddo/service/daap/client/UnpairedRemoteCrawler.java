@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class UnpairedRemoteCrawler implements IDiscoverer {
-	public static final Logger logger = LoggerFactory
+	private static final Logger LOGGER = LoggerFactory
 			.getLogger(UnpairedRemoteCrawler.class);
 
 	public static final String SERVICE_PORT_NAME = "SERVICE_PORT_NAME";
@@ -51,19 +51,19 @@ public class UnpairedRemoteCrawler implements IDiscoverer {
 
 	@Override
 	public void serviceAdded(final ServiceEvent event) {
-		logger.info("ADD: "
+		LOGGER.info("ADD: "
 				+ event.getDNS().getServiceInfo(event.getType(),
 						event.getName()));
 	}
 
 	@Override
 	public void serviceRemoved(final ServiceEvent event) {
-		logger.debug("REMOVE: " + event.getName());
+		LOGGER.debug("REMOVE: " + event.getName());
 	}
 
 	@Override
 	public void serviceResolved(final ServiceEvent event) {
-		logger.info("ADD: "
+		LOGGER.info("ADD: "
 				+ event.getDNS().getServiceInfo(event.getType(),
 						event.getName()));
 
@@ -100,7 +100,7 @@ public class UnpairedRemoteCrawler implements IDiscoverer {
 	public void inetAddressAdded(final NetworkTopologyEvent event) {
 		final JmDNS mdns = event.getDNS();
 		final InetAddress address = event.getInetAddress();
-		logger.info("Registered PairedRemoteDiscoverer @ "
+		LOGGER.info("Registered PairedRemoteDiscoverer @ "
 				+ address.getHostAddress());
 		mdns.addServiceListener(ITouchRemoteResource.TOUCH_REMOTE_CLIENT, this);
 		interfaces.put(mdns, address);

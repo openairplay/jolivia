@@ -60,7 +60,7 @@ import com.google.common.collect.Lists;
  */
 public class RemoteControl
 {
-	public static final Logger logger = LoggerFactory.getLogger(RemoteControl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RemoteControl.class);
 
 	private final Session session;
 
@@ -258,7 +258,7 @@ public class RemoteControl
 		}
 		catch(final IOException e)
 		{
-			logger.debug(e.getMessage(), e);
+			LOGGER.debug(e.getMessage(), e);
 			return getNowPlaying();
 		}
 	}
@@ -299,7 +299,7 @@ public class RemoteControl
 	{
 		if(volume > 100 || volume < 0)
 		{
-			logger.debug("Volume should be in the range 0 to 100");
+			LOGGER.debug("Volume should be in the range 0 to 100");
 		}
 		// http://192.168.254.128:3689/ctrl-int/1/setproperty?dmcp.volume=100.000000&session-id=130883770
 		RequestHelper.dispatch(String.format("%s/ctrl-int/1/setproperty?dmcp.volume=%s&session-id=%s", session.getRequestBase(), volume, session.getSessionId()));

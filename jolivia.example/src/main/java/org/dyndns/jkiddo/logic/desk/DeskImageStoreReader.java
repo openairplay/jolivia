@@ -28,7 +28,7 @@ public class DeskImageStoreReader implements IImageStoreReader
 	 * 
 	 */
 	private static final long serialVersionUID = -3205613907987224359L;
-	private static final Logger logger = LoggerFactory.getLogger(DeskImageStoreReader.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DeskImageStoreReader.class);
 	private Map<IImageItem, File> mapOfImageToFile;
 	private String path;
 
@@ -78,7 +78,7 @@ public class DeskImageStoreReader implements IImageStoreReader
 				}
 			}
 			else
-				logger.debug("Symlink'ish ... " + f.getAbsolutePath());
+				LOGGER.debug("Symlink'ish ... " + f.getAbsolutePath());
 		}
 		else if(isImage(f))
 		{
@@ -138,7 +138,7 @@ public class DeskImageStoreReader implements IImageStoreReader
 	{
 		if(image != null)
 		{
-			logger.debug("Serving " + image.getImageFilename());
+			LOGGER.debug("Serving " + image.getImageFilename());
 		}
 		return mapOfImageToFile.get(image).toURI();
 	}

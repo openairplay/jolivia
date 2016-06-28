@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
 public class DmapInputStream extends BufferedInputStream
 {
 
-	private static final Logger logger = LoggerFactory.getLogger(DmapInputStream.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DmapInputStream.class);
 
 	private ChunkFactory factory;
 
@@ -240,7 +240,7 @@ public class DmapInputStream extends BufferedInputStream
 					}
 					catch(final ProtocolViolationException pve)
 					{
-						logger.warn(pve.getMessage(), pve);
+						LOGGER.warn(pve.getMessage(), pve);
 						in.skip(in.getChunkContentLength());
 					}
 					//
@@ -264,13 +264,13 @@ public class DmapInputStream extends BufferedInputStream
 	 */
 	private static void checkLength(final Chunk chunk, final int expected, final int length)
 	{
-		if (expected != length && logger.isWarnEnabled())
+		if (expected != length && LOGGER.isWarnEnabled())
 		{
 			// throw new IOException("Expected a chunk with length " + expected
 			// + " but got " + length + " (" + chunk.getContentCodeString() +
 			// ")");
 
-			logger.warn("Expected a chunk with length " + expected + " but got " + length + " (" + chunk.getContentCodeString() + ") " + chunk.getClass());
+			LOGGER.warn("Expected a chunk with length " + expected + " but got " + length + " (" + chunk.getContentCodeString() + ") " + chunk.getClass());
 		}
 	}
 }

@@ -32,7 +32,7 @@ import javax.crypto.CipherSpi;
 
 public final class AirTunesCrytography
 {
-	private static final Logger s_logger = Logger.getLogger(AirTunesCrytography.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(AirTunesCrytography.class.getName());
 
 	/**
 	 * The JCA/JCE Provider who supplies the necessary cryptographic algorithms
@@ -132,7 +132,7 @@ public final class AirTunesCrytography
 
 			/* Create a {@link javax.crypto.Cipher} instance from the {@link javax.crypto.CipherSpi} the provider gave us */
 
-			s_logger.info("Using SPI " + cipherSpi.getClass() + " for " + transformation);
+			LOGGER.info("Using SPI " + cipherSpi.getClass() + " for " + transformation);
 			return getCipher(cipherSpi, transformation.toUpperCase());
 		}
 		catch(final RuntimeException e)

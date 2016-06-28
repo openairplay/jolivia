@@ -52,7 +52,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 	/**
 	 * 
 	 */
-	private static final Logger logger = LoggerFactory.getLogger(DeskMusicStoreReader.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DeskMusicStoreReader.class);
 	private Collection<MediaItem> mapOfSongToFile;
 	private final File path;
 	private final Parser parser;
@@ -86,7 +86,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 		catch(final Exception e)
 		{
-			logger.info(e.getMessage(), e);
+			LOGGER.info(e.getMessage(), e);
 		}
 		return mapOfSongToFile;
 	}
@@ -103,7 +103,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 				}
 			}
 			else
-				logger.debug("Symlink'ish ... " + f.getAbsolutePath());
+				LOGGER.debug("Symlink'ish ... " + f.getAbsolutePath());
 		}
 		else if(isMusic(f))
 		{
@@ -131,7 +131,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 		catch(final Exception e)
 		{
-			logger.debug(e.getMessage(), e);
+			LOGGER.debug(e.getMessage(), e);
 		}
 		song.setSongAlbum(metadata.get(XMPDM.ALBUM));
 		song.setSongArtist(metadata.get(XMPDM.ARTIST));
@@ -143,7 +143,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 		catch(final Exception e)
 		{
-			logger.debug(e.getMessage(), e);
+			LOGGER.debug(e.getMessage(), e);
 		}
 		try
 		{
@@ -153,7 +153,7 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		}
 		catch(final Exception e)
 		{
-			logger.debug(e.getMessage(), e);
+			LOGGER.debug(e.getMessage(), e);
 		}
 		song.setExternalIdentifer(file.getAbsolutePath());
 		return song;

@@ -29,14 +29,14 @@ import org.jboss.netty.handler.codec.rtsp.RtspVersions;
  */
 public class RtspUnsupportedResponseHandler extends SimpleChannelUpstreamHandler
 {
-	private static Logger s_logger = Logger.getLogger(RtspUnsupportedResponseHandler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(RtspUnsupportedResponseHandler.class.getName());
 
 	@Override
 	public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent evt) throws Exception
 	{
 		final HttpRequest req = (HttpRequest) evt.getMessage();
 
-		s_logger.warning("Method " + req.getMethod() + " is not supported");
+		LOGGER.warning("Method " + req.getMethod() + " is not supported");
 
 		final HttpResponse response = new DefaultHttpResponse(RtspVersions.RTSP_1_0, RtspResponseStatuses.METHOD_NOT_VALID);
 		ctx.getChannel().write(response);

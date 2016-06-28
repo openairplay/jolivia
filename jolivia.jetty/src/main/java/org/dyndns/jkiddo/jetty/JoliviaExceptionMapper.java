@@ -25,12 +25,12 @@ import com.sun.jersey.core.spi.factory.ResponseBuilderImpl;
 @Singleton
 public class JoliviaExceptionMapper implements ExceptionMapper<Throwable>
 {
-	private final static Logger logger = LoggerFactory.getLogger(JoliviaExceptionMapper.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JoliviaExceptionMapper.class);
 
 	@Override
 	public Response toResponse(Throwable exception)
 	{
-		logger.warn(exception.getMessage(), exception);
+		LOGGER.warn(exception.getMessage(), exception);
 		return new ResponseBuilderImpl().status(Status.INTERNAL_SERVER_ERROR).build();
 	}
 }

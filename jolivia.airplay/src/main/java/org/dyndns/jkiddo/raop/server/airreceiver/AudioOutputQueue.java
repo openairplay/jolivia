@@ -34,7 +34,7 @@ import javax.sound.sampled.SourceDataLine;
  */
 public class AudioOutputQueue implements AudioClock
 {
-	private static Logger s_logger = Logger.getLogger(AudioOutputQueue.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(AudioOutputQueue.class.getName());
 
 	private static final double QueueLengthMaxSeconds = 10;
 	private static final double BufferSizeSeconds = 0.05;
@@ -151,7 +151,7 @@ public class AudioOutputQueue implements AudioClock
 						if(gapFrames < -m_packetSizeFrames)
 						{
 							/* Too late for playback */
-							s_logger.warning("Audio data was scheduled for playback " + (-gapFrames) + " frames ago, skipping");
+							LOGGER.warning("Audio data was scheduled for playback " + (-gapFrames) + " frames ago, skipping");
 
 							m_queue.remove(entryFrameTime);
 							continue;
@@ -164,7 +164,7 @@ public class AudioOutputQueue implements AudioClock
 							/* Unmute line in case it was muted previously */
 							if(lineMuted)
 							{
-								s_logger.info("Audio data available, un-muting line");
+								LOGGER.info("Audio data available, un-muting line");
 
 								lineMuted = false;
 								applyGain();
@@ -179,13 +179,13 @@ public class AudioOutputQueue implements AudioClock
 							int nextPlaybackSamplesLength = nextPlaybackSamples.length;
 							if(nextPlaybackSamplesLength % m_bytesPerFrame != 0)
 							{
-								s_logger.severe("Audio data contains non-integral number of frames, ignore last " + (nextPlaybackSamplesLength % m_bytesPerFrame) + " bytes");
+								LOGGER.severe("Audio data contains non-integral number of frames, ignore last " + (nextPlaybackSamplesLength % m_bytesPerFrame) + " bytes");
 
 								nextPlaybackSamplesLength -= nextPlaybackSamplesLength % m_bytesPerFrame;
 							}
 
 							/* Append packet to line */
-							s_logger.finest("Audio data containing " + nextPlaybackSamplesLength / m_bytesPerFrame + " frames for playback time " + entryFrameTime + " found in queue, appending to the output line");
+							LOGGER.finest("Audio data containing " + nextPlaybackSamplesLength / m_bytesPerFrame + " frames for playback time " + entryFrameTime + " found in queue, appending to the output line");
 							appendFrames(nextPlaybackSamples, 0, nextPlaybackSamplesLength, entryLineTime);
 							continue;
 						}
@@ -196,7 +196,7 @@ public class AudioOutputQueue implements AudioClock
 							if(!didWarnGap)
 							{
 								didWarnGap = true;
-								s_logger.warning("Audio data missing for frame time " + getNextLineTime() + " (currently " + gapFrames + " frames), writing " + m_packetSizeFrames + " frames of silence");
+								LOGGER.warning("Audio data missing for frame time " + getNextLineTime() + " (currently " + gapFrames + " frames), writing " + m_packetSizeFrames + " frames of silence");
 							}
 						}
 					}
@@ -208,7 +208,7 @@ public class AudioOutputQueue implements AudioClock
 						{
 							lineMuted = true;
 							setLineGain(Float.NEGATIVE_INFINITY);
-							s_logger.fine("Audio data ended at frame time " + getNextLineTime() + ", writing " + m_packetSizeFrames + " frames of silence and muted line");
+							LOGGER.fine("Audio data ended at frame time " + getNextLineTime() + ", writing " + m_packetSizeFrames + " frames of silence and muted line");
 						}
 					}
 
@@ -222,7 +222,7 @@ public class AudioOutputQueue implements AudioClock
 			}
 			catch(final Throwable e)
 			{
-				s_logger.log(Level.SEVERE, "Audio output thread died unexpectedly", e);
+				LOGGER.log(Level.SEVERE, "Audio output thread died unexpectedly", e);
 			}
 			finally
 			{
@@ -269,7 +269,7 @@ public class AudioOutputQueue implements AudioClock
 				else if(timingErrorFrames > 0)
 				{
 					/* Samples to append scheduled after the line end. Fill the gap with silence */
-					s_logger.warning("Audio output non-continous (gap of " + timingErrorFrames + " frames), filling with silence");
+					LOGGER.warning("Audio output non-continous (gap of " + timingErrorFrames + " frames), filling with silence");
 
 					appendSilence((int) (lineTime - endLineTime));
 				}
@@ -278,7 +278,7 @@ public class AudioOutputQueue implements AudioClock
 					/*
 					 * Samples to append scheduled before the line end. Remove the overlapping part and retry
 					 */
-					s_logger.warning("Audio output non-continous (overlap of " + (-timingErrorFrames) + "), skipping overlapping frames");
+					LOGGER.warning("Audio output non-continous (overlap of " + (-timingErrorFrames) + "), skipping overlapping frames");
 
 					off += (endLineTime - lineTime) * m_bytesPerFrame;
 					lineTime += endLineTime - lineTime;
@@ -334,7 +334,7 @@ public class AudioOutputQueue implements AudioClock
 			/* Write samples to line */
 			final int bytesWritten = m_line.write(samplesConverted, 0, samplesConverted.length);
 			if(bytesWritten != len)
-				s_logger.warning("Audio output line accepted only " + bytesWritten + " bytes of sample data while trying to write " + samples.length + " bytes");
+				LOGGER.warning("Audio output line accepted only " + bytesWritten + " bytes of sample data while trying to write " + samples.length + " bytes");
 
 			/* Update state */
 			synchronized(AudioOutputQueue.this)
@@ -343,7 +343,7 @@ public class AudioOutputQueue implements AudioClock
 				for(int b = 0; b < m_bytesPerFrame; ++b)
 					m_lineLastFrame[b] = samples[off + len - (m_bytesPerFrame - b)];
 
-				s_logger.finest("Audio output line end is now at " + getNextLineTime() + " after writing " + len / m_bytesPerFrame + " frames");
+				LOGGER.finest("Audio output line end is now at " + getNextLineTime() + " after writing " + len / m_bytesPerFrame + " frames");
 			}
 		}
 
@@ -358,7 +358,7 @@ public class AudioOutputQueue implements AudioClock
                 final FloatControl gainControl = (FloatControl) m_line.getControl(FloatControl.Type.MASTER_GAIN);
                 return gainControl.getValue();
             }
-            s_logger.severe("Audio output line doesn not support volume control");
+            LOGGER.severe("Audio output line doesn not support volume control");
             return 0.0f;
         }
 
@@ -387,7 +387,7 @@ public class AudioOutputQueue implements AudioClock
                     gainControl.setValue(gain);
             }
             else
-                s_logger.severe("Audio output line doesn not support volume control");
+                LOGGER.severe("Audio output line doesn not support volume control");
         }
 
 	}
@@ -426,7 +426,7 @@ public class AudioOutputQueue implements AudioClock
 		final DataLine.Info lineInfo = new DataLine.Info(SourceDataLine.class, m_format, desiredBufferSize);
 		m_line = (SourceDataLine) AudioSystem.getLine(lineInfo);
 		m_line.open(m_format, desiredBufferSize);
-		s_logger.info("Audio output line created and openend. Requested buffer of " + desiredBufferSize / m_bytesPerFrame + " frames, got " + m_line.getBufferSize() / m_bytesPerFrame + " frames");
+		LOGGER.info("Audio output line created and openend. Requested buffer of " + desiredBufferSize / m_bytesPerFrame + " frames, got " + m_line.getBufferSize() / m_bytesPerFrame + " frames");
 
 		/*
 		 * Start enqueuer thread and wait for the line to start. The wait guarantees that the AudioClock functions return sensible values right after construction
@@ -497,7 +497,7 @@ public class AudioOutputQueue implements AudioClock
 		if(delay < -packetSeconds)
 		{
 			/* The whole packet is scheduled to be played in the past */
-			s_logger.warning("Audio data arrived " + -(delay) + " seconds too late, dropping");
+			LOGGER.warning("Audio data arrived " + -(delay) + " seconds too late, dropping");
 			return false;
 		}
 		else if(delay > QueueLengthMaxSeconds)
@@ -505,7 +505,7 @@ public class AudioOutputQueue implements AudioClock
 			/*
 			 * The packet extends further into the future that our maximum queue size. We reject it, since this is probably the result of some timing discrepancies
 			 */
-			s_logger.warning("Audio data arrived " + delay + " seconds too early, dropping");
+			LOGGER.warning("Audio data arrived " + delay + " seconds too early, dropping");
 			return false;
 		}
 
@@ -530,7 +530,7 @@ public class AudioOutputQueue implements AudioClock
 		final long frameTimeOffsetPrevious = m_frameTimeOffset;
 		m_frameTimeOffset = frameTime - lineTime;
 
-		s_logger.fine("Frame time adjusted by " + (m_frameTimeOffset - frameTimeOffsetPrevious) + " based on timing information " + ageSeconds + " seconds old and " + (m_latestSeenFrameTime - frameTime) + " frames before latest seen frame time");
+		LOGGER.fine("Frame time adjusted by " + (m_frameTimeOffset - frameTimeOffsetPrevious) + " based on timing information " + ageSeconds + " seconds old and " + (m_latestSeenFrameTime - frameTime) + " frames before latest seen frame time");
 	}
 
 	@Override

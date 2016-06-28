@@ -67,7 +67,7 @@ import com.google.common.collect.Lists;
 
 public class Session
 {
-	public final static Logger logger = LoggerFactory.getLogger(Session.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Session.class);
 
 	private final String host;
 	private long revision = 1;
@@ -92,7 +92,7 @@ public class Session
 
 		getServerInfo();
 
-		logger.debug(String.format("trying login for host=%s", host));
+		LOGGER.debug(String.format("trying login for host=%s", host));
 		final NSDictionary nsDic = Util.requestPList(username, password);
 		homeSharingGid = "&hsgid=" + ((NSString) nsDic.get("sgid")).getContent();
 		final LoginResponse loginResponse = doLoginWithHomeSharingGid(((NSString) nsDic.get("sgid")).getContent());
@@ -135,7 +135,7 @@ public class Session
 		getServerInfo();
 
 		// http://192.168.254.128:3689/login?pairing-guid=0x0000000000000001
-		logger.debug(String.format("trying login for host=%s and guid=%s", host, pairingGuid));
+		LOGGER.debug(String.format("trying login for host=%s and guid=%s", host, pairingGuid));
 		final LoginResponse loginResponse = doLogin(pairingGuid);
 
 		sessionId = loginResponse.getSessionId().getValue();
@@ -200,7 +200,7 @@ public class Session
 		}
 		catch(final NoSuchElementException nee)
 		{
-			logger.debug("No radio databases found", nee);
+			LOGGER.debug("No radio databases found", nee);
 			return null;
 		}
 

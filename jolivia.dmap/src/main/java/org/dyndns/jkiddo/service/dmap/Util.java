@@ -48,7 +48,7 @@ public class Util
 {
 	public static final String APPLICATION_NAME = "APPLICATION_NAME";
 	public static final String APPLICATION_X_DMAP_TAGGED = "application/x-dmap-tagged";
-	private static final Logger logger = LoggerFactory.getLogger(Util.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Util.class);
 
 	private static final int PARTIAL_CONTENT = 206;
 
@@ -212,7 +212,7 @@ public class Util
 					final byte[] ifaceMacAddress = iface.getHardwareAddress();
 					if((ifaceMacAddress != null) && (ifaceMacAddress.length == 6) && !isBlockedHardwareAddress(ifaceMacAddress))
 					{
-						logger.info("Hardware address is " + toHexString(ifaceMacAddress) + " (" + iface.getDisplayName() + ")");
+						LOGGER.info("Hardware address is " + toHexString(ifaceMacAddress) + " (" + iface.getDisplayName() + ")");
 						return Arrays.copyOfRange(ifaceMacAddress, 0, 6);
 					}
 				}
@@ -231,7 +231,7 @@ public class Util
 		try
 		{
 			final byte[] hostAddress = Arrays.copyOfRange(InetAddress.getLocalHost().getAddress(), 0, 6);
-			logger.info("Hardware address is " + toHexString(hostAddress) + " (IP address)");
+			LOGGER.info("Hardware address is " + toHexString(hostAddress) + " (IP address)");
 			return hostAddress;
 		}
 		catch(final Throwable e)
@@ -240,7 +240,7 @@ public class Util
 		}
 
 		/* Fallback to a constant */
-		logger.info("Hardware address is 00DEADBEEF00 (last resort)");
+		LOGGER.info("Hardware address is 00DEADBEEF00 (last resort)");
 		return new byte[] { (byte) 0x00, (byte) 0xDE, (byte) 0xAD, (byte) 0xBE, (byte) 0xEF, (byte) 0x00 };
 	}
 

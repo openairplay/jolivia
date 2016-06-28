@@ -14,7 +14,7 @@ import org.dyndns.jkiddo.raop.client.command.DeviceCommand;
  */
 public class DeviceConnection
 {
-	private static Logger logger = Logger.getLogger(DeviceConnection.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(DeviceConnection.class.getName());
 
 	private final Device device;
 	private Socket socket;
@@ -49,7 +49,7 @@ public class DeviceConnection
 			}
 			catch(IOException e)
 			{
-				logger.log(Level.SEVERE, e.getMessage(), e);
+				LOGGER.log(Level.SEVERE, e.getMessage(), e);
 				throw new RuntimeException(e.getMessage(), e);
 			}
 		}
@@ -99,7 +99,7 @@ public class DeviceConnection
 		}
 		catch(IOException e)
 		{
-			logger.log(Level.SEVERE, e.getMessage(), e);
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new RuntimeException(e.getMessage(), e);
 		}
 	}

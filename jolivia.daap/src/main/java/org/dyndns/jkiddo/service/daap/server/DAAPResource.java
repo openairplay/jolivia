@@ -66,7 +66,7 @@ import com.google.common.collect.Iterables;
 @Consumes(MediaType.WILDCARD)
 // @Produces(MediaType.WILDCARD)
 public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLibrary {
-	private static final Logger logger = LoggerFactory.getLogger(DAAPResource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(DAAPResource.class);
 
 	public static final String DAAP_PORT_NAME = "DAAP_PORT_NAME";
 	public static final String DAAP_RESOURCE = "DAAP_IMPLEMENTATION";
