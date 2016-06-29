@@ -113,8 +113,8 @@ public class DmapInputStream extends BufferedInputStream
 		long v = read();
 		v = v << 24;
 		long v2,v3,v4;
-		v2 = (read() << 16);
-		v3 = (read() << 8);
+		v2 = read() << 16;
+		v3 = read() << 8;
 		v4 = read();
 		v = v | v2 | v3 | v4;
 		return  v;

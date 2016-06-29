@@ -37,7 +37,7 @@ public abstract class BooleanChunk extends UByteChunk
 
 	public BooleanChunk(final String type, final String name, final boolean value)
 	{
-		super(type, name, (value ? 1 : 0));
+		super(type, name, value ? 1 : 0);
 	}
 
 	public boolean getBooleanValue()

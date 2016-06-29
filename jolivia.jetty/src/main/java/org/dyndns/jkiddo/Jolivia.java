@@ -382,7 +382,7 @@ public class Jolivia {
 
 		/* Create tray icon */
 		final URL trayIconUrl = Thread.currentThread().getContextClassLoader().getResource("Ceres.png");
-		final TrayIcon trayIcon1 = new TrayIcon((new ImageIcon(trayIconUrl, "AirReceiver").getImage()));
+		final TrayIcon trayIcon1 = new TrayIcon(new ImageIcon(trayIconUrl, "AirReceiver").getImage());
 		trayIcon1.setToolTip("Jolivia");
 		trayIcon1.setImageAutoSize(true);
 		final PopupMenu popupMenu = new PopupMenu();

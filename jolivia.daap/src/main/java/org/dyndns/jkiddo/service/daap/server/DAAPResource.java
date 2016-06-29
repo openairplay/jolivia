@@ -215,7 +215,7 @@ public class DAAPResource extends DMAPResource<IItemManager> implements IMusicLi
 				end = Long.parseLong(rangesToken.nextToken().trim());
 		}
 
-		return (new long[] { position, end });
+		return new long[] { position, end };
 	}
 
 	@Override

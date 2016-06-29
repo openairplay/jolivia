@@ -332,7 +332,7 @@ public class Window
 			{
 				throw new Exception("No image found");
 			}
-			TrayIcon trayIcon = new TrayIcon((new ImageIcon(trayIconUrl, "Jolivia").getImage()));
+			TrayIcon trayIcon = new TrayIcon(new ImageIcon(trayIconUrl, "Jolivia").getImage());
 			trayIcon.setToolTip("Jolivia");
 			trayIcon.setImageAutoSize(true);
 			final PopupMenu popupMenu = new PopupMenu();

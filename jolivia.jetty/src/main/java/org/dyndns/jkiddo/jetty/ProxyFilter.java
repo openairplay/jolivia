@@ -53,7 +53,7 @@ public class ProxyFilter implements Filter
 		while(headerNames.hasMoreElements())
 		{
 			final String headerName = headerNames.nextElement();
-			logger.info((headerName + ": " + httpServletRequest.getHeader(headerName)));
+			logger.info(headerName + ": " + httpServletRequest.getHeader(headerName));
 		}
 
 		logger.info(httpServletRequest.getRequestURI() + queryString);

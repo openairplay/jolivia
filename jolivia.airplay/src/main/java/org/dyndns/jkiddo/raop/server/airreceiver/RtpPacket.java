@@ -197,7 +197,7 @@ public class RtpPacket
 	 */
 	public int getSequence()
 	{
-		return(((m_buffer.getByte(2) & 0xff) << 8) | ((m_buffer.getByte(3) & 0xff) << 0));
+		return ((m_buffer.getByte(2) & 0xff) << 8) | ((m_buffer.getByte(3) & 0xff) << 0);
 	}
 
 	/**

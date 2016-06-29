@@ -149,7 +149,7 @@ public class RaopRtpTimingHandler extends SimpleChannelHandler
 		final double weight = 1e-6 / (transmissionTime + 1e-3);
 
 		/* Update exponential average */
-		final double remoteSecondsOffsetPrevious = (!m_remoteSecondsOffset.isEmpty() ? m_remoteSecondsOffset.get() : 0.0);
+		final double remoteSecondsOffsetPrevious = !m_remoteSecondsOffset.isEmpty() ? m_remoteSecondsOffset.get() : 0.0;
 		m_remoteSecondsOffset.add(remoteSecondsOffset, weight);
 		final double secondsTimeAdjustment = m_remoteSecondsOffset.get() - remoteSecondsOffsetPrevious;
 
