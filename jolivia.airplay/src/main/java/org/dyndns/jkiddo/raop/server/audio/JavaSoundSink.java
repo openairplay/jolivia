@@ -25,7 +25,7 @@ import javax.sound.sampled.*;
 
 public class JavaSoundSink implements SampleClock
 {
-	private static Logger s_logger = Logger.getLogger(JavaSoundSink.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(JavaSoundSink.class.getName());
 
 	private static final double TimeOffset = 2208988800.0;
 
@@ -114,7 +114,7 @@ public class JavaSoundSink implements SampleClock
 								}
 								catch(InterruptedException e)
 								{
-									s_logger.log(Level.WARNING, "Java Sound line writer was interrupted during startup", e);
+									LOGGER.log(Level.WARNING, "Java Sound line writer was interrupted during startup", e);
                                     Thread.currentThread().interrupt();
 									throw new RuntimeException(e.getMessage(), e);
 								}
@@ -163,13 +163,13 @@ public class JavaSoundSink implements SampleClock
 						{
 							mute();
 							lineIsPaused = true;
-							s_logger.log(Level.INFO, "Audio output paused at " + m_lineEndTime);
+							LOGGER.log(Level.INFO, "Audio output paused at " + m_lineEndTime);
 						}
 						else
 						{
 							unmute();
 							lineIsPaused = false;
-							s_logger.log(Level.INFO, "Audio output resumed at " + m_lineEndTime);
+							LOGGER.log(Level.INFO, "Audio output resumed at " + m_lineEndTime);
 						}
 					}
 
@@ -194,13 +194,13 @@ public class JavaSoundSink implements SampleClock
 							{
 								unmute();
 								lineIsMuted = false;
-								s_logger.log(Level.WARNING, "Audio sample source resumed providing samples at " + m_lineEndTime + ", un-muted line");
+								LOGGER.log(Level.WARNING, "Audio sample source resumed providing samples at " + m_lineEndTime + ", un-muted line");
 							}
 							else
 							{
 								mute();
 								lineIsMuted = true;
-								s_logger.log(Level.WARNING, "Audio sample source stopped providing samples at " + m_lineEndTime + ", muted line");
+								LOGGER.log(Level.WARNING, "Audio sample source stopped providing samples at " + m_lineEndTime + ", muted line");
 							}
 						}
 					}
@@ -230,18 +230,18 @@ public class JavaSoundSink implements SampleClock
 					{
 						if(skipSamples >= sampleSourceBuffer.getDimensions().samples)
 						{
-							s_logger.warning("Audio output overlaps " + skipSamples + " samples, ignored buffer");
+							LOGGER.warning("Audio output overlaps " + skipSamples + " samples, ignored buffer");
 						}
 						else if(silenceSamples >= sampleSourceBuffer.getDimensions().samples)
 						{
-							s_logger.warning("Audio output has gap of " + silenceSamples + " samples, ignored buffer");
+							LOGGER.warning("Audio output has gap of " + silenceSamples + " samples, ignored buffer");
 						}
 						else
 						{
 							if(skipSamples > 0)
-								s_logger.warning("Audio output overlaps " + skipSamples + " samples, skipped samples");
+								LOGGER.warning("Audio output overlaps " + skipSamples + " samples, skipped samples");
 							if(silenceSamples > 0)
-								s_logger.warning("Audio output has gap of " + silenceSamples + " samples, filled with silence");
+								LOGGER.warning("Audio output has gap of " + silenceSamples + " samples, filled with silence");
 
 							advanceEndTime(write(sampleSourceBuffer.slice(new SampleOffset(0, skipSamples), sampleSourceBuffer.getDimensions().reduce(0, skipSamples))));
 						}

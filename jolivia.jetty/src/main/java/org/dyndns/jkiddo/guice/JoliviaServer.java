@@ -52,7 +52,7 @@ import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
 
 public class JoliviaServer extends GuiceServletContextListener
 {
-	private static final Logger logger = LoggerFactory.getLogger(JoliviaServer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(JoliviaServer.class);
 
 	private final String DB_NAME = "db";
 	private final Integer hostingPort;
@@ -82,9 +82,9 @@ public class JoliviaServer extends GuiceServletContextListener
 		System.setProperty("java.net.preferIPv6Addresses", "false");
 		h2server = Server.createWebServer(new String[] { "-webPort", "9123", "-webAllowOthers" });
 		h2server.start();
-		logger.info("h2 web server started on port http://" + InetAddress.getLocalHost().getHostName() + ":9123/");
-		logger.info("log in with empty username and password");
-		logger.info(databaseUrl);
+		LOGGER.info("h2 web server started on port http://" + InetAddress.getLocalHost().getHostName() + ":9123/");
+		LOGGER.info("log in with empty username and password");
+		LOGGER.info(databaseUrl);
 
 		this.hostingPort = port;
 		this.pairingCode = pairingCode;
@@ -182,7 +182,7 @@ public class JoliviaServer extends GuiceServletContextListener
 		}
 		catch(final IOException e)
 		{
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 		super.contextDestroyed(servletContextEvent);
 	}

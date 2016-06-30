@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 public class Library
 {
 
-	public final static Logger logger = LoggerFactory.getLogger(Library.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Library.class);
 
 	private final Session session;
 

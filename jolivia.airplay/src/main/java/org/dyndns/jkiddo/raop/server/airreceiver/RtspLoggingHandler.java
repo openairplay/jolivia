@@ -34,12 +34,12 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
  */
 public class RtspLoggingHandler extends SimpleChannelHandler
 {
-	private static final Logger s_logger = Logger.getLogger(RtspLoggingHandler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(RtspLoggingHandler.class.getName());
 
 	@Override
 	public void channelConnected(final ChannelHandlerContext ctx, final ChannelStateEvent e) throws Exception
 	{
-		s_logger.info("Client " + e.getChannel().getRemoteAddress() + " connected on " + e.getChannel().getLocalAddress());
+		LOGGER.info("Client " + e.getChannel().getRemoteAddress() + " connected on " + e.getChannel().getLocalAddress());
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class RtspLoggingHandler extends SimpleChannelHandler
 			final HttpRequest req = (HttpRequest) evt.getMessage();
 
 			final Level level = Level.FINE;
-			if(s_logger.isLoggable(level))
+			if(LOGGER.isLoggable(level))
 			{
 				final String content = req.getContent().toString(Charset.defaultCharset());
 
@@ -69,7 +69,7 @@ public class RtspLoggingHandler extends SimpleChannelHandler
 					s.append("\n");
 				}
 				s.append(content);
-				s_logger.log(Level.FINE, s.toString());
+				LOGGER.log(Level.FINE, s.toString());
 			}
 		}
 		catch(final Exception e)
@@ -86,7 +86,7 @@ public class RtspLoggingHandler extends SimpleChannelHandler
 		final HttpResponse resp = (HttpResponse) evt.getMessage();
 
 		final Level level = Level.FINE;
-		if(s_logger.isLoggable(level))
+		if(LOGGER.isLoggable(level))
 		{
 			final StringBuilder s = new StringBuilder();
 			s.append("<");
@@ -102,7 +102,7 @@ public class RtspLoggingHandler extends SimpleChannelHandler
 				s.append(header.getValue());
 				s.append("\n");
 			}
-			s_logger.log(Level.FINE, s.toString());
+			LOGGER.log(Level.FINE, s.toString());
 		}
 
 		super.writeRequested(ctx, evt);

@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class RemoteSpeakerDiscoverer implements IDiscoverer
 {
-	public static final Logger logger = LoggerFactory.getLogger(RemoteSpeakerDiscoverer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RemoteSpeakerDiscoverer.class);
 
 	private final JmmDNS mDNS;
 	private final Map<JmDNS, InetAddress> interfaces = new HashMap<JmDNS, InetAddress>();
@@ -48,13 +48,13 @@ public class RemoteSpeakerDiscoverer implements IDiscoverer
 	@Override
 	public void serviceAdded(ServiceEvent event)
 	{
-		logger.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
+		LOGGER.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
 	}
 
 	@Override
 	public void serviceRemoved(ServiceEvent event)
 	{
-		logger.debug("REMOVE: " + event.getName());
+		LOGGER.debug("REMOVE: " + event.getName());
 		this.speakerListener.removeAvailableSpeaker(event.getInfo().getServer(), event.getInfo().getPort());
 	}
 
@@ -62,7 +62,7 @@ public class RemoteSpeakerDiscoverer implements IDiscoverer
 	@Override
 	public void serviceResolved(ServiceEvent event)
 	{
-		logger.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
+		LOGGER.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
 		speakerListener.registerAvailableSpeaker(DeviceConnectionService.getConnection(new Device(event.getName(), event.getInfo().getInetAddress(), event.getInfo().getPort())));
 	}
 
@@ -71,7 +71,7 @@ public class RemoteSpeakerDiscoverer implements IDiscoverer
 	{
 		JmDNS mdns = event.getDNS();
 		InetAddress address = event.getInetAddress();
-		logger.info("Registered RemoteSpeakerDiscoverer @ " + address.getHostAddress());
+		LOGGER.info("Registered RemoteSpeakerDiscoverer @ " + address.getHostAddress());
 		mdns.addServiceListener(ISpeakerListener.RAOP_TYPE, this);
 		interfaces.put(mdns, address);
 	}

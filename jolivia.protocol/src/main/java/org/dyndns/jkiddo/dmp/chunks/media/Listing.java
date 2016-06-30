@@ -49,7 +49,7 @@ import org.dyndns.jkiddo.dmp.DMAPAnnotation;
 @DMAPAnnotation(type=DmapChunkDefinition.mlcl)
 public class Listing extends ContainerChunk
 {
-	public final static Logger logger = LoggerFactory.getLogger(Listing.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Listing.class);
 
 	public Listing()
 	{
@@ -88,7 +88,7 @@ public class Listing extends ContainerChunk
 		}
 		if(Iterables.size(filteredItems) > 1)
 		{
-			logger.info("Found more than one ListingItem fullfilling predicate - returning the first one");
+			LOGGER.info("Found more than one ListingItem fullfilling predicate - returning the first one");
 		}
 
 		return filteredItems.iterator().next();

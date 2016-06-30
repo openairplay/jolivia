@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class ZeroconfManagerImpl implements IZeroconfManager, NetworkTopologyListener
 {
-	private static final Logger logger = LoggerFactory.getLogger(ZeroconfManagerImpl.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ZeroconfManagerImpl.class);
 
 	private final JmmDNS mdns;
 	private javax.jmdns.ServiceInfo info;
@@ -51,7 +51,7 @@ public class ZeroconfManagerImpl implements IZeroconfManager, NetworkTopologyLis
 		}
 		catch(final IOException e)
 		{
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 

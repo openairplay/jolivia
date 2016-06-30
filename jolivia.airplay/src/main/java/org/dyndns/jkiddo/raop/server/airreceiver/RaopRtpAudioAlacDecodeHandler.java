@@ -32,7 +32,7 @@ import com.beatofthedrum.alacdecoder.*;
  */
 public class RaopRtpAudioAlacDecodeHandler extends OneToOneDecoder implements AudioStreamInformationProvider
 {
-	private static Logger s_logger = Logger.getLogger(RaopRtpAudioAlacDecodeHandler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(RaopRtpAudioAlacDecodeHandler.class.getName());
 
 	/*
 	 * There are the indices into the SDP format options at which the sessions appear
@@ -101,7 +101,7 @@ public class RaopRtpAudioAlacDecodeHandler extends OneToOneDecoder implements Au
 		m_alacFile.setinfo_86 = Integer.valueOf(formatOptions[FormatOption86]);
 		m_alacFile.setinfo_8a_rate = sampleRate;
 
-		s_logger.info("Created ALAC decode for options " + Arrays.toString(formatOptions));
+		LOGGER.info("Created ALAC decode for options " + Arrays.toString(formatOptions));
 	}
 
 	@Override
@@ -125,8 +125,8 @@ public class RaopRtpAudioAlacDecodeHandler extends OneToOneDecoder implements Au
 		/* decode_frame() returns the number of *bytes*, not samples! */
 		final int pcmSamplesLength = pcmSamplesBytes / 4;
 		final Level level = Level.FINEST;
-		if(s_logger.isLoggable(level))
-			s_logger.log(level, "Decoded " + alacBytes.length + " bytes of ALAC audio data to " + pcmSamplesLength + " PCM samples");
+		if(LOGGER.isLoggable(level))
+			LOGGER.log(level, "Decoded " + alacBytes.length + " bytes of ALAC audio data to " + pcmSamplesLength + " PCM samples");
 
 		/* Complain if the sender doesn't honour it's commitment */
 		if(pcmSamplesLength != m_samplesPerFrame)

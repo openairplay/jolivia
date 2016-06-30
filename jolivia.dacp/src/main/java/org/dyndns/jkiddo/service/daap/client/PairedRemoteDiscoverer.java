@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class PairedRemoteDiscoverer implements IDiscoverer
 {
-	public static final Logger logger = LoggerFactory.getLogger(PairedRemoteDiscoverer.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PairedRemoteDiscoverer.class);
 
 	private final IZeroconfManager mDNS;
 	private final IPairingDatabase database;
@@ -51,18 +51,18 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 	@Override
 	public void serviceAdded(final ServiceEvent event)
 	{
-		logger.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
+		LOGGER.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
 		//serviceResolved(event);
 	}
 
 	@Override
 	public void serviceRemoved(final ServiceEvent event)
 	{
-		logger.info("REMOVE: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
+		LOGGER.info("REMOVE: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
 		final String code = database.findCode(event.getInfo().getName());
 		if(code != null)
 		{
-			logger.debug("Unpairing ... ");
+			LOGGER.debug("Unpairing ... ");
 			this.clientSessionListener.tearDownSession(event.getInfo().getServer(), event.getInfo().getPort());	
 		}
 	}
@@ -70,14 +70,14 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 	@Override
 	public void serviceResolved(final ServiceEvent event)
 	{
-		logger.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
+		LOGGER.info("ADD: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
 
 		final String code = database.findCode(event.getInfo().getName());
 		if(code != null)
 		{
 			try
 			{
-				logger.debug("About to pair with " + event.getInfo().getServer());
+				LOGGER.debug("About to pair with " + event.getInfo().getServer());
 				// If code is != null, we previously have been paired with this library. It does not mean that we still are.
 				final String host;
 				// if(!Strings.isNullOrEmpty(event.getInfo().getServer()))
@@ -89,13 +89,13 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 			}
 			catch(final Exception e)
 			{
-				logger.warn("Could not establish session with client - erasing previously submitted code", e);
+				LOGGER.warn("Could not establish session with client - erasing previously submitted code", e);
 				database.updateCode(event.getInfo().getName(), null);
 			}
 		}
 		else
 		{
-			logger.debug("No matching code could be found to service: " + event.getInfo().getName());
+			LOGGER.debug("No matching code could be found to service: " + event.getInfo().getName());
 		}
 	}
 
@@ -104,7 +104,7 @@ public class PairedRemoteDiscoverer implements IDiscoverer
 	{
 		final JmDNS mdns = event.getDNS();
 		final InetAddress address = event.getInetAddress();
-		logger.info("Registered PairedRemoteDiscoverer @ " + address.getHostAddress());
+		LOGGER.info("Registered PairedRemoteDiscoverer @ " + address.getHostAddress());
 		mdns.addServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
 		mdns.addServiceListener(ITouchAbleServerResource.DACP_TYPE, this);
 		mdns.addServiceListener(ITouchRemoteResource.TOUCH_REMOTE_CLIENT, this);

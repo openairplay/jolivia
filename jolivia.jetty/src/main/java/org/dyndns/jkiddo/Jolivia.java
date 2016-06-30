@@ -66,7 +66,7 @@ import com.google.inject.servlet.GuiceFilter;
 
 public class Jolivia {
 
-	public static Logger logger = LoggerFactory.getLogger(Jolivia.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Jolivia.class);
 	private static final String AboutMessage = "Use it only to be disruptive";
 
 	public static class JoliviaBuilder {
@@ -224,7 +224,7 @@ public class Jolivia {
 					frame.setSize(icon.getIconWidth(), icon.getIconHeight());
 					frame.setVisible(true);
 				} catch (final Exception e) {
-					logger.debug(e.getMessage(), e);
+					LOGGER.debug(e.getMessage(), e);
 				}
 			}
 
@@ -246,7 +246,7 @@ public class Jolivia {
 
 		Preconditions.checkArgument(!(builder.pairingCode > 9999 || builder.pairingCode < 0),
 				"Pairingcode must be expressed within 4 ciphers");
-		logger.info("Starting " + builder.name + " on port " + builder.port);
+		LOGGER.info("Starting " + builder.name + " on port " + builder.port);
 		server = new Server(builder.port);
 
 		final ServerConnector dmapConnector = new ServerConnector(server, new DmapConnectionFactory());
@@ -277,7 +277,7 @@ public class Jolivia {
 					getSecurityHandler(username, password, DmapUtil.DAAP_REALM, new DigestAuthenticator()));
 		sch.addServlet(DefaultServlet.class, "/");
 
-		logger.info(builder.name + " started");
+		LOGGER.info(builder.name + " started");
 	}
 
 	public void start() throws Exception {
@@ -402,7 +402,7 @@ public class Jolivia {
 				try {
 					onShutdown();
 				} catch (final Exception e) {
-					logger.info(e.getMessage(), e);
+					LOGGER.info(e.getMessage(), e);
 				}
 				System.exit(0);
 			}

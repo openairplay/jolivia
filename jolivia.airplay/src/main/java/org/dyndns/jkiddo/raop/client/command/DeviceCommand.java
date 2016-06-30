@@ -14,7 +14,7 @@ import java.io.UnsupportedEncodingException;
 
 public abstract class DeviceCommand
 {
-	private static Logger logger = Logger.getLogger(DeviceCommand.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(DeviceCommand.class.getName());
 
 	private final Map<String, String> parameterMap = new HashMap<>();
 
@@ -38,7 +38,7 @@ public abstract class DeviceCommand
 			}
 			catch(UnsupportedEncodingException e)
 			{
-				logger.log(Level.SEVERE, e.getMessage(), e);
+				LOGGER.log(Level.SEVERE, e.getMessage(), e);
 				throw new RuntimeException(e.getMessage(), e);
 			}
 		}

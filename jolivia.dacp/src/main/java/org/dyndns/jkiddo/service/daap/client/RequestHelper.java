@@ -58,7 +58,7 @@ public final class RequestHelper
 	private static final int CONNECT_TIMEOUT = 10000;
 	private static final int READ_TIMEOUT = 0; // Infinite
 
-	public final static Logger logger = LoggerFactory.getLogger(RequestHelper.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(RequestHelper.class);
 
 	private RequestHelper() throws InstantiationException {
 		throw new InstantiationException("This class is not created for instantiation");
@@ -87,7 +87,7 @@ public final class RequestHelper
 	@SuppressWarnings("unchecked")
 	public static <T extends Chunk> T requestParsed(final String url, final boolean keepalive, final boolean specialCaseProtocolViolation) throws Exception
 	{
-		logger.debug(url);
+		LOGGER.debug(url);
 		final DmapInputStream inputStream = new DmapInputStream(new ByteArrayInputStream(request(url, keepalive)), specialCaseProtocolViolation);
 		final Chunk chunk = inputStream.getChunk();
 		Closeables.close(inputStream, true);
@@ -162,7 +162,7 @@ public final class RequestHelper
 	 */
 	private static byte[] request(final String remoteUrl, final boolean keepalive) throws Exception
 	{
-		logger.debug(String.format("started request(remote=%s)", remoteUrl));
+		LOGGER.debug(String.format("started request(remote=%s)", remoteUrl));
 
 		final byte[] buffer = new byte[1024];
 
@@ -257,7 +257,7 @@ public final class RequestHelper
 		}
 		catch(final UnsupportedEncodingException e)
 		{
-			logger.warn("escapeUrlString Exception:" + e.getMessage());
+			LOGGER.warn("escapeUrlString Exception:" + e.getMessage());
 		}
 		return encoded;
 	}

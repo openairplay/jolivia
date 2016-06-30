@@ -75,7 +75,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 {
-	private static Logger logger = LoggerFactory.getLogger(RaopAudioHandler.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(RaopAudioHandler.class.getName());
 
 	/**
 	 * {@code Transport} header option format. Format of a single option is <br>
@@ -234,12 +234,12 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 				final byte[] samples = new byte[audioPacket.getPayload().capacity()];
 				audioPacket.getPayload().getBytes(0, samples);
 				m_audioOutputQueue.enqueue(audioPacket.getTimeStamp(), samples);
-				if(logger.isTraceEnabled())
-					logger.trace("Packet with sequence " + audioPacket.getSequence() + " for playback at " + audioPacket.getTimeStamp() + " submitted to audio output queue");
+				if(LOGGER.isTraceEnabled())
+					LOGGER.trace("Packet with sequence " + audioPacket.getSequence() + " for playback at " + audioPacket.getTimeStamp() + " submitted to audio output queue");
 			}
 			else
 			{
-				logger.warn("No audio queue available, dropping packet");
+				LOGGER.warn("No audio queue available, dropping packet");
 			}
 
 			super.messageReceived(ctx, evt);
@@ -322,7 +322,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 	@Override
 	public void channelClosed(final ChannelHandlerContext ctx, final ChannelStateEvent evt) throws Exception
 	{
-		logger.info("RTSP connection was shut down, closing RTP channels and audio output queue");
+		LOGGER.info("RTSP connection was shut down, closing RTP channels and audio output queue");
 
 		synchronized(this)
 		{
@@ -474,7 +474,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 					}
 					else
 					{
-						logger.info("Key " + key + " was unmapped");
+						LOGGER.info("Key " + key + " was unmapped");
 					}
 					break;
 
@@ -568,7 +568,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 				/* Port number of the client's control socket. Response includes port number of *our* control port */
 				final int clientControlPort = Integer.parseInt(value);
 				m_controlChannel = createRtpChannel(substitutePort((InetSocketAddress) ctx.getChannel().getLocalAddress(), 0), substitutePort((InetSocketAddress) ctx.getChannel().getRemoteAddress(), clientControlPort), RaopRtpChannelType.Control);
-				logger.info("Launched RTP control service on " + m_controlChannel.getLocalAddress());
+				LOGGER.info("Launched RTP control service on " + m_controlChannel.getLocalAddress());
 				responseOptions.add("control_port=" + ((InetSocketAddress) m_controlChannel.getLocalAddress()).getPort());
 			}
 			else if("timing_port".equals(key))
@@ -576,7 +576,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 				/* Port number of the client's timing socket. Response includes port number of *our* timing port */
 				final int clientTimingPort = Integer.parseInt(value);
 				m_timingChannel = createRtpChannel(substitutePort((InetSocketAddress) ctx.getChannel().getLocalAddress(), 0), substitutePort((InetSocketAddress) ctx.getChannel().getRemoteAddress(), clientTimingPort), RaopRtpChannelType.Timing);
-				logger.info("Launched RTP timing service on " + m_timingChannel.getLocalAddress());
+				LOGGER.info("Launched RTP timing service on " + m_timingChannel.getLocalAddress());
 				responseOptions.add("timing_port=" + ((InetSocketAddress) m_timingChannel.getLocalAddress()).getPort());
 			}
 			else
@@ -588,7 +588,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 
 		/* Create audio socket and include it's port in our response */
 		m_audioChannel = createRtpChannel(substitutePort((InetSocketAddress) ctx.getChannel().getLocalAddress(), 0), null, RaopRtpChannelType.Audio);
-		logger.info("Launched RTP audio service on " + m_audioChannel.getLocalAddress());
+		LOGGER.info("Launched RTP audio service on " + m_audioChannel.getLocalAddress());
 		responseOptions.add("server_port=" + ((InetSocketAddress) m_audioChannel.getLocalAddress()).getPort());
 
 		/* Build response options string */
@@ -615,7 +615,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 		if(m_audioStreamInformationProvider == null)
 			throw new ProtocolException("Audio stream not configured, cannot start recording");
 
-		logger.info("Client started streaming");
+		LOGGER.info("Client started streaming");
 
 		final HttpResponse response = new DefaultHttpResponse(RtspVersions.RTSP_1_0, RtspResponseStatuses.OK);
 		ctx.getChannel().write(response);
@@ -629,7 +629,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 		if(m_audioOutputQueue != null)
 			m_audioOutputQueue.flush();
 
-		logger.info("Client paused streaming, flushed audio output queue");
+		LOGGER.info("Client paused streaming, flushed audio output queue");
 
 		final HttpResponse response = new DefaultHttpResponse(RtspVersions.RTSP_1_0, RtspResponseStatuses.OK);
 		ctx.getChannel().write(response);
@@ -647,7 +647,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 			public void operationComplete(final ChannelFuture future) throws Exception
 			{
 				future.getChannel().close();
-				logger.info("RTSP connection closed after client initiated teardown");
+				LOGGER.info("RTSP connection closed after client initiated teardown");
 			}
 		});
 	}
@@ -667,7 +667,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 			}
 			catch(final IOException e)
 			{
-				logger.debug(e.getMessage(), e);
+				LOGGER.debug(e.getMessage(), e);
 			}
 		}
 		else if(req.headers().get(HttpHeaders.CONTENT_TYPE) != null && req.headers().get(HttpHeaders.CONTENT_TYPE).equalsIgnoreCase(Util.APPLICATION_X_DMAP_TAGGED))
@@ -722,7 +722,7 @@ public class RaopAudioHandler extends SimpleChannelUpstreamHandler
 		}
 		else
 		{
-			logger.warn("Unknown content type: " + req.headers().get(HttpHeaders.CONTENT_TYPE));
+			LOGGER.warn("Unknown content type: " + req.headers().get(HttpHeaders.CONTENT_TYPE));
 		}
 		final HttpResponse response = new DefaultHttpResponse(RtspVersions.RTSP_1_0, RtspResponseStatuses.OK);
 		ctx.getChannel().write(response);
