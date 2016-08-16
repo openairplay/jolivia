@@ -3,6 +3,7 @@ package org.dyndns.jkiddo.raop.client.model;
 
 import java.net.Socket;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -56,8 +57,10 @@ public class DeviceConnection
 
 		try
 		{
-			BufferedReader deviceInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			BufferedWriter deviceOutput = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			BufferedReader deviceInput = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+			BufferedWriter deviceOutput = new BufferedWriter(
+                    new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
 
 			String commandString = command.getCommandString();
 			deviceOutput.write(commandString + "\n");

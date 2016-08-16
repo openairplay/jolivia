@@ -36,6 +36,7 @@
 package org.dyndns.jkiddo.service.daap.client;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -348,7 +349,7 @@ public class Session
 
 		final byte[] value = new byte[] { 2, 0, 2, (byte) 187 };
 		final byte[] nr = { 1 };
-		final ArrayList<byte[]> bytes = Lists.newArrayList("FPLYd".getBytes(), new byte[] { 1 }, nr, new byte[] { 0, 0, 0, 0 }, new byte[] { (byte) value.length }, value);
+		final ArrayList<byte[]> bytes = Lists.newArrayList("FPLYd".getBytes(StandardCharsets.UTF_8), new byte[] { 1 }, nr, new byte[] { 0, 0, 0, 0 }, new byte[] { (byte) value.length }, value);
 		cert = RequestHelper.requestPost(String.format("%s/fp-setup?session-id=%s" + homeSharingGid, this.getRequestBase(), this.sessionId), concatenateByteArrays(bytes));
 		System.out.println(Util.toHex(cert));
 		return;
