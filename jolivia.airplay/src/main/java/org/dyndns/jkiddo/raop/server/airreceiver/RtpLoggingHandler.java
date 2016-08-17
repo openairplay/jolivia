@@ -29,7 +29,7 @@ import org.jboss.netty.channel.SimpleChannelHandler;
  */
 public class RtpLoggingHandler extends SimpleChannelHandler
 {
-	private static final Logger s_logger = Logger.getLogger(RtpLoggingHandler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(RtpLoggingHandler.class.getName());
 
 	@Override
 	public void messageReceived(final ChannelHandlerContext ctx, final MessageEvent evt) throws Exception
@@ -39,8 +39,8 @@ public class RtpLoggingHandler extends SimpleChannelHandler
 			final RtpPacket packet = (RtpPacket) evt.getMessage();
 
 			final Level level = getPacketLevel(packet);
-			if(s_logger.isLoggable(level))
-				s_logger.log(level, evt.getRemoteAddress() + "> " + packet.toString());
+			if(LOGGER.isLoggable(level))
+				LOGGER.log(level, evt.getRemoteAddress() + "> " + packet.toString());
 		}
 
 		super.messageReceived(ctx, evt);
@@ -54,8 +54,8 @@ public class RtpLoggingHandler extends SimpleChannelHandler
 			final RtpPacket packet = (RtpPacket) evt.getMessage();
 
 			final Level level = getPacketLevel(packet);
-			if(s_logger.isLoggable(level))
-				s_logger.log(level, evt.getRemoteAddress() + "< " + packet.toString());
+			if(LOGGER.isLoggable(level))
+				LOGGER.log(level, evt.getRemoteAddress() + "< " + packet.toString());
 		}
 
 		super.writeRequested(ctx, evt);

@@ -54,7 +54,7 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 	public static final String DACP_CLIENT_PORT_NAME = "DACP_CLIENT_PORT_NAME";
 	public static final String DACP_CLIENT_PAIRING_CODE = "DACP_CLIENT_PAIRING_CODE";
 
-	public final static Logger logger = LoggerFactory.getLogger(TouchRemoteResource.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TouchRemoteResource.class);
 
 	private final IPairingDatabase database;
 	private final Integer actualCode;
@@ -71,7 +71,7 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 		}
 		catch(final NoSuchAlgorithmException e)
 		{
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
@@ -149,7 +149,7 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 	@Override
 	public void serviceRemoved(final ServiceEvent event)
 	{
-		logger.info("REMOVE: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
+		LOGGER.info("REMOVE: " + event.getDNS().getServiceInfo(event.getType(), event.getName()));
 		try
 		{
 			final String code = database.findCode(event.getInfo().getName());
@@ -162,7 +162,7 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 		}
 		catch(final IOException e)
 		{
-			logger.debug(e.getMessage(), e);
+			LOGGER.debug(e.getMessage(), e);
 		}
 	}
 
@@ -175,7 +175,7 @@ public class TouchRemoteResource extends MDNSResource implements ITouchRemoteRes
 	{
 		final JmDNS mdns = event.getDNS();
 		final InetAddress address = event.getInetAddress();
-		logger.info("Registered PairedRemoteDiscoverer @ " + address.getHostAddress());
+		LOGGER.info("Registered PairedRemoteDiscoverer @ " + address.getHostAddress());
 		mdns.addServiceListener(ITouchAbleServerResource.TOUCH_ABLE_SERVER, this);
 	}
 

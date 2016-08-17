@@ -26,7 +26,7 @@ import org.eclipse.jetty.util.log.Logger;
 
 public class DmapParser extends HttpParser{
 
-	 public static final Logger LOG = Log.getLogger(HttpParser.class);
+	 private static final Logger LOG = Log.getLogger(HttpParser.class);
 	    @Deprecated
 	    public final static String __STRICT="org.eclipse.jetty.http.HttpParser.STRICT";
 	    public final static int INITIAL_URI_LENGTH=256;

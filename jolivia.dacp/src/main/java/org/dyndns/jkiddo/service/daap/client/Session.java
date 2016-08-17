@@ -36,6 +36,7 @@
 package org.dyndns.jkiddo.service.daap.client;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -67,7 +68,7 @@ import com.google.common.collect.Lists;
 
 public class Session
 {
-	public final static Logger logger = LoggerFactory.getLogger(Session.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Session.class);
 
 	private final String host;
 	private long revision = 1;
@@ -92,7 +93,7 @@ public class Session
 
 		getServerInfo();
 
-		logger.debug(String.format("trying login for host=%s", host));
+		LOGGER.debug(String.format("trying login for host=%s", host));
 		final NSDictionary nsDic = Util.requestPList(username, password);
 		homeSharingGid = "&hsgid=" + ((NSString) nsDic.get("sgid")).getContent();
 		final LoginResponse loginResponse = doLoginWithHomeSharingGid(((NSString) nsDic.get("sgid")).getContent());
@@ -135,7 +136,7 @@ public class Session
 		getServerInfo();
 
 		// http://192.168.254.128:3689/login?pairing-guid=0x0000000000000001
-		logger.debug(String.format("trying login for host=%s and guid=%s", host, pairingGuid));
+		LOGGER.debug(String.format("trying login for host=%s and guid=%s", host, pairingGuid));
 		final LoginResponse loginResponse = doLogin(pairingGuid);
 
 		sessionId = loginResponse.getSessionId().getValue();
@@ -200,7 +201,7 @@ public class Session
 		}
 		catch(final NoSuchElementException nee)
 		{
-			logger.debug("No radio databases found", nee);
+			LOGGER.debug("No radio databases found", nee);
 			return null;
 		}
 
@@ -348,7 +349,7 @@ public class Session
 
 		final byte[] value = new byte[] { 2, 0, 2, (byte) 187 };
 		final byte[] nr = { 1 };
-		final ArrayList<byte[]> bytes = Lists.newArrayList("FPLYd".getBytes(), new byte[] { 1 }, nr, new byte[] { 0, 0, 0, 0 }, new byte[] { (byte) value.length }, value);
+		final ArrayList<byte[]> bytes = Lists.newArrayList("FPLYd".getBytes(StandardCharsets.UTF_8), new byte[] { 1 }, nr, new byte[] { 0, 0, 0, 0 }, new byte[] { (byte) value.length }, value);
 		cert = RequestHelper.requestPost(String.format("%s/fp-setup?session-id=%s" + homeSharingGid, this.getRequestBase(), this.sessionId), concatenateByteArrays(bytes));
 		System.out.println(Util.toHex(cert));
 		return;

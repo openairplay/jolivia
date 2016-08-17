@@ -58,7 +58,7 @@ public final class SampleByteBufferFormat
 
 	public ByteBuffer allocateBuffer(SampleDimensions dimensions)
 	{
-		ByteBuffer buffer = ByteBuffer.allocate(sampleFormat.getSizeBytes((dimensions)));
+		ByteBuffer buffer = ByteBuffer.allocate(sampleFormat.getSizeBytes(dimensions));
 		buffer.order(byteOrder);
 		return buffer;
 	}

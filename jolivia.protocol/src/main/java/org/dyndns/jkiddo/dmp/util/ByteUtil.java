@@ -46,7 +46,7 @@ public final class ByteUtil
 	 */
 	public static final int toInt16BE(byte[] src, int offset)
 	{
-		return(((src[offset] & 0xFF) << 8) + (src[++offset] & 0xFF));
+		return((src[offset] & 0xFF) << 8) + (src[++offset] & 0xFF);
 	}
 
 	/**
@@ -64,7 +64,7 @@ public final class ByteUtil
 	 */
 	public static final int toIntBE(byte[] src, int offset)
 	{
-		return(((src[offset] & 0xFF) << 24) + ((src[++offset] & 0xFF) << 16) + ((src[++offset] & 0xFF) << 8) + (src[++offset] & 0xFF));
+		return ((src[offset] & 0xFF) << 24) + ((src[++offset] & 0xFF) << 16) + ((src[++offset] & 0xFF) << 8) + (src[++offset] & 0xFF);
 	}
 
 	/**
@@ -130,6 +130,6 @@ public final class ByteUtil
 	 */
 	public static final long toLongBE(byte[] src, int offset)
 	{
-		return(((src[offset] & 0xFFl) << 56l) + ((src[++offset] & 0xFFl) << 48l) + ((src[++offset] & 0xFFl) << 40l) + ((src[++offset] & 0xFFl) << 32l) + ((src[++offset] & 0xFFl) << 24l) + ((src[++offset] & 0xFFl) << 16l) + ((src[++offset] & 0xFFl) << 8l) + (src[++offset] & 0xFFl));
+		return((src[offset] & 0xFFl) << 56l) + ((src[++offset] & 0xFFl) << 48l) + ((src[++offset] & 0xFFl) << 40l) + ((src[++offset] & 0xFFl) << 32l) + ((src[++offset] & 0xFFl) << 24l) + ((src[++offset] & 0xFFl) << 16l) + ((src[++offset] & 0xFFl) << 8l) + (src[++offset] & 0xFFl);
 	}
 }

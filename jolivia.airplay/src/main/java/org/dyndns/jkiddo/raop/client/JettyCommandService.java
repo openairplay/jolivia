@@ -32,7 +32,7 @@ import com.google.gson.Gson;
 
 public class JettyCommandService extends AbstractHandler
 {
-	private static Logger logger = Logger.getLogger(JettyCommandService.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(JettyCommandService.class.getName());
 
 	private static Map<String, Device> deviceMap = new HashMap<>();
 
@@ -87,7 +87,7 @@ public class JettyCommandService extends AbstractHandler
 			}
 			catch(RuntimeException e)
 			{
-				logger.log(Level.SEVERE, e.getMessage(), e);
+				LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 	}
@@ -126,7 +126,7 @@ public class JettyCommandService extends AbstractHandler
 				Device device = deviceMap.get(deviceId);
 				if(device == null)
 				{
-					logger.log(Level.SEVERE, "Device ID is not valid: " + deviceId);
+					LOGGER.log(Level.SEVERE, "Device ID is not valid: " + deviceId);
 					sendErrorResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Device ID is not valid: " + deviceId, baseRequest, response);
 				}
 				else
@@ -186,7 +186,7 @@ public class JettyCommandService extends AbstractHandler
 				}
 				else
 				{
-					logger.log(Level.INFO, "Error response: code=" + deviceResponse.getResponseCode() + " message=" + deviceResponse.getResponseMessage());
+					LOGGER.log(Level.INFO, "Error response: code=" + deviceResponse.getResponseCode() + " message=" + deviceResponse.getResponseMessage());
 					sendErrorResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, deviceResponse.getResponseMessage(), baseRequest, response);
 				}
 			}
@@ -203,7 +203,7 @@ public class JettyCommandService extends AbstractHandler
 				}
 				catch(NumberFormatException e)
 				{
-					logger.log(Level.INFO, "Could not parse rate parameter: " + request.getParameter("r"));
+					LOGGER.log(Level.INFO, "Could not parse rate parameter: " + request.getParameter("r"));
 					sendErrorResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Rate is not valid.", baseRequest, response);
 				}
 
@@ -238,7 +238,7 @@ public class JettyCommandService extends AbstractHandler
 				}
 				catch(NumberFormatException e)
 				{
-					logger.log(Level.INFO, "Could not parse position parameter: " + request.getParameter("p"));
+					LOGGER.log(Level.INFO, "Could not parse position parameter: " + request.getParameter("p"));
 					sendErrorResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Position is not valid.", baseRequest, response);
 				}
 
@@ -261,7 +261,7 @@ public class JettyCommandService extends AbstractHandler
 					}
 					else
 					{
-						logger.log(Level.INFO, "Error response: code=" + deviceResponse.getResponseCode() + " message=" + deviceResponse.getResponseMessage());
+						LOGGER.log(Level.INFO, "Error response: code=" + deviceResponse.getResponseCode() + " message=" + deviceResponse.getResponseMessage());
 						sendErrorResponse(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, deviceResponse.getResponseMessage(), baseRequest, response);
 					}
 				}
@@ -269,7 +269,7 @@ public class JettyCommandService extends AbstractHandler
 				break;
 			default:
 			{
-				logger.info("Command not understood: " + request.getParameter("t"));
+				LOGGER.info("Command not understood: " + request.getParameter("t"));
 				sendErrorResponse(HttpServletResponse.SC_NOT_ACCEPTABLE, "Command not understood.", baseRequest, response);
 			}
 		}

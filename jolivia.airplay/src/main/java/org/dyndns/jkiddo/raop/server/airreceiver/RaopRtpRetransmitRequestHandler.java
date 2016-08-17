@@ -34,7 +34,7 @@ import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
  */
 public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandler
 {
-	private static Logger s_logger = Logger.getLogger(RaopRtpRetransmitRequestHandler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(RaopRtpRetransmitRequestHandler.class.getName());
 
 	/**
 	 * Maximal number of in-flight (i.e. not yet fulfilled) retransmit requests
@@ -168,7 +168,7 @@ public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandle
 			final MissingPacket missingPacket = i.next();
 			if(missingPacket.sequence == sequence)
 			{
-				s_logger.fine("Packet " + sequence + " arrived " + (missingPacket.expectedUntilSecondsTime - nextSecondsTimee) + " seconds before it was due");
+				LOGGER.fine("Packet " + sequence + " arrived " + (missingPacket.expectedUntilSecondsTime - nextSecondsTimee) + " seconds before it was due");
 				i.remove();
 			}
 		}
@@ -188,13 +188,13 @@ public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandle
 		final MissingPacket missingPacket = new MissingPacket(sequence, nextSecondsTime);
 		if(missingPacket.requiredUntilSecondsTime > nextSecondsTime)
 		{
-			s_logger.fine("Packet " + sequence + " expected to arive in " + (missingPacket.expectedUntilSecondsTime - nextSecondsTime) + " seconds");
+			LOGGER.fine("Packet " + sequence + " expected to arive in " + (missingPacket.expectedUntilSecondsTime - nextSecondsTime) + " seconds");
 
 			m_missingPackets.add(missingPacket);
 		}
 		else
 		{
-			s_logger.warning("Packet " + sequence + " was required " + (nextSecondsTime - missingPacket.expectedUntilSecondsTime) + " seconds ago, not requesting retransmit");
+			LOGGER.warning("Packet " + sequence + " was required " + (nextSecondsTime - missingPacket.expectedUntilSecondsTime) + " seconds ago, not requesting retransmit");
 		}
 
 		/*
@@ -205,7 +205,7 @@ public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandle
 			final MissingPacket m = m_missingPackets.get(0);
 			m_missingPackets.remove(0);
 
-			s_logger.warning("Packet " + sequence + " overflowed in-flight retransmit count, giving up on old packet " + m.sequence);
+			LOGGER.warning("Packet " + sequence + " overflowed in-flight retransmit count, giving up on old packet " + m.sequence);
 		}
 	}
 
@@ -232,7 +232,7 @@ public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandle
 			 */
 			if(missingPacket.requiredUntilSecondsTime <= nextSecondsTime)
 			{
-				s_logger.warning("Packet " + missingPacket.sequence + " was required " + (nextSecondsTime - missingPacket.requiredUntilSecondsTime) + " secons ago, giving up");
+				LOGGER.warning("Packet " + missingPacket.sequence + " was required " + (nextSecondsTime - missingPacket.requiredUntilSecondsTime) + " secons ago, giving up");
 
 				missingPacketIterator.remove();
 				continue;
@@ -251,7 +251,7 @@ public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandle
 				/*
 				 * If the packet was already requests too often, warn and forget about it
 				 */
-				s_logger.warning("Packet " + missingPacket.sequence + " overdue " + (nextSecondsTime - missingPacket.expectedUntilSecondsTime) + " seconds after " + missingPacket.retransmitRequestCount + " retransmit requests, giving up");
+				LOGGER.warning("Packet " + missingPacket.sequence + " overdue " + (nextSecondsTime - missingPacket.expectedUntilSecondsTime) + " seconds after " + missingPacket.retransmitRequestCount + " retransmit requests, giving up");
 
 				missingPacketIterator.remove();
 				continue;
@@ -261,7 +261,7 @@ public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandle
 			final double expectedUntilSecondsTimePrevious = missingPacket.expectedUntilSecondsTime;
 			missingPacket.sentRetransmitRequest(nextSecondsTime);
 
-			s_logger.fine("Packet " + missingPacket.sequence + " overdue " + (nextSecondsTime - expectedUntilSecondsTimePrevious) + " seconds after " + retransmitRequestCountPrevious + " retransmit requests, requesting again expecting response in " + (missingPacket.expectedUntilSecondsTime - nextSecondsTime) + " seconds");
+			LOGGER.fine("Packet " + missingPacket.sequence + " overdue " + (nextSecondsTime - expectedUntilSecondsTimePrevious) + " seconds after " + retransmitRequestCountPrevious + " retransmit requests, requesting again expecting response in " + (missingPacket.expectedUntilSecondsTime - nextSecondsTime) + " seconds");
 
 			/* Ok, really request re-transmission */
 
@@ -353,7 +353,7 @@ public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandle
 		else if((delta > 1) && (delta <= RetransmitInFlightLimit))
 		{
 			/* Previous packet reordered/delayed or missing */
-			s_logger.fine("Packet sequence number increased by " + delta + ", " + (delta - 1) + " packet(s) missing,");
+			LOGGER.fine("Packet sequence number increased by " + delta + ", " + (delta - 1) + " packet(s) missing,");
 
 			for(int s = expectedSequence; s != audioPacket.getSequence(); s = sequenceSuccessor(s))
 				markMissing(s, nextSecondsTime);
@@ -361,12 +361,12 @@ public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandle
 		else if(delta < 0)
 		{
 			/* Delayed packet */
-			s_logger.fine("Packet sequence number decreased by " + (-delta) + ", assuming delayed packet");
+			LOGGER.fine("Packet sequence number decreased by " + (-delta) + ", assuming delayed packet");
 		}
 		else
 		{
 			/* Unsynchronized sequences */
-			s_logger.warning("Packet sequence number jumped to " + audioPacket.getSequence() + ", assuming sequences number are out of sync");
+			LOGGER.warning("Packet sequence number jumped to " + audioPacket.getSequence() + ", assuming sequences number are out of sync");
 
 			m_missingPackets.clear();
 		}
@@ -415,7 +415,7 @@ public class RaopRtpRetransmitRequestHandler extends SimpleChannelUpstreamHandle
 		final long d = sequenceDistance(a, b);
 		if(d < 0x8000)
 			return d;
-		return(d - 0x10000);
+		return d - 0x10000;
 	}
 
 	/**

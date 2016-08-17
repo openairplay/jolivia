@@ -3,6 +3,7 @@ package org.dyndns.jkiddo.raop.client.model;
 
 import java.net.Socket;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -14,7 +15,7 @@ import org.dyndns.jkiddo.raop.client.command.DeviceCommand;
  */
 public class DeviceConnection
 {
-	private static Logger logger = Logger.getLogger(DeviceConnection.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(DeviceConnection.class.getName());
 
 	private final Device device;
 	private Socket socket;
@@ -49,15 +50,17 @@ public class DeviceConnection
 			}
 			catch(IOException e)
 			{
-				logger.log(Level.SEVERE, e.getMessage(), e);
+				LOGGER.log(Level.SEVERE, e.getMessage(), e);
 				throw new RuntimeException(e.getMessage(), e);
 			}
 		}
 
 		try
 		{
-			BufferedReader deviceInput = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			BufferedWriter deviceOutput = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			BufferedReader deviceInput = new BufferedReader(
+                    new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+			BufferedWriter deviceOutput = new BufferedWriter(
+                    new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
 
 			String commandString = command.getCommandString();
 			deviceOutput.write(commandString + "\n");
@@ -99,7 +102,7 @@ public class DeviceConnection
 		}
 		catch(IOException e)
 		{
-			logger.log(Level.SEVERE, e.getMessage(), e);
+			LOGGER.log(Level.SEVERE, e.getMessage(), e);
 			throw new RuntimeException(e.getMessage(), e);
 		}
 	}

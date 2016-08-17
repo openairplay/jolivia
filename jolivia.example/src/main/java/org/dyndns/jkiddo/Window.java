@@ -54,7 +54,7 @@ public class Window
 			"a copy of the GNU General Public License\n"
 			+ "along with didms.  If not, see <http://www.gnu.org/licenses/>." + "\n\n";
 
-	private static Logger logger = LoggerFactory.getLogger(Window.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Window.class);
 
 	private final JFrame mainFormJolivia;
 	private final JTextField txtUsername = new JTextField();
@@ -212,7 +212,7 @@ public class Window
 						}*/
 						catch(Exception e)
 						{
-							logger.error(e.getMessage(), e);
+							LOGGER.error(e.getMessage(), e);
 							onShutdown();
 						}
 					}
@@ -252,7 +252,7 @@ public class Window
 				}
 				catch(Exception e)
 				{
-					logger.error(e.getMessage(), e);
+					LOGGER.error(e.getMessage(), e);
 				}
 			}
 		});
@@ -332,7 +332,7 @@ public class Window
 			{
 				throw new Exception("No image found");
 			}
-			TrayIcon trayIcon = new TrayIcon((new ImageIcon(trayIconUrl, "Jolivia").getImage()));
+			TrayIcon trayIcon = new TrayIcon(new ImageIcon(trayIconUrl, "Jolivia").getImage());
 			trayIcon.setToolTip("Jolivia");
 			trayIcon.setImageAutoSize(true);
 			final PopupMenu popupMenu = new PopupMenu();
@@ -362,7 +362,7 @@ public class Window
 		}
 		catch(Exception e)
 		{
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 

@@ -27,12 +27,12 @@ import org.jboss.netty.channel.*;
  */
 public class ExceptionLoggingHandler extends SimpleChannelHandler
 {
-	private static Logger s_logger = Logger.getLogger(ExceptionLoggingHandler.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ExceptionLoggingHandler.class.getName());
 
 	@Override
 	public void exceptionCaught(final ChannelHandlerContext ctx, final ExceptionEvent evt) throws Exception
 	{
 		super.exceptionCaught(ctx, evt);
-		s_logger.log(Level.WARNING, "Handler raised exception", evt.getCause());
+		LOGGER.log(Level.WARNING, "Handler raised exception", evt.getCause());
 	}
 }

@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 @Singleton
 public class ProxyFilter implements Filter
 {
-	private static Logger logger = LoggerFactory.getLogger(ProxyFilter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProxyFilter.class);
 
 	//http://simplapi.wordpress.com/2013/01/24/jersey-jax-rs-implements-a-http-basic-auth-decoder/
 		
@@ -53,11 +53,11 @@ public class ProxyFilter implements Filter
 		while(headerNames.hasMoreElements())
 		{
 			final String headerName = headerNames.nextElement();
-			logger.info((headerName + ": " + httpServletRequest.getHeader(headerName)));
+			LOGGER.info(headerName + ": " + httpServletRequest.getHeader(headerName));
 		}
 
-		logger.info(httpServletRequest.getRequestURI() + queryString);
-		logger.info("");
+		LOGGER.info(httpServletRequest.getRequestURI() + queryString);
+		LOGGER.info("");
 		chain.doFilter(request, response);
 	}
 
