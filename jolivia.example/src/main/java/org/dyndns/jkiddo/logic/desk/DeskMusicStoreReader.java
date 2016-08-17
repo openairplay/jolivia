@@ -29,15 +29,37 @@ import org.apache.tika.parser.AutoDetectParser;
 import org.apache.tika.parser.ParseContext;
 import org.apache.tika.parser.Parser;
 import org.apache.tika.sax.BodyContentHandler;
+import org.dyndns.jkiddo.dmap.chunks.audio.AlbumArtist;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbum;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongAlbumId;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongArtist;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongArtistId;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongArtworkCount;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongBitrate;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongCodecType;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongDataKind;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongDateAdded;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongDateModified;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongDescription;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongExtraData;
 import org.dyndns.jkiddo.dmap.chunks.audio.SongFormat;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongGenre;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongSampleRate;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongSize;
+import org.dyndns.jkiddo.dmap.chunks.audio.SongTime;
+import org.dyndns.jkiddo.dmap.chunks.audio.SortAlbum;
+import org.dyndns.jkiddo.dmap.chunks.audio.SortAlbumArtist;
+import org.dyndns.jkiddo.dmap.chunks.audio.SortArtist;
+import org.dyndns.jkiddo.dmap.chunks.audio.SortName;
+import org.dyndns.jkiddo.dmap.chunks.audio.extension.ExtendedMediaKind;
+import org.dyndns.jkiddo.dmap.chunks.audio.extension.MediaKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ContainerItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemId;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemKind;
 import org.dyndns.jkiddo.dmp.chunks.media.ItemName;
 import org.dyndns.jkiddo.dmp.chunks.media.Listing;
 import org.dyndns.jkiddo.dmp.chunks.media.ListingItem;
+import org.dyndns.jkiddo.dmp.chunks.media.PersistentId;
 import org.dyndns.jkiddo.dmp.model.MediaItem;
 import org.dyndns.jkiddo.logic.interfaces.IMusicStoreReader;
 import org.slf4j.Logger;
@@ -193,20 +215,42 @@ public class DeskMusicStoreReader implements IMusicStoreReader
 		
 		final Collection<MediaItem> songs = readTunes();
 		System.gc();
-		final AtomicLong id = new AtomicLong(13);
+		final AtomicLong id = new AtomicLong(1);
 
 		for(final MediaItem song : songs)
 		{
 			final ListingItem item = new ListingItem();
 			item.add(new ItemKind(ItemKind.AUDIO));
-			item.add(new ItemId(id.get()));
-			item.add(new ContainerItemId(id.get() + 100));
-			item.add(new SongAlbum(song.getSongAlbum()));
+			item.add(new SongDataKind(SongDataKind.UNKNOWN));
 			item.add(new SongArtist(song.getSongArtist()));
+			item.add(new SongArtistId(666));
+			item.add(new SongSize(0x430000));
+			item.add(new SongTime(1000));
+			item.add(new SongDateAdded(403958));
 			item.add(new ItemName(song.getItemName()));
+			item.add(new SongGenre("Other"));
+			item.add(new ContainerItemId(id.get()));
+			item.add(new ItemId(id.get()));
+			item.add(new SongSampleRate(SongSampleRate.KHZ_44100));
+			item.add(new SongDescription("MPEG audio file"));
+			item.add(new SongAlbum(song.getSongAlbum()));
+			item.add(new SongAlbumId(123456));
+			item.add(new SongBitrate(0x80));
+			item.add(new ExtendedMediaKind(ExtendedMediaKind.UNKNOWN_ONE));
+			item.add(new AlbumArtist("Unknown"));
+			item.add(new SortArtist("WonderWall"));
+			
+			item.add(new SongDateModified(123456));
+			item.add(new SortName("Unknown"));
+			item.add(new SongCodecType(SongCodecType.MPEG));
+			item.add(new PersistentId(id.get()));
+			item.add(new MediaKind(MediaKind.KIND_1));
+			item.add(new SortAlbum(""));
 			item.add(new SongFormat(SongFormat.MP3));
-			// item.add(new SongSampleRate(SongSampleRate.KHZ_44100));
-			// item.add(new SongComment(song.getId()));
+			item.add(new SortAlbumArtist("unknown"));
+			item.add(new SongExtraData(1));
+			item.add(new SongArtworkCount(1));
+			
 			listing.add(item);
 			map.put(Long.valueOf(id.getAndIncrement()), song.getExternalIdentifer());
 		}
